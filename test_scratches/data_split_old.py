@@ -23,10 +23,17 @@ full_r_train, full_r_test, full_r_val = [], [], []
 
 for category in os.listdir(RAW_IMAGES_PATH):
 
-    # todo: filtra via immagini e metadata che non sono presenti nel dataset delle ricette
-    metadata = json.load(open(os.path.join(RAW_METADATA_PATH, category + ".json")))
-    images = os.listdir(os.path.join(RAW_IMAGES_PATH, category))
+    metadata_s = json.load(open(os.path.join(RAW_METADATA_PATH, category + ".json")))
+    images_s = os.listdir(os.path.join(RAW_IMAGES_PATH, category))
     recipes_cat = list(filter(lambda recipe: recipe['cuisine'] == category, recipes))
+
+    # since some recipes are not present in the dataset, we need to filter them out
+    id_recipes = [recipe['id'] for recipe in recipes_cat]
+    images = [image for image in images_s if image.removesuffix(".jpg") in id_recipes]
+    metadata = [md for md in metadata_s if md['id'] in id_recipes]
+
+    print(f"Category: {category}\nAll images {len(images_s)}\nAll metadata {len(metadata_s)}\n"
+          f"All recipes {len(recipes_cat)}\nAll immages filtered {len(images)}\nAll metadata filtered {len(metadata)}\n")
 
     # Split the data
     (images_train, images_test, metadata_train,

@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 
 def tokenize_category(category):
-    return f"{category}____"
+    return f"____{category}"
 
 def detokenize_category(token):
-    return token.split("____", 1)[0] if "____" in token else token
+    return token.rsplit("____", 1)[1] if "____" in token else token
 
 def remove_token(token):
     return token.replace("____", "") if "____" in token else token
