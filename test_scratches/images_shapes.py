@@ -18,6 +18,7 @@ for category in os.listdir(IMAGES_PATH):
 shape_df = pd.DataFrame(shapes, columns=['height', 'width', 'channels'], index=names)
 print(shape_df.describe())
 print("\n", shape_df.mode())
+print("\n", len(shape_df))
 shape_df.plot(kind="hist", bins=20, alpha=0.5, title="Image Shapes", subplots=True)
 plt.show()
 
