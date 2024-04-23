@@ -18,6 +18,9 @@ for path in [INPUT_PATH, IMAGES_PATH, RECIPES_PATH, METADATA_PATH]:
     if not os.path.exists(path):
         os.makedirs(path)
 
+FOOD_CATEGORIES = ['american', 'chinese', 'french', 'greek', 'indian', 'italian', 'japanese', 'mexican',
+                   'spanish', 'thai']
+
 # matplotlib.style.use('ggplot')
 matplotlib.rcParams['figure.figsize'] = (5, 5)
 matplotlib.rcParams['axes.grid'] = False
