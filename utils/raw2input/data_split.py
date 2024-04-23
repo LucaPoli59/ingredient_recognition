@@ -22,6 +22,8 @@ full_md_train, full_md_test, full_md_val = [], [], []
 full_r_train, full_r_test, full_r_val = [], [], []
 
 for category in os.listdir(RAW_IMAGES_PATH):
+
+    # todo: filtra via immagini e metadata che non sono presenti nel dataset delle ricette
     metadata = json.load(open(os.path.join(RAW_METADATA_PATH, category + ".json")))
     images = os.listdir(os.path.join(RAW_IMAGES_PATH, category))
     recipes_cat = list(filter(lambda recipe: recipe['cuisine'] == category, recipes))
