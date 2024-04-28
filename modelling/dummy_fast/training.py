@@ -5,6 +5,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from torchvision.transforms import v2
+from torch.cuda.amp import autocast, GradScaler
 from tqdm.auto import tqdm
 
 from config import *
@@ -20,31 +21,32 @@ def train_step(model: torch.nn.Module,
                loss_fn: torch.nn.Module,
                accuracy_fn: Callable[[torch.Tensor, torch.Tensor], float],
                device: torch.device,
-               pbar: tqdm | TrainingTQDM):
+               pbar: tqdm | TrainingTQDM,
+               scaler: GradScaler):
     # Set model in training mode
     model.train()
 
     loss, accuracy = 0, 0
     for batch, (X, y) in enumerate(dataloader):
-        X, y = X.to(device), y.to(device)
+        X, y = X.to(device, non_blocking=True, memory_format=torch.channels_last), y.to(device, non_blocking=True)
 
-        # Forward
-        y_pred = model(X)
-
-        # Loss and accuracy computation
-        batch_loss = loss_fn(y_pred, y)
-        batch_acc = accuracy_fn(y_pred, y)
+        # Forward and loss with autocasting
+        with autocast():
+            y_pred = model(X)
+            batch_loss = loss_fn(y_pred, y)
 
         # Zero grad optimizer
-        optimizer.zero_grad()
+        optimizer.zero_grad(set_to_none=True)
 
         # Backward
-        batch_loss.backward()
+        scaler.scale(batch_loss).backward()
 
         # Step of optimization
-        optimizer.step()
+        scaler.step(optimizer)
+        scaler.update()
 
-        loss += batch_loss.item()
+        batch_acc = accuracy_fn(y_pred, y)
+        loss += batch_loss
         accuracy += batch_acc
         pbar.update(metrics=[batch_loss, batch_acc, None, None])
 
@@ -58,20 +60,22 @@ def eval_step(model: torch.nn.Module,
               loss_fn: torch.nn.Module,
               accuracy_fn: Callable[[torch.Tensor, torch.Tensor], float],
               device: torch.device,
-              pbar: tqdm | TrainingTQDM):
+              pbar: tqdm | TrainingTQDM,
+              scaler: GradScaler):
     model.eval()
 
     loss, accuracy = 0, 0
 
     with torch.inference_mode():
         for batch, (X, y) in enumerate(dataloader):
-            X, y = X.to(device), y.to(device)
-            y_pred = model(X)
+            X, y = X.to(device, non_blocking=True, memory_format=torch.channels_last), y.to(device, non_blocking=True)
 
-            batch_loss = loss_fn(y_pred, y)
+            with autocast():
+                y_pred = model(X)
+                batch_loss = loss_fn(y_pred, y)
             batch_acc = accuracy_fn(y_pred, y)
 
-            loss += batch_loss.item()
+            loss += batch_loss
             accuracy += batch_acc
 
             pbar.update(metrics=[None, None, batch_loss, batch_acc])
@@ -81,10 +85,10 @@ def eval_step(model: torch.nn.Module,
     return avg_loss, avg_acc
 
 
-def multi_label_accuracy(y_pred: torch.Tensor, y_true: torch.Tensor) -> float:
-    y_pred = torch.round(torch.sigmoid(y_pred)) # get the binary predictions
+def multi_label_accuracy(y_pred: torch.Tensor, y_true: torch.Tensor) -> float | torch.Tensor:
+    y_pred = torch.round(torch.sigmoid(y_pred))  # get the binary predictions
     # num of hits / num of classes mean over the batch
-    return torch.mean((y_pred == y_true).sum(dim=1) / y_pred.size(1)).item()
+    return torch.mean((y_pred == y_true).sum(dim=1) / y_pred.size(1))
 
 
 def train(model: torch.nn.Module,
@@ -95,15 +99,17 @@ def train(model: torch.nn.Module,
           optimizer: torch.optim.Optimizer,
           epochs: int = 10,
           device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")):
-    model.to(device)
+    model.to(device, memory_format=torch.channels_last)
+    scaler = GradScaler()
 
     results = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": [], "time": []}
     for epoch in range(epochs):
         with TrainingTQDM(total=len(train_dataloader) + len(val_dataloader),
                           desc=f"Epoch {epoch + 1} / {epochs}") as pbar:
-            train_loss, train_acc = train_step(model, train_dataloader, optimizer, loss_fn, accuracy_fn, device, pbar)
+            train_loss, train_acc = train_step(model, train_dataloader, optimizer, loss_fn,
+                                               accuracy_fn, device, pbar, scaler)
 
-            val_loss, val_acc = eval_step(model, val_dataloader, loss_fn, accuracy_fn, device, pbar)
+            val_loss, val_acc = eval_step(model, val_dataloader, loss_fn, accuracy_fn, device, pbar, scaler)
 
         results["train_loss"].append(train_loss)
         results["train_acc"].append(train_acc)
@@ -111,6 +117,8 @@ def train(model: torch.nn.Module,
         results["val_acc"].append(val_acc)
         results["time"].append(pbar.get_elapsed_s())
 
+    for key in ['train_loss', 'train_acc', 'val_loss', 'val_acc']:  # Convert to float (by removing gradients)
+        results[key] = [tensor.item() for tensor in results[key]]
     return results
 
 
@@ -143,12 +151,13 @@ if __name__ == "__main__":
                                 pin_memory=True, persistent_workers=True)
 
     # Creation of the model
-    model = DummyModel(INPUT_SHAPE, len(mlb.classes)+1)
+    model = DummyModel(INPUT_SHAPE, len(mlb.classes) + 1)
 
     # Training hyperparameters
     loss_fn = torch.nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
     accuracy_fn = multi_label_accuracy
+    # torch.backends.cudnn.benchmark = True # Speed up the training  # Non funziona molto
 
     # Training
     results = train(model, train_dataloader, val_dataloader, loss_fn, accuracy_fn, optimizer, epochs=EPOCHS)

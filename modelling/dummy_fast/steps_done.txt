@@ -4,7 +4,12 @@ with 2 epochs: 105s
 
 Steps:
 
-- Persistent_workers, Pin_memory, num_workers=2 [80s]
+- Persistent_workers, Pin_memory, num_workers=2 [75s]
+- zero_grad(set_to_none=True) [71s] (dovrebbe già essere di default)
+- Chain operations over the forward pass [70s]
+- Removing sync operation (effettuato rimuovendo le operazioni di items() e mettendo , to(.., non_blocking=True) [67s]
+- Channel Last [65s]
+- Mixed precision [64s]
 
 
 

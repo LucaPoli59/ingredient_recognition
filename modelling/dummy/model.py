@@ -32,13 +32,13 @@ class DummyModel(torch.nn.Module):
         )
 
     def forward(self, x):
-        x = self.block_1(x)
-        x = self.block_2(x)
-        x = self.block_3(x)
-        x = self.classifier(x)
-        return x
+        # x = self.block_1(x)
+        # x = self.block_2(x)
+        # x = self.block_3(x)
+        # x = self.classifier(x)
+        # return x
 
-        # better to do return self.classifier(self.block_3(self.block_2(self.block_1(x)))) for faster inference
+        return self.classifier(self.block_3(self.block_2(self.block_1(x))))
 
 
 if __name__ == "__main__":
