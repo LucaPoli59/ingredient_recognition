@@ -52,6 +52,8 @@ class ImagesRecipesDataset(Dataset):
             recipes = json.load(open(self.recipes_file))
             # Filter recipes by category chosen
             self.recipes = list(filter(lambda recipe: recipe['cuisine'].lower() == self.category, recipes))
+            if not self.recipes:
+                raise ValueError(f"No recipes found for category {self.category}")
 
         self._encode_label_data()
 

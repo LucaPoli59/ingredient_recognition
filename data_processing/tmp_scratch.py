@@ -18,18 +18,18 @@ transforms = v2.Compose([
 encoder = MultiLabelBinarizerRobust()
 
 train_dataset = ImagesRecipesDataset(os.path.join(IMAGES_PATH, "train"), os.path.join(RECIPES_PATH, 'train.json'),
-                                     transform=transforms, label_encoder=encoder)
+                                     transform=transforms, label_encoder=encoder, category="american")
 
 
-# image = train_dataset.load_image(0)
-# plot([image] + [transforms(image) for _ in range(3)])
-# plt.show()
+image = train_dataset.load_image(0)
+plot([image] + [transforms(image) for _ in range(3)])
+plt.show()
 
 
 val_dataset = ImagesRecipesDataset(os.path.join(IMAGES_PATH, "val"), os.path.join(RECIPES_PATH, 'val.json'),
-                                   label_encoder=encoder)
+                                   label_encoder=encoder, category="american")
 test_dataset = ImagesRecipesDataset(os.path.join(IMAGES_PATH, "test"), os.path.join(RECIPES_PATH, 'test.json'),
-                                    label_encoder=encoder)
+                                    label_encoder=encoder, category="american")
 
 batch_size = 32
 
@@ -37,8 +37,8 @@ train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True
 val_dataloader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
 test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=0)
 
-img, y = next(iter(train_dataloader))
-plot(img[:4])
-plt.show()
-
-print(encoder.inverse_transform([y[0]]))
+# img, y = next(iter(train_dataloader))
+# plot(img[:4])
+# plt.show()
+#
+# print(y[0])
