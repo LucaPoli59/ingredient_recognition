@@ -1,3 +1,4 @@
+import os
 from typing import Callable
 
 import numpy as np
@@ -132,8 +133,10 @@ if __name__ == "__main__":
     val_dataset = ImagesRecipesDataset(os.path.join(IMAGES_PATH, "val"), os.path.join(RECIPES_PATH, "val.json"),
                                        transform=transform, label_encoder=mlb, category=CATEGORY)
 
-    BATCH_SIZE = 32
-    NUM_WORKERS = 4
+    BATCH_SIZE = 128
+    EPOCHS = 2
+    NUM_WORKERS = os.cpu_count() if EPOCHS > 3 else 2
+
     train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=NUM_WORKERS,
                                   pin_memory=True, persistent_workers=True)
     val_dataloader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS,
@@ -148,7 +151,7 @@ if __name__ == "__main__":
     accuracy_fn = multi_label_accuracy
 
     # Training
-    results = train(model, train_dataloader, val_dataloader, loss_fn, accuracy_fn, optimizer, epochs=10)
+    results = train(model, train_dataloader, val_dataloader, loss_fn, accuracy_fn, optimizer, epochs=EPOCHS)
     print(f"Training Done in {sum(results['time']):.4f}s")
     print(results)
 

@@ -146,7 +146,7 @@ if __name__ == "__main__":
     accuracy_fn = multi_label_accuracy
 
     # Training
-    results = train(model, train_dataloader, val_dataloader, loss_fn, accuracy_fn, optimizer, epochs=10)
+    results = train(model, train_dataloader, val_dataloader, loss_fn, accuracy_fn, optimizer, epochs=2)
     print(f"Training Done in {sum(results['time']):.4f}s")
     print(results)
 
