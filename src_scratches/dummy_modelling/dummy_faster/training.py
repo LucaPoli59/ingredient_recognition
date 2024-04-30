@@ -1,18 +1,16 @@
 import shutil
 
 import lightning as lgn
-import logging
 import torch
 from torch.utils.data import DataLoader
 from torchvision.transforms import v2
-from lightning.pytorch.profilers import SimpleProfiler, AdvancedProfiler
+from lightning.pytorch.profilers import SimpleProfiler
 
-from config import *
-from data_processing.ImagesRecipesDataset import ImagesRecipesDataset
-from data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
-from external_code.ProgressBarCallback import ProgressBarCallback
-from modelling.dummy_faster.LightningModel import LightningModel
-from modelling.dummy_faster.model import DummyModel
+from settings.config import *
+from src.data_processing.ImagesRecipesDataset import ImagesRecipesDataset
+from src.data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
+from test_scratches.dummy_modelling.dummy_faster.LightningModel import LightningModel
+from test_scratches.dummy_modelling.dummy_faster.model import DummyModel
 
 
 def multi_label_accuracy(y_pred: torch.Tensor, y_true: torch.Tensor) -> float | torch.Tensor:

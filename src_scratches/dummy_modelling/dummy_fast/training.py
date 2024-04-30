@@ -1,18 +1,16 @@
-import os
 from typing import Callable
 
-import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from torchvision.transforms import v2
 from torch.cuda.amp import autocast, GradScaler
 from tqdm.auto import tqdm
 
-from config import *
-from data_processing.ImagesRecipesDataset import ImagesRecipesDataset
-from data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
-from modelling.dummy_fast.model import DummyModel
-from TrainingTQDM import TrainingTQDM
+from settings.config import *
+from src.data_processing.ImagesRecipesDataset import ImagesRecipesDataset
+from src.data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
+from test_scratches.dummy_modelling.dummy_fast.model import DummyModel
+from settings.commons import TrainingTQDM
 
 
 def train_step(model: torch.nn.Module,

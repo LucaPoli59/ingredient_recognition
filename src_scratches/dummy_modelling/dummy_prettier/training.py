@@ -1,16 +1,15 @@
-import torch
-import os
-from torchvision.transforms import v2
-from torch.utils.data import DataLoader
-from tqdm.auto import tqdm
-from sklearn.metrics import accuracy_score
-import numpy as np
 from typing import Callable
 
-from data_processing.ImagesRecipesDataset import ImagesRecipesDataset
-from data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
-from modelling.dummy.model import DummyModel
-from config import *
+import torch
+from torch.utils.data import DataLoader
+from torchvision.transforms import v2
+from tqdm.auto import tqdm
+
+from settings.config import *
+from src.data_processing.ImagesRecipesDataset import ImagesRecipesDataset
+from src.data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
+from test_scratches.dummy_modelling.dummy_prettier.model import DummyModel
+from settings.commons import TrainingTQDM
 
 
 def train_step(model: torch.nn.Module,
@@ -18,7 +17,8 @@ def train_step(model: torch.nn.Module,
                optimizer: torch.optim.Optimizer,
                loss_fn: torch.nn.Module,
                accuracy_fn: Callable[[torch.Tensor, torch.Tensor], float],
-               device: torch.device):
+               device: torch.device,
+               pbar: tqdm | TrainingTQDM):
     # Set model in training mode
     model.train()
 
@@ -31,8 +31,7 @@ def train_step(model: torch.nn.Module,
 
         # Loss and accuracy computation
         batch_loss = loss_fn(y_pred, y)
-        loss += batch_loss.item()
-        accuracy += accuracy_fn(y_pred, y)
+        batch_acc = accuracy_fn(y_pred, y)
 
         # Zero grad optimizer
         optimizer.zero_grad()
@@ -43,6 +42,10 @@ def train_step(model: torch.nn.Module,
         # Step of optimization
         optimizer.step()
 
+        loss += batch_loss.item()
+        accuracy += batch_acc
+        pbar.update(metrics=[batch_loss, batch_acc, None, None])
+
     avg_loss, avg_acc = loss / len(dataloader), accuracy / len(dataloader)
 
     return avg_loss, avg_acc
@@ -52,7 +55,8 @@ def eval_step(model: torch.nn.Module,
               dataloader: DataLoader,
               loss_fn: torch.nn.Module,
               accuracy_fn: Callable[[torch.Tensor, torch.Tensor], float],
-              device: torch.device):
+              device: torch.device,
+              pbar: tqdm | TrainingTQDM):
     model.eval()
 
     loss, accuracy = 0, 0
@@ -62,8 +66,13 @@ def eval_step(model: torch.nn.Module,
             X, y = X.to(device), y.to(device)
             y_pred = model(X)
 
-            loss += loss_fn(y_pred, y)
-            accuracy += accuracy_fn(y_pred, y)
+            batch_loss = loss_fn(y_pred, y)
+            batch_acc = accuracy_fn(y_pred, y)
+
+            loss += batch_loss.item()
+            accuracy += batch_acc
+
+            pbar.update(metrics=[None, None, batch_loss, batch_acc])
 
     avg_loss, avg_acc = loss / len(dataloader), accuracy / len(dataloader)
 
@@ -86,19 +95,19 @@ def train(model: torch.nn.Module,
           device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")):
     model.to(device)
 
-    results = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": []}
-    for epoch in tqdm(range(epochs), desc=f"Training model"):
-        train_loss, train_acc = train_step(model, train_dataloader, optimizer, loss_fn, accuracy_fn, device)
+    results = {"train_loss": [], "train_acc": [], "val_loss": [], "val_acc": [], "time": []}
+    for epoch in range(epochs):
+        with TrainingTQDM(total=len(train_dataloader) + len(val_dataloader),
+                          desc=f"Epoch {epoch + 1} / {epochs}") as pbar:
+            train_loss, train_acc = train_step(model, train_dataloader, optimizer, loss_fn, accuracy_fn, device, pbar)
 
-        val_loss, val_acc = eval_step(model, val_dataloader, loss_fn, accuracy_fn, device)
-
-        print(f"\nEpoch {epoch + 1}/{epochs} - Train Loss: {train_loss:.4f} - Train Acc: {train_acc:.4f} - "
-              f"Val Loss: {val_loss:.4f} - Val Acc: {val_acc:.4f}")
+            val_loss, val_acc = eval_step(model, val_dataloader, loss_fn, accuracy_fn, device, pbar)
 
         results["train_loss"].append(train_loss)
         results["train_acc"].append(train_acc)
         results["val_loss"].append(val_loss)
         results["val_acc"].append(val_acc)
+        results["time"].append(pbar.get_elapsed_s())
 
     return results
 
@@ -123,7 +132,7 @@ if __name__ == "__main__":
                                        transform=transform, label_encoder=mlb, category=CATEGORY)
 
     BATCH_SIZE = 128
-    NUM_WORKERS = 1
+    NUM_WORKERS = 0
     train_dataloader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=NUM_WORKERS)
     val_dataloader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS)
 
@@ -136,8 +145,8 @@ if __name__ == "__main__":
     accuracy_fn = multi_label_accuracy
 
     # Training
-    results = train(model, train_dataloader, val_dataloader, loss_fn, accuracy_fn, optimizer, epochs=10)
-    print("Training Done!")
+    results = train(model, train_dataloader, val_dataloader, loss_fn, accuracy_fn, optimizer, epochs=2)
+    print(f"Training Done in {sum(results['time']):.4f}s")
     print(results)
 
     # Save the model

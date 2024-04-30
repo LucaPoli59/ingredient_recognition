@@ -1,6 +1,6 @@
 import json
 
-from config import *
+from settings.config import *
 
 all_recipes = json.load(open(os.path.join(RECIPES_PATH, 'all_recipes.json')))
 

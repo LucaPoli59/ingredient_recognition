@@ -1,7 +1,7 @@
 import os
 import matplotlib
 
-PROJECT_PATH = os.path.dirname(os.path.abspath(__file__))
+PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(PROJECT_PATH, 'data')
 INPUT_PATH = os.path.join(DATA_PATH, 'input')
 RAW_INPUT_PATH = os.path.join(DATA_PATH, 'raw_input')
@@ -18,6 +18,9 @@ for path in [INPUT_PATH, IMAGES_PATH, RECIPES_PATH, METADATA_PATH]:
     if not os.path.exists(path):
         os.makedirs(path)
 
+# Data settings
+VAL_SIZE = 0.08
+TEST_SIZE = 0.08
 FOOD_CATEGORIES = ['american', 'chinese', 'french', 'greek', 'indian', 'italian', 'japanese', 'mexican',
                    'spanish', 'thai']
 

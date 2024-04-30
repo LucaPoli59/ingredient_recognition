@@ -1,13 +1,11 @@
-import os
-import pathlib
 from sklearn.model_selection import train_test_split
 import json
 import shutil
 from tqdm import tqdm
 
-from config import *
+from settings.config import *
 from settings import VAL_SIZE, TEST_SIZE
-from commons import tokenize_category
+from settings.commons import tokenize_category
 
 # Create the directories for train, val, and test data
 for phase in ["train", "val", "test"]:  # delete and recreate the directories

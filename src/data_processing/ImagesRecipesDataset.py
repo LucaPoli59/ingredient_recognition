@@ -1,18 +1,15 @@
-import os
 import pathlib
 import json
 
-import numpy as np
 import pandas as pd
-import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from torchvision.transforms import v2
 from typing import Tuple
 from PIL import Image
 
-from config import *
-from commons import *
-from data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
+from settings.config import *
+from settings.commons import *
+from src.data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
 
 
 class ImagesRecipesDataset(Dataset):

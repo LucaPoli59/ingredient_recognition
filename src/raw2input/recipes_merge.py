@@ -1,6 +1,6 @@
 import json
 
-from config import *
+from settings.config import *
 
 recipes = []
 for name in os.listdir(RAW_RECIPES_PATH):

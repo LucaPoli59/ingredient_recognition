@@ -1,13 +1,10 @@
-import os
-import pathlib
 from sklearn.model_selection import train_test_split
 import json
 import shutil
 from tqdm import tqdm
 
-from config import *
-from settings import VAL_SIZE, TEST_SIZE
-from commons import tokenize_category
+from settings.config import *
+from settings.commons import tokenize_category
 
 seed = 42
 
@@ -19,9 +16,12 @@ for phase in ["train", "val", "test"]:  # delete and recreate the directories
 
 # load and split the recipes
 recipes = json.load(open(os.path.join(RECIPES_PATH, "recipes_sorted.json")))
+train_size = len(recipes) - int(len(recipes) * (VAL_SIZE + TEST_SIZE))
+val_size = int(len(recipes) * VAL_SIZE)
+test_size = int(len(recipes) * TEST_SIZE)
 
-recipes_train, recipes_test = train_test_split(recipes, shuffle=False, test_size=TEST_SIZE, random_state=seed)
-recipes_train, recipes_val = train_test_split(recipes_train, shuffle=False, test_size=VAL_SIZE, random_state=seed)
+recipes_train, recipes_test = train_test_split(recipes, shuffle=True, test_size=test_size, random_state=seed)
+recipes_train, recipes_val = train_test_split(recipes_train, shuffle=True, test_size=val_size, random_state=seed)
 
 int_id = 1
 for phase, recipes_dataset in zip(["train", "val", "test"], [recipes_train, recipes_val, recipes_test]):
