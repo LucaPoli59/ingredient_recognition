@@ -1,0 +1,31 @@
+con batch_size 128:
+--- 0 workers: 109s
+--- 1 worker: 118s
+--- 2 workers: 114s
+--- 3 workers: 101s  (altri test a 98 x2)
+--- 4 workers: 115s
+--- 8 workers: 120s
+
+con batch_size 32:
+--- 0 workers: 125
+--- 1 worker: 109
+--- 2 workers: 90 (92)
+--- 3 workers: 102 (98)
+--- 4 workers: 110
+--- 8 workers: 180s
+
+Con batch_size 32 e persistent_workers=True:
+--- 0 workers: ---
+--- 1 worker: 99
+--- 2 workers: 72
+--- 3 workers: 72
+--- 4 workers: 76
+--- 8 workers: 109
+
+Con batch_size 32 e persistent_workers=True a 10 epoche (al posto di 2):
+--- 2 workers (persistent false): 478
+--- 1 worker: 464
+--- 2 workers:
+--- 3 workers:
+--- 4 workers: 228
+--- 8 workers: 262

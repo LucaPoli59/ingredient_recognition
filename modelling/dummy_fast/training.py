@@ -11,7 +11,7 @@ from tqdm.auto import tqdm
 from config import *
 from data_processing.ImagesRecipesDataset import ImagesRecipesDataset
 from data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
-from modelling.dummy_prettier.model import DummyModel
+from modelling.dummy_fast.model import DummyModel
 from TrainingTQDM import TrainingTQDM
 
 
