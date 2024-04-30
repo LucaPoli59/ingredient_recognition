@@ -7,8 +7,8 @@ from torch.cuda.amp import autocast, GradScaler
 from tqdm.auto import tqdm
 
 from settings.config import *
-from src.data_processing.ImagesRecipesDataset import ImagesRecipesDataset
-from src.data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
+from src.data_processing.data_handling import ImagesRecipesDataset
+from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
 from src_scratches.dummy_modelling.dummy_fast.model import DummyModel
 from settings.commons import TrainingTQDM
 
