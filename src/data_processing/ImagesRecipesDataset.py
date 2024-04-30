@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 from torchvision.transforms import v2
 from typing import Tuple, List, Dict, Iterable
 from PIL import Image
-from sklearn.base import TransformerMixin as any_sk_transformer
+from sklearn.base import TransformerMixin as anySkTransformer
 
 from settings.config import *
 from settings.commons import *
@@ -67,9 +67,9 @@ class ImagesRecipesDataset(_ImagesRecipesDataset):
 
 
 def images_recipes_processing(images_dir: os.path, recipes_file: os.path, category: str | None = None,
-                              label_encoder: any_sk_transformer | MultiLabelBinarizerRobust = None,
+                              label_encoder: anySkTransformer | MultiLabelBinarizerRobust = None,
                               recipe_feature_label: str = "ingredients_ok"
-                              ) -> Tuple[List[pathlib.Path], ndarray, any_sk_transformer | MultiLabelBinarizerRobust]:
+                              ) -> Tuple[List[pathlib.Path], ndarray, anySkTransformer | MultiLabelBinarizerRobust]:
     """Function that processes the images and recipes data, filtering them by category, encoding the recipes and
     returning the images paths, the label data and the label encoder."""
 
@@ -87,11 +87,11 @@ def _recipes_filter_by_category(recipes: List[Dict], category: str | None = None
 
 
 def _encode_recipes(recipes: List[Dict],
-                    label_encoder: any_sk_transformer | MultiLabelBinarizerRobust,
-                    feature_label: str) -> Tuple[ndarray, any_sk_transformer | MultiLabelBinarizerRobust]:
+                    label_encoder: anySkTransformer | MultiLabelBinarizerRobust,
+                    feature_label: str) -> Tuple[ndarray, anySkTransformer | MultiLabelBinarizerRobust]:
     # Fit the encoder to the label feature if it is not already fitted, and then transform it
     label_data_raw = pd.DataFrame(recipes)[feature_label].values
-    if not label_encoder.is_fitted():
+    if not label_encoder.fitted: # warning: this doesn't work for anySkTransformer
         label_encoder.fit(label_data_raw)
     return label_encoder.transform(label_data_raw), label_encoder
 
