@@ -9,7 +9,7 @@ from tqdm.auto import tqdm
 from settings.config import *
 from src.data_processing.ImagesRecipesDataset import ImagesRecipesDataset
 from src.data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
-from test_scratches.dummy_modelling.dummy_fast.model import DummyModel
+from src_scratches.dummy_modelling.dummy_fast.model import DummyModel
 from settings.commons import TrainingTQDM
 
 
@@ -97,6 +97,7 @@ def train(model: torch.nn.Module,
           optimizer: torch.optim.Optimizer,
           epochs: int = 10,
           device: torch.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")):
+    # noinspection PyArgumentList
     model.to(device, memory_format=torch.channels_last)
     scaler = GradScaler()
 

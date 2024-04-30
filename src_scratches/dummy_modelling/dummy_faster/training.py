@@ -9,8 +9,8 @@ from lightning.pytorch.profilers import SimpleProfiler
 from settings.config import *
 from src.data_processing.ImagesRecipesDataset import ImagesRecipesDataset
 from src.data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
-from test_scratches.dummy_modelling.dummy_faster.LightningModel import LightningModel
-from test_scratches.dummy_modelling.dummy_faster.model import DummyModel
+from src_scratches.dummy_modelling.dummy_faster.LightningModel import LightningModel
+from src_scratches.dummy_modelling.dummy_faster.model import DummyModel
 
 
 def multi_label_accuracy(y_pred: torch.Tensor, y_true: torch.Tensor) -> float | torch.Tensor:

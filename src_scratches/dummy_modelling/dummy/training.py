@@ -6,7 +6,7 @@ from typing import Callable
 
 from src.data_processing.ImagesRecipesDataset import ImagesRecipesDataset
 from src.data_processing.MultiLabelBinarizerRobust import MultiLabelBinarizerRobust
-from test_scratches.dummy_modelling.dummy.model import DummyModel
+from src_scratches.dummy_modelling.dummy.model import DummyModel
 from settings.config import *
 
 

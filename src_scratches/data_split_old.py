@@ -4,7 +4,6 @@ import shutil
 from tqdm import tqdm
 
 from settings.config import *
-from settings import VAL_SIZE, TEST_SIZE
 from settings.commons import tokenize_category
 
 # Create the directories for train, val, and test data
