@@ -1,4 +1,3 @@
-import logging
 from typing import Any, Tuple
 import lightning as lgn
 from lightning.pytorch.utilities.types import OptimizerLRScheduler
@@ -13,7 +12,7 @@ class BaseLightning(lgn.LightningModule):
         self.loss_fn = loss_fn
         self.accuracy_fn = accuracy_fn
         self.optimizer = optimizer
-        self.save_hyperparameters(ignore=["model", "loss_fn", "accuracy_fn"])  # For logging purposes
+        self.save_hyperparameters(ignore=["model", "loss_fn", "accuracy_fn", "optimizer"])  # For logging purposes
 
     def forward(self, *args: Any, **kwargs: Any) -> Any:
         return self.model(*args, **kwargs)

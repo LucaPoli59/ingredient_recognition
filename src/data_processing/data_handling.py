@@ -70,15 +70,17 @@ class ImagesRecipesDataset(_ImagesRecipesDataset):
 
 
 class ImagesRecipesDataModule(lgn.LightningDataModule):
-    def __init__(self,
-                 global_images_dir: os.path = IMAGES_PATH,
-                 recipes_dir: os.path = RECIPES_PATH,
-                 category: str = None,
-                 recipe_feature_label: str = "ingredients_ok",
-                 label_encoder: None | MultiLabelBinarizerRobust | anySkTransformer = None,
-                 image_size: Tuple[int, int] = (224, 224),
-                 batch_size: int = 32,
-                 num_workers: int | None = None):
+    def __init__(
+            self,
+            global_images_dir: os.path = IMAGES_PATH,
+            recipes_dir: os.path = RECIPES_PATH,
+            category: str = None,
+            recipe_feature_label: str = "ingredients_ok",
+            label_encoder: None | MultiLabelBinarizerRobust | anySkTransformer = None,
+            image_size: Tuple[int, int] = (224, 224),
+            batch_size: int = 32,
+            num_workers: int | None = None
+    ):
         super().__init__()  # Setting parameters
         self.images_dir = global_images_dir
         self.recipes_dir = recipes_dir
@@ -209,10 +211,11 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
         return len(self.label_encoder.classes) + 1
 
 
-def images_recipes_processing(images_dir: os.path, recipes_file: os.path, category: str | None = None,
-                              label_encoder: anySkTransformer | MultiLabelBinarizerRobust = None,
-                              recipe_feature_label: str = "ingredients_ok"
-                              ) -> Tuple[List[pathlib.Path], ndarray, anySkTransformer | MultiLabelBinarizerRobust]:
+def images_recipes_processing(
+        images_dir: os.path, recipes_file: os.path, category: str | None = None,
+        label_encoder: anySkTransformer | MultiLabelBinarizerRobust = None,
+        recipe_feature_label: str = "ingredients_ok"
+) -> Tuple[List[pathlib.Path], ndarray, anySkTransformer | MultiLabelBinarizerRobust]:
     """Function that processes the images and recipes data, filtering them by category, encoding the recipes and
     returning the images paths, the label data and the label encoder."""
 
@@ -229,9 +232,10 @@ def _recipes_filter_by_category(recipes: List[Dict], category: str | None = None
     return list(filter(lambda recipe: recipe['cuisine'].lower() == category, recipes))
 
 
-def _encode_recipes(recipes: List[Dict],
-                    label_encoder: anySkTransformer | MultiLabelBinarizerRobust,
-                    feature_label: str) -> Tuple[ndarray, anySkTransformer | MultiLabelBinarizerRobust]:
+def _encode_recipes(
+        recipes: List[Dict],
+        label_encoder: anySkTransformer | MultiLabelBinarizerRobust,
+        feature_label: str) -> Tuple[ndarray, anySkTransformer | MultiLabelBinarizerRobust]:
     # Fit the encoder to the label feature if it is not already fitted, and then transform it
     label_data_raw = pd.DataFrame(recipes)[feature_label].values
     if not label_encoder.fitted:  # warning: this doesn't work for anySkTransformer

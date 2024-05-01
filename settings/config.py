@@ -14,7 +14,9 @@ RAW_IMAGES_PATH = os.path.join(RAW_INPUT_PATH, 'images')
 RAW_RECIPES_PATH = os.path.join(RAW_INPUT_PATH, 'recipes')
 RAW_METADATA_PATH = os.path.join(RAW_INPUT_PATH, 'metadata')
 
-for path in [INPUT_PATH, IMAGES_PATH, RECIPES_PATH, METADATA_PATH]:
+EXPERIMENTS_PATH = os.path.join(PROJECT_PATH, 'experiments')
+
+for path in [INPUT_PATH, IMAGES_PATH, RECIPES_PATH, METADATA_PATH, EXPERIMENTS_PATH]:
     if not os.path.exists(path):
         os.makedirs(path)
 
