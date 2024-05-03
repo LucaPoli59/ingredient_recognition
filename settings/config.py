@@ -28,6 +28,7 @@ FOOD_CATEGORIES = ['american', 'chinese', 'french', 'greek', 'indian', 'italian'
                    'spanish', 'thai']
 DEF_BATCH_SIZE = 128
 DEF_LR = 1e-3
+DISABLE_RESUME = False
 
 # matplotlib.style.use('ggplot')
 matplotlib.rcParams['figure.figsize'] = (5, 5)

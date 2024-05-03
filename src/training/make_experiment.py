@@ -1,15 +1,16 @@
-from typing import Tuple, Callable, Type, Optional
+import warnings
+from typing import Tuple, Callable, Type, Optional, Dict, Any
 import torch
 import os
 import logging
 import lightning as lgn
-from lightning.pytorch.tuner import Tuner
 
-from settings.config import IMAGES_PATH, RECIPES_PATH, FOOD_CATEGORIES, EXPERIMENTS_PATH, DEF_BATCH_SIZE, DEF_LR
+from settings.config import (IMAGES_PATH, RECIPES_PATH, FOOD_CATEGORIES, EXPERIMENTS_PATH, DEF_BATCH_SIZE, DEF_LR,
+                             DISABLE_RESUME)
 from src.data_processing.data_handling import ImagesRecipesDataModule
 from src.training.lgn_models import BaseLGNM, AdvancedLGNM
 from src.models.dummy import DummyModel
-from src.training.utils import multi_label_accuracy
+from src.training.utils import multi_label_accuracy, str_to_class
 from src.training.lgn_trainers import TrainerInterface, BaseFasterTrainer, BaseTrainer, LiteTrainer
 
 
@@ -27,7 +28,7 @@ def make_experiment(
         batch_size: Optional[int] = DEF_BATCH_SIZE,
         optimizer: torch.optim.Optimizer = torch.optim.Adam,
         lr: Optional[float] = DEF_LR,
-        loss_fn: torch.nn.Module = torch.nn.BCEWithLogitsLoss(),
+        loss_fn: torch.nn.Module = torch.nn.BCEWithLogitsLoss,
         accuracy_fn: Callable[[torch.Tensor, torch.Tensor], float] = multi_label_accuracy,
         model_kwargs: dict | None = None,
         debug: bool = False,
@@ -85,6 +86,7 @@ def _set_torch_constants():
     torch.set_float32_matmul_precision('medium')  # For better performance with cuda
     torch.backends.cudnn.benchmark = True
 
+
 def _assert_lgn_model_trainer_compatibility(model: Type[lgn.LightningModule], trainer: Type[TrainerInterface]):
     if not issubclass(model, BaseLGNM):
         raise ValueError(f"Model must be a subclass of BaseLightning, got {model}")
@@ -135,9 +137,65 @@ def _check_inputs(category: str, input_shape: Tuple[int, int],
     return category, model_kwargs
 
 
+def _check_for_resume(exp_dir: str | os.PathLike, exp_name) -> str | os.PathLike | None:
+    """Function that check if the last experiment saved in the directory is not completed and return the path of that
+    version, otherwise it returns None"""
+
+    # if not issubclass(trainer_type, BaseTrainer):
+    #     return None
+
+    # check if the experiment directory exists and is not empty
+    if (not os.path.exists(exp_dir) or not os.path.exists(os.path.join(exp_dir, exp_name)) or
+            len(os.listdir(os.path.join(exp_dir, exp_name))) == 0):
+        return None
+
+    # check if the last experiment is completed
+    last_version_path = os.path.join(exp_dir, exp_name, f"version_{_find_next_version(exp_dir, exp_name) - 1}")
+    if (not os.path.exists(os.path.join(last_version_path, "checkpoints")) or
+            not os.path.exists(os.path.join(last_version_path, "checkpoints", "last.ckpt"))):
+        return None
+
+    return last_version_path
+
+
+def resume_experiment(ckpt_path: str | os.PathLike):
+    checkpoint_data: Dict[str, Any] = torch.load(ckpt_path)
+    _set_torch_constants()
+
+    # model configuration (torch\lightning)
+    trainer_type = str_to_class(checkpoint_data['trainer_hyper_parameters']['type'])
+    lgn_model_type = str_to_class(checkpoint_data['hyper_parameters']['lgn_model_type'])
+    data_module_type = str_to_class(checkpoint_data['datamodule_hyper_parameters']['type'])
+
+    trainer = trainer_type.load_from_config(checkpoint_data['trainer_hyper_parameters'])
+    lgn_model = lgn_model_type.load_from_config(checkpoint_data['hyper_parameters'])
+
+    image_size, batch_size = lgn_model.input_shape, lgn_model.batch_size
+    data_module = data_module_type.load_from_config(checkpoint_data['datamodule_hyper_parameters'],
+                                                    image_size=image_size, batch_size=batch_size)
+    debug = trainer.debug or True # TODO: Remove or True (when the module is ready)
+    if debug:
+        print("Data Module, Models and Trainer loaded, resume training")
+
+    trained_model = trainer.fit(
+        model=lgn_model,
+        datamodule=data_module,
+        ckpt_path=ckpt_path
+    )
+
+    if debug:
+        print("Training completed")
 
 
 if __name__ == "__main__":
-    make_experiment("dummy_experiment", DummyModel, category="all", trainer_type=BaseFasterTrainer,
-                    experiment_dir=os.path.join(EXPERIMENTS_PATH, "dummy"), batch_size=256, lr=DEF_LR,
-                    max_epochs=20, debug=True, testing=True)
+    experiment_name, experiment_dir = "dummy_experiment", os.path.join(EXPERIMENTS_PATH, "dummy")
+
+    resume_path = _check_for_resume(experiment_dir, experiment_name)
+    if not DISABLE_RESUME and resume_path is not None:
+        warnings.filterwarnings("ignore","Checkpoint directory .*. exists and is not empty.")
+        resume_experiment(str(os.path.join(resume_path, "checkpoints", "last.ckpt")))
+
+    else:
+        make_experiment(experiment_name, DummyModel, category="mexican", trainer_type=BaseFasterTrainer,
+                        experiment_dir=experiment_dir, batch_size=256, lr=DEF_LR, max_epochs=20, debug=True,
+                        testing=True)

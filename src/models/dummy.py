@@ -35,6 +35,7 @@ class DummyModel(torch.nn.Module):
 
         self.num_blocks = 3
         self.num_classes = num_classes
+        self.input_shape = input_shape
 
         self.classifier = nn.Sequential(
             nn.Flatten(),

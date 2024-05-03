@@ -14,6 +14,7 @@ from typing import Tuple, List, Dict
 
 from settings.commons import tokenize_category
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
+from src.training.utils import register_hparams, str_to_class
 from settings.config import FOOD_CATEGORIES, IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE
 
 
@@ -74,6 +75,7 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
             self,
             global_images_dir: os.path = IMAGES_PATH,
             recipes_dir: os.path = RECIPES_PATH,
+            food_categories: List[str] = FOOD_CATEGORIES,
             category: str = None,
             recipe_feature_label: str = "ingredients_ok",
             label_encoder: None | MultiLabelBinarizerRobust | anySkTransformer = None,
@@ -82,13 +84,15 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
             num_workers: int | None = None
     ):
         super().__init__()  # Setting parameters
-        self.images_dir = global_images_dir
-        self.recipes_dir = recipes_dir
-        self.recipe_feature_label = recipe_feature_label
-        self.image_size = image_size
-        self.batch_size = batch_size
-        self.label_encoder, self.category, self.num_workers = None, None, None
-        self._set_def_init_params(label_encoder, category, num_workers)
+        self.images_dir, self.recipes_dir, = global_images_dir, recipes_dir,
+        self.recipe_feature_label, self.food_categories = recipe_feature_label, food_categories
+        self.image_size, self.batch_size = image_size, batch_size
+        self.label_encoder, self.category, self.num_workers = label_encoder, category, num_workers
+        self._set_def_params()
+
+        register_hparams(self, ["global_images_dir", "recipes_dir", "category", "recipe_feature_label",
+                                {"label_encoder": self.label_encoder.to_config()}, {"type": str(self.__class__)},
+                                {"num_workers": self.num_workers}], log=False)
 
         self.transform_aug = self._get_transform_aug()
         self.transform_plain = self._get_transform_plain()
@@ -101,21 +105,18 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
 
         self.train_dataset, self.val_dataset, self.test_dataset, self.predict_dataset = None, None, None, None
 
-    def _set_def_init_params(self, label_encoder, category, num_workers):
+    def _set_def_params(self):
         """Sets some default parameters if not provided"""
-        if label_encoder is None:
-            label_encoder = MultiLabelBinarizerRobust()  # default encoder
-        self.label_encoder = label_encoder
+        if self.label_encoder is None:
+            self.label_encoder = MultiLabelBinarizerRobust()  # default encoder
 
-        if category is not None:
-            category = category.lower()
-            if category not in FOOD_CATEGORIES:
-                raise ValueError(f'Invalid category: {category}')
-        self.category = category
+        if self.category is not None:
+            self.category = self.category.lower()
+            if self.category not in self.food_categories:
+                raise ValueError(f'Invalid category: {self.category}')
 
-        if num_workers is None:
-            num_workers = os.cpu_count()
-        self.num_workers = num_workers
+        if self.num_workers is None:
+            self.num_workers = os.cpu_count()
 
     def _check_paths_and_set_locals(self):
         """Checks if the global images and recipes directories exist and sets the local paths for each stage"""
@@ -178,6 +179,8 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
                                             self.label_encoder, self.recipe_feature_label)
             self._images_paths[stage], self._label_data[stage], self.label_encoder = res
 
+        self.hparams['label_encoder'] = self.label_encoder.to_config()
+
     def setup(self, stage=None):
         if stage == 'fit' or stage is None:
             self.train_dataset = _ImagesRecipesDataset(self._images_paths['train'], self._label_data['train'],
@@ -209,6 +212,19 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
 
     def get_num_classes(self):
         return len(self.label_encoder.classes) + 1
+
+    @classmethod
+    def load_from_config(cls, config: Dict[str, any], image_size: Tuple[int, int], batch_size: int
+                         ) -> 'ImagesRecipesDataModule':
+        image_dir_path, recipe_dir_path = config['global_images_dir'], config['recipes_dir']
+        category, recipe_feature_label = config['category'], config['recipe_feature_label']
+        num_workers = config['num_workers']
+        le_type = str_to_class(json.loads(config['label_encoder'])['type'])
+
+        label_encoder = le_type.load_from_config(config['label_encoder'])
+        return cls(global_images_dir=image_dir_path, recipes_dir=recipe_dir_path, category=category,
+                   image_size=image_size, batch_size=batch_size, recipe_feature_label=recipe_feature_label,
+                   num_workers=num_workers, label_encoder=label_encoder)
 
 
 def images_recipes_processing(

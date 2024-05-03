@@ -1,7 +1,7 @@
 import os
 import random
 from abc import ABC, abstractmethod
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Dict, Any
 from typing_extensions import Never
 
 import lightning as lgn
@@ -12,6 +12,19 @@ from lightning.pytorch.profilers import SimpleProfiler, AdvancedProfiler
 
 from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH
 from src.training.utils import _extract_name_version_dir, CSVLoggerQuiet
+
+
+class FullModelCheckpoint(callbacks.ModelCheckpoint):
+    """Custom ModelCheckpoint that saves also some information about the data used and trainer configuration"""
+    def on_save_checkpoint(
+        self, trainer: "TrainerInterface", pl_module: "lgn.pytorch.LightningModule", checkpoint: Dict[str, Any]
+    ) -> None:
+        checkpoint["trainer_hyper_parameters"] = trainer.hparams
+
+    def on_load_checkpoint(
+            self, trainer: "lgn.pytorch.Trainer", pl_module: "lgn.pytorch.LightningModule", checkpoint: Dict[str, Any]
+    ) -> None:
+        trainer.hparams = checkpoint["trainer_hyper_parameters"]
 
 
 class TrainerInterface(ABC, lgn.Trainer):
@@ -37,6 +50,9 @@ class TrainerInterface(ABC, lgn.Trainer):
         self._grad_clip_val = kwargs.pop("gradient_clip_val", grad_clip_val)
         self._grad_clip_algo = kwargs.pop("gradient_clip_algorithm", grad_clip_algo)
 
+        self.hparams = {'max_epochs': self._max_epochs, 'save_dir': self._save_dir, 'debug': self._debug,
+                        'type': str(self.__class__)}
+
         super().__init__(
             max_epochs=self._max_epochs,
             accelerator="gpu",
@@ -57,6 +73,10 @@ class TrainerInterface(ABC, lgn.Trainer):
 
             **kwargs
         )
+
+    @property
+    def debug(self):
+        return self._debug
 
     @abstractmethod
     def _get_def_save_dir(self) -> Optional[str | os.PathLike]:
@@ -94,13 +114,20 @@ class TrainerInterface(ABC, lgn.Trainer):
     def model_checkpoint_callback(self) -> callbacks.ModelCheckpoint:
         return self._chkp_callback
 
+    @classmethod
+    def load_from_config(cls, config: Dict[str, Any]) -> "TrainerInterface":
+        debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
+        return cls(max_epochs=max_epochs, save_dir=save_dir, debug=False) # todo: debug=debug
+
+
     def fit(self, model, train_dataloaders=None, val_dataloaders=None, datamodule=None,
             ckpt_path=None) -> lgn.LightningModule:
         """Slightingly overrided fit method that return the best model (in this case the last one)"""
         super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
                     datamodule=datamodule, ckpt_path=ckpt_path)
 
-        # TODO: Remove cleaning of the trash folder
+        for file in os.listdir(EXPERIMENTS_TRASH_PATH):
+            os.remove(os.path.join(EXPERIMENTS_TRASH_PATH, file))
 
         return model
 
@@ -136,9 +163,9 @@ class BaseTrainer(TrainerInterface):
         return path
 
     def _get_chkp_callback(self) -> callbacks.ModelCheckpoint:
-        return callbacks.ModelCheckpoint(  # Only checkpoint saved since is needed at the end
+        return FullModelCheckpoint(  # Only checkpoint saved since is needed at the end
             dirpath=os.path.join(self._save_dir, "checkpoints"), every_n_epochs=1, save_top_k=5,
-            monitor="val_loss", mode="min", save_last=True, save_weights_only=True,
+            monitor="val_loss", mode="min", save_last=True, save_weights_only=False,
             filename="epoch={epoch}-vloss={val_loss:.3f}"
         )
 
@@ -159,23 +186,35 @@ class BaseTrainer(TrainerInterface):
         return SimpleProfiler(dirpath=self._save_dir, filename="profiler")
 
     def fit(self, model, train_dataloaders=None, val_dataloaders=None, datamodule=None,
-            ckpt_path=None) -> lgn.LightningModule:
+            ckpt_path=None) -> lgn.LightningModule | None:
         """Slightingly overrided fit method that return the best model"""
-        super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
+        try:
+            super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
                     datamodule=datamodule, ckpt_path=ckpt_path)
-        # Find the best model and load it, otherwise return the last one
-        best_model_path = self._chkp_callback.best_model_path
-        if (not self._debug and best_model_path is not None and best_model_path != ""
-                and os.path.exists(best_model_path)):
+        except (Exception, KeyboardInterrupt) as e:
+            raise e
+        else:
+            if self.interrupted:  # TODO valutare se lanciare l'eccezione o no
+                raise KeyboardInterrupt("Training interrupted by user")
+            # Find the best model and load it, otherwise leave the last one
+            best_model_path = self._chkp_callback.best_model_path
+            if (not self._debug and best_model_path is not None and best_model_path != ""
+                    and os.path.exists(best_model_path)):
+                if self._chkp_callback.save_weights_only:
+                    # Retrieve hparams.yaml file
+                    hparams_path = os.path.join(self._save_dir, "hparams.yaml")
+                else:
+                    hparams_path = None
 
-            if self._chkp_callback.save_weights_only:
-                # Retrieve hparams.yaml file
-                hparams_path = os.path.join(self._save_dir, "hparams.yaml")
+                best_model = model.load_from_checkpoint(best_model_path, hparams_file=hparams_path)
             else:
-                hparams_path = None
+                best_model_path = os.path.join(self._save_dir, "checkpoints", "last.ckpt")
+                best_model = model
 
-            return model.load_from_checkpoint(best_model_path, hparams_file=hparams_path)
-        return model
+            os.rename(best_model_path, os.path.join(self._save_dir, "best_model.ckpt"))
+            if os.path.exists(os.path.join(self._save_dir, "checkpoints", "last.ckpt")):
+                os.remove(os.path.join(self._save_dir, "checkpoints", "last.ckpt"))
+            return best_model
 
 
 class BaseFasterTrainer(BaseTrainer):
