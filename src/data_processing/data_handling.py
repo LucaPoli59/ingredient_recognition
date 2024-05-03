@@ -14,7 +14,7 @@ from typing import Tuple, List, Dict
 
 from settings.commons import tokenize_category
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
-from settings.config import FOOD_CATEGORIES, IMAGES_PATH, RECIPES_PATH
+from settings.config import FOOD_CATEGORIES, IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE
 
 
 class _ImagesRecipesDataset(Dataset):
@@ -78,7 +78,7 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
             recipe_feature_label: str = "ingredients_ok",
             label_encoder: None | MultiLabelBinarizerRobust | anySkTransformer = None,
             image_size: Tuple[int, int] = (224, 224),
-            batch_size: int = 32,
+            batch_size: int = DEF_BATCH_SIZE,
             num_workers: int | None = None
     ):
         super().__init__()  # Setting parameters
