@@ -11,7 +11,7 @@ from lightning.pytorch.loggers import TensorBoardLogger, Logger
 from lightning.pytorch.profilers import SimpleProfiler, AdvancedProfiler
 
 from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH
-from src.training.utils import _extract_name_version_dir, CSVLoggerQuiet
+from src.training.utils import _extract_name_trial_dir, CSVLoggerQuiet
 
 
 class FullModelCheckpoint(callbacks.ModelCheckpoint):
@@ -176,10 +176,10 @@ class BaseTrainer(TrainerInterface):
         ] + super()._get_callbacks()
 
     def _get_loggers(self) -> List[Logger]:
-        exp_dir, exp_name, version = _extract_name_version_dir(self._save_dir)
+        exp_dir, exp_name, trial = _extract_name_trial_dir(self._save_dir)
         return [
-            TensorBoardLogger(save_dir=exp_dir, name=exp_name, version=version),
-            CSVLoggerQuiet(save_dir=exp_dir, name=exp_name, version=version)
+            TensorBoardLogger(save_dir=exp_dir, name=exp_name, trial=trial),
+            CSVLoggerQuiet(save_dir=exp_dir, name=exp_name, trial=trial)
         ]
 
     def _get_profiler(self) -> SimpleProfiler:

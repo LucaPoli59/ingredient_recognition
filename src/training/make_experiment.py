@@ -96,21 +96,21 @@ def _assert_lgn_model_trainer_compatibility(model: Type[lgn.LightningModule], tr
 
 def _prepare_save_dir(experiment_dir: str | os.PathLike, experiment_name: str | os.PathLike) -> str | os.PathLike:
     """Function that creates the directory structure for the experiments and returns the path of the new experiment
-    directory with the version number.
+    directory with the trial number.
     Example: experiment_dir = "experiments/food_classification", experiment_name = "mexican"
-    -> "experiments/food_classification/mexican/version_0" """
+    -> "experiments/food_classification/mexican/trial_0" """
     if not os.path.exists(experiment_dir):
         os.makedirs(experiment_dir)
 
     if not os.path.exists(os.path.join(experiment_dir, experiment_name)):
         os.makedirs(os.path.join(experiment_dir, experiment_name))
-        version = 0
+        trial = 0
     else:
-        version = _find_next_version(experiment_dir, experiment_name)
-    return os.path.join(experiment_dir, experiment_name, f"version_{version}")
+        trial = _find_next_trial(experiment_dir, experiment_name)
+    return os.path.join(experiment_dir, experiment_name, f"trial_{trial}")
 
 
-def _find_next_version(experiment_dir: str | os.PathLike, experiment_name: str | os.PathLike) -> int:
+def _find_next_trial(experiment_dir: str | os.PathLike, experiment_name: str | os.PathLike) -> int:
     exp_vers_files = [exp for exp in os.listdir(str(os.path.join(experiment_dir, experiment_name)))]
     vers = [int(exp_vers.split("_")[1]) for exp_vers in exp_vers_files]
     return len(vers)
@@ -137,25 +137,26 @@ def _check_inputs(category: str, input_shape: Tuple[int, int],
     return category, model_kwargs
 
 
-def _check_for_resume(exp_dir: str | os.PathLike, exp_name) -> str | os.PathLike | None:
+def _check_for_resume(experiment_dir: str | os.PathLike, experiment_name,) -> str | os.PathLike | None:
     """Function that check if the last experiment saved in the directory is not completed and return the path of that
-    version, otherwise it returns None"""
+    trial, otherwise it returns None"""
 
     # if not issubclass(trainer_type, BaseTrainer):
     #     return None
 
     # check if the experiment directory exists and is not empty
-    if (not os.path.exists(exp_dir) or not os.path.exists(os.path.join(exp_dir, exp_name)) or
-            len(os.listdir(os.path.join(exp_dir, exp_name))) == 0):
+    if (not os.path.exists(experiment_dir) or not os.path.exists(os.path.join(experiment_dir, experiment_name)) or
+            len(os.listdir(os.path.join(experiment_dir, experiment_name))) == 0):
         return None
 
     # check if the last experiment is completed
-    last_version_path = os.path.join(exp_dir, exp_name, f"version_{_find_next_version(exp_dir, exp_name) - 1}")
-    if (not os.path.exists(os.path.join(last_version_path, "checkpoints")) or
-            not os.path.exists(os.path.join(last_version_path, "checkpoints", "last.ckpt"))):
+    last_trial_path = os.path.join(experiment_dir, experiment_name,
+                                     f"trial_{_find_next_trial(experiment_dir, experiment_name) - 1}")
+    if (not os.path.exists(os.path.join(last_trial_path, "checkpoints")) or
+            not os.path.exists(os.path.join(last_trial_path, "checkpoints", "last.ckpt"))):
         return None
 
-    return last_version_path
+    return last_trial_path
 
 
 def resume_experiment(ckpt_path: str | os.PathLike):
@@ -188,14 +189,14 @@ def resume_experiment(ckpt_path: str | os.PathLike):
 
 
 if __name__ == "__main__":
-    experiment_name, experiment_dir = "dummy_experiment", os.path.join(EXPERIMENTS_PATH, "dummy")
+    exp_name, exp_dir = "dummy_experiment", os.path.join(EXPERIMENTS_PATH, "dummy")
 
-    resume_path = _check_for_resume(experiment_dir, experiment_name)
+    resume_path = _check_for_resume(exp_dir, exp_name)
     if not DISABLE_RESUME and resume_path is not None:
-        warnings.filterwarnings("ignore","Checkpoint directory .*. exists and is not empty.")
+        warnings.filterwarnings("ignore", "Checkpoint directory .*. exists and is not empty.")
         resume_experiment(str(os.path.join(resume_path, "checkpoints", "last.ckpt")))
 
     else:
-        make_experiment(experiment_name, DummyModel, category="mexican", trainer_type=BaseFasterTrainer,
-                        experiment_dir=experiment_dir, batch_size=256, lr=DEF_LR, max_epochs=20, debug=True,
+        make_experiment(exp_name, DummyModel, category="mexican", trainer_type=BaseFasterTrainer,
+                        experiment_dir=exp_dir, batch_size=256, lr=DEF_LR, max_epochs=20, debug=True,
                         testing=True)

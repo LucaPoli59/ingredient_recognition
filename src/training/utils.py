@@ -11,8 +11,8 @@ import sys
 import importlib
 
 
-def _extract_name_version_dir(save_dir: str) -> Tuple[str, str, str]:
-    """Function that extract the path of the experiments directory, the experiment name and the experiment version
+def _extract_name_trial_dir(save_dir: str) -> Tuple[str, str, str]:
+    """Function that extract the path of the experiments directory, the experiment name and the experiment trial
     from the save_dir.  Example: save_dir = "experiments/food_classification/mexican/1"
     -> ("experiments/food_classification", "mexican", "1")"""
     exp_vers, exp_name = save_dir, os.path.dirname(save_dir)
