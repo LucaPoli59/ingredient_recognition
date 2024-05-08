@@ -7,24 +7,12 @@ from typing_extensions import Never
 import lightning as lgn
 from lightning.pytorch import callbacks
 from lightning.pytorch.callbacks.progress.rich_progress import RichProgressBarTheme
-from lightning.pytorch.loggers import TensorBoardLogger, Logger
+from lightning.pytorch.loggers import Logger
 from lightning.pytorch.profilers import SimpleProfiler, AdvancedProfiler
 
 from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH
-from src.training.utils import _extract_name_trial_dir, CSVLoggerQuiet
-
-
-class FullModelCheckpoint(callbacks.ModelCheckpoint):
-    """Custom ModelCheckpoint that saves also some information about the data used and trainer configuration"""
-    def on_save_checkpoint(
-        self, trainer: "TrainerInterface", pl_module: "lgn.pytorch.LightningModule", checkpoint: Dict[str, Any]
-    ) -> None:
-        checkpoint["trainer_hyper_parameters"] = trainer.hparams
-
-    def on_load_checkpoint(
-            self, trainer: "lgn.pytorch.Trainer", pl_module: "lgn.pytorch.LightningModule", checkpoint: Dict[str, Any]
-    ) -> None:
-        trainer.hparams = checkpoint["trainer_hyper_parameters"]
+from src.training.utils import _extract_name_trial_dir
+from src.training.custom_callbacks import FullModelCheckpoint, TensorBoardEncodeLogger, CSVLoggerEncode
 
 
 class TrainerInterface(ABC, lgn.Trainer):
@@ -51,7 +39,7 @@ class TrainerInterface(ABC, lgn.Trainer):
         self._grad_clip_algo = kwargs.pop("gradient_clip_algorithm", grad_clip_algo)
 
         self.hparams = {'max_epochs': self._max_epochs, 'save_dir': self._save_dir, 'debug': self._debug,
-                        'type': str(self.__class__)}
+                        'type': self.__class__}
 
         super().__init__(
             max_epochs=self._max_epochs,
@@ -178,8 +166,8 @@ class BaseTrainer(TrainerInterface):
     def _get_loggers(self) -> List[Logger]:
         exp_dir, exp_name, trial = _extract_name_trial_dir(self._save_dir)
         return [
-            TensorBoardLogger(save_dir=exp_dir, name=exp_name, trial=trial),
-            CSVLoggerQuiet(save_dir=exp_dir, name=exp_name, trial=trial)
+            TensorBoardEncodeLogger(save_dir=exp_dir, name=exp_name, version=trial),
+            CSVLoggerEncode(save_dir=exp_dir, name=exp_name, version=trial)
         ]
 
     def _get_profiler(self) -> SimpleProfiler:

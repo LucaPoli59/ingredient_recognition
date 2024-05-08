@@ -91,7 +91,7 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
         self._set_def_params()
 
         register_hparams(self, ["global_images_dir", "recipes_dir", "category", "recipe_feature_label",
-                                {"label_encoder": self.label_encoder.to_config()}, {"type": str(self.__class__)},
+                                {"label_encoder": self.label_encoder.to_config()}, {"type": self.__class__},
                                 {"num_workers": self.num_workers}], log=False)
 
         self.transform_aug = self._get_transform_aug()
@@ -219,7 +219,8 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
         image_dir_path, recipe_dir_path = config['global_images_dir'], config['recipes_dir']
         category, recipe_feature_label = config['category'], config['recipe_feature_label']
         num_workers = config['num_workers']
-        le_type = str_to_class(json.loads(config['label_encoder'])['type'])
+        # le_type = str_to_class(json.loads(config['label_encoder'])['type'])
+        le_type = config['label_encoder']['type']
 
         label_encoder = le_type.load_from_config(config['label_encoder'])
         return cls(global_images_dir=image_dir_path, recipes_dir=recipe_dir_path, category=category,

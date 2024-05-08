@@ -1,13 +1,11 @@
 import json
 import os
-from typing import Tuple, Dict, Any, List
+from typing import Tuple, Dict, Any, List, Set
+
+import numpy as np
 import torch
-import logging
 import lightning as lgn
-from lightning.pytorch.loggers import CSVLogger
-from lightning.pytorch.callbacks import ModelCheckpoint
-import warnings
-import sys
+import inspect
 import importlib
 
 
@@ -26,20 +24,8 @@ def multi_label_accuracy(y_pred: torch.Tensor, y_true: torch.Tensor) -> float | 
     return torch.mean((y_pred == y_true).sum(dim=1) / y_pred.size(1))
 
 
-class CSVLoggerQuiet(CSVLogger):
-    """Simple wrapper for lighting CSVLogger, that disable a warning message,
-    useful when multiple loggers use the same directory"""
-
-    def __init__(self, *args, **kwargs):
-        warnings.filterwarnings(
-            "ignore",
-            f"Experiment logs directory .*. exists and is not empty. "
-            f"Previous log files in this directory will be deleted when the new ones are saved")
-        super().__init__(*args, **kwargs)
-
-
-def register_hparams(elem: lgn.LightningModule | lgn.LightningDataModule, hparams: List[Dict[str, Any] | str],
-                     log=True, ) -> None:
+def register_hparams(elem: lgn.LightningModule | lgn.LightningDataModule,
+                     hparams: List[Dict[str, Any] | str] | Set[Dict[str, Any] | str], log=True) -> None:
     """Function that register the hyperparameters to the elem """
     param_list = []
     param_dicts = []
@@ -53,6 +39,58 @@ def register_hparams(elem: lgn.LightningModule | lgn.LightningDataModule, hparam
         elem.save_hyperparameters(*param_list, logger=log)
     for param_dict in param_dicts:
         elem.save_hyperparameters(param_dict, logger=log)
+
+
+def encode_config(config: Dict[str, Any]) -> Dict[str, Tuple[str, str | Dict]]:
+    """Function that encodes the config dictionary, converting the values to a tuple of the type and the str value"""
+    new_config = {}
+    for key, value in config.items():
+        if value is None:
+            new_config[key] = ("None", "None")
+        if isinstance(value, (int, float, bool, str)):
+            new_config[key] = (type(value).__name__, value)
+        elif inspect.isclass(value):
+            new_config[key] = ("class", str(value))
+        elif inspect.isfunction(value):
+            new_config[key] = ("function", func_to_str(value))
+        elif isinstance(value, (list, tuple)):
+            new_config[key] = ("list", json.dumps(value))
+        elif isinstance(value, np.ndarray):
+            new_config[key] = ("ndarray", json.dumps(value.tolist()))
+        elif isinstance(value, dict):
+            new_config[key] = ("config", encode_config(value))
+
+    return new_config
+
+
+def enc_config_to_yaml(config: Dict[str, Tuple[str, str | Dict]]) -> Dict[str, Any]:
+    """Function that converts the encoded config dictionary to a dictionary without the type field"""
+    return {key: value[1] if value[0] != "config" else enc_config_to_yaml(value[1]) for key, value in config.items()}
+
+
+def decode_config(config: Dict[str, Tuple[str, str | Dict]]) -> Dict[str, Any]:
+    """Function that decodes the config dictionary, converting the values to the original type"""
+    new_config = {}
+    for key, (type_str, value) in config.items():
+        match type_str:
+            case "None":
+                new_config[key] = None
+            case "int" | "float" | "bool" | "str":
+                new_config[key] = value
+            case "class":
+                new_config[key] = str_to_class(value)
+            case "function":
+                new_config[key] = str_to_func(value)
+            case "list":
+                new_config[key] = json.loads(value)
+            case "ndarray":
+                new_config[key] = np.array(json.loads(value))
+            case "config":
+                new_config[key] = decode_config(value)
+
+    return new_config
+
+    return new_config
 
 
 def str_to_class(class_str):

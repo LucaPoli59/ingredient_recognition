@@ -10,7 +10,7 @@ from settings.config import (IMAGES_PATH, RECIPES_PATH, FOOD_CATEGORIES, EXPERIM
 from src.data_processing.data_handling import ImagesRecipesDataModule
 from src.training.lgn_models import BaseLGNM, AdvancedLGNM
 from src.models.dummy import DummyModel
-from src.training.utils import multi_label_accuracy, str_to_class
+from src.training.utils import multi_label_accuracy, decode_config
 from src.training.lgn_trainers import TrainerInterface, BaseFasterTrainer, BaseTrainer, LiteTrainer
 
 
@@ -164,17 +164,35 @@ def resume_experiment(ckpt_path: str | os.PathLike):
     _set_torch_constants()
 
     # model configuration (torch\lightning)
-    trainer_type = str_to_class(checkpoint_data['trainer_hyper_parameters']['type'])
-    lgn_model_type = str_to_class(checkpoint_data['hyper_parameters']['lgn_model_type'])
-    data_module_type = str_to_class(checkpoint_data['datamodule_hyper_parameters']['type'])
+    # trainer_type = str_to_class(checkpoint_data['trainer_hyper_parameters']['type'])
+    # lgn_model_type = str_to_class(checkpoint_data['hyper_parameters']['lgn_model_type'])
+    # data_module_type = str_to_class(checkpoint_data['datamodule_hyper_parameters']['type'])
+    #
+    # trainer = trainer_type.load_from_config(checkpoint_data['trainer_hyper_parameters'])
+    # lgn_model = lgn_model_type.load_from_config(checkpoint_data['hyper_parameters'])
+    #
+    # image_size, batch_size = lgn_model.input_shape, lgn_model.batch_size
+    # data_module = data_module_type.load_from_config(checkpoint_data['datamodule_hyper_parameters'],
+    #                                                 image_size=image_size, batch_size=batch_size)
+    # debug = trainer.debug or True # TODO: Remove or True (when the module is ready)
 
-    trainer = trainer_type.load_from_config(checkpoint_data['trainer_hyper_parameters'])
-    lgn_model = lgn_model_type.load_from_config(checkpoint_data['hyper_parameters'])
+    #  (new)
+    config = {k: decode_config(v) for k, v in checkpoint_data.items() if k in
+              ['trainer_hyper_parameters', 'hyper_parameters', 'datamodule_hyper_parameters']}
+
+
+    # model configuration(torch\lightning)
+    trainer_type = config['trainer_hyper_parameters']['type']
+    lgn_model_type = config['hyper_parameters']['lgn_model_type']
+    data_module_type = config['datamodule_hyper_parameters']['type']
+
+    trainer = trainer_type.load_from_config(config['trainer_hyper_parameters'])
+    lgn_model = lgn_model_type.load_from_config(config['hyper_parameters'])
 
     image_size, batch_size = lgn_model.input_shape, lgn_model.batch_size
-    data_module = data_module_type.load_from_config(checkpoint_data['datamodule_hyper_parameters'],
-                                                    image_size=image_size, batch_size=batch_size)
-    debug = trainer.debug or True # TODO: Remove or True (when the module is ready)
+    data_module = data_module_type.load_from_config(config['datamodule_hyper_parameters'], image_size=image_size,
+                                                    batch_size=batch_size)
+    debug = trainer.debug or True  # TODO: Remove or True (when the module is ready)
     if debug:
         print("Data Module, Models and Trainer loaded, resume training")
 

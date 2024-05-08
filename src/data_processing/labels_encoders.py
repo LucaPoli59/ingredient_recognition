@@ -56,7 +56,9 @@ class MultiLabelBinarizerRobust:
     def load_from_config(cls, config: str | Dict[str, Any]):
         if isinstance(config, str):
             config = json.loads(config)
-        classes = np.array(config['classes']) if config['classes'] is not None else None
+
+
+        classes = config['classes'] if config['classes'] is not None else None
         encode_map = config['encode_map']
         fitted = config['fitted']
         unknown_token = config['unknown_token']
@@ -67,13 +69,14 @@ class MultiLabelBinarizerRobust:
             classes = self.classes.tolist() if isinstance(self.classes, np.ndarray) else list(self.classes)
         else:
             classes = None
-        return json.dumps({
+        return {
             'classes': classes,
             'encode_map': self.encode_map,
             'fitted': self.fitted,
             'unknown_token': self.unknown_token,
-            'type': str(self.__class__)
-        })
+            'type': self.__class__
+        }
+
     def get_classes(self):
         return self.classes
 
