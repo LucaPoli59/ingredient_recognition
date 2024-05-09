@@ -17,7 +17,6 @@ class LightningModel(lgn.LightningModule):
 
         # logging.getLogger("lightning.pytorch").setLevel(logging.ERROR)  # to remove warning messages
 
-
     def forward(self, *args: Any, **kwargs: Any) -> Any:
         return self.model(*args, **kwargs)
 
