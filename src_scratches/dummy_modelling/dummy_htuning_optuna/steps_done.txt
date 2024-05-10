@@ -1,0 +1,10 @@
+Schedulers:
+- ASHAS
+- HyperBandForBOHB
+
+Searchers:
+- RandomSearch
+- BayesianOptimization [non funziona]
+- TuneBOHB [funziona]
+- HEBO [funziona]
+- HyperOptSearch [funziona]
