@@ -1,6 +1,7 @@
+import lightning as lgn
 import torch
 import os
-from typing import Dict, Any
+from typing import Dict, Any, Optional, Type, Tuple
 
 from settings.config import IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE, DEF_LR, DEF_UNKNOWN_TOKEN
 from src.models.dummy import DummyModel
@@ -126,3 +127,33 @@ class ExpConfig:
 
     def __str__(self):
         return str(self.config)
+
+
+def model_training(exp_config: ExpConfig, data_module: Optional[Type[lgn.LightningDataModule]] = None,
+                   ckpt_path: Optional[str | os.PathLike] = None
+                   ) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+    resuming = ckpt_path is None
+    model_config, trainer_config = exp_config.model, exp_config.trainer
+
+    lgn_model = model_config['lgn_model_type'].load_from_config(model_config)
+    trainer = trainer_config['type'].load_from_config(trainer_config)
+
+    if data_module is None:
+        dm_config = exp_config.datamodule
+        dm_type = dm_config['type']
+        data_module = dm_type.load_from_config(dm_config, image_size=lgn_model.input_shape,
+                                               batch_size=lgn_model.batch_size)
+
+    debug = trainer.debug or True  # TODO: Remove or True (when the module is ready)
+    if debug:
+        print("Data Module, Models and Trainer loaded, " + ("training started" if resuming else "resume training"))
+
+    trained_model = trainer.fit(
+        model=lgn_model,
+        datamodule=data_module,
+        ckpt_path=ckpt_path
+    )
+
+    if debug:
+        print("Training completed")
+    return trainer, trained_model

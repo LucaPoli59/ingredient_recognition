@@ -8,8 +8,8 @@ from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, DEF_LR)
 from src.lightning.lgn_models import BaseLGNM
 from src.lightning.lgn_trainers import TrainerInterface, BaseFasterTrainer
 from src.models.dummy import DummyModel
-from src.training.exp_config import ExpConfig
-from src.training.utils import decode_config, set_torch_constants
+from src.training.commons import ExpConfig, model_training
+from src.training.utils import set_torch_constants
 
 
 def make_one_shot_exp(
@@ -90,34 +90,6 @@ def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[Type[lgn.Trainer], Type[l
     return model_training(ExpConfig.load_from_ckpt_data(checkpoint_data), ckpt_path=ckpt_path)
 
 
-def model_training(exp_config: ExpConfig, data_module: Optional[Type[lgn.LightningDataModule]] = None,
-                   ckpt_path: Optional[str | os.PathLike] = None
-                   ) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
-    resuming = ckpt_path is None
-    model_config, trainer_config = exp_config.model, exp_config.trainer
-
-    lgn_model = model_config['lgn_model_type'].load_from_config(model_config)
-    trainer = trainer_config['type'].load_from_config(trainer_config)
-
-    if data_module is None:
-        dm_config = exp_config.datamodule
-        dm_type = dm_config['type']
-        data_module = dm_type.load_from_config(dm_config, image_size=lgn_model.input_shape,
-                                               batch_size=lgn_model.batch_size)
-
-    debug = trainer.debug or True  # TODO: Remove or True (when the module is ready)
-    if debug:
-        print("Data Module, Models and Trainer loaded, " + ("training started" if resuming else "resume training"))
-
-    trained_model = trainer.fit(
-        model=lgn_model,
-        datamodule=data_module,
-        ckpt_path=ckpt_path
-    )
-
-    if debug:
-        print("Training completed")
-    return trainer, trained_model
 
 
 if __name__ == "__main__":

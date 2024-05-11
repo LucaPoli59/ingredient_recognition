@@ -91,6 +91,7 @@ def decode_config(config: Dict[str, Tuple[str, str | Dict]]) -> Dict[str, Any]:
 
     return new_config
 
+
 def str_to_class(class_str):
     class_str = class_str.removeprefix("<class '").removesuffix("'>")
     module_name, classname = class_str.rsplit(".", 1)
