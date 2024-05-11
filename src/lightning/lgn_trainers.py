@@ -1,7 +1,7 @@
 import os
 import random
 from abc import ABC, abstractmethod
-from typing import Optional, List, Tuple, Dict, Any
+from typing import Optional, List, Tuple, Dict, Any, Type
 from typing_extensions import Never
 
 import lightning as lgn
@@ -12,7 +12,7 @@ from lightning.pytorch.profilers import SimpleProfiler, AdvancedProfiler
 
 from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH
 from src.training.utils import _extract_name_trial_dir
-from src.training.custom_callbacks import FullModelCheckpoint, TensorBoardEncodeLogger, CSVLoggerEncode
+from src.lightning.custom_callbacks import FullModelCheckpoint, TensorBoardEncodeLogger, CSVLoggerEncode
 
 
 class TrainerInterface(ABC, lgn.Trainer):
@@ -105,11 +105,10 @@ class TrainerInterface(ABC, lgn.Trainer):
     @classmethod
     def load_from_config(cls, config: Dict[str, Any]) -> "TrainerInterface":
         debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
-        return cls(max_epochs=max_epochs, save_dir=save_dir, debug=False) # todo: debug=debug
-
+        return cls(max_epochs=max_epochs, save_dir=save_dir, debug=False)  # todo: debug=debug
 
     def fit(self, model, train_dataloaders=None, val_dataloaders=None, datamodule=None,
-            ckpt_path=None) -> lgn.LightningModule:
+            ckpt_path=None) -> Type[lgn.LightningModule]:
         """Slightingly overrided fit method that return the best model (in this case the last one)"""
         super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
                     datamodule=datamodule, ckpt_path=ckpt_path)
@@ -174,11 +173,11 @@ class BaseTrainer(TrainerInterface):
         return SimpleProfiler(dirpath=self._save_dir, filename="profiler")
 
     def fit(self, model, train_dataloaders=None, val_dataloaders=None, datamodule=None,
-            ckpt_path=None) -> lgn.LightningModule | None:
+            ckpt_path=None) -> Type[lgn.LightningModule] | None:
         """Slightingly overrided fit method that return the best model"""
         try:
             super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
-                    datamodule=datamodule, ckpt_path=ckpt_path)
+                        datamodule=datamodule, ckpt_path=ckpt_path)
         except (Exception, KeyboardInterrupt) as e:
             raise e
         else:

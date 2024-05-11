@@ -29,7 +29,7 @@ def _trainable(config, data_module):
     model_config = config["hyper_parameters"]
     trainer_config = config["trainer_hyper_parameters"]
 
-    input_shape, num_classes = tuple(model_config['model_input_shape']), model_config['model_num_classes']
+    input_shape, num_classes = tuple(model_config['input_shape']), model_config['num_classes']
     batch_size, lr = model_config['batch_size'], model_config['lr']
     loss_fn, accuracy_fn = model_config['loss_fn'], model_config['accuracy_fn']
     optimizer, model_name = model_config['optimizer'], model_config.get('model_name', None)
@@ -98,8 +98,8 @@ if __name__ == "__main__":
 
     config = {
         "hyper_parameters": {
-            "model_input_shape": INPUT_SHAPE,
-            "model_num_classes": data_module.get_num_classes(),
+            "input_shape": INPUT_SHAPE,
+            "num_classes": data_module.get_num_classes(),
             "batch_size": BATCH_SIZE,
             "lr": tune.loguniform(1e-5, 1e-1),
             "loss_fn": LOSS_FN,

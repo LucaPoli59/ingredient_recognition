@@ -1,11 +1,12 @@
 from typing import List, Dict, Any
 import json
-
 import numpy as np
+
+from settings.config import DEF_UNKNOWN_TOKEN
 
 
 class MultiLabelBinarizerRobust:
-    def __init__(self, classes: List[str] = None, unknown_token: str = '<UNK>',
+    def __init__(self, classes: List[str] = None, unknown_token: str = DEF_UNKNOWN_TOKEN,
                  encode_map: Dict[str, int] = None, fitted: bool = False):
         self.unknown_token = unknown_token
         self.classes: List[str] = classes

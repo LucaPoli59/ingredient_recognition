@@ -25,7 +25,9 @@ for path in [INPUT_PATH, IMAGES_PATH, RECIPES_PATH, METADATA_PATH, EXPERIMENTS_P
 VAL_SIZE = 0.08
 TEST_SIZE = 0.08
 FOOD_CATEGORIES = ['american', 'chinese', 'french', 'greek', 'indian', 'italian', 'japanese', 'mexican',
-                   'spanish', 'thai']
+                   'spanish', 'thai', 'all']
+DEF_UNKNOWN_TOKEN: str = '<UNK>'
+
 DEF_BATCH_SIZE = 128
 DEF_LR = 1e-3
 DISABLE_RESUME = False

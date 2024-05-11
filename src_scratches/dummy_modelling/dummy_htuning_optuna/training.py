@@ -23,7 +23,7 @@ def objective(config, data_module, trial: optuna.Trial):
     trainer_config = config["trainer_hyper_parameters"]
 
     # Fixed hyperparameters
-    input_shape, num_classes = tuple(model_config['model_input_shape']), model_config['model_num_classes']
+    input_shape, num_classes = tuple(model_config['input_shape']), model_config['num_classes']
     batch_size, loss_fn, accuracy_fn = model_config['batch_size'], model_config['loss_fn'], model_config['accuracy_fn']
     optimizer, model_name = model_config['optimizer'], model_config.get('model_name', None)
     debug, max_epochs, save_dir = trainer_config['debug'], trainer_config['max_epochs'], trainer_config['save_dir']
@@ -43,7 +43,7 @@ def objective(config, data_module, trial: optuna.Trial):
         devices=1,
         accelerator="gpu",
         default_root_dir=save_dir,
-        limit_train_batches=0.3,
+        limit_train_batches=0.2,
         logger=True,
         precision="16-mixed",
         log_every_n_steps=25,
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     torch.set_float32_matmul_precision('medium')  # For better performance with cuda
 
     BATCH_SIZE = 128
-    EPOCHS = 10
+    EPOCHS = 5
     NUM_WORKERS = os.cpu_count() if EPOCHS > 3 else 2
     LOSS_FN = torch.nn.BCEWithLogitsLoss()
     OPTIMIZER, LR = torch.optim.Adam, 1e-3
@@ -96,8 +96,8 @@ if __name__ == "__main__":
 
     config = {
         "hyper_parameters": {
-            "model_input_shape": INPUT_SHAPE,
-            "model_num_classes": data_module.get_num_classes(),
+            "input_shape": INPUT_SHAPE,
+            "num_classes": data_module.get_num_classes(),
             "batch_size": BATCH_SIZE,
             "lr": None,
             "loss_fn": LOSS_FN,

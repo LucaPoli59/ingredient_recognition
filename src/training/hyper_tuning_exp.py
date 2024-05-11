@@ -2,16 +2,15 @@ import warnings
 from typing import Tuple, Callable, Type, Optional, Dict, Any
 import torch
 import os
-import logging
 import lightning as lgn
 
 from settings.config import (IMAGES_PATH, RECIPES_PATH, FOOD_CATEGORIES, EXPERIMENTS_PATH, DEF_BATCH_SIZE, DEF_LR,
                              DISABLE_RESUME)
 from src.data_processing.data_handling import ImagesRecipesDataModule
-from src.training.lgn_models import BaseLGNM, AdvancedLGNM
+from src.lightning.lgn_models import BaseLGNM
 from src.models.dummy import DummyModel
-from src.training.utils import multi_label_accuracy, decode_config
-from src.training.lgn_trainers import TrainerInterface, BaseFasterTrainer, BaseTrainer, LiteTrainer
+from src.training.utils import multi_label_accuracy, decode_config, set_torch_constants
+from src.lightning.lgn_trainers import TrainerInterface, BaseFasterTrainer, LiteTrainer
 
 
 def make_experiment(
@@ -37,7 +36,7 @@ def make_experiment(
     category, model_kwargs = _check_inputs(category, input_shape, image_dir_path, recipe_dir_path, model_kwargs)
     # lr, batch_size, tune_lr, tune_batch_size = _assert_lr_batch_tuning(lr, batch_size)
     _assert_lgn_model_trainer_compatibility(lgn_model_type, trainer_type)
-    _set_torch_constants()
+    set_torch_constants()
     save_dir = _prepare_save_dir(experiment_dir, experiment_name)
     if debug:
         print("Experiment directory created")
@@ -79,12 +78,6 @@ def make_experiment(
         trainer.test(model=lgn_model, datamodule=data_module)
         print(f"Testing the best model...{trainer.model_checkpoint_callback.best_model_path}")
         trainer.test(model=trained_model, datamodule=data_module)
-
-
-def _set_torch_constants():
-    logging.getLogger("lightning.pytorch").setLevel(logging.ERROR)  # to remove warning messages
-    torch.set_float32_matmul_precision('medium')  # For better performance with cuda
-    torch.backends.cudnn.benchmark = True
 
 
 def _assert_lgn_model_trainer_compatibility(model: Type[lgn.LightningModule], trainer: Type[TrainerInterface]):
@@ -161,7 +154,7 @@ def _check_for_resume(experiment_dir: str | os.PathLike, experiment_name,) -> st
 
 def resume_experiment(ckpt_path: str | os.PathLike):
     checkpoint_data: Dict[str, Any] = torch.load(ckpt_path)
-    _set_torch_constants()
+    set_torch_constants()
 
     # model configuration (torch\lightning)
     # trainer_type = str_to_class(checkpoint_data['trainer_hyper_parameters']['type'])

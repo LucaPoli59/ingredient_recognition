@@ -261,7 +261,7 @@ def _encode_recipes(
 
 
 def _compute_images_paths(images_dir: os.path, category: str) -> List[pathlib.Path]:
-    if category is None:
+    if category is None or category == "all":
         return list(pathlib.Path(images_dir).glob('*.jpg'))
     else:
         return list(pathlib.Path(images_dir).glob(f'*{tokenize_category(category)}.jpg'))

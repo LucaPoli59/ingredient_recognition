@@ -25,8 +25,8 @@ class BaseLGNM(lgn.LightningModule):
         register_hparams(
             self, ["lr", "batch_size", {"optimizer": self.optimizer}, {"loss_fn": self.loss_fn},
                    {"lgn_model_type": self.__class__}, {"torch_model_type": self.torch_model_type},
-                   {"accuracy_fn": self.accuracy_fn}, {"model_input_shape": self.input_shape},
-                   {"model_num_classes": self.num_classes}] + (["model_name"] if model_name is not None else [])
+                   {"accuracy_fn": self.accuracy_fn}, {"input_shape": self.input_shape},
+                   {"num_classes": self.num_classes}] + (["model_name"] if model_name is not None else [])
         )
 
         self.loss_fn = loss_fn()  # After registering the loss_fn, we need to instantiate it
@@ -86,13 +86,7 @@ class BaseLGNM(lgn.LightningModule):
 
     @classmethod
     def load_from_config(cls, config: Dict[str, Any]) -> "BaseLGNM":
-        # input_shape, num_classes = literal_eval(config['model_input_shape']), config['model_num_classes']
-        # batch_size, lr = config['batch_size'], config['lr']
-        # torch_model_type = str_to_class(config['torch_model_type'])
-        # loss_fn, accuracy_fn = str_to_class(config['loss_fn']), str_to_func(config['accuracy_fn'])
-        # optimizer, model_name = str_to_class(config['optimizer']), config.get('model_name', None)
-
-        input_shape, num_classes = tuple(config['model_input_shape']), config['model_num_classes']
+        input_shape, num_classes = tuple(config['input_shape']), config['num_classes']
         batch_size, lr = config['batch_size'], config['lr']
         torch_model_type = config['torch_model_type']
         loss_fn, accuracy_fn = config['loss_fn'], config['accuracy_fn']

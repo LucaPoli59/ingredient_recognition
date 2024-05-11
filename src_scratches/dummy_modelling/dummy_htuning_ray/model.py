@@ -38,12 +38,13 @@ class DummyModel(torch.nn.Module):
         self.block_3 = DummyBlock(32, 64)
         self.block_4 = DummyBlock(64, 128) if self.num_blocks == 4 else None
 
+        self.output_dim = 128 if self.num_blocks == 4 else 64
         self.num_classes = num_classes
         self.input_shape = input_shape
 
         self.classifier = nn.Sequential(
             nn.Flatten(),
-            nn.Linear((input_shape[0] // (2 ** self.num_blocks)) ** 2 * 64, 64), nn.ReLU(),
+            nn.Linear((input_shape[0] // (2 ** self.num_blocks)) ** 2 * self.output_dim, 64), nn.ReLU(),
             nn.Linear(64, num_classes)
         )
 

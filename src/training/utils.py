@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 from typing import Tuple, Dict, Any, List, Set
 
@@ -90,9 +91,6 @@ def decode_config(config: Dict[str, Tuple[str, str | Dict]]) -> Dict[str, Any]:
 
     return new_config
 
-    return new_config
-
-
 def str_to_class(class_str):
     class_str = class_str.removeprefix("<class '").removesuffix("'>")
     module_name, classname = class_str.rsplit(".", 1)
@@ -109,3 +107,9 @@ def str_to_func(func_str):
     module_name, func_name = func_str.rsplit(".", 1)
     module = importlib.import_module(module_name)
     return getattr(module, func_name)
+
+
+def set_torch_constants():
+    logging.getLogger("lightning.pytorch").setLevel(logging.ERROR)  # to remove warning messages
+    torch.set_float32_matmul_precision('medium')  # For better performance with cuda
+    torch.backends.cudnn.benchmark = True
