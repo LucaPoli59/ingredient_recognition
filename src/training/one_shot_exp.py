@@ -20,6 +20,13 @@ def make_one_shot_exp(
         debug: bool = False,
         **config_kwargs
 ) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+    """Function that creates a one-shot experiment with the given configuration and run it. If the experiment is
+    resumable, it will resume the last trial.
+
+    Note: Other configuration parameters must be passed as keyword arguments, by following the design pattern
+    of the ExpConfig class.
+    """
+
     save_dir, to_resume = _setup_or_resume_dir(experiment_dir, experiment_name)
     if to_resume:
         return _resume_exp(str(os.path.join(save_dir, "checkpoints", "last.ckpt")))
@@ -61,6 +68,7 @@ def _find_last_trial(experiment_dir: str | os.PathLike, experiment_name: str | o
 
 
 def _assert_lgn_model_trainer_compatibility(model: Type[lgn.LightningModule], trainer: Type[TrainerInterface]):
+    """Function that asserts if the model and the trainer are compatible with the training function."""
     if not issubclass(model, BaseLGNM):
         raise ValueError(f"Model must be a subclass of BaseLightning, got {model}")
     if not issubclass(trainer, TrainerInterface):
@@ -68,6 +76,7 @@ def _assert_lgn_model_trainer_compatibility(model: Type[lgn.LightningModule], tr
 
 
 def _run_new_exp(exp_config: ExpConfig) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+    """Function that runs a new experiment with the given configuration."""
     set_torch_constants()
 
     # Load the dataset
@@ -84,6 +93,7 @@ def _run_new_exp(exp_config: ExpConfig) -> Tuple[Type[lgn.Trainer], Type[lgn.Lig
 
 
 def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+    """Function that resumes the experiment from the given checkpoint path."""
     set_torch_constants()
     warnings.filterwarnings("ignore", "Checkpoint directory .*. exists and is not empty.")
     checkpoint_data: Dict[str, Any] = torch.load(ckpt_path)

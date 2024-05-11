@@ -132,6 +132,7 @@ class ExpConfig:
 def model_training(exp_config: ExpConfig, data_module: Optional[Type[lgn.LightningDataModule]] = None,
                    ckpt_path: Optional[str | os.PathLike] = None
                    ) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+    """General function that trains a model with the given configuration."""
     resuming = ckpt_path is None
     model_config, trainer_config = exp_config.model, exp_config.trainer
 
