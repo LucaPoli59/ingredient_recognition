@@ -78,7 +78,7 @@ if __name__ == "__main__":
     os.mkdir(os.path.join(model_path, "lightning_logs"))
 
     torch.set_float32_matmul_precision('medium')  # For better performance with cuda
-    # ray.init(_temp_dir=temp_path)
+    ray.init(_temp_dir=temp_path)
 
     BATCH_SIZE = 256
     EPOCHS = 2

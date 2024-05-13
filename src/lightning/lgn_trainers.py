@@ -2,6 +2,8 @@ import os
 import random
 from abc import ABC, abstractmethod
 from typing import Optional, List, Tuple, Dict, Any, Type
+
+import optuna
 from typing_extensions import Never
 
 import lightning as lgn
@@ -10,8 +12,10 @@ from lightning.pytorch.callbacks.progress.rich_progress import RichProgressBarTh
 from lightning.pytorch.loggers import Logger
 from lightning.pytorch.profilers import SimpleProfiler, AdvancedProfiler
 
+from optuna_integration import PyTorchLightningPruningCallback
+
 from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH
-from src.training.utils import _extract_name_trial_dir
+from src.training.utils import extract_name_trial_dir
 from src.lightning.custom_callbacks import FullModelCheckpoint, TensorBoardEncodeLogger, CSVLoggerEncode
 
 
@@ -103,9 +107,9 @@ class TrainerInterface(ABC, lgn.Trainer):
         return self._chkp_callback
 
     @classmethod
-    def load_from_config(cls, config: Dict[str, Any]) -> "TrainerInterface":
+    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> "TrainerInterface":
         debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
-        return cls(max_epochs=max_epochs, save_dir=save_dir, debug=False)  # todo: debug=debug
+        return cls(max_epochs=max_epochs, save_dir=save_dir, debug=False, **kwargs)  # todo: debug=debug
 
     def fit(self, model, train_dataloaders=None, val_dataloaders=None, datamodule=None,
             ckpt_path=None) -> Type[lgn.LightningModule]:
@@ -149,9 +153,9 @@ class BaseTrainer(TrainerInterface):
             free = not os.path.exists(path)
         return path
 
-    def _get_chkp_callback(self) -> callbacks.ModelCheckpoint:
+    def _get_chkp_callback(self, save_freq: int = 1, save_top_k: int = 5) -> callbacks.ModelCheckpoint:
         return FullModelCheckpoint(  # Only checkpoint saved since is needed at the end
-            dirpath=os.path.join(self._save_dir, "checkpoints"), every_n_epochs=1, save_top_k=5,
+            dirpath=os.path.join(self._save_dir, "checkpoints"), every_n_epochs=save_freq, save_top_k=save_top_k,
             monitor="val_loss", mode="min", save_last=True, save_weights_only=False,
             filename="epoch={epoch}-vloss={val_loss:.3f}"
         )
@@ -163,7 +167,7 @@ class BaseTrainer(TrainerInterface):
         ] + super()._get_callbacks()
 
     def _get_loggers(self) -> List[Logger]:
-        exp_dir, exp_name, trial = _extract_name_trial_dir(self._save_dir)
+        exp_dir, exp_name, trial = extract_name_trial_dir(self._save_dir)
         return [
             TensorBoardEncodeLogger(save_dir=exp_dir, name=exp_name, version=trial),
             CSVLoggerEncode(save_dir=exp_dir, name=exp_name, version=trial)
@@ -193,7 +197,7 @@ class BaseTrainer(TrainerInterface):
                 else:
                     hparams_path = None
 
-                best_model = model.load_from_checkpoint(best_model_path, hparams_file=hparams_path)
+                best_model = model.load_from_checkpoint(best_model_path, hparams_file=hparams_path)  # TODO: controllare perchè il loading non va
             else:
                 best_model_path = os.path.join(self._save_dir, "checkpoints", "last.ckpt")
                 best_model = model
@@ -218,3 +222,28 @@ class BaseFasterTrainer(BaseTrainer):
         return [callbacks.EarlyStopping(monitor="val_loss", mode="min", verbose=self._debug,
                                         patience=int(self._max_epochs * 1 / self._check_val_freq / 4))
                 ] + super()._get_callbacks()
+
+
+class OptunaTrainer(BaseTrainer):
+    def __init__(self, max_epochs: int, trial: optuna.Trial, save_dir: str | os.PathLike | None = None,
+                 debug: bool = False, limit_train_batches: int = 1, **kwargs):
+        self.trial = trial
+        super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, limit_train_batches=limit_train_batches,
+                         **kwargs)
+
+    def _get_precision(self) -> str:
+        return '16-mixed'
+
+    def _get_grad_accum(self) -> int:
+        return 5
+
+    def _get_chkp_callback(self, save_freq: int = 2, save_top_k: int = 2) -> callbacks.ModelCheckpoint:
+        return super()._get_chkp_callback(save_freq=save_freq, save_top_k=save_top_k)
+
+    def _get_callbacks(self) -> List[callbacks.Callback]:
+        return [PyTorchLightningPruningCallback(self.trial, monitor="val_loss")] + super()._get_callbacks()
+
+    @classmethod
+    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> "TrainerInterface":
+        limit_train_batches = config.get("limit_train_batches", 1)  # Use get for backward compatibility
+        return super().load_from_config(config, limit_train_batches=limit_train_batches, **kwargs)

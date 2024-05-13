@@ -10,7 +10,7 @@ import inspect
 import importlib
 
 
-def _extract_name_trial_dir(save_dir: str) -> Tuple[str, str, str]:
+def extract_name_trial_dir(save_dir: str) -> Tuple[str, str, str]:
     """Function that extract the path of the experiments directory, the experiment name and the experiment trial
     from the save_dir.  Example: save_dir = "experiments/food_classification/mexican/1"
     -> ("experiments/food_classification", "mexican", "1")"""
