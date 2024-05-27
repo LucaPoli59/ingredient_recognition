@@ -19,7 +19,7 @@ def make_one_shot_exp(
         batch_size: Optional[int] = DEF_BATCH_SIZE,
         debug: bool = False,
         **config_kwargs
-) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """Function that creates a one-shot experiment with the given configuration and run it. If the experiment is
     resumable, it will resume the last trial.
 
@@ -75,7 +75,7 @@ def _assert_lgn_model_trainer_compatibility(model: Type[lgn.LightningModule], tr
         raise ValueError(f"Trainer must be a subclass of TrainerInterface, got {trainer}")
 
 
-def _run_new_exp(exp_config: ExpConfig) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+def _run_new_exp(exp_config: ExpConfig) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """Function that runs a new experiment with the given configuration."""
     set_torch_constants()
 
@@ -87,7 +87,7 @@ def _run_new_exp(exp_config: ExpConfig) -> Tuple[Type[lgn.Trainer], Type[lgn.Lig
     return model_training(exp_config, data_module)
 
 
-def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """Function that resumes the experiment from the given checkpoint path."""
     set_torch_constants()
     warnings.filterwarnings("ignore", "Checkpoint directory .*. exists and is not empty.")
@@ -99,5 +99,8 @@ def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[Type[lgn.Trainer], Type[l
 
 if __name__ == "__main__":
     exp_dir, exp_name = os.path.join(EXPERIMENTS_PATH, "dummy"), "dummy_experiment"
-    make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=5, batch_size=256, debug=True,
-                      torch_model_type=DummyModel, dm_category="mexican", tr_type=BaseFasterTrainer, lr=DEF_LR)
+    trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=5, batch_size=256, debug=True,
+                                       torch_model_type=DummyModel, dm_category="mexican", tr_type=BaseFasterTrainer,
+                                       lr=DEF_LR)
+
+

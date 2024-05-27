@@ -1,85 +1,160 @@
+import copy
 import os
-import random
+import shutil
 import warnings
-from typing import Tuple, Type, Optional, Dict, Any
+from typing import Tuple, Type, Optional, List
+
 import lightning as lgn
-import torch
+import numpy as np
 import optuna
 
-from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, DEF_LR)
+from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, OPTUNA_JOURNAL_FILENAME, HTUNER_CONFIG_FILE)
 from src.data_processing.data_handling import ImagesRecipesDataModule
-from src.lightning.lgn_trainers import TrainerInterface, BaseFasterTrainer, OptunaTrainer
+from src.lightning.lgn_trainers import TrainerInterface, OptunaTrainer
 from src.models.dummy import DummyModel
-from src.training.commons import ExpConfig, model_training, HGeneratorConfig, HTunerExpConfig, load_datamodule
-from src.training.utils import set_torch_constants
 from src.start_optuna import start_optuna
+from src.training.commons import ExpConfig, model_training, HGeneratorConfig, HTunerExpConfig, load_datamodule, \
+    init_optuna_storage
+from src.training.utils import set_torch_constants, extract_name_trial_dir
 
 
 def make_htuning_exp(
         experiment_name: str,
+        hgen_config: HGeneratorConfig,
         experiment_dir: str | None = None,
         max_epochs: int = 20,
         batch_size: Optional[int] = DEF_BATCH_SIZE,
         debug: bool = False,
         **config_kwargs
-) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """Function that creates an experiment with hyperparameters tuning with the given configuration and run it.
     If the experiment is resumable, it will resume the last trial.
 
     Note: Other configuration parameters must be passed as keyword arguments, by following the design pattern
     of the ExpConfig class.
     """
+    warnings.filterwarnings("ignore", "Checkpoint directory .*. exists and is not empty.")
+    warnings.filterwarnings("ignore", "ExperimentalWarning: JournalStorage is experimental "
+                                      "(supported from v3.1.0). The interface can change in the future.")
+    if experiment_dir is None:
+        experiment_dir = EXPERIMENTS_PATH
+
+    if not debug:
+        optuna.logging.set_verbosity(optuna.logging.ERROR)
+
+    set_torch_constants()
 
     save_dir, to_resume = _setup_or_resume_dir(experiment_dir, experiment_name)
-    # if to_resume:
-    #     return _resume_exp(str(os.path.join(save_dir, "checkpoints", "last.ckpt")))
+    if to_resume:
+        return _resume_exp(save_dir)
 
     exp_config = HTunerExpConfig(**config_kwargs)
     _assert_lgn_model_trainer_compatibility(exp_config.model["lgn_model_type"], exp_config.trainer["type"])
     exp_config.update_config(tr_save_dir=save_dir, tr_debug=debug, tr_max_epochs=max_epochs, batch_size=batch_size,
                              ht_save_dir=os.path.dirname(save_dir))
-    return _run_new_exp(exp_config)
+    return _run_new_exp(exp_config, hgen_config)
 
 
-def _setup_or_resume_dir(experiment_dir: str | os.PathLike, experiment_name: str | os.PathLike
+def _setup_or_resume_dir(experiment_dir: str | os.PathLike, experiment_name: str | os.PathLike,
+                         clear_inconsistent_state: bool = True
                          ) -> Tuple[str | os.PathLike, bool]:
-    """
-    Function that search if a resumable experiment is present or create a new one-shot experiment directory,
-    returning the path of the last trial directory and a boolean that indicates if the experiment is resumable.
-    """
-
     if not os.path.exists(os.path.join(experiment_dir, experiment_name)):
         os.makedirs(os.path.join(experiment_dir, experiment_name))
-        return os.path.join(experiment_dir, experiment_name, f"trial_0"), False
+        return os.path.join(experiment_dir, experiment_name), False
 
-    last_trial = _find_last_trial(experiment_dir, experiment_name)
-    if last_trial == -1:  # No trials found
-        return os.path.join(experiment_dir, experiment_name, f"trial_0"), False
+    if not os.path.exists(os.path.join(experiment_dir, OPTUNA_JOURNAL_FILENAME)):
+        if clear_inconsistent_state:
+            shutil.rmtree(os.path.join(experiment_dir, experiment_name))
+            os.makedirs(os.path.join(experiment_dir, experiment_name))
+            return os.path.join(experiment_dir, experiment_name), False
+        else:
+            raise ValueError("Inconsistent state: experiment directory exists but no journal file found.")
 
-    last_trial_path = os.path.join(experiment_dir, experiment_name, f"trial_{last_trial}")
-    if os.path.exists(os.path.join(last_trial_path, "checkpoints", "last.ckpt")):
-        return last_trial_path, True
+    storage = init_optuna_storage(os.path.join(experiment_dir, OPTUNA_JOURNAL_FILENAME))
+    studies = optuna.get_all_study_names(storage)
+    return os.path.join(experiment_dir, experiment_name), experiment_name in studies
 
-    last_trial_path = os.path.join(experiment_dir, experiment_name, f"trial_{last_trial + 1}")
-    return last_trial_path, False
+def _restore_study(study_name: str, storage: optuna.storages.BaseStorage,
+                   states_error: List[optuna.trial.TrialState], **study_kwargs
+                   ) -> Tuple[optuna.study.Study, int]:
+    """Function that uses an existing study to create a new one with the valid trials already saved, and the
+    invalid ones re-enqueued."""
+    old_study = optuna.load_study(study_name=study_name, storage=storage)
+    old_trials = old_study.get_trials(deepcopy=True)
+    optuna.delete_study(study_name=study_name, storage=storage)
+
+    new_study = optuna.create_study(study_name=study_name, storage=storage, **study_kwargs)
+    trials_completed = 0
+    for trial in old_trials:
+        if trial.state in states_error:
+            new_study.enqueue_trial(trial.params)
+        else:
+            new_study.add_trial(trial)
+            trials_completed += 1
+
+    return new_study, trials_completed
 
 
-def _find_last_trial(experiment_dir: str | os.PathLike, experiment_name: str | os.PathLike) -> int:
-    """Function that search for trials in experiment_dir/experiment_name and return the last trial number"""
-    exp_sub_files = os.listdir(os.path.join(experiment_dir, experiment_name))
-    exp_vers = [file_name for file_name in exp_sub_files if "trial" in file_name]
-    return len(exp_vers) - 1
+
+
+def _resume_exp(save_dir: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.LightningModule]:
+    """Function that resumes the experiment from the given checkpoint path."""
+
+    exp_config = HTunerExpConfig.load_from_file(os.path.join(save_dir, HTUNER_CONFIG_FILE))
+    debug = exp_config.trainer['debug']
+
+    exp_dir, exp_name, _ = extract_name_trial_dir(os.path.join(save_dir, "_"))
+    storage = init_optuna_storage(os.path.join(exp_dir, "journal.log"))
+
+    htuner_config = exp_config.htuner
+    sampler = htuner_config["sampler"]()
+    pruner = htuner_config["pruner"]()
+
+    study = optuna.load_study(study_name=exp_name, storage=storage, sampler=sampler, pruner=pruner)
+    if len(study.trials) == 0:
+        raise ValueError("No trials found in the study.")
+
+    exp_gen_config = HGeneratorConfig(**study.trials[0].distributions)
+    data_module = load_datamodule(exp_config)
+    exp_config.drop("lb")
+
+    study, trials_completed = _restore_study(
+        exp_name, storage,[optuna.trial.TrialState.FAIL, optuna.trial.TrialState.RUNNING],
+        sampler=sampler, pruner=pruner)
+
+    if debug:
+        print("Resuming Optimization...")
+
+    study.optimize(
+        lambda trial: _objective_wrapper(trial, exp_config, data_module, exp_gen_config, check_for_resume=True),
+        n_trials=htuner_config["n_trials"] - trials_completed
+    )
+
+    return save_best_trial(study, exp_config.trainer["save_dir"], exp_config=exp_config)
+
+
+def _prepare_trial_dir(trial_path: str | os.PathLike, check_for_resume: bool) -> str | os.PathLike | None:
+    if os.path.exists(trial_path) and os.path.exists(os.path.join(trial_path, "checkpoints", "last.ckpt")):
+        if check_for_resume:
+            return os.path.join(trial_path, "checkpoints", "last.ckpt")
+        else:
+            shutil.rmtree(trial_path)
+
+    if not os.path.exists(trial_path):
+        os.mkdir(trial_path)
+    return None
 
 
 def _assert_lgn_model_trainer_compatibility(model: Type[lgn.LightningModule], trainer: Type[TrainerInterface]):
     """Function that asserts if the model and the trainer are compatible with the training function."""
-    if not issubclass(model, OptunaTrainer):
+    if not issubclass(trainer, OptunaTrainer):
         raise ValueError(f"Model must be a subclass of OptunaTrainer, got {model}")
 
 
-def _run_new_exp(exp_config: HTunerExpConfig) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+def _run_new_exp(exp_config: HTunerExpConfig, exp_gen_config: HGeneratorConfig
+                 ) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """Function that runs a new experiment with the given configuration."""
-    set_torch_constants()
+
     debug = exp_config.trainer['debug']
 
     # Load the dataset
@@ -87,59 +162,89 @@ def _run_new_exp(exp_config: HTunerExpConfig) -> Tuple[Type[lgn.Trainer], Type[l
     exp_config.update_config(dm_label_encoder=data_module.label_encoder.to_config(),
                              num_classes=data_module.get_num_classes())
 
+    # Save the configuration to file
+    exp_config.save_to_file(os.path.join(exp_config.trainer["save_dir"], HTUNER_CONFIG_FILE))
+    exp_config.drop("lb")  # From this point is useless to carry the label encoder in the config
+
     htuner_config = exp_config.htuner
     sampler = htuner_config["sampler"]()
     pruner = htuner_config["pruner"]()
+    direction = htuner_config["direction"]
 
-    storage_type = htuner_config["storage"]
-    if storage_type == optuna.storages.JournalStorage:
-        log_file_path = os.path.join(htuner_config["save_path"], "journal.log")
-        lock_file = optuna.storages.JournalFileOpenLock(log_file_path)
-        storage = storage_type(file_path=log_file_path, lock_obj=lock_file)
-    else:
-        raise ValueError(f"Storage type {storage_type} not yet supported.")
-
-    study_name = os.path.basename(exp_config.trainer["save_dir"]) # TODO: sistemare in base al save_dir che teroricamente sarà senza il trial folder
-    study = optuna.create_study(sampler=sampler, direction="minimize", study_name=study_name,
+    exp_dir, exp_name, _ = extract_name_trial_dir(os.path.join(exp_config.trainer["save_dir"], "_"))
+    storage = init_optuna_storage(os.path.join(exp_dir, "journal.log"))
+    study = optuna.create_study(sampler=sampler, direction=direction, study_name=exp_name,
                                 storage=storage, pruner=pruner)
 
     if debug:
-        start_optuna()
         print("Starting Optimization...")
 
-    study.optimize(lambda trial: objective_wrapper(exp_config, data_module, trial, htuner_config["hparam_gen"]),
-                   n_trials=htuner_config["n_trials"])
+    study.optimize(
+        lambda trial: _objective_wrapper(trial, exp_config, data_module, exp_gen_config, check_for_resume=False),
+        n_trials=htuner_config["n_trials"]
+    )
 
-    return study.best_trial # TODO: guardare cos'è e cercare di ritornare il modello addestrato
+    return save_best_trial(study, exp_config.trainer["save_dir"], exp_config=exp_config)
 
 
-def objective_wrapper(exp_config: ExpConfig, data_module: ImagesRecipesDataModule,
-                      trial: optuna.Trial, hparam_gen_config: HGeneratorConfig) -> float:  # todo vedere per il resume
+def save_best_trial(study: optuna.study.Study, save_dir: str | os.PathLike, exp_config: Optional[HTunerExpConfig],
+                    ) -> Tuple[TrainerInterface, lgn.LightningModule]:
+    best_trial_path_in = os.path.join(save_dir, f"trial_{study.best_trial.number}")
+    best_trial_path_out = os.path.join(save_dir, "trial_best")
+    shutil.copytree(best_trial_path_in, best_trial_path_out)
+
+    if exp_config is None:
+        exp_config = HTunerExpConfig.load_from_file(
+            file_path=os.path.join(best_trial_path_out, HTUNER_CONFIG_FILE))  # Questa parte andrà solo dopo il resume
+
+    trainer = exp_config.trainer["type"].load_from_config(exp_config.trainer, trial=study.best_trial)
+    model = exp_config.model["lgn_model_type"].load_from_config(exp_config.model)
+
+    model = model.load_weights_from_checkpoint(os.path.join(best_trial_path_out, "best_model.ckpt"))
+    return trainer, model
+
+
+def _objective_wrapper(trial: optuna.Trial, exp_config: ExpConfig, data_module: ImagesRecipesDataModule,
+                       hparam_gen_config: HGeneratorConfig, check_for_resume: bool = False
+                       ) -> float:
+    trial_config = copy.deepcopy(exp_config)
+
     # generate the variable hyperparameters
     hparams = hparam_gen_config.generate_hparams_on_trial(trial)
+    variable_hparams_names = [key for key, value in hparam_gen_config.model.items() if value is not None]
+
+    trial_path = os.path.join(trial_config.trainer["save_dir"], f"trial_{trial.number}")
+    resume_path = _prepare_trial_dir(trial_path, check_for_resume)
 
     # Update the configuration with the generated hyperparameters and the trial
-    exp_config.update_config(**hparams, tr_trial=trial)
+    trial_config.update_config(**hparams, tr_trial=trial, tr_save_dir=trial_path)
 
     # Run the experiment
-    trainer, model = model_training(exp_config, data_module)
-    ris = trainer.logged_metrics
+    trainer, model = model_training(trial_config, data_module, ckpt_path=resume_path,
+                                    lgn_model_kwargs={"hparams_to_register": variable_hparams_names})
+    ckpt_callback = trainer.checkpoint_callback
+    if ckpt_callback is None:
+        raise ValueError("Checkpoint callback not found in the trainer.")
+    ris = ckpt_callback.best_model_score
 
-    return ris["val_loss"].item()
-
-
-def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
-    """Function that resumes the experiment from the given checkpoint path."""
-    set_torch_constants()
-    warnings.filterwarnings("ignore", "Checkpoint directory .*. exists and is not empty.")
-    checkpoint_data: Dict[str, Any] = torch.load(ckpt_path)
-    return model_training(ExpConfig.load_from_ckpt_data(checkpoint_data), ckpt_path=ckpt_path)
+    return ris.item() if ris is not None else np.nan
 
 
 if __name__ == "__main__":
     exp_dir, exp_name = os.path.join(EXPERIMENTS_PATH, "dummy_htuning"), "dummy_experiment"
-    exp_name = f"{exp_name}_{random.randint(0, 100)}"
+    debug = True
+    # random_int = random.randint(0, 100)
+    random_int = 69
+    exp_name = f"{exp_name}_{random_int}"
     print(exp_name)
 
-    make_htuning_exp(exp_name, experiment_dir=exp_dir, max_epochs=5, batch_size=256, debug=True,
-                     torch_model_type=DummyModel, dm_category="mexican", tr_type=BaseFasterTrainer, lr=DEF_LR)
+    if debug:
+        start_optuna(os.path.join(exp_dir, "journal.log"))
+
+    hgen_config = HGeneratorConfig(
+        hp_lr=(lambda trial: trial.suggest_float("lr", 1e-5, 1e-1, log=True)),
+    )
+
+    make_htuning_exp(exp_name, hgen_config, experiment_dir=exp_dir, max_epochs=3, debug=debug,
+                     torch_model_type=DummyModel, tr_type=OptunaTrainer, dm_category="mexican", hp_lr=None,
+                     tr_limit_train_batches=25, ht_n_trials=3)

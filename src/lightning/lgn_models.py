@@ -1,4 +1,4 @@
-from typing import Any, Tuple, Dict
+from typing import Any, Tuple, Dict, Optional
 import lightning as lgn
 from lightning.pytorch.utilities.types import OptimizerLRScheduler
 import torch
@@ -8,7 +8,8 @@ from src.training.utils import register_hparams, multi_label_accuracy, str_to_cl
 
 
 class BaseLGNM(lgn.LightningModule):
-    def __init__(self, model, lr, batch_size, optimizer, loss_fn, accuracy_fn, model_name=None):
+    def __init__(self, model, lr, batch_size, optimizer, loss_fn, accuracy_fn, model_name=None,
+                 hparams_to_register=None):
         super().__init__()
         self._model = model
         self._lr = lr
@@ -22,12 +23,16 @@ class BaseLGNM(lgn.LightningModule):
         self.torch_model_type = type(self._model)
         self.model_name = model_name
 
-        register_hparams(
-            self, ["lr", "batch_size", {"optimizer": self.optimizer}, {"loss_fn": self.loss_fn},
-                   {"lgn_model_type": self.__class__}, {"torch_model_type": self.torch_model_type},
-                   {"accuracy_fn": self.accuracy_fn}, {"input_shape": self.input_shape},
-                   {"num_classes": self.num_classes}] + (["model_name"] if model_name is not None else [])
-        )
+        hparams = ([{"lr": self._lr}, {"batch_size": self._batch_size}, {"optimizer": self.optimizer},
+                   {"loss_fn": self.loss_fn}, {"lgn_model_type": self.__class__},
+                   {"torch_model_type": self.torch_model_type}, {"accuracy_fn": self.accuracy_fn},
+                   {"input_shape": self.input_shape}, {"num_classes": self.num_classes}]
+                   + (["model_name"] if model_name is not None else []))
+
+        if hparams_to_register is not None:
+            hparams = [hparam for hparam in hparams if list(hparam.keys())[0] in hparams_to_register]
+
+        register_hparams(self, hparams)
 
         self.loss_fn = loss_fn()  # After registering the loss_fn, we need to instantiate it
 
@@ -85,18 +90,22 @@ class BaseLGNM(lgn.LightningModule):
         self.hparams.batch_size = batch_size
 
     @classmethod
-    def load_from_config(cls, config: Dict[str, Any]) -> "BaseLGNM":
+    def load_from_config(cls, config: Dict[str, Any], torch_model_kwargs: Optional[Dict[str, Any]] = None,
+                         lgn_model_kwargs: Optional[Dict[str, Any]] = None) -> "BaseLGNM":
+        if torch_model_kwargs is None:
+            torch_model_kwargs = {}
+        if lgn_model_kwargs is None:
+            lgn_model_kwargs = {}
+
         input_shape, num_classes = tuple(config['input_shape']), config['num_classes']
         batch_size, lr = config['batch_size'], config['lr']
         torch_model_type = config['torch_model_type']
         loss_fn, accuracy_fn = config['loss_fn'], config['accuracy_fn']
         optimizer, model_name = config['optimizer'], config.get('model_name', None)
 
-        torch_model = torch_model_type(input_shape, num_classes)
-        lgn_model = cls(torch_model, lr, batch_size, optimizer, loss_fn, accuracy_fn, model_name)
+        torch_model = torch_model_type(input_shape, num_classes, **torch_model_kwargs)
+        lgn_model = cls(torch_model, lr, batch_size, optimizer, loss_fn, accuracy_fn, model_name, **lgn_model_kwargs)
         return lgn_model
 
-
-class AdvancedLGNM(BaseLGNM):  # For more advanced models (for hparams fine tuning)
-    def __init__(self, model, lr, batch_size, optimizer, loss_fn, accuracy_fn, model_name=None):
-        super().__init__(model, lr, batch_size, optimizer, loss_fn, accuracy_fn, model_name)
+    def load_weights_from_checkpoint(self, checkpoint_path: str):
+        self.load_state_dict(torch.load(checkpoint_path)['state_dict'])

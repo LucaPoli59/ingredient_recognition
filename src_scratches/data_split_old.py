@@ -66,4 +66,3 @@ json.dump(full_r_train, open(os.path.join(RECIPES_PATH, "train.json"), "w"))
 json.dump(full_r_val, open(os.path.join(RECIPES_PATH, "val.json"), "w"))
 json.dump(full_r_test, open(os.path.join(RECIPES_PATH, "test.json"), "w"))
 
-# todo: alcune immagini e metadata non sono presenti nel dataset delle ricette

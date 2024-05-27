@@ -9,6 +9,7 @@ from src.training.utils import encode_config, decode_config, enc_config_to_yaml
 
 class CSVLoggerQuiet(CSVLogger):
     """Simple wrapper for lighting CSVLogger. This is useful when multiple loggers use the same directory"""
+
     def __init__(self, *args, **kwargs):
         warnings.filterwarnings(
             "ignore",
@@ -19,12 +20,14 @@ class CSVLoggerQuiet(CSVLogger):
 
 class CSVLoggerEncode(CSVLoggerQuiet):
     """Simple wrapper for lighting CSVLogger that encodes the hyperparameters in a more readable way"""
+
     def log_hyperparams(self, params: Dict[str, Any]) -> None:
         super().log_hyperparams(enc_config_to_yaml(encode_config(params)))
 
 
 class FullModelCheckpoint(callbacks.ModelCheckpoint):
     """Custom ModelCheckpoint that saves also some information about the data used and trainer configuration"""
+
     def on_save_checkpoint(
             self, trainer: "lgn.pytorch.Trainer", pl_module: "lgn.pytorch.LightningModule", checkpoint: Dict[str, Any]
     ) -> None:
@@ -38,7 +41,22 @@ class FullModelCheckpoint(callbacks.ModelCheckpoint):
         trainer.hparams = decode_config(checkpoint["trainer_hyper_parameters"])
 
 
+class LightModelCheckpoint(callbacks.ModelCheckpoint):
+    def __init__(self, *args, fields_to_skip: Optional[list[str]] = None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if fields_to_skip is None:
+            fields_to_skip = ["datamodule_hyper_parameters", "trainer_hyper_parameters", "hyper_parameters"]
+        self.fields_to_skip = fields_to_skip
+
+    def on_save_checkpoint(
+            self, trainer: "lgn.pytorch.Trainer", pl_module: "lgn.pytorch.LightningModule", checkpoint: Dict[str, Any]
+    ) -> None:
+        for field in self.fields_to_skip:
+            checkpoint.pop(field, None)
+
+
 class TensorBoardEncodeLogger(TensorBoardLogger):
     """Custom TensorBoardLogger when saving the hyperparameters it encodes them in a more readable way"""
+
     def log_hyperparams(self, params: Dict[str, Any], metrics: Optional[Dict[str, Any]] = None) -> None:
         super().log_hyperparams(enc_config_to_yaml(encode_config(params)), metrics)

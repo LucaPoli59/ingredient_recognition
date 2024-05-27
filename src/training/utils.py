@@ -42,6 +42,7 @@ def register_hparams(elem: lgn.LightningModule | lgn.LightningDataModule,
         elem.save_hyperparameters(param_dict, logger=log)
 
 
+
 def encode_config(config: Dict[str, Any]) -> Dict[str, Tuple[str, str | Dict]]:
     """Function that encodes the config dictionary, converting the values to a tuple of the type and the str value"""
     new_config = {}

@@ -172,7 +172,7 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
             v2.ToDtype(torch.float32, scale=True)
         ])
 
-    def prepare_data(self):
+    def prepare_data(self): # todo: fare il sistema che salva i risultati in un file, in modo che non vengano ricalcolati ogni volta (e che si possano rimuovere volendo dal checkpointing)
         """Prepares the data for the datasets by processing the images and recipes data."""
         for stage in ['train', 'val', 'test', 'predict']:
             res = images_recipes_processing(self._images_dir[stage], self._recipes_files[stage], self.category,
@@ -214,7 +214,7 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
         return len(self.label_encoder.classes) + 1
 
     @classmethod
-    def load_from_config(cls, config: Dict[str, any], image_size: Tuple[int, int], batch_size: int
+    def load_from_config(cls, config: Dict[str, any], image_size: Tuple[int, int], batch_size: int, **kwargs
                          ) -> 'ImagesRecipesDataModule':
         image_dir_path, recipe_dir_path = config['global_images_dir'], config['recipes_dir']
         category, recipe_feature_label = config['category'], config['recipe_feature_label']
@@ -225,7 +225,7 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
         label_encoder = le_type.load_from_config(config['label_encoder'])
         return cls(global_images_dir=image_dir_path, recipes_dir=recipe_dir_path, category=category,
                    image_size=image_size, batch_size=batch_size, recipe_feature_label=recipe_feature_label,
-                   num_workers=num_workers, label_encoder=label_encoder)
+                   num_workers=num_workers, label_encoder=label_encoder, **kwargs)
 
 
 def images_recipes_processing(

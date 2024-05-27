@@ -31,6 +31,9 @@ DEF_UNKNOWN_TOKEN: str = '<UNK>'
 DEF_BATCH_SIZE = 128
 DEF_LR = 1e-3
 DISABLE_RESUME = False
+OPTUNA_JOURNAL_FILENAME = 'journal.log'
+DEF_N_TRIALS = 20
+HTUNER_CONFIG_FILE = 'hparam_config.json'
 
 # matplotlib.style.use('ggplot')
 matplotlib.rcParams['figure.figsize'] = (5, 5)

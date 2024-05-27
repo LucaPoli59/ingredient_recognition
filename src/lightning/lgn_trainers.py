@@ -2,8 +2,10 @@ import os
 import random
 from abc import ABC, abstractmethod
 from typing import Optional, List, Tuple, Dict, Any, Type
-
+import copy
+import numpy as np
 import optuna
+from lightning.pytorch.callbacks import Checkpoint
 from typing_extensions import Never
 
 import lightning as lgn
@@ -14,9 +16,11 @@ from lightning.pytorch.profilers import SimpleProfiler, AdvancedProfiler
 
 from optuna_integration import PyTorchLightningPruningCallback
 
+from src.lightning.lgn_models import BaseLGNM
 from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH
 from src.training.utils import extract_name_trial_dir
-from src.lightning.custom_callbacks import FullModelCheckpoint, TensorBoardEncodeLogger, CSVLoggerEncode
+from src.lightning.custom_callbacks import (FullModelCheckpoint, LightModelCheckpoint, TensorBoardEncodeLogger,
+                                            CSVLoggerEncode)
 
 
 class TrainerInterface(ABC, lgn.Trainer):
@@ -81,8 +85,7 @@ class TrainerInterface(ABC, lgn.Trainer):
         return None
 
     def _get_callbacks(self) -> List[callbacks.Callback] | List[Never]:
-        chkp_callback = self._get_chkp_callback()
-        return [] if chkp_callback is None else [chkp_callback]
+        return [] if self._chkp_callback is None else [self._chkp_callback]
 
     def _get_profiler(self) -> Optional[SimpleProfiler | AdvancedProfiler]:
         return None
@@ -103,24 +106,22 @@ class TrainerInterface(ABC, lgn.Trainer):
             self._max_epochs ** (1 / 2) - 4)  # Con questa formula si ottiene un numero di validazioni di circa 20
 
     @property
-    def model_checkpoint_callback(self) -> callbacks.ModelCheckpoint:
-        return self._chkp_callback
+    def checkpoint_callback(self) -> Optional[FullModelCheckpoint]:
+        return super().checkpoint_callback
 
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], **kwargs) -> "TrainerInterface":
         debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
-        return cls(max_epochs=max_epochs, save_dir=save_dir, debug=False, **kwargs)  # todo: debug=debug
+        return cls(max_epochs=max_epochs, save_dir=save_dir, debug=debug, **kwargs)
 
     def fit(self, model, train_dataloaders=None, val_dataloaders=None, datamodule=None,
-            ckpt_path=None) -> Type[lgn.LightningModule]:
+            ckpt_path=None) -> None:
         """Slightingly overrided fit method that return the best model (in this case the last one)"""
         super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
                     datamodule=datamodule, ckpt_path=ckpt_path)
 
         for file in os.listdir(EXPERIMENTS_TRASH_PATH):
             os.remove(os.path.join(EXPERIMENTS_TRASH_PATH, file))
-
-        return model
 
 
 class LiteTrainer(TrainerInterface):
@@ -153,18 +154,26 @@ class BaseTrainer(TrainerInterface):
             free = not os.path.exists(path)
         return path
 
-    def _get_chkp_callback(self, save_freq: int = 1, save_top_k: int = 5) -> callbacks.ModelCheckpoint:
+    @property
+    def checkpoint_callback(self) -> FullModelCheckpoint:
+        chkpt = self.checkpoint_callbacks[0]
+        if not isinstance(chkpt, FullModelCheckpoint):
+            raise ValueError("Checkpoint callback is not a FullModelCheckpoint")
+        return chkpt
+
+    def _get_chkp_callback(self, save_freq: int = 1, save_top_k: int = 5, save_all: bool = True
+                           ) -> callbacks.ModelCheckpoint:
         return FullModelCheckpoint(  # Only checkpoint saved since is needed at the end
             dirpath=os.path.join(self._save_dir, "checkpoints"), every_n_epochs=save_freq, save_top_k=save_top_k,
-            monitor="val_loss", mode="min", save_last=True, save_weights_only=False,
+            monitor="val_loss", mode="min", save_last=True, save_weights_only=not save_all,
             filename="epoch={epoch}-vloss={val_loss:.3f}"
         )
 
     def _get_callbacks(self) -> List[callbacks.Callback]:
-        return [
+        return super()._get_callbacks() + [
             callbacks.RichProgressBar(leave=True, theme=RichProgressBarTheme(metrics_format=".5e")),
             callbacks.Timer(),
-        ] + super()._get_callbacks()
+        ]
 
     def _get_loggers(self) -> List[Logger]:
         exp_dir, exp_name, trial = extract_name_trial_dir(self._save_dir)
@@ -176,8 +185,8 @@ class BaseTrainer(TrainerInterface):
     def _get_profiler(self) -> SimpleProfiler:
         return SimpleProfiler(dirpath=self._save_dir, filename="profiler")
 
-    def fit(self, model, train_dataloaders=None, val_dataloaders=None, datamodule=None,
-            ckpt_path=None) -> Type[lgn.LightningModule] | None:
+    def fit(self, model: BaseLGNM, train_dataloaders=None, val_dataloaders=None, datamodule=None,
+            ckpt_path=None) -> lgn.LightningModule:
         """Slightingly overrided fit method that return the best model"""
         try:
             super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
@@ -185,27 +194,23 @@ class BaseTrainer(TrainerInterface):
         except (Exception, KeyboardInterrupt) as e:
             raise e
         else:
-            if self.interrupted:  # TODO valutare se lanciare l'eccezione o no
+            if self.interrupted:
                 raise KeyboardInterrupt("Training interrupted by user")
             # Find the best model and load it, otherwise leave the last one
-            best_model_path = self._chkp_callback.best_model_path
-            if (not self._debug and best_model_path is not None and best_model_path != ""
-                    and os.path.exists(best_model_path)):
-                if self._chkp_callback.save_weights_only:
-                    # Retrieve hparams.yaml file
-                    hparams_path = os.path.join(self._save_dir, "hparams.yaml")
-                else:
-                    hparams_path = None
-
-                best_model = model.load_from_checkpoint(best_model_path, hparams_file=hparams_path)  # TODO: controllare perchè il loading non va
-            else:
+            ckpt_c = self.checkpoint_callback
+            best_model_path = ckpt_c.best_model_path if ckpt_c is not None else None
+            # IF the path exist and is not the last one
+            if (self._debug or best_model_path is None or best_model_path == ""
+                    or not os.path.exists(best_model_path) or ckpt_c.best_model_score is None
+                    or ckpt_c.best_model_score.item() == ckpt_c.current_score.item()):
+                # if the best model path is not correct we take the last one
                 best_model_path = os.path.join(self._save_dir, "checkpoints", "last.ckpt")
-                best_model = model
 
+            model.load_weights_from_checkpoint(best_model_path)
             os.rename(best_model_path, os.path.join(self._save_dir, "best_model.ckpt"))
             if os.path.exists(os.path.join(self._save_dir, "checkpoints", "last.ckpt")):
                 os.remove(os.path.join(self._save_dir, "checkpoints", "last.ckpt"))
-            return best_model
+            return model
 
 
 class BaseFasterTrainer(BaseTrainer):
@@ -219,17 +224,21 @@ class BaseFasterTrainer(BaseTrainer):
         return 5
 
     def _get_callbacks(self) -> List[callbacks.Callback]:
-        return [callbacks.EarlyStopping(monitor="val_loss", mode="min", verbose=self._debug,
-                                        patience=int(self._max_epochs * 1 / self._check_val_freq / 4))
-                ] + super()._get_callbacks()
+        return super()._get_callbacks() + [
+            callbacks.EarlyStopping(monitor="val_loss", mode="min", verbose=self._debug,
+                                    patience=int(self._max_epochs * 1 / self._check_val_freq / 4))
+        ]
 
 
 class OptunaTrainer(BaseTrainer):
     def __init__(self, max_epochs: int, trial: optuna.Trial, save_dir: str | os.PathLike | None = None,
-                 debug: bool = False, limit_train_batches: int = 1, **kwargs):
+                 debug: bool = False, limit_train_batches: float = 1.0, **kwargs):
         self.trial = trial
         super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, limit_train_batches=limit_train_batches,
                          **kwargs)
+
+    def _get_def_save_dir(self) -> Optional[str | os.PathLike]:
+        raise ValueError("OptunaTrainer must have a save_dir (that depends on the trial)")
 
     def _get_precision(self) -> str:
         return '16-mixed'
@@ -237,13 +246,37 @@ class OptunaTrainer(BaseTrainer):
     def _get_grad_accum(self) -> int:
         return 5
 
-    def _get_chkp_callback(self, save_freq: int = 2, save_top_k: int = 2) -> callbacks.ModelCheckpoint:
-        return super()._get_chkp_callback(save_freq=save_freq, save_top_k=save_top_k)
+    def _get_chkp_callback(self, save_freq: int = 2, save_top_k: int = 2, save_all: bool = True
+                           ) -> callbacks.ModelCheckpoint:
+        return LightModelCheckpoint(  # Only checkpoint saved since is needed at the end
+            dirpath=os.path.join(self._save_dir, "checkpoints"), every_n_epochs=save_freq, save_top_k=save_top_k,
+            monitor="val_loss", mode="min", save_last=True, save_weights_only=not save_all,
+            filename="epoch={epoch}-vloss={val_loss:.3f}"
+        )
 
     def _get_callbacks(self) -> List[callbacks.Callback]:
-        return [PyTorchLightningPruningCallback(self.trial, monitor="val_loss")] + super()._get_callbacks()
+        return super()._get_callbacks() + [PyTorchLightningPruningCallback(self.trial, monitor="val_loss")]
+
+    def _get_profiler(self) -> None:
+        return None
+
+    @property
+    def checkpoint_callback(self) -> LightModelCheckpoint:
+        chkpt = self.checkpoint_callbacks[0]
+        if not isinstance(chkpt, LightModelCheckpoint):
+            raise ValueError("Checkpoint callback is not a LightModelCheckpoint")
+        return chkpt
 
     @classmethod
-    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> "TrainerInterface":
+    def load_from_config(cls, config: Dict[str, Any], trial: Optional[optuna.Trial] = None, **kwargs
+                         ) -> "OptunaTrainer":
         limit_train_batches = config.get("limit_train_batches", 1)  # Use get for backward compatibility
-        return super().load_from_config(config, limit_train_batches=limit_train_batches, **kwargs)
+        debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
+
+        if trial is None:
+            trial = config.get('trial', None)
+        if trial is None:
+            raise ValueError("Trail not found in config")
+
+        return cls(max_epochs=max_epochs, trial=trial, save_dir=save_dir, debug=debug,
+                   limit_train_batches=limit_train_batches, **kwargs)

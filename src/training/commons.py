@@ -1,15 +1,17 @@
+import json
+
 import lightning as lgn
 import torch
 import os
-from typing import Dict, Any, Optional, Type, Tuple, List, TypeVar
+from typing import Dict, Any, Optional, Type, Tuple, List
 import optuna
 
-from settings.config import IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE, DEF_LR, DEF_UNKNOWN_TOKEN
+from settings.config import IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE, DEF_LR, DEF_UNKNOWN_TOKEN, DEF_N_TRIALS
 from src.models.dummy import DummyModel
 from src.lightning.lgn_models import BaseLGNM
-from src.lightning.lgn_trainers import BaseTrainer
+from src.lightning.lgn_trainers import BaseTrainer, TrainerInterface
 from src.data_processing.data_handling import ImagesRecipesDataModule
-from src.training.utils import multi_label_accuracy, decode_config
+from src.training.utils import multi_label_accuracy, decode_config, encode_config
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
 
 DEF_EXP_CONFIG = {
@@ -84,8 +86,10 @@ class ExpConfig:
         if config_map is None:
             config_map = DEF_EXP_CONFIG_MAP
         self._config_map = config_map
+        self._inverted_map = self._invert_config_map()
 
-        self.update_config(**update_kwargs)
+        if update_kwargs:
+            self.update_config(**update_kwargs)
 
     def update_config(self, **kwargs) -> None:
         """Function that takes some kwargs to update the default configuration.
@@ -130,14 +134,14 @@ class ExpConfig:
 
     @property
     def label_encoder(self) -> Dict[str, Any]:
-        return self._config["datamodule_hyper_parameters"]["label_encoder"]
+        return self.datamodule["label_encoder"] if "label_encoder" in self.datamodule else {}
 
     @property
     def config(self) -> Dict[str, Any]:
         return self._config
 
     @staticmethod
-    def idx(obj_dict, key: str | List[str]):
+    def idx(obj_dict: Dict[str | List[str], Any], key: str | List[str]) -> Any:
         if isinstance(key, str):
             return obj_dict[key]
 
@@ -146,9 +150,36 @@ class ExpConfig:
             ris = ris[k]
         return ris
 
+    @staticmethod
+    def idx_set(obj_dict: Dict[str | List[str], Any], key: str | List[str], value: Any) -> Dict[str | List[str], Any]:
+        if isinstance(key, str):
+            obj_dict[key] = value
+        else:
+            dest = obj_dict
+            for k in key[:-1]:
+                dest = dest[k]
+
+            dest[key[-1]] = value
+
+        return obj_dict
+
     @property
     def config_map(self) -> Dict[str, str | List[str]]:
         return self._config_map
+
+    def _invert_config_map(self) -> Dict[str, str]:
+        inverted_map = {}
+        for key, value in self._config_map.items():
+            if isinstance(value, str) and value not in inverted_map:  # we use only direct mapping
+                inverted_map[value] = key
+        return inverted_map
+
+    def _convert_dict_to_update_kwargs(self, input_dict: Dict[str, Any]) -> Dict[str, Any]:
+        output_dict = {}
+        for class_key in (class_key for class_key in input_dict if class_key in self._config.keys()):
+            for item_key, value in input_dict[class_key].items():
+                output_dict[f"{self._inverted_map[class_key]}_{item_key}"] = value
+        return output_dict
 
     @classmethod
     def load_from_ckpt_data(cls, ckpt_data: Dict[str, Any], loaded_config: Optional[Dict[str, Any]] = None
@@ -156,15 +187,38 @@ class ExpConfig:
         if loaded_config is None:
             loaded_config = {}
 
-        config = {k: decode_config(v) for k, v in ckpt_data.items() if k in
-                  ['trainer_hyper_parameters', 'hyper_parameters', 'datamodule_hyper_parameters']}
-        config_edit = (
-                {f"tr_{key}": value for key, value in config['trainer_hyper_parameters'].items()} |
-                {f"dm_{key}": value for key, value in config['datamodule_hyper_parameters'].items()} |
-                {key: value for key, value in config['hyper_parameters'].items()} |
-                loaded_config
-        )
-        return cls(**config_edit)
+        exp_config = cls(**loaded_config)
+
+        config = {k: decode_config(v) for k, v in ckpt_data.items() if k in exp_config._config.keys()}
+        config_edit = exp_config._convert_dict_to_update_kwargs(config)
+        exp_config.update_config(**config_edit)
+        return exp_config
+
+    def save_to_file(self, file_path: str | os.PathLike) -> None:
+        with open(file_path, "w") as file:
+            json.dump(encode_config(self._config), file, indent=4)
+
+    @classmethod
+    def load_from_file(cls, file_path: str | os.PathLike) -> "ExpConfig":
+        with open(file_path, "r") as file:
+            config = decode_config(json.load(file))
+
+            exp_config = cls()
+            exp_config.update_config(**exp_config._convert_dict_to_update_kwargs(config))
+            return exp_config
+
+    def _drop(self, key: str):
+        if key not in self._config_map:
+            raise KeyError(f"Key {key} not found in the configuration map.")
+        self.idx_set(self._config, self._config_map[key], {})
+
+    def drop(self, keys: List[str] | str):
+        """Drop a category from the configuration (useful when it's not needed anymore)."""
+        if isinstance(keys, str):
+            keys = [keys]
+        for key in keys:
+            self._drop(key)
+
 
     def __str__(self):
         return str(self._config)
@@ -174,33 +228,29 @@ class HTunerExpConfig(ExpConfig):
     """
     Class that provide a dictionary with the configuration of the experiment for the hyperparameters tuning.
     """
+
     def __init__(self, def_configs: Optional[Dict[str, Any]] = None,
                  config_map: Optional[Dict[str, List[str] | str]] = None,
                  **update_kwargs):
-        super().__init__(def_configs, config_map, **update_kwargs)
+        super().__init__(def_configs, config_map)
         self._config = self._config | {
             "htuner_hyper_parameters": {
                 "sampler": optuna.samplers.RandomSampler,
                 "pruner": optuna.pruners.NopPruner,
-                "storage": optuna.storages.JournalStorage,
-                "save_path": None,
-                "n_trials": 10,
+                "direction": "minimize",  # "minimize" or "maximize
+                "n_trials": DEF_N_TRIALS,
             }
         }
         self._config_map = self._config_map | {
             "ht": "htuner_hyper_parameters",
             "htuner": "htuner_hyper_parameters"
         }
+        self._inverted_map = self._invert_config_map()
+        self.update_config(**update_kwargs)
 
     @property
     def htuner(self) -> Dict[str, Any]:
         return self._config["htuner_hyper_parameters"]
-
-    def load_from_ckpt_data(cls, ckpt_data: Dict[str, Any], loaded_config: Optional[Dict[str, Any]] = None
-                            ) -> "HTunerExpConfig":
-        pass # TODO: Fare quando si è capito come funziona il loading di Optuna, anche se gli htuner hyperparameters
-        #  non dovrebbero essere salvati nei checkpoint delle trials
-
 
 class HGeneratorConfig(ExpConfig):
     """
@@ -211,12 +261,10 @@ class HGeneratorConfig(ExpConfig):
         def_configs = {
             "hyper_parameters": {
                 "input_shape": None,
-                "batch_size": None,
-                "lr": None,  # expected: (lambda trial: trial.suggest_float("lr", 1e-5, 1e-1))
+                "lr": None,  # expected: (lambda trial: trial.suggest_float("lr", 1e-5, 1e-1)) or optuna.distributions
                 "optimizer": None,
             },
             "trainer_hyper_parameters": {
-                "max_epochs": None,
             },
             "datamodule_hyper_parameters": {
             },
@@ -231,16 +279,24 @@ class HGeneratorConfig(ExpConfig):
             "lb": "label_encoder",
         }
 
+        for key, value in update_kwargs.items():
+            if isinstance(value, optuna.distributions.BaseDistribution):
+                update_kwargs[key] = self._convert_dist2lambda(key, value)
+
         super().__init__(def_configs, config_map, **update_kwargs)
 
-        self._inverted_map = self._invert_config_map()
-
-    def _invert_config_map(self) -> Dict[str, str | List[str]]:
-        inverted_map = {}
-        for key, value in self._config_map.items():
-            if key not in inverted_map:
-                inverted_map[value] = key
-        return inverted_map
+    @staticmethod
+    def _convert_dist2lambda(dist_name: str, dist: optuna.distributions.BaseDistribution):
+        dist = json.loads(optuna.distributions.distribution_to_json(dist))
+        match dist['name']:
+            case 'CategoricalDistribution':
+                return lambda trial: trial.suggest_categorical(dist_name, **dist['attributes'])
+            case 'IntDistribution':
+                return lambda trial: trial.suggest_int(dist_name, **dist['attributes'])
+            case 'FloatDistribution':
+                return lambda trial: trial.suggest_float(dist_name, **dist['attributes'])
+            case _:
+                raise ValueError(f"Invalid distribution type: {dist['name']}")
 
     def generate_hparams_on_trial(self, trial: optuna.trial) -> Dict[str, Any]:
         """
@@ -248,25 +304,31 @@ class HGeneratorConfig(ExpConfig):
         """
 
         res_dict = {}
-        for group_key in self._config[1:]:
+        for group_key in self._config:
             target_group_key = self._inverted_map[group_key]
             for key, gen in ((key, value) for key, value in self._config[group_key].items() if value is not None):
                 res_dict[f"{target_group_key}_{key}"] = gen(trial)
         return res_dict
 
-    def update_config(self, **kwargs):
-        raise PermissionError("This method is not allowed for this class")
 
-
-def model_training(exp_config: ExpConfig, data_module: Optional[Type[lgn.LightningDataModule]] = None,
-                   ckpt_path: Optional[str | os.PathLike] = None
-                   ) -> Tuple[Type[lgn.Trainer], Type[lgn.LightningModule]]:
+def model_training(exp_config: ExpConfig, data_module: Optional[lgn.LightningDataModule] = None,
+                   ckpt_path: Optional[str | os.PathLike] = None, torch_model_kwargs: Optional[Dict[str, Any]] = None,
+                   lgn_model_kwargs: Optional[Dict[str, Any]] = None, trainer_kwargs: Optional[Dict[str, Any]] = None
+                   ) -> Tuple[TrainerInterface, lgn.LightningModule]:
     """General function that trains a model with the given configuration."""
+    if torch_model_kwargs is None:
+        torch_model_kwargs = {}
+    if lgn_model_kwargs is None:
+        lgn_model_kwargs = {}
+    if trainer_kwargs is None:
+        trainer_kwargs = {}
+
     resuming = ckpt_path is None
     model_config, trainer_config = exp_config.model, exp_config.trainer
 
-    lgn_model = model_config['lgn_model_type'].load_from_config(model_config)
-    trainer = trainer_config['type'].load_from_config(trainer_config)
+    lgn_model = model_config['lgn_model_type'].load_from_config(model_config, lgn_model_kwargs=lgn_model_kwargs,
+                                                                torch_model_kwargs=torch_model_kwargs)
+    trainer = trainer_config['type'].load_from_config(trainer_config, **trainer_kwargs)
 
     if data_module is None:
         dm_config = exp_config.datamodule
@@ -286,7 +348,9 @@ def model_training(exp_config: ExpConfig, data_module: Optional[Type[lgn.Lightni
 
     if debug:
         print("Training completed")
+
     return trainer, trained_model
+
 
 def load_datamodule(exp_config: ExpConfig | HTunerExpConfig) -> ImagesRecipesDataModule:
     dm_config = exp_config.datamodule
@@ -296,3 +360,10 @@ def load_datamodule(exp_config: ExpConfig | HTunerExpConfig) -> ImagesRecipesDat
     data_module.prepare_data()
     data_module.setup()
     return data_module
+
+
+def init_optuna_storage(path: os.PathLike | str) -> optuna.storages.JournalStorage:
+    lock_file = optuna.storages.JournalFileOpenLock(path)
+    return optuna.storages.JournalStorage(
+        optuna.storages.JournalFileStorage(file_path=path, lock_obj=lock_file)
+    )

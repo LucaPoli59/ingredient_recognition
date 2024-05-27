@@ -1,5 +1,5 @@
 import shutil
-
+import joblib
 import lightning as lgn
 import torch
 import optuna
@@ -57,11 +57,15 @@ def objective(config, data_module, trial: optuna.Trial):
         enable_progress_bar=True,
     )
 
+    trainer.save_checkpoint(os.path.join(save_dir, "checkpoints", "init.ckpt"))
+
     print(F"Trial {trial.number} started with lr={lr}")
     trainer.fit(
         model=lgn_model,
         datamodule=data_module
     )
+
+    trainer.checkpoint_callback
 
     ris = trainer.logged_metrics
     print(f"Result of the trial: {ris}")
@@ -73,6 +77,8 @@ if __name__ == "__main__":
     INPUT_SHAPE = (224, 224)
     CATEGORY = None
     model_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "model_logs")
+    log_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "journal.log")
+    study_name = "dummy_study"
     if os.path.exists(model_path):
         shutil.rmtree(model_path)
     os.mkdir(model_path)
@@ -117,15 +123,16 @@ if __name__ == "__main__":
     sampler = optuna.samplers.RandomSampler()
     pruner = optuna.pruners.NopPruner()
 
-    log_file_path = os.path.join(model_path, "journal.log")
-    lock_file = optuna.storages.JournalFileOpenLock(log_file_path)
+    lock_file = optuna.storages.JournalFileOpenLock(log_path)
     storage = optuna.storages.JournalStorage(
-        optuna.storages.JournalFileStorage(file_path=log_file_path, lock_obj=lock_file),
+        optuna.storages.JournalFileStorage(file_path=log_path, lock_obj=lock_file),
         # failed_trial_callback=
     )
 
-    study = optuna.create_study(sampler=sampler, direction="minimize", study_name="dummy_study",
+    study = optuna.create_study(sampler=sampler, direction="minimize", study_name=study_name,
                                 storage=storage, pruner=pruner)
+
+    joblib.dump(study, os.path.join(model_path, "study.pkl"))
 
     start_optuna()
     study.optimize(lambda trial: objective(config, data_module, trial), n_trials=10)
