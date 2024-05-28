@@ -1,40 +1,13 @@
 import logging
 import os
-from typing import Tuple, Dict, Any, List, Set, Optional
+from typing import Tuple, Dict, Any, Optional
 
 import optuna
 import torch
 import lightning as lgn
 
+from src.commons.exp_config import ExpConfig, HTunerExpConfig
 from src.data_processing.data_handling import ImagesRecipesDataModule
-from src.lightning.lgn_trainers import TrainerInterface
-from src.training.exp_config import ExpConfig, HTunerExpConfig
-
-
-def extract_name_trial_dir(save_dir: str) -> Tuple[str, str, str]:
-    """Function that extract the path of the experiments directory, the experiment name and the experiment trial
-    from the save_dir.  Example: save_dir = "experiments/food_classification/mexican/1"
-    -> ("experiments/food_classification", "mexican", "1")"""
-    exp_vers, exp_name = save_dir, os.path.dirname(save_dir)
-    exps_dir = os.path.dirname(exp_name)
-    return exps_dir, os.path.split(exp_name)[1], os.path.split(exp_vers)[1]
-
-
-def register_hparams(elem: lgn.LightningModule | lgn.LightningDataModule,
-                     hparams: List[Dict[str, Any] | str] | Set[Dict[str, Any] | str], log=True) -> None:
-    """Function that register the hyperparameters to the elem """
-    param_list = []
-    param_dicts = []
-    for param in hparams:
-        if isinstance(param, dict):
-            param_dicts.append(param)
-        else:
-            param_list.append(param)
-
-    if len(param_list) > 0:
-        elem.save_hyperparameters(*param_list, logger=log)
-    for param_dict in param_dicts:
-        elem.save_hyperparameters(param_dict, logger=log)
 
 
 def set_torch_constants():
@@ -46,7 +19,7 @@ def set_torch_constants():
 def model_training(exp_config: ExpConfig, data_module: Optional[lgn.LightningDataModule] = None,
                    ckpt_path: Optional[str | os.PathLike] = None, torch_model_kwargs: Optional[Dict[str, Any]] = None,
                    lgn_model_kwargs: Optional[Dict[str, Any]] = None, trainer_kwargs: Optional[Dict[str, Any]] = None
-                   ) -> Tuple[TrainerInterface, lgn.LightningModule]:
+                   ) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """General function that trains a model with the given configuration."""
     if torch_model_kwargs is None:
         torch_model_kwargs = {}
@@ -83,6 +56,13 @@ def model_training(exp_config: ExpConfig, data_module: Optional[lgn.LightningDat
     return trainer, trained_model
 
 
+def init_optuna_storage(path: os.PathLike | str) -> optuna.storages.JournalStorage:
+    lock_file = optuna.storages.JournalFileOpenLock(path)
+    return optuna.storages.JournalStorage(
+        optuna.storages.JournalFileStorage(file_path=path, lock_obj=lock_file)
+    )
+
+
 def load_datamodule(exp_config: ExpConfig | HTunerExpConfig) -> ImagesRecipesDataModule:
     dm_config = exp_config.datamodule
     dm_type = dm_config["type"]
@@ -91,10 +71,3 @@ def load_datamodule(exp_config: ExpConfig | HTunerExpConfig) -> ImagesRecipesDat
     data_module.prepare_data()
     data_module.setup()
     return data_module
-
-
-def init_optuna_storage(path: os.PathLike | str) -> optuna.storages.JournalStorage:
-    lock_file = optuna.storages.JournalFileOpenLock(path)
-    return optuna.storages.JournalStorage(
-        optuna.storages.JournalFileStorage(file_path=path, lock_obj=lock_file)
-    )

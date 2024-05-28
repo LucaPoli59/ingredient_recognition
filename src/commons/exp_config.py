@@ -1,18 +1,29 @@
 import json
-
 import torch
 import os
 from typing import Dict, Any, Optional, List
+from torchmetrics import Accuracy, HammingDistance, Precision, Recall
 import optuna
 
+from src.commons.config_enc_dec import encode_config, decode_config
 from settings.config import IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE, DEF_LR, DEF_UNKNOWN_TOKEN, DEF_N_TRIALS
 from src.models.dummy import DummyModel
 from src.lightning.lgn_models import BaseLGNM
 from src.lightning.lgn_trainers import BaseTrainer
-from src.data_processing.data_handling import ImagesRecipesDataModule
-from src.training.metrics import multi_label_accuracy
-from src.training._config_enc_dec import encode_config, decode_config
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
+from src.data_processing.data_handling import ImagesRecipesDataModule
+from src.commons.utils import MyMLAccuracy
+
+DEF_METRIC_INIT_P = {
+    "task": "multilabel",
+    "num_labels": None,
+    "average": "macro",
+}
+DEF_METRIC_LOGGING_P = {
+    "prog_bar": True,
+    "on_epoch": True,
+    "on_step": False,
+}
 
 DEF_EXP_CONFIG = {
     "hyper_parameters": {
@@ -23,9 +34,17 @@ DEF_EXP_CONFIG = {
         "batch_size": DEF_BATCH_SIZE,
         "lr": DEF_LR,
         "loss_fn": torch.nn.BCEWithLogitsLoss,
-        "accuracy_fn": multi_label_accuracy,
         "optimizer": torch.optim.Adam,
-        "model_name": None
+        "model_name": None,
+        "metrics": {
+            "acc_t": {'obj': Accuracy, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
+            "precision": {'obj': Precision, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
+            "recall": {'obj': Recall, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
+            "hamming": {'obj': HammingDistance,
+                        'init_params': {'num_labels': None, 'average': DEF_METRIC_INIT_P['average']},
+                        'logging_params': DEF_METRIC_LOGGING_P},
+            "acc_my" : {'obj': MyMLAccuracy, 'init_params': {}, 'logging_params': DEF_METRIC_LOGGING_P}
+        }
     },
     "trainer_hyper_parameters": {
         "type": BaseTrainer,
@@ -51,6 +70,7 @@ DEF_EXP_CONFIG = {
     }
 }
 
+
 DEF_EXP_CONFIG_MAP = {  # map the prefix to the configuration section
     "tr": "trainer_hyper_parameters",
     "trainer": "trainer_hyper_parameters",
@@ -59,7 +79,9 @@ DEF_EXP_CONFIG_MAP = {  # map the prefix to the configuration section
     "data_module": "datamodule_hyper_parameters",
     "lb": ("datamodule_hyper_parameters", "label_encoder"),
     "label_encoder": ("datamodule_hyper_parameters", "label_encoder"),
-    "hp": "hyper_parameters"
+    "hp": "hyper_parameters",
+    "metrics": ("hyper_parameters", "metrics"),
+    "me": ("hyper_parameters", "metrics"),
 }
 
 

@@ -8,14 +8,16 @@ import lightning as lgn
 import numpy as np
 import optuna
 
+from src.dashboards.start_optuna import start_optuna
+
+from src.commons.utils import extract_name_trial_dir
 from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, OPTUNA_JOURNAL_FILENAME, HTUNER_CONFIG_FILE)
+from src.training._commons import set_torch_constants, model_training, init_optuna_storage, load_datamodule
+
 from src.data_processing.data_handling import ImagesRecipesDataModule
 from src.lightning.lgn_trainers import TrainerInterface, OptunaTrainer
 from src.models.dummy import DummyModel
-from src.start_optuna import start_optuna
-from src.training.exp_config import ExpConfig, HGeneratorConfig, HTunerExpConfig
-from src.training.commons import set_torch_constants, extract_name_trial_dir, model_training, load_datamodule, \
-    init_optuna_storage
+from src.commons.exp_config import ExpConfig, HGeneratorConfig, HTunerExpConfig
 
 
 def make_htuning_exp(

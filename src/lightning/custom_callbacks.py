@@ -2,9 +2,9 @@ import warnings
 from typing import Dict, Any, Optional
 import lightning as lgn
 from lightning.pytorch import callbacks
-
 from lightning.pytorch.loggers import CSVLogger, TensorBoardLogger
-from src.training._config_enc_dec import encode_config, enc_config_to_yaml, decode_config
+
+from src.commons.config_enc_dec import encode_config, enc_config_to_yaml, decode_config
 
 
 class CSVLoggerQuiet(CSVLogger):

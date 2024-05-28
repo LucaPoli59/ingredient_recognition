@@ -1,26 +1,23 @@
 import os
 import random
 from abc import ABC, abstractmethod
-from typing import Optional, List, Tuple, Dict, Any, Type
-import copy
-import numpy as np
+from typing import Optional, List, Tuple, Dict, Any
 import optuna
-from lightning.pytorch.callbacks import Checkpoint
 from typing_extensions import Never
-
 import lightning as lgn
 from lightning.pytorch import callbacks
 from lightning.pytorch.callbacks.progress.rich_progress import RichProgressBarTheme
 from lightning.pytorch.loggers import Logger
 from lightning.pytorch.profilers import SimpleProfiler, AdvancedProfiler
-
 from optuna_integration import PyTorchLightningPruningCallback
 
-from src.lightning.lgn_models import BaseLGNM
 from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH
-from src.training.commons import extract_name_trial_dir
+from src.commons.utils import extract_name_trial_dir
+
+from src.lightning.lgn_models import BaseLGNM
 from src.lightning.custom_callbacks import (FullModelCheckpoint, LightModelCheckpoint, TensorBoardEncodeLogger,
                                             CSVLoggerEncode)
+
 
 
 class TrainerInterface(ABC, lgn.Trainer):

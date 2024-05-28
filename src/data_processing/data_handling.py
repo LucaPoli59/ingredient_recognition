@@ -12,10 +12,11 @@ import os
 from sklearn.base import TransformerMixin as anySkTransformer
 from typing import Tuple, List, Dict
 
-from settings.commons import tokenize_category
-from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
-from src.training.commons import register_hparams
 from settings.config import FOOD_CATEGORIES, IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE
+from settings.commons import tokenize_category
+from src.commons.utils import register_hparams
+
+from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
 
 
 class _ImagesRecipesDataset(Dataset):
@@ -265,3 +266,5 @@ def _compute_images_paths(images_dir: os.path, category: str) -> List[pathlib.Pa
         return list(pathlib.Path(images_dir).glob('*.jpg'))
     else:
         return list(pathlib.Path(images_dir).glob(f'*{tokenize_category(category)}.jpg'))
+
+

@@ -5,11 +5,12 @@ import lightning as lgn
 import torch
 
 from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, DEF_LR)
+from src.training._commons import set_torch_constants, model_training, load_datamodule
+
 from src.lightning.lgn_models import BaseLGNM
 from src.lightning.lgn_trainers import TrainerInterface, BaseFasterTrainer
 from src.models.dummy import DummyModel
-from src.training.exp_config import ExpConfig
-from src.training.commons import set_torch_constants, model_training, load_datamodule
+from src.commons.exp_config import ExpConfig
 
 
 def make_one_shot_exp(

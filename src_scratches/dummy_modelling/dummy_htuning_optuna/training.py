@@ -3,14 +3,13 @@ import joblib
 import lightning as lgn
 import torch
 import optuna
-from optuna_dashboard import run_server
 from optuna_integration import PyTorchLightningPruningCallback
 
 from settings.config import *
 from src.data_processing.data_handling import ImagesRecipesDataModule
 from src_scratches.dummy_modelling.dummy_htuning_optuna.LightningModel import LightningModel
 from src_scratches.dummy_modelling.dummy_htuning_optuna.model import DummyModel
-from src.start_optuna import start_optuna
+from src.dashboards.start_optuna import start_optuna
 
 def multi_label_accuracy(y_pred: torch.Tensor, y_true: torch.Tensor) -> float | torch.Tensor:
     y_pred = torch.round(torch.sigmoid(y_pred))  # get the binary predictions

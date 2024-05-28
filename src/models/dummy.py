@@ -1,9 +1,5 @@
 import torch
 from torch import nn
-import logging
-from typing import Any, Tuple
-import lightning as lgn
-from lightning.pytorch.utilities.types import OptimizerLRScheduler
 
 
 class DummyBlock(torch.nn.Module):
