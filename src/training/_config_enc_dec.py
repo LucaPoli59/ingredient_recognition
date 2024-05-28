@@ -1,46 +1,9 @@
+import importlib
+import inspect
 import json
-import logging
-import os
-from typing import Tuple, Dict, Any, List, Set
+from typing import Dict, Any, Tuple
 
 import numpy as np
-import torch
-import lightning as lgn
-import inspect
-import importlib
-
-
-def extract_name_trial_dir(save_dir: str) -> Tuple[str, str, str]:
-    """Function that extract the path of the experiments directory, the experiment name and the experiment trial
-    from the save_dir.  Example: save_dir = "experiments/food_classification/mexican/1"
-    -> ("experiments/food_classification", "mexican", "1")"""
-    exp_vers, exp_name = save_dir, os.path.dirname(save_dir)
-    exps_dir = os.path.dirname(exp_name)
-    return exps_dir, os.path.split(exp_name)[1], os.path.split(exp_vers)[1]
-
-
-def multi_label_accuracy(y_pred: torch.Tensor, y_true: torch.Tensor) -> float | torch.Tensor:
-    y_pred = torch.round(torch.sigmoid(y_pred))  # get the binary predictions
-    # num of hits / num of classes mean over the batch
-    return torch.mean((y_pred == y_true).sum(dim=1) / y_pred.size(1))
-
-
-def register_hparams(elem: lgn.LightningModule | lgn.LightningDataModule,
-                     hparams: List[Dict[str, Any] | str] | Set[Dict[str, Any] | str], log=True) -> None:
-    """Function that register the hyperparameters to the elem """
-    param_list = []
-    param_dicts = []
-    for param in hparams:
-        if isinstance(param, dict):
-            param_dicts.append(param)
-        else:
-            param_list.append(param)
-
-    if len(param_list) > 0:
-        elem.save_hyperparameters(*param_list, logger=log)
-    for param_dict in param_dicts:
-        elem.save_hyperparameters(param_dict, logger=log)
-
 
 
 def encode_config(config: Dict[str, Any]) -> Dict[str, Tuple[str, str | Dict]]:
@@ -109,9 +72,3 @@ def str_to_func(func_str):
     module_name, func_name = func_str.rsplit(".", 1)
     module = importlib.import_module(module_name)
     return getattr(module, func_name)
-
-
-def set_torch_constants():
-    logging.getLogger("lightning.pytorch").setLevel(logging.ERROR)  # to remove warning messages
-    torch.set_float32_matmul_precision('medium')  # For better performance with cuda
-    torch.backends.cudnn.benchmark = True

@@ -2,9 +2,8 @@ from typing import Any, Tuple, Dict, Optional
 import lightning as lgn
 from lightning.pytorch.utilities.types import OptimizerLRScheduler
 import torch
-from ast import literal_eval
 
-from src.training.utils import register_hparams, multi_label_accuracy, str_to_class, func_to_str, str_to_func
+from src.training.commons import register_hparams
 
 
 class BaseLGNM(lgn.LightningModule):
@@ -97,6 +96,9 @@ class BaseLGNM(lgn.LightningModule):
         if lgn_model_kwargs is None:
             lgn_model_kwargs = {}
 
+        if not issubclass(config['lgn_model_type'], cls):
+            raise ValueError(f"Invalid model type. Expected {cls} but got {config['lgn_model_type']}")
+
         input_shape, num_classes = tuple(config['input_shape']), config['num_classes']
         batch_size, lr = config['batch_size'], config['lr']
         torch_model_type = config['torch_model_type']
@@ -109,3 +111,4 @@ class BaseLGNM(lgn.LightningModule):
 
     def load_weights_from_checkpoint(self, checkpoint_path: str):
         self.load_state_dict(torch.load(checkpoint_path)['state_dict'])
+

@@ -13,9 +13,9 @@ from src.data_processing.data_handling import ImagesRecipesDataModule
 from src.lightning.lgn_trainers import TrainerInterface, OptunaTrainer
 from src.models.dummy import DummyModel
 from src.start_optuna import start_optuna
-from src.training.commons import ExpConfig, model_training, HGeneratorConfig, HTunerExpConfig, load_datamodule, \
+from src.training.exp_config import ExpConfig, HGeneratorConfig, HTunerExpConfig
+from src.training.commons import set_torch_constants, extract_name_trial_dir, model_training, load_datamodule, \
     init_optuna_storage
-from src.training.utils import set_torch_constants, extract_name_trial_dir
 
 
 def make_htuning_exp(

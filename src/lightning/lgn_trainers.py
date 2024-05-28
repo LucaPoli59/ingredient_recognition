@@ -18,7 +18,7 @@ from optuna_integration import PyTorchLightningPruningCallback
 
 from src.lightning.lgn_models import BaseLGNM
 from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH
-from src.training.utils import extract_name_trial_dir
+from src.training.commons import extract_name_trial_dir
 from src.lightning.custom_callbacks import (FullModelCheckpoint, LightModelCheckpoint, TensorBoardEncodeLogger,
                                             CSVLoggerEncode)
 
@@ -172,7 +172,6 @@ class BaseTrainer(TrainerInterface):
     def _get_callbacks(self) -> List[callbacks.Callback]:
         return super()._get_callbacks() + [
             callbacks.RichProgressBar(leave=True, theme=RichProgressBarTheme(metrics_format=".5e")),
-            callbacks.Timer(),
         ]
 
     def _get_loggers(self) -> List[Logger]:

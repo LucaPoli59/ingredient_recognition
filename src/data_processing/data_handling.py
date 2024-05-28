@@ -14,7 +14,7 @@ from typing import Tuple, List, Dict
 
 from settings.commons import tokenize_category
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
-from src.training.utils import register_hparams, str_to_class
+from src.training.commons import register_hparams
 from settings.config import FOOD_CATEGORIES, IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE
 
 

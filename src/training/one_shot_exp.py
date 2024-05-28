@@ -8,8 +8,8 @@ from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, DEF_LR)
 from src.lightning.lgn_models import BaseLGNM
 from src.lightning.lgn_trainers import TrainerInterface, BaseFasterTrainer
 from src.models.dummy import DummyModel
-from src.training.commons import ExpConfig, model_training, load_datamodule
-from src.training.utils import set_torch_constants
+from src.training.exp_config import ExpConfig
+from src.training.commons import set_torch_constants, model_training, load_datamodule
 
 
 def make_one_shot_exp(
@@ -99,8 +99,8 @@ def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.Lightnin
 
 if __name__ == "__main__":
     exp_dir, exp_name = os.path.join(EXPERIMENTS_PATH, "dummy"), "dummy_experiment"
-    trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=5, batch_size=256, debug=True,
-                                       torch_model_type=DummyModel, dm_category="mexican", tr_type=BaseFasterTrainer,
+    trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=20, batch_size=128, debug=False,
+                                       torch_model_type=DummyModel, dm_category="all", tr_type=BaseFasterTrainer,
                                        lr=DEF_LR)
 
 

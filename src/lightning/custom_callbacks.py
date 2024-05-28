@@ -4,7 +4,7 @@ import lightning as lgn
 from lightning.pytorch import callbacks
 
 from lightning.pytorch.loggers import CSVLogger, TensorBoardLogger
-from src.training.utils import encode_config, decode_config, enc_config_to_yaml
+from src.training._config_enc_dec import encode_config, enc_config_to_yaml, decode_config
 
 
 class CSVLoggerQuiet(CSVLogger):
