@@ -19,7 +19,6 @@ from src.lightning.custom_callbacks import (FullModelCheckpoint, LightModelCheck
                                             CSVLoggerEncode)
 
 
-
 class TrainerInterface(ABC, lgn.Trainer):
     def __init__(self,
                  max_epochs: int,
@@ -109,7 +108,8 @@ class TrainerInterface(ABC, lgn.Trainer):
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], **kwargs) -> "TrainerInterface":
         debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
-        return cls(max_epochs=max_epochs, save_dir=save_dir, debug=debug, **kwargs)
+        log_every_n_steps = config['log_every_n_steps']
+        return cls(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps, **kwargs)
 
     def fit(self, model, train_dataloaders=None, val_dataloaders=None, datamodule=None,
             ckpt_path=None) -> None:

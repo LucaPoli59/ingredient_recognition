@@ -59,7 +59,7 @@ def model_training(exp_config: ExpConfig, data_module: Optional[lgn.LightningDat
 def init_optuna_storage(path: os.PathLike | str) -> optuna.storages.JournalStorage:
     lock_file = optuna.storages.JournalFileOpenLock(path)
     return optuna.storages.JournalStorage(
-        optuna.storages.JournalFileStorage(file_path=path, lock_obj=lock_file)
+        optuna.storages.JournalFileStorage(file_path=path, lock_type=lock_file)
     )
 
 

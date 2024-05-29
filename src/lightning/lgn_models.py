@@ -1,8 +1,8 @@
-from typing import Any, Dict, Optional, List, Type
+from typing import Any, Dict, Optional, List, Type, Tuple
 import lightning as lgn
 from lightning.pytorch.utilities.types import OptimizerLRScheduler
 import torch
-from torchmetrics import Metric
+from torchmetrics import Metric, MetricCollection
 import inspect
 
 from src.commons.utils import register_hparams
@@ -11,7 +11,8 @@ from src.commons.utils import register_hparams
 class BaseLGNM(lgn.LightningModule):
     def __init__(self, model: torch.nn.Module, lr: float, batch_size: int, optimizer: torch.nn.Module,
                  loss_fn: torch.nn.Module,
-                 metrics: Type[Metric] | Dict[str, Type[Metric] | Dict[str, Dict[str, Any] | Type[Metric]]],
+                 metrics: Optional[Type[Metric] | Dict[str, Type[Metric] | Dict[str, Dict[str, Any] | Type[Metric]]]
+                                   ] = None,
                  model_name: Optional[str] = None,
                  hparams_to_register: Optional[List[str]] = None):
         super().__init__()
@@ -19,7 +20,7 @@ class BaseLGNM(lgn.LightningModule):
         self._lr = lr
         self._batch_size = batch_size
         self.loss_fn = loss_fn  # loss class
-        self.metrics = self._parse_metrics(metrics)  # dict to metrics class pointer and their parameters
+        self.metrics_config = self._parse_metrics_config(metrics)  # dict to metrics class pointer and their parameters
         self.optimizer = optimizer  # Optimizer class
 
         self.input_shape = self._model.input_shape
@@ -29,7 +30,7 @@ class BaseLGNM(lgn.LightningModule):
 
         hparams = ([{"lr": self._lr}, {"batch_size": self._batch_size}, {"optimizer": self.optimizer},
                     {"loss_fn": self.loss_fn}, {"lgn_model_type": self.__class__},
-                    {"torch_model_type": self.torch_model_type}, {"metrics": self.metrics},
+                    {"torch_model_type": self.torch_model_type}, {"metrics": self.metrics_config},
                     {"input_shape": self.input_shape}, {"num_classes": self.num_classes}]
                    + (["model_name"] if model_name is not None else []))
 
@@ -39,24 +40,26 @@ class BaseLGNM(lgn.LightningModule):
         register_hparams(self, hparams)
 
         self.loss_fn = loss_fn()  # After registering the loss_fn, we need to instantiate it
-        for metric in self.metrics.values():
-            num_labels = metric['init_params'].get('num_labels', None)
-            metric['init_params']['num_labels'] = num_labels if num_labels is not None else self.num_classes
-            metric['obj']: Metric = metric['obj'](**metric['init_params'])
+        metrics = MetricCollection(self._init_metrics())  # Initialize the metrics
+        self.train_metrics = metrics.clone(prefix="train_")
+        self.val_metrics = metrics.clone(prefix="val_")
+        self.test_metrics = metrics.clone(prefix="test_")
 
     @staticmethod
-    def _parse_metrics(metrics_in) -> Dict[str, Dict[str, Type[Metric] | Dict[str, Any]]]:
+    def _parse_metrics_config(metrics_in) -> Dict[str, Dict[str, Type[Metric] | Dict[str, Any]]]:
+        if metrics_in is None:
+            return {}
         if inspect.isfunction(metrics_in):
             raise ValueError("Metrics must be a class, not a function")
         if inspect.isclass(metrics_in):
-            return {'metric': dict(obj=metrics_in, init_params={}, logging_params={})}
+            return {'metric': dict(type=metrics_in, init_params={}, logging_params={})}
         if isinstance(metrics_in, dict):
             for name, metric in metrics_in.items():
                 if inspect.isclass(metric):
-                    metrics_in[name] = dict(obj=metric, init_params={}, logging_params={})
+                    metrics_in[name] = dict(type=metric, init_params={}, logging_params={})
                 elif isinstance(metric, dict):
-                    if 'obj' not in metric:
-                        raise ValueError("Metrics must have the 'obj' key")
+                    if 'type' not in metric:
+                        raise ValueError("Metrics must have the 'type' key")
                     if 'init_params' not in metric:
                         metric['init_params'] = {}
                     if 'logging_params' not in metric:
@@ -65,6 +68,21 @@ class BaseLGNM(lgn.LightningModule):
                     raise ValueError("Metric type not recognized")
             return metrics_in
 
+    def _init_metrics(self) -> Dict[str, Metric]:
+        metrics = {}
+        for metric_name, metric_conf in self.metrics_config.items():
+            if 'num_labels' in metric_conf['init_params']:
+                num_labels = metric_conf['init_params']['num_labels']
+                metric_conf['init_params']['num_labels'] = num_labels if num_labels is not None else self.num_classes
+            metrics[metric_name] = metric_conf['type'](**metric_conf['init_params'])
+            # metrics[metric_name].persistent(True)
+        return metrics
+
+    def _log_metric_collections(self, metric_out, prefix):
+        for metric_name, metric in metric_out.items():
+            self.log(metric_name, metric, **self.metrics_config[metric_name.removeprefix(prefix)]['logging_params'])
+
+
     def forward(self, *args: Any, **kwargs: Any) -> Any:
         return self.model(*args, **kwargs)
 
@@ -72,39 +90,33 @@ class BaseLGNM(lgn.LightningModule):
         self.optimizer = self.optimizer(self.model.parameters(), lr=self.hparams.lr)
         return self.optimizer
 
-    def _base_step(self, batch) -> float:
+    def _base_step(self, batch, metrics) -> Tuple[float, Dict[str, torch.Tensor]]:
         X, y = batch
         y_pred = self.model(X)
         loss = self.loss_fn(y_pred, y)
+        metrics_out = metrics(y_pred, y)
 
-        for metric in self.metrics.values():
-            metric['obj'](y_pred, y)
-        return loss
+        return loss, metrics_out
 
     def training_step(self, batch, batch_idx):
-        loss = self._base_step(batch)
+        loss, metrics_out = self._base_step(batch, self.train_metrics)
 
         self.log("train_loss", loss, prog_bar=True, on_epoch=False, on_step=True)
-        for metric_name, metric in self.metrics.items():
-            self.log(f"train_{metric_name}", metric['obj'], **metric['logging_params'])
-
+        self._log_metric_collections(metrics_out, self.train_metrics.prefix)
         return loss
 
     def validation_step(self, batch, batch_idx):
-        loss = self._base_step(batch)
+        loss, metrics_out = self._base_step(batch, self.val_metrics)
 
         self.log("val_loss", loss, prog_bar=True, on_epoch=True, on_step=False)
-        for metric_name, metric in self.metrics.items():
-            self.log(f"val_{metric_name}", metric['obj'], **metric['logging_params'])
-
+        self._log_metric_collections(metrics_out, self.val_metrics.prefix)
         return loss
 
     def test_step(self, batch, batch_idx):
-        loss = self._base_step(batch)
-
+        loss, metrics_out = self._base_step(batch, self.test_metrics)
         self.log("test_loss", loss, prog_bar=True, on_epoch=True, on_step=False)
-        for metric_name, metric in self.metrics.items():
-            self.log(f"test_{metric_name}", metric['obj'], **metric['logging_params'])
+        self._log_metric_collections(metrics_out, self.test_metrics.prefix)
+        return loss
 
     @property
     def model(self):

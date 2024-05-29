@@ -17,10 +17,10 @@ from src.commons.utils import MyMLAccuracy
 DEF_METRIC_INIT_P = {
     "task": "multilabel",
     "num_labels": None,
-    "average": "macro",
+    "average": "weighted",
 }
 DEF_METRIC_LOGGING_P = {
-    "prog_bar": True,
+    "prog_bar": False,
     "on_epoch": True,
     "on_step": False,
 }
@@ -37,13 +37,11 @@ DEF_EXP_CONFIG = {
         "optimizer": torch.optim.Adam,
         "model_name": None,
         "metrics": {
-            "acc_t": {'obj': Accuracy, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
-            "precision": {'obj': Precision, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
-            "recall": {'obj': Recall, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
-            "hamming": {'obj': HammingDistance,
-                        'init_params': {'num_labels': None, 'average': DEF_METRIC_INIT_P['average']},
-                        'logging_params': DEF_METRIC_LOGGING_P},
-            "acc_my" : {'obj': MyMLAccuracy, 'init_params': {}, 'logging_params': DEF_METRIC_LOGGING_P}
+            "acc": {'type': Accuracy, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
+            "precision": {'type': Precision, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
+            "recall": {'type': Recall, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
+            "hamming": {'type': HammingDistance, 'init_params': DEF_METRIC_INIT_P,
+                        'logging_params': DEF_METRIC_LOGGING_P | {"prog_bar": True}},
         }
     },
     "trainer_hyper_parameters": {
@@ -52,6 +50,7 @@ DEF_EXP_CONFIG = {
         "max_epochs": None,
         "save_dir": None,
         "limit_train_batches": 1.0,
+        "log_every_n_steps": 50,
     },
     "datamodule_hyper_parameters": {  # in questo caso non serve
         "type": ImagesRecipesDataModule,

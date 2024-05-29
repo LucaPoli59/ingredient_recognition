@@ -20,18 +20,21 @@ def multi_label_accuracy(y_pred: torch.Tensor, y_true: torch.Tensor) -> float | 
 
 
 class MyMLAccuracy(Metric):
-    def __init__(self, **kwargs):
+    is_differentiable = False
+    higher_is_better = True
+    full_state_update = False
+
+    def __init__(self, are_digits: bool = True, **kwargs):
         super().__init__(**kwargs)
+        self.are_digits = are_digits
         self.add_state("correct", default=torch.tensor(0), dist_reduce_fx="sum")
         self.add_state("total", default=torch.tensor(0), dist_reduce_fx="sum")
 
     def update(self, preds: Tensor, target: Tensor) -> None:
-        preds, target = self._input_format(preds, target)
-
         if preds.shape != target.shape:
             raise ValueError("preds and target must have the same shape")
 
-        if preds[0] < 0:  # if the preds are digits
+        if self.are_digits:
             preds = pred_digits_to_values(preds)
 
         self.correct += torch.sum(preds == target)
@@ -65,5 +68,3 @@ def extract_name_trial_dir(save_dir: str) -> Tuple[str, str, str]:
     exp_vers, exp_name = save_dir, os.path.dirname(save_dir)
     exps_dir = os.path.dirname(exp_name)
     return exps_dir, os.path.split(exp_name)[1], os.path.split(exp_vers)[1]
-
-

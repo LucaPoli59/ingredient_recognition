@@ -102,6 +102,6 @@ if __name__ == "__main__":
     exp_dir, exp_name = os.path.join(EXPERIMENTS_PATH, "dummy"), "dummy_experiment"
     trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=20, batch_size=128, debug=False,
                                        torch_model_type=DummyModel, dm_category="all", tr_type=BaseFasterTrainer,
-                                       lr=DEF_LR)
+                                       lr=DEF_LR,  tr_log_every_n_steps=10)
 
 
