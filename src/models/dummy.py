@@ -10,6 +10,7 @@ class DummyBlock(torch.nn.Module):
             nn.Conv2d(output_dim, output_dim, 3, padding="same"), nn.ReLU(),
             nn.MaxPool2d(2, 2)
         )
+        self.conv_target_layer = self.block[4]
 
     def forward(self, x):
         return self.block(x)
@@ -33,11 +34,16 @@ class DummyModel(torch.nn.Module):
         self.num_classes = num_classes
         self.input_shape = input_shape
 
+        last_block = getattr(self, f"block_{self.num_blocks}")
+        self.conv_target_layer = last_block.conv_target_layer
+
         self.classifier = nn.Sequential(
             nn.Flatten(),
             nn.Linear((input_shape[0] // (2 ** self.num_blocks)) ** 2 * 64, 64), nn.ReLU(),
             nn.Linear(64, num_classes)
         )
+
+        self.classifier_target_layer = self.classifier[-1]
 
     def forward(self, x):
         return self.classifier(self.block_3(self.block_2(self.block_1(x))))

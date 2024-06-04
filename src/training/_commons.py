@@ -6,6 +6,7 @@ import optuna
 import torch
 import lightning as lgn
 
+from settings.config import OPTUNA_JOURNAL_PATH
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
 from src.data_processing.data_handling import ImagesRecipesDataModule
 
@@ -56,10 +57,12 @@ def model_training(exp_config: ExpConfig, data_module: Optional[lgn.LightningDat
     return trainer, trained_model
 
 
-def init_optuna_storage(path: os.PathLike | str) -> optuna.storages.JournalStorage:
+def init_optuna_storage(path: Optional[os.PathLike | str] = None) -> optuna.storages.JournalStorage:
+    if path is None:
+        path = OPTUNA_JOURNAL_PATH
     lock_file = optuna.storages.JournalFileOpenLock(path)
     return optuna.storages.JournalStorage(
-        optuna.storages.JournalFileStorage(file_path=path, lock_type=lock_file)
+        optuna.storages.JournalFileStorage(file_path=path, lock_obj=lock_file)
     )
 
 

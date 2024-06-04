@@ -18,6 +18,17 @@ def detokenize_category(token):
 def remove_token(token):
     return token.replace("____", "") if "____" in token else token
 
+def pad_array(array, pad_val=None, step=1, n_pads=1):
+    """Pads an array with a value (repeated for n_pads) every n steps"""
+    dim_multiplayer = (step + n_pads) / step
+    if not round(len(array) * dim_multiplayer, 3).is_integer():
+        raise ValueError(
+            f"The step and n_nones combination is not valid : {len(array) * dim_multiplayer} / step must be an integer.")
+    output = np.array([pad_val] * int(len(array) * dim_multiplayer))
+    for i in range(step):
+        output[i::step + n_pads] = array[i::step]
+    return output
+
 
 def show_image(img, cmap=None, title=None):
     fig, ax = plt.subplots()
@@ -27,7 +38,8 @@ def show_image(img, cmap=None, title=None):
     ax.axis('off')
     plt.show()
 
-
+def list_intersection(lst1, lst2):
+    return list(set(lst1).intersection(lst2))
 
 # External code for plotting images after transformations
 def torch_plot(imgs, row_title=None, **imshow_kwargs):

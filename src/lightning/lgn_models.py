@@ -6,6 +6,7 @@ from torchmetrics import Metric, MetricCollection
 import inspect
 
 from src.commons.utils import register_hparams
+from src.commons.visualizations import gradcam
 
 
 class BaseLGNM(lgn.LightningModule):
@@ -15,6 +16,21 @@ class BaseLGNM(lgn.LightningModule):
                                    ] = None,
                  model_name: Optional[str] = None,
                  hparams_to_register: Optional[List[str]] = None):
+        """
+        Initialize the BaseLGNM class
+        :param model: underlying model (torch model instance)
+        :param lr: learning rate
+        :param batch_size: batch size
+        :param optimizer: optimized to use (provided as a class)
+        :param loss_fn: loss function to use (provided as a class)
+        :param metrics: metrics to use (provided as a class or a dict with the name as key and as value a dict with
+                        the keys 'type' (metric class) and 'init_params' (dict) and 'logging_params' (dict))
+                        (by default is empty)
+
+                        (by default is the property gradcam_target_layer of the model)
+        :param model_name:
+        :param hparams_to_register:
+        """
         super().__init__()
         self._model = model
         self._lr = lr
@@ -27,6 +43,8 @@ class BaseLGNM(lgn.LightningModule):
         self.num_classes = self._model.num_classes
         self.torch_model_type = type(self._model)
         self.model_name = model_name
+
+        self.gradcam_target_layer = getattr(self._model, "gradcam_target_layer", None)
 
         hparams = ([{"lr": self._lr}, {"batch_size": self._batch_size}, {"optimizer": self.optimizer},
                     {"loss_fn": self.loss_fn}, {"lgn_model_type": self.__class__},
@@ -82,7 +100,6 @@ class BaseLGNM(lgn.LightningModule):
         for metric_name, metric in metric_out.items():
             self.log(metric_name, metric, **self.metrics_config[metric_name.removeprefix(prefix)]['logging_params'])
 
-
     def forward(self, *args: Any, **kwargs: Any) -> Any:
         return self.model(*args, **kwargs)
 
@@ -117,6 +134,13 @@ class BaseLGNM(lgn.LightningModule):
         self.log("test_loss", loss, prog_bar=True, on_epoch=True, on_step=False)
         self._log_metric_collections(metrics_out, self.test_metrics.prefix)
         return loss
+
+    def predict_step(self, batch, batch_idx) -> Any:
+        X, y = batch
+        if self.gradcam_target_layer is None:
+            return X, self.model(X), y
+        cam_imgs, cam_masks, targets, outputs = gradcam(self.model, self.gradcam_target_layer, X)
+        return X, outputs, y, cam_imgs, targets  # todo controlla se va bene
 
     @property
     def model(self):

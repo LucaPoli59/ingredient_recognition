@@ -10,7 +10,7 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 import os
 from sklearn.base import TransformerMixin as anySkTransformer
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Optional, Any
 
 from settings.config import FOOD_CATEGORIES, IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE
 from settings.commons import tokenize_category
@@ -45,6 +45,30 @@ class _ImagesRecipesDataset(Dataset):
 
         return image, torch.tensor(label, dtype=torch.float32)
 
+    def to_light_dataset(self, label_encoder: Optional[MultiLabelBinarizerRobust | anySkTransformer] = None
+                         ) -> 'LightImagesRecipesDataset':
+        label_data = self.label_data
+        if label_encoder is not None and label_encoder.fitted:
+            label_data = label_encoder.inverse_transform(label_data)
+            label_data = [label.tolist() for label in label_data if isinstance(label, ndarray)]
+        return LightImagesRecipesDataset(self.images_paths, label_data)
+
+
+class LightImagesRecipesDataset(_ImagesRecipesDataset):
+    def __init__(self, images_paths: List[pathlib.Path], label_data: ndarray):
+        super().__init__(images_paths, label_data, None)
+
+    def to_json(self) -> Dict[str, Any]:
+        return {"images_paths": [str(p) for p in self.images_paths], "label_data": self.label_data}
+
+    @classmethod
+    def from_json(cls, data: Dict[str, Any]) -> 'LightImagesRecipesDataset':
+        return cls([pathlib.Path(p) for p in data['images_paths']], data['label_data'])
+
+    def to_light_dataset(self, label_encoder: Optional[MultiLabelBinarizerRobust | anySkTransformer] = None
+                         ) -> 'LightImagesRecipesDataset':
+        return self
+
 
 class ImagesRecipesDataset(_ImagesRecipesDataset):
     """Dataset class wrapper for the base class _ImagesRecipesDataset.
@@ -70,6 +94,13 @@ class ImagesRecipesDataset(_ImagesRecipesDataset):
 
         super().__init__(images_paths, label_data, transform)
 
+
+def get_transform_plain(image_size: Tuple[int, int] = (224, 224)):
+    return v2.Compose([
+        v2.ToImage(),
+        v2.Resize(image_size),
+        v2.ToDtype(torch.float32, scale=True)
+    ])
 
 class ImagesRecipesDataModule(lgn.LightningDataModule):
     def __init__(
@@ -167,13 +198,10 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
         ])
 
     def _get_transform_plain(self):
-        return v2.Compose([
-            v2.ToImage(),
-            v2.Resize(self.image_size),
-            v2.ToDtype(torch.float32, scale=True)
-        ])
+        return get_transform_plain(self.image_size)
 
-    def prepare_data(self): # todo: fare il sistema che salva i risultati in un file, in modo che non vengano ricalcolati ogni volta (e che si possano rimuovere volendo dal checkpointing)
+    def prepare_data(
+            self):  # todo: fare il sistema che salva i risultati in un file, in modo che non vengano ricalcolati ogni volta (e che si possano rimuovere volendo dal checkpointing)
         """Prepares the data for the datasets by processing the images and recipes data."""
         for stage in ['train', 'val', 'test', 'predict']:
             res = images_recipes_processing(self._images_dir[stage], self._recipes_files[stage], self.category,
@@ -208,7 +236,7 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
                           pin_memory=True, persistent_workers=True)
 
     def predict_dataloader(self):
-        return DataLoader(self.predict_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers,
+        return DataLoader(self.predict_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers,
                           pin_memory=True, persistent_workers=True)
 
     def get_num_classes(self):
@@ -266,5 +294,3 @@ def _compute_images_paths(images_dir: os.path, category: str) -> List[pathlib.Pa
         return list(pathlib.Path(images_dir).glob('*.jpg'))
     else:
         return list(pathlib.Path(images_dir).glob(f'*{tokenize_category(category)}.jpg'))
-
-

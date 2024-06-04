@@ -42,7 +42,7 @@ DEF_EXP_CONFIG = {
             "recall": {'type': Recall, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
             "hamming": {'type': HammingDistance, 'init_params': DEF_METRIC_INIT_P,
                         'logging_params': DEF_METRIC_LOGGING_P | {"prog_bar": True}},
-        }
+        },
     },
     "trainer_hyper_parameters": {
         "type": BaseTrainer,
@@ -50,6 +50,7 @@ DEF_EXP_CONFIG = {
         "max_epochs": None,
         "save_dir": None,
         "limit_train_batches": 1.0,
+        "limit_predict_batches": 1,
         "log_every_n_steps": 50,
     },
     "datamodule_hyper_parameters": {  # in questo caso non serve

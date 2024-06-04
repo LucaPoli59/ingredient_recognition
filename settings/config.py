@@ -14,6 +14,11 @@ RAW_IMAGES_PATH = os.path.join(RAW_INPUT_PATH, 'images')
 RAW_RECIPES_PATH = os.path.join(RAW_INPUT_PATH, 'recipes')
 RAW_METADATA_PATH = os.path.join(RAW_INPUT_PATH, 'metadata')
 
+APP_DATA = os.path.join(DATA_PATH, 'app_data')
+BLANK_IMG_PATH = os.path.join(APP_DATA, 'blank.jpg')
+DASH_PATH = os.path.join(PROJECT_PATH, 'src', 'dashboards', 'dash')
+
+
 EXPERIMENTS_PATH = os.path.join(PROJECT_PATH, 'experiments')
 EXPERIMENTS_TRASH_PATH = os.path.join(EXPERIMENTS_PATH, '__trash__')
 
@@ -32,6 +37,7 @@ DEF_BATCH_SIZE = 128
 DEF_LR = 1e-3
 DISABLE_RESUME = False
 OPTUNA_JOURNAL_FILENAME = 'journal.log'
+OPTUNA_JOURNAL_PATH = os.path.join(EXPERIMENTS_PATH, OPTUNA_JOURNAL_FILENAME)
 DEF_N_TRIALS = 20
 HTUNER_CONFIG_FILE = 'hparam_config.json'
 

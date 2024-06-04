@@ -1,14 +1,20 @@
 import os
 import subprocess
-from settings.config import EXPERIMENTS_PATH
+import warnings
+from settings.config import OPTUNA_JOURNAL_PATH
+from src.dashboards._commons import OPTUNA_PORT
 
+def start_optuna(path: str | os.PathLike | None = None, new_console: bool = True) -> subprocess.Popen | None:
 
-def start_optuna(path: str | os.PathLike | None = None) -> subprocess.Popen | None:
     if path is None:
-        path = EXPERIMENTS_PATH
+        path = OPTUNA_JOURNAL_PATH
+    if new_console:
+        creationflags = subprocess.CREATE_NEW_CONSOLE
+    else:
+        creationflags = 0
 
     try:
-        process = subprocess.Popen(["optuna-dashboard", path], creationflags=subprocess.CREATE_NEW_CONSOLE)
+        process = subprocess.Popen(["optuna-dashboard", path, "--port", str(OPTUNA_PORT)], creationflags=creationflags)
     except FileNotFoundError:
         # Case of remote development
         print("Process started on remote, open dashboard manually")

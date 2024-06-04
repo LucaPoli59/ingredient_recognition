@@ -11,7 +11,8 @@ import optuna
 from src.dashboards.start_optuna import start_optuna
 
 from src.commons.utils import extract_name_trial_dir
-from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, OPTUNA_JOURNAL_FILENAME, HTUNER_CONFIG_FILE)
+from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, OPTUNA_JOURNAL_FILENAME, HTUNER_CONFIG_FILE,
+                             OPTUNA_JOURNAL_PATH)
 from src.training._commons import set_torch_constants, model_training, init_optuna_storage, load_datamodule
 
 from src.data_processing.data_handling import ImagesRecipesDataModule
@@ -19,6 +20,10 @@ from src.lightning.lgn_trainers import TrainerInterface, OptunaTrainer
 from src.models.dummy import DummyModel
 from src.commons.exp_config import ExpConfig, HGeneratorConfig, HTunerExpConfig
 
+
+def silence_optuna_warnings():
+    warnings.filterwarnings("ignore", "ExperimentalWarning: JournalStorage is experimental "
+                                      "(supported from v3.1.0). The interface can change in the future.")
 
 def make_htuning_exp(
         experiment_name: str,
@@ -36,8 +41,6 @@ def make_htuning_exp(
     of the ExpConfig class.
     """
     warnings.filterwarnings("ignore", "Checkpoint directory .*. exists and is not empty.")
-    warnings.filterwarnings("ignore", "ExperimentalWarning: JournalStorage is experimental "
-                                      "(supported from v3.1.0). The interface can change in the future.")
     if experiment_dir is None:
         experiment_dir = EXPERIMENTS_PATH
 
@@ -64,7 +67,7 @@ def _setup_or_resume_dir(experiment_dir: str | os.PathLike, experiment_name: str
         os.makedirs(os.path.join(experiment_dir, experiment_name))
         return os.path.join(experiment_dir, experiment_name), False
 
-    if not os.path.exists(os.path.join(experiment_dir, OPTUNA_JOURNAL_FILENAME)):
+    if not os.path.exists(OPTUNA_JOURNAL_PATH):
         if clear_inconsistent_state:
             shutil.rmtree(os.path.join(experiment_dir, experiment_name))
             os.makedirs(os.path.join(experiment_dir, experiment_name))
@@ -72,9 +75,10 @@ def _setup_or_resume_dir(experiment_dir: str | os.PathLike, experiment_name: str
         else:
             raise ValueError("Inconsistent state: experiment directory exists but no journal file found.")
 
-    storage = init_optuna_storage(os.path.join(experiment_dir, OPTUNA_JOURNAL_FILENAME))
+    storage = init_optuna_storage()
     studies = optuna.get_all_study_names(storage)
     return os.path.join(experiment_dir, experiment_name), experiment_name in studies
+
 
 def _restore_study(study_name: str, storage: optuna.storages.BaseStorage,
                    states_error: List[optuna.trial.TrialState], **study_kwargs
@@ -97,22 +101,21 @@ def _restore_study(study_name: str, storage: optuna.storages.BaseStorage,
     return new_study, trials_completed
 
 
-
-
 def _resume_exp(save_dir: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """Function that resumes the experiment from the given checkpoint path."""
 
     exp_config = HTunerExpConfig.load_from_file(os.path.join(save_dir, HTUNER_CONFIG_FILE))
     debug = exp_config.trainer['debug']
 
+    storage = init_optuna_storage()
     exp_dir, exp_name, _ = extract_name_trial_dir(os.path.join(save_dir, "_"))
-    storage = init_optuna_storage(os.path.join(exp_dir, "journal.log"))
+    study_name = f"{exp_dir}/{exp_name}"
 
     htuner_config = exp_config.htuner
     sampler = htuner_config["sampler"]()
     pruner = htuner_config["pruner"]()
 
-    study = optuna.load_study(study_name=exp_name, storage=storage, sampler=sampler, pruner=pruner)
+    study = optuna.load_study(study_name=study_name, storage=storage, sampler=sampler, pruner=pruner)
     if len(study.trials) == 0:
         raise ValueError("No trials found in the study.")
 
@@ -121,7 +124,7 @@ def _resume_exp(save_dir: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.Lightning
     exp_config.drop("lb")
 
     study, trials_completed = _restore_study(
-        exp_name, storage,[optuna.trial.TrialState.FAIL, optuna.trial.TrialState.RUNNING],
+        study_name, storage, [optuna.trial.TrialState.FAIL, optuna.trial.TrialState.RUNNING],
         sampler=sampler, pruner=pruner)
 
     if debug:
@@ -165,7 +168,7 @@ def _run_new_exp(exp_config: HTunerExpConfig, exp_gen_config: HGeneratorConfig
                              num_classes=data_module.get_num_classes())
 
     # Save the configuration to file
-    exp_config.save_to_file(os.path.join(exp_config.trainer["save_dir"], HTUNER_CONFIG_FILE))
+    exp_config.save_to_file(str(os.path.join(exp_config.trainer["save_dir"], HTUNER_CONFIG_FILE)))
     exp_config.drop("lb")  # From this point is useless to carry the label encoder in the config
 
     htuner_config = exp_config.htuner
@@ -173,9 +176,10 @@ def _run_new_exp(exp_config: HTunerExpConfig, exp_gen_config: HGeneratorConfig
     pruner = htuner_config["pruner"]()
     direction = htuner_config["direction"]
 
+    storage = init_optuna_storage()
     exp_dir, exp_name, _ = extract_name_trial_dir(os.path.join(exp_config.trainer["save_dir"], "_"))
-    storage = init_optuna_storage(os.path.join(exp_dir, "journal.log"))
-    study = optuna.create_study(sampler=sampler, direction=direction, study_name=exp_name,
+    study_name = f"{exp_dir}/{exp_name}"
+    study = optuna.create_study(sampler=sampler, direction=direction, study_name=study_name,
                                 storage=storage, pruner=pruner)
 
     if debug:
@@ -233,15 +237,16 @@ def _objective_wrapper(trial: optuna.Trial, exp_config: ExpConfig, data_module: 
 
 
 if __name__ == "__main__":
+    silence_optuna_warnings()
     exp_dir, exp_name = os.path.join(EXPERIMENTS_PATH, "dummy_htuning"), "dummy_experiment"
-    debug = True
+    debug = False
     # random_int = random.randint(0, 100)
     random_int = 69
     exp_name = f"{exp_name}_{random_int}"
     print(exp_name)
 
     if debug:
-        start_optuna(os.path.join(exp_dir, "journal.log"))
+        start_optuna()
 
     hgen_config = HGeneratorConfig(
         hp_lr=(lambda trial: trial.suggest_float("lr", 1e-5, 1e-1, log=True)),
