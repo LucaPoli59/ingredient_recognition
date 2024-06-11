@@ -11,6 +11,7 @@ from torch.utils.data import DataLoader, Dataset
 import os
 from sklearn.base import TransformerMixin as anySkTransformer
 from typing import Tuple, List, Dict, Optional, Any
+from typing_extensions import Self
 
 from settings.config import FOOD_CATEGORIES, IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE
 from settings.commons import tokenize_category
@@ -95,10 +96,10 @@ class ImagesRecipesDataset(_ImagesRecipesDataset):
         super().__init__(images_paths, label_data, transform)
 
 
-def get_transform_plain(image_size: Tuple[int, int] = (224, 224)):
+def get_transform_plain(image_shape: Tuple[int, int] = (224, 224)):
     return v2.Compose([
         v2.ToImage(),
-        v2.Resize(image_size),
+        v2.Resize(image_shape),
         v2.ToDtype(torch.float32, scale=True)
     ])
 
@@ -111,18 +112,18 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
             category: str = None,
             recipe_feature_label: str = "ingredients_ok",
             label_encoder: None | MultiLabelBinarizerRobust | anySkTransformer = None,
-            image_size: Tuple[int, int] = (224, 224),
+            image_shape: Tuple[int, int] = (224, 224),
             batch_size: int = DEF_BATCH_SIZE,
             num_workers: int | None = None
     ):
         super().__init__()  # Setting parameters
         self.images_dir, self.recipes_dir, = global_images_dir, recipes_dir,
         self.recipe_feature_label, self.food_categories = recipe_feature_label, food_categories
-        self.image_size, self.batch_size = image_size, batch_size
+        self.image_shape, self.batch_size = image_shape, batch_size
         self.label_encoder, self.category, self.num_workers = label_encoder, category, num_workers
         self._set_def_params()
 
-        register_hparams(self, ["global_images_dir", "recipes_dir", "category", "recipe_feature_label",
+        register_hparams(self, ["global_images_dir", "recipes_dir", "category", "recipe_feature_label", "image_shape",
                                 {"label_encoder": self.label_encoder.to_config()}, {"type": self.__class__},
                                 {"num_workers": self.num_workers}], log=False)
 
@@ -192,13 +193,13 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
     def _get_transform_aug(self, num_magnitude_bins=31):
         return v2.Compose([
             v2.ToImage(),
-            v2.Resize(self.image_size),
+            v2.Resize(self.image_shape),
             v2.TrivialAugmentWide(num_magnitude_bins=num_magnitude_bins),
             v2.ToDtype(torch.float32, scale=True)
         ])
 
     def _get_transform_plain(self):
-        return get_transform_plain(self.image_size)
+        return get_transform_plain(self.image_shape)
 
     def prepare_data(
             self):  # todo: fare il sistema che salva i risultati in un file, in modo che non vengano ricalcolati ogni volta (e che si possano rimuovere volendo dal checkpointing)
@@ -243,17 +244,16 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
         return len(self.label_encoder.classes) + 1
 
     @classmethod
-    def load_from_config(cls, config: Dict[str, any], image_size: Tuple[int, int], batch_size: int, **kwargs
-                         ) -> 'ImagesRecipesDataModule':
+    def load_from_config(cls, config: Dict[str, any], batch_size: int, **kwargs
+                         ) -> Self:
         image_dir_path, recipe_dir_path = config['global_images_dir'], config['recipes_dir']
         category, recipe_feature_label = config['category'], config['recipe_feature_label']
-        num_workers = config['num_workers']
-        # le_type = str_to_class(json.loads(config['label_encoder'])['type'])
+        num_workers, image_shape = config['num_workers'], config['image_shape']
         le_type = config['label_encoder']['type']
 
         label_encoder = le_type.load_from_config(config['label_encoder'])
         return cls(global_images_dir=image_dir_path, recipes_dir=recipe_dir_path, category=category,
-                   image_size=image_size, batch_size=batch_size, recipe_feature_label=recipe_feature_label,
+                   image_shape=image_shape, batch_size=batch_size, recipe_feature_label=recipe_feature_label,
                    num_workers=num_workers, label_encoder=label_encoder, **kwargs)
 
 

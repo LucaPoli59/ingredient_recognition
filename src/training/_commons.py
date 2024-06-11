@@ -30,7 +30,7 @@ def model_training(exp_config: ExpConfig, data_module: Optional[lgn.LightningDat
         trainer_kwargs = {}
 
     resuming = ckpt_path is None
-    model_config, trainer_config = exp_config.model, exp_config.trainer
+    model_config, trainer_config = exp_config.lgn_model, exp_config.trainer
 
     lgn_model = model_config['lgn_model_type'].load_from_config(model_config, lgn_model_kwargs=lgn_model_kwargs,
                                                                 torch_model_kwargs=torch_model_kwargs)
@@ -38,9 +38,7 @@ def model_training(exp_config: ExpConfig, data_module: Optional[lgn.LightningDat
 
     if data_module is None:
         dm_config = exp_config.datamodule
-        dm_type = dm_config['type']
-        data_module = dm_type.load_from_config(dm_config, image_size=lgn_model.input_shape,
-                                               batch_size=lgn_model.batch_size)
+        data_module = dm_config['type'].load_from_config(dm_config, batch_size=lgn_model.batch_size)
 
     if trainer.debug:
         print("Data Module, Models and Trainer loaded, " + ("training started" if resuming else "resume training"))
@@ -69,8 +67,7 @@ def init_optuna_storage(path: Optional[os.PathLike | str] = None) -> optuna.stor
 def load_datamodule(exp_config: ExpConfig | HTunerExpConfig) -> ImagesRecipesDataModule:
     dm_config = exp_config.datamodule
     dm_type = dm_config["type"]
-    data_module = dm_type.load_from_config(dm_config, image_size=exp_config.model["input_shape"],
-                                           batch_size=exp_config.model["batch_size"])
+    data_module = dm_type.load_from_config(dm_config, batch_size=exp_config.lgn_model["batch_size"])
     data_module.prepare_data()
     data_module.setup()
     return data_module

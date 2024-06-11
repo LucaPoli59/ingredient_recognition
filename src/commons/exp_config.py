@@ -27,15 +27,26 @@ DEF_METRIC_LOGGING_P = {
 
 DEF_EXP_CONFIG = {
     "hyper_parameters": {
-        "torch_model_type": DummyModel,
         "lgn_model_type": BaseLGNM,
-        "input_shape": (224, 224),
-        "num_classes": None,
         "batch_size": DEF_BATCH_SIZE,
         "lr": DEF_LR,
         "loss_fn": torch.nn.BCEWithLogitsLoss,
         "optimizer": torch.optim.Adam,
-        "model_name": None,
+        "momentum": None,
+        "weight_decay": None,
+        "lr_scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau,  #  this works only with BaeWithSchedulerLGNM
+        "lr_scheduler_params": {
+            "mode": "min",
+            "factor": 0.1,
+            "patience": 5,
+            "cooldown": 5,
+            "min_lr": DEF_LR / 1000,
+        },
+        "torch_model": {
+            "type": DummyModel,
+            "input_shape": (224, 224),
+            "num_classes": None,
+        },
         "metrics": {
             "acc": {'type': Accuracy, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
             "precision": {'type': Precision, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
@@ -43,6 +54,7 @@ DEF_EXP_CONFIG = {
             "hamming": {'type': HammingDistance, 'init_params': DEF_METRIC_INIT_P,
                         'logging_params': DEF_METRIC_LOGGING_P | {"prog_bar": True}},
         },
+        "model_name": None,
     },
     "trainer_hyper_parameters": {
         "type": BaseTrainer,
@@ -55,6 +67,7 @@ DEF_EXP_CONFIG = {
     },
     "datamodule_hyper_parameters": {  # in questo caso non serve
         "type": ImagesRecipesDataModule,
+        "image_shape": (224, 224),
         "global_images_dir": IMAGES_PATH,
         "recipes_dir": RECIPES_PATH,
         "category": None,
@@ -70,7 +83,6 @@ DEF_EXP_CONFIG = {
     }
 }
 
-
 DEF_EXP_CONFIG_MAP = {  # map the prefix to the configuration section
     "tr": "trainer_hyper_parameters",
     "trainer": "trainer_hyper_parameters",
@@ -80,6 +92,10 @@ DEF_EXP_CONFIG_MAP = {  # map the prefix to the configuration section
     "lb": ("datamodule_hyper_parameters", "label_encoder"),
     "label_encoder": ("datamodule_hyper_parameters", "label_encoder"),
     "hp": "hyper_parameters",
+    "hyper_parameters": "hyper_parameters",
+    "lgn_model": "hyper_parameters",
+    "torch_model": ("hyper_parameters", "torch_model"),
+    "tm": ("hyper_parameters", "torch_model"),
     "metrics": ("hyper_parameters", "metrics"),
     "me": ("hyper_parameters", "metrics"),
 }
@@ -95,11 +111,7 @@ class ExpConfig:
                  config_map: Optional[Dict[str, List[str] | str]] = None,
                  **update_kwargs):
         """Takes some kwargs to update the default configuration.
-        Begin Code:
-            - "tr" or "trainer": for trainer_hyper_parameters
-            - "dm" or "datamodule" or "data_module": for datamodule_hyper_parameters
-            - "lb" or "label_encoder": for label_encoder
-            - "hp" or None: for hyper_parameters
+        Begin Code: any key in the config_map
             """
         if def_configs is None:
             def_configs = DEF_EXP_CONFIG.copy()
@@ -117,11 +129,8 @@ class ExpConfig:
         """Function that takes some kwargs to update the default configuration.
         Each key in kwargs must be a key must begin with a code related to the configuration section, and followed by the
         _key of the parameter to update.
-        Begin Code (with the default config map):
-            - "tr" or "trainer": for trainer_hyper_parameters
-            - "dm" or "datamodule" or "data_module": for datamodule_hyper_parameters
-            - "lb" or "label_encoder": for label_encoder
-            - "hp" or None: for hyper_parameters
+        Begin Code: any key in the config_map, the default is the hyper_parameters section
+
 
         Note: it ignores null values
         """
@@ -129,6 +138,7 @@ class ExpConfig:
         for key, value in ((key, value) for key, value in kwargs.items() if value is not None):
             split_key = key.split("_", 1)
 
+            #extract the related key
             if len(split_key) == 1:  # one of the case for hyper_parameters
                 prefix_config = self.idx(self._config, self._config_map["hp"])
             else:
@@ -151,8 +161,16 @@ class ExpConfig:
         return self._config["datamodule_hyper_parameters"]
 
     @property
-    def model(self) -> Dict[str, Any]:
+    def lgn_model(self) -> Dict[str, Any]:
         return self._config["hyper_parameters"]
+
+    @property
+    def hp(self) -> Dict[str, Any]:
+        return self._config["hyper_parameters"]
+
+    @property
+    def torch_model(self) -> Dict[str, Any]:
+        return self.idx(self._config, self._config_map["model"])
 
     @property
     def label_encoder(self) -> Dict[str, Any]:
@@ -241,7 +259,6 @@ class ExpConfig:
         for key in keys:
             self._drop(key)
 
-
     def __str__(self):
         return str(self._config)
 
@@ -274,6 +291,7 @@ class HTunerExpConfig(ExpConfig):
     def htuner(self) -> Dict[str, Any]:
         return self._config["htuner_hyper_parameters"]
 
+
 class HGeneratorConfig(ExpConfig):
     """
     Class that provide a dictionary with the generators of hyperparameters for the experiments with htuning.
@@ -282,16 +300,18 @@ class HGeneratorConfig(ExpConfig):
     def __init__(self, **update_kwargs):
         def_configs = {
             "hyper_parameters": {
-                "input_shape": None,
                 "lr": None,  # expected: (lambda trial: trial.suggest_float("lr", 1e-5, 1e-1)) or optuna.distributions
                 "optimizer": None,
             },
             "trainer_hyper_parameters": {
             },
             "datamodule_hyper_parameters": {
+                "input_shape": None,
             },
             "label_encoder": {
-            }
+            },
+            "torch_model": {
+            },
         }
 
         config_map = {
@@ -299,6 +319,7 @@ class HGeneratorConfig(ExpConfig):
             "dm": "datamodule_hyper_parameters",
             "hp": "hyper_parameters",
             "lb": "label_encoder",
+            "tm": "torch_model",
         }
 
         for key, value in update_kwargs.items():
@@ -331,5 +352,3 @@ class HGeneratorConfig(ExpConfig):
             for key, gen in ((key, value) for key, value in self._config[group_key].items() if value is not None):
                 res_dict[f"{target_group_key}_{key}"] = gen(trial)
         return res_dict
-
-

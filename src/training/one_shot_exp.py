@@ -7,9 +7,10 @@ import torch
 from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, DEF_LR)
 from src.training._commons import set_torch_constants, model_training, load_datamodule
 
-from src.lightning.lgn_models import BaseLGNM
+from src.lightning.lgn_models import BaseLGNM, BaseWithSchedulerLGNM
 from src.lightning.lgn_trainers import TrainerInterface, BaseFasterTrainer
-from src.models.dummy import DummyModel
+from src.models.dummy import DummyModel, DummyBNModel
+from src.models.resnet import ResnetLikeV1, ResnetLikeV2
 from src.commons.exp_config import ExpConfig
 
 
@@ -33,7 +34,7 @@ def make_one_shot_exp(
         return _resume_exp(str(os.path.join(save_dir, "checkpoints", "last.ckpt")))
 
     exp_config = ExpConfig(**config_kwargs)
-    _assert_lgn_model_trainer_compatibility(exp_config.model["lgn_model_type"], exp_config.trainer["type"])
+    _assert_lgn_model_trainer_compatibility(exp_config.lgn_model["lgn_model_type"], exp_config.trainer["type"])
     exp_config.update_config(tr_save_dir=save_dir, tr_debug=debug, tr_max_epochs=max_epochs, batch_size=batch_size)
     return _run_new_exp(exp_config)
 
@@ -83,7 +84,7 @@ def _run_new_exp(exp_config: ExpConfig) -> Tuple[lgn.Trainer, lgn.LightningModul
     # Load the dataset
     data_module = load_datamodule(exp_config)
     exp_config.update_config(dm_label_encoder=data_module.label_encoder.to_config(),
-                             num_classes=data_module.get_num_classes())
+                             tm_num_classes=data_module.get_num_classes())
 
     return model_training(exp_config, data_module)
 
@@ -100,8 +101,9 @@ def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.Lightnin
 
 if __name__ == "__main__":
     exp_dir, exp_name = os.path.join(EXPERIMENTS_PATH, "dummy"), "dummy_experiment"
-    trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=5, batch_size=128, debug=False,
-                                       torch_model_type=DummyModel, dm_category="all", tr_type=BaseFasterTrainer,
-                                       lr=DEF_LR,  tr_log_every_n_steps=10)
+    trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=False,
+                                       tm_type=DummyBNModel, dm_category="all", tr_type=BaseFasterTrainer,
+                                       lgn_model_type=BaseWithSchedulerLGNM,
+                                       optimizer=torch.optim.SGD, momentum=0.9, weight_decay=5e-4)
 
 

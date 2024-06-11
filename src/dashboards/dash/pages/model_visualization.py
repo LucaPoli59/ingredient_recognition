@@ -63,7 +63,7 @@ layout = dbc.Container(fluid=True, children=[
 
     ]),
     dbc.Toast(id="loading_notify", is_open=False, header="Loading experiment", duration=10000, dismissable=True,
-                  class_name="position-absolute top-0 end-0 me-3", style={"margin-top": "60px"}),
+              class_name="position-absolute top-0 end-0 me-3", style={"margin-top": "60px"}),
 
     dmc.Divider(size="xl", className="my-5"),
 
@@ -110,11 +110,11 @@ layout = dbc.Container(fluid=True, children=[
     ]),
 
     dbc.Toast(id="inference_notify", is_open=False, header="Prediction notifications", duration=10000,
-                  dismissable=True, class_name="position-absolute top-0 end-0 me-3", style={"margin-top": "60px"}),
+              dismissable=True, class_name="position-absolute top-0 end-0 me-3", style={"margin-top": "60px"}),
 
     dcc.Store(id='store_data_loader', data={}, storage_type="memory"),  # todo put in session
     dcc.Store(id='store_label_encoder', data={}, storage_type="memory"),
-    dcc.Store(id='store_imgs_size', data={}, storage_type="memory"),
+    dcc.Store(id='store_imgs_shape', data={}, storage_type="memory"),
     # Make this to the transform method loaded similar to the config
     dcc.Store(id='store_imgs_data', data={}, storage_type="memory"),
     dcc.Store(id='store_img_index', data={"curr": None, "max": None}, storage_type="memory"),
@@ -141,7 +141,7 @@ def update_trial_selector(selected_exp):
 
 @callback(Output("store_data_loader", "data"),
           Output("store_label_encoder", "data"),
-          Output("store_imgs_size", "data"),
+          Output("store_imgs_shape", "data"),
           Output("store_model_loaded", "data", allow_duplicate=True),
           Output('gradcam_target_select', 'data'),
           Output('gradcam_target_select', 'value'),
@@ -180,12 +180,12 @@ def load_experiment(_, selected_exp, selected_htrial, upload_contents, upload_fi
             raise ValueError("Unknown trigger")
 
     except Exception as e:
-        return dash.no_update, dash.no_update, True, f"Error: {e}", "danger"
+        return (dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update,
+                True, f"Error: {e}", "danger")
 
     dm_config = exp_config.datamodule
     dm_type = dm_config["type"]
-    datamodule = dm_type.load_from_config(dm_config, image_size=exp_config.model["input_shape"],
-                                          batch_size=exp_config.model["batch_size"])
+    datamodule = dm_type.load_from_config(dm_config, batch_size=exp_config.lgn_model["batch_size"])
     datamodule.prepare_data()
     datamodule.setup()
 
@@ -197,10 +197,10 @@ def load_experiment(_, selected_exp, selected_htrial, upload_contents, upload_fi
                       [{"value": datamodule.label_encoder.get_index(ingredient), "label": ingredient}
                        for ingredient in ingredients])
 
-    imgs_size = datamodule.image_size
+    imgs_shape = datamodule.image_shape
     torch.save(model.model, MODEL_CACHE_PATH)
 
-    return (dataset.to_json(), label_encoder, imgs_size, True, target_options, target_options[1]['value'],
+    return (dataset.to_json(), label_encoder, imgs_shape, True, target_options, target_options[1]['value'],
             True, feedback, "success")
 
 
@@ -258,12 +258,12 @@ def enable_model_use(model_loaded):
           Output('inference_notify', 'icon'),
           Input('load_preds_btn', 'n_clicks'),
           State('gradcam_target_select', 'value'),
-          State('store_imgs_size', 'data'),
+          State('store_imgs_shape', 'data'),
           State('store_img_index', 'data'),
           State('store_imgs_data', 'data'),
           State("img_preds_weight_slider", 'value'),
           State("store_label_encoder", "data"), prevent_initial_call=True)
-def make_inference(_, target, imgs_size, img_index_data, imgs_data, img_weight, label_encoder, device=DEVICE):
+def make_inference(_, target, imgs_shape, img_index_data, imgs_data, img_weight, label_encoder, device=DEVICE):
     try:
         model = _load_model().to(device)
     except Exception as e:
@@ -271,7 +271,7 @@ def make_inference(_, target, imgs_size, img_index_data, imgs_data, img_weight, 
 
     targets = [target] if target is not None else None
     model.eval()
-    imgs_transform = get_transform_plain(imgs_size)
+    imgs_transform = get_transform_plain(imgs_shape)
     img_path = imgs_data[img_index_data["curr"]]["img"]
     img = imgs_transform(Image.open(img_path))
     label_encoder = jsonpickle.decode(label_encoder)
@@ -282,7 +282,6 @@ def make_inference(_, target, imgs_size, img_index_data, imgs_data, img_weight, 
 
     if not isinstance(gradcam_target, str):
         gradcam_target = label_encoder.decode_labels([[int(gradcam_target)]])[0][0]
-
 
     factors_img = feature_factorization(model, model.conv_target_layer, model.classifier_target_layer,
                                         img.to(device), img_weight=1 - img_weight, label_encoder=label_encoder)[0]
@@ -307,7 +306,7 @@ def _load_exp_from_select(select_value, selected_htrial, device=DEVICE) -> Tuple
             raise ValueError("No checkpoint found in the selected trial")
 
         exp_config = ExpConfig.load_from_ckpt_data(torch.load(ckpt_path))
-        model = exp_config.model['lgn_model_type'].load_from_config(exp_config.model).to(device)
+        model = exp_config.lgn_model['lgn_model_type'].load_from_config(exp_config.lgn_model).to(device)
         model.load_weights_from_checkpoint(ckpt_path)
 
         output = f"Loaded experiment from {os.path.basename(ckpt_path)}"
@@ -319,7 +318,7 @@ def _load_exp_from_select(select_value, selected_htrial, device=DEVICE) -> Tuple
             raise ValueError(f"Config file not found in {selected_htrial}")
 
         exp_config = HTunerExpConfig.load_from_file(str(config_path))
-        model = exp_config.model['lgn_model_type'].load_from_config(exp_config.model).to(device)
+        model = exp_config.lgn_model['lgn_model_type'].load_from_config(exp_config.lgn_model).to(device)
         model.load_weights_from_checkpoint(ckpt_weights_path)
 
         output = (f"Loaded experiment from "

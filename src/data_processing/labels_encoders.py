@@ -1,6 +1,7 @@
 from typing import List, Dict, Any
 import json
 import numpy as np
+from typing_extensions import Self
 
 from settings.config import DEF_UNKNOWN_TOKEN
 
@@ -68,7 +69,7 @@ class MultiLabelBinarizerRobust:
         return np.array(list(map(self._decode_labels, encoded_labels_array)), dtype=object)
 
     @classmethod
-    def load_from_config(cls, config: str | Dict[str, Any]):
+    def load_from_config(cls, config: str | Dict[str, Any]) -> Self:
         if isinstance(config, str):
             config = json.loads(config)
 

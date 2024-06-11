@@ -1,4 +1,5 @@
 from typing import Any, Dict, Optional, List, Type, Tuple
+from typing_extensions import Self
 import lightning as lgn
 from lightning.pytorch.utilities.types import OptimizerLRScheduler
 import torch
@@ -7,11 +8,12 @@ import inspect
 
 from src.commons.utils import register_hparams
 from src.commons.visualizations import gradcam
+from src.models.commons import BaseModel
 
 
 class BaseLGNM(lgn.LightningModule):
-    def __init__(self, model: torch.nn.Module, lr: float, batch_size: int, optimizer: torch.nn.Module,
-                 loss_fn: torch.nn.Module,
+    def __init__(self, model: BaseModel, lr: float, batch_size: int, optimizer: Type[torch.optim.Optimizer],
+                 loss_fn: torch.nn.Module, momentum: Optional[float] = None, weight_decay: Optional[float] = None,
                  metrics: Optional[Type[Metric] | Dict[str, Type[Metric] | Dict[str, Dict[str, Any] | Type[Metric]]]
                                    ] = None,
                  model_name: Optional[str] = None,
@@ -23,6 +25,8 @@ class BaseLGNM(lgn.LightningModule):
         :param batch_size: batch size
         :param optimizer: optimized to use (provided as a class)
         :param loss_fn: loss function to use (provided as a class)
+        :param momentum: momentum for the optimizer (by default is None) [works only with SGD]
+        :param weight_decay: weight decay for the optimizer (by default is None)
         :param metrics: metrics to use (provided as a class or a dict with the name as key and as value a dict with
                         the keys 'type' (metric class) and 'init_params' (dict) and 'logging_params' (dict))
                         (by default is empty)
@@ -38,8 +42,9 @@ class BaseLGNM(lgn.LightningModule):
         self.loss_fn = loss_fn  # loss class
         self.metrics_config = self._parse_metrics_config(metrics)  # dict to metrics class pointer and their parameters
         self.optimizer = optimizer  # Optimizer class
+        self.momentum_val = momentum
+        self.weight_decay_val = weight_decay
 
-        self.input_shape = self._model.input_shape
         self.num_classes = self._model.num_classes
         self.torch_model_type = type(self._model)
         self.model_name = model_name
@@ -47,10 +52,10 @@ class BaseLGNM(lgn.LightningModule):
         self.gradcam_target_layer = getattr(self._model, "gradcam_target_layer", None)
 
         hparams = ([{"lr": self._lr}, {"batch_size": self._batch_size}, {"optimizer": self.optimizer},
+                    {"momentum": self.momentum_val}, {"weight_decay": self.weight_decay_val},
                     {"loss_fn": self.loss_fn}, {"lgn_model_type": self.__class__},
-                    {"torch_model_type": self.torch_model_type}, {"metrics": self.metrics_config},
-                    {"input_shape": self.input_shape}, {"num_classes": self.num_classes}]
-                   + (["model_name"] if model_name is not None else []))
+                    {"torch_model": self._model.to_config()}, {"metrics": self.metrics_config},
+                    {"num_classes": self.num_classes}] + (["model_name"] if model_name is not None else []))
 
         if hparams_to_register is not None:
             hparams = [hparam for hparam in hparams if list(hparam.keys())[0] in hparams_to_register]
@@ -104,7 +109,13 @@ class BaseLGNM(lgn.LightningModule):
         return self.model(*args, **kwargs)
 
     def configure_optimizers(self) -> OptimizerLRScheduler:
-        self.optimizer = self.optimizer(self.model.parameters(), lr=self.hparams.lr)
+        weight_decay = 0 if self.weight_decay_val is None else self.weight_decay_val
+        if self.optimizer == torch.optim.SGD:
+            momentum = 0 if self.momentum_val is None else self.momentum_val
+            self.optimizer = self.optimizer(self.model.parameters(), lr=self.hparams.lr, momentum=momentum,
+                                            weight_decay=weight_decay)
+        else:
+            self.optimizer = self.optimizer(self.model.parameters(), lr=self.hparams.lr, weight_decay=weight_decay)
         return self.optimizer
 
     def _base_step(self, batch, metrics) -> Tuple[float, Dict[str, torch.Tensor]]:
@@ -168,24 +179,78 @@ class BaseLGNM(lgn.LightningModule):
 
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], torch_model_kwargs: Optional[Dict[str, Any]] = None,
-                         lgn_model_kwargs: Optional[Dict[str, Any]] = None) -> "BaseLGNM":
+                         lgn_model_kwargs: Optional[Dict[str, Any]] = None) -> Self:
         if torch_model_kwargs is None:
             torch_model_kwargs = {}
         if lgn_model_kwargs is None:
             lgn_model_kwargs = {}
 
         if not issubclass(config['lgn_model_type'], cls):
-            raise ValueError(f"Invalid model type. Expected {cls} but got {config['lgn_model_type']}")
+            raise ValueError(f"Invalid LGN model type. Expected {cls} but got {config['lgn_model_type']}")
 
-        input_shape, num_classes = tuple(config['input_shape']), config['num_classes']
         batch_size, lr = config['batch_size'], config['lr']
-        torch_model_type = config['torch_model_type']
         loss_fn, metrics = config['loss_fn'], config['metrics']
+        momentum, weight_decay = config.get('momentum', None), config.get('weight_decay', None)
         optimizer, model_name = config['optimizer'], config.get('model_name', None)
 
-        torch_model = torch_model_type(input_shape, num_classes, **torch_model_kwargs)
-        lgn_model = cls(torch_model, lr, batch_size, optimizer, loss_fn, metrics, model_name, **lgn_model_kwargs)
+        torch_model_config = config['torch_model']
+        torch_model = torch_model_config['type'].load_from_config(torch_model_config, **torch_model_kwargs)
+
+        lgn_model = cls(torch_model, lr, batch_size, optimizer, loss_fn, momentum=momentum, weight_decay=weight_decay,
+                        metrics=metrics, model_name=model_name,
+                        **lgn_model_kwargs)
         return lgn_model
 
     def load_weights_from_checkpoint(self, checkpoint_path: str):
         self.load_state_dict(torch.load(checkpoint_path)['state_dict'])
+
+
+class BaseWithSchedulerLGNM(BaseLGNM):
+    def __init__(self, model: BaseModel, lr: float, batch_size: int, optimizer: Type[torch.optim.Optimizer],
+                 loss_fn: torch.nn.Module, momentum: Optional[float] = None, weight_decay: Optional[float] = None,
+                 lr_scheduler: Optional[Type[torch.optim.lr_scheduler.LRScheduler]] = None,
+                 lr_scheduler_params: Optional[Dict[str, Any]] = None,
+                 metrics: Optional[Type[Metric] | Dict[str, Type[Metric] | Dict[str, Dict[str, Any] | Type[Metric]]]
+                                   ] = None,
+                 model_name: Optional[str] = None,
+                 hparams_to_register: Optional[List[str]] = None):
+
+        # by using a scheduler we can increase the starting LR
+        if lr_scheduler is not None:
+            lr = min(1e-1, lr * 10)
+
+
+        super().__init__(model, lr, batch_size, optimizer, loss_fn, momentum, weight_decay, metrics, model_name,
+                         hparams_to_register)
+
+        if lr_scheduler_params is None:
+            lr_scheduler_params = {}
+        self.lr_scheduler_params = lr_scheduler_params
+        self.lr_scheduler = lr_scheduler
+
+
+        hparams = [{"lr_scheduler": self.lr_scheduler}, {"lr_scheduler_params": self.lr_scheduler_params}]
+
+        if hparams_to_register is not None:
+            hparams = [hparam for hparam in hparams if list(hparam.keys())[0] in hparams_to_register]
+
+        register_hparams(self, hparams)
+
+
+    def configure_optimizers(self) -> OptimizerLRScheduler:
+        self.optimizer = super().configure_optimizers()
+        if self.lr_scheduler is None:
+            return self.optimizer
+
+        self.lr_scheduler = self.lr_scheduler(self.optimizer, **self.lr_scheduler_params)
+        return {'optimizer': self.optimizer, 'lr_scheduler': self.lr_scheduler, 'monitor': 'val_loss'}
+
+    @classmethod
+    def load_from_config(cls, config: Dict[str, Any], torch_model_kwargs: Optional[Dict[str, Any]] = None,
+                         lgn_model_kwargs: Optional[Dict[str, Any]] = None) -> Self:
+        if lgn_model_kwargs is None:
+            lgn_model_kwargs = {}
+        lgn_model_kwargs['lr_scheduler'] = config.get('lr_scheduler', None)
+        lgn_model_kwargs['lr_scheduler_params'] = config.get('lr_scheduler_params', None)
+
+        return super().load_from_config(config, torch_model_kwargs, lgn_model_kwargs)

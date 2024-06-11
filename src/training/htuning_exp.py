@@ -54,7 +54,7 @@ def make_htuning_exp(
         return _resume_exp(save_dir)
 
     exp_config = HTunerExpConfig(**config_kwargs)
-    _assert_lgn_model_trainer_compatibility(exp_config.model["lgn_model_type"], exp_config.trainer["type"])
+    _assert_lgn_model_trainer_compatibility(exp_config.lgn_model["lgn_model_type"], exp_config.trainer["type"])
     exp_config.update_config(tr_save_dir=save_dir, tr_debug=debug, tr_max_epochs=max_epochs, batch_size=batch_size,
                              ht_save_dir=os.path.dirname(save_dir))
     return _run_new_exp(exp_config, hgen_config)
@@ -165,7 +165,7 @@ def _run_new_exp(exp_config: HTunerExpConfig, exp_gen_config: HGeneratorConfig
     # Load the dataset
     data_module = load_datamodule(exp_config)
     exp_config.update_config(dm_label_encoder=data_module.label_encoder.to_config(),
-                             num_classes=data_module.get_num_classes())
+                             tm_num_classes=data_module.get_num_classes())
 
     # Save the configuration to file
     exp_config.save_to_file(str(os.path.join(exp_config.trainer["save_dir"], HTUNER_CONFIG_FILE)))
@@ -204,7 +204,7 @@ def save_best_trial(study: optuna.study.Study, save_dir: str | os.PathLike, exp_
             file_path=os.path.join(best_trial_path_out, HTUNER_CONFIG_FILE))  # Questa parte andrà solo dopo il resume
 
     trainer = exp_config.trainer["type"].load_from_config(exp_config.trainer, trial=study.best_trial)
-    model = exp_config.model["lgn_model_type"].load_from_config(exp_config.model)
+    model = exp_config.lgn_model["lgn_model_type"].load_from_config(exp_config.lgn_model)
 
     model = model.load_weights_from_checkpoint(os.path.join(best_trial_path_out, "best_model.ckpt"))
     return trainer, model
@@ -217,7 +217,7 @@ def _objective_wrapper(trial: optuna.Trial, exp_config: ExpConfig, data_module: 
 
     # generate the variable hyperparameters
     hparams = hparam_gen_config.generate_hparams_on_trial(trial)
-    variable_hparams_names = [key for key, value in hparam_gen_config.model.items() if value is not None]
+    variable_hparams_names = [key for key, value in hparam_gen_config.lgn_model.items() if value is not None]
 
     trial_path = os.path.join(trial_config.trainer["save_dir"], f"trial_{trial.number}")
     resume_path = _prepare_trial_dir(trial_path, check_for_resume)

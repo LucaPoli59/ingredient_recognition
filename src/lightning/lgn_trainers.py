@@ -3,7 +3,7 @@ import random
 from abc import ABC, abstractmethod
 from typing import Optional, List, Tuple, Dict, Any
 import optuna
-from typing_extensions import Never
+from typing_extensions import Never, Self
 import lightning as lgn
 from lightning.pytorch import callbacks
 from lightning.pytorch.callbacks.progress.rich_progress import RichProgressBarTheme
@@ -106,7 +106,7 @@ class TrainerInterface(ABC, lgn.Trainer):
         return super().checkpoint_callback
 
     @classmethod
-    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> "TrainerInterface":
+    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
         debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
         log_every_n_steps, limit_predict_batches = config['log_every_n_steps'], config['limit_predict_batches']
         return cls(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
@@ -170,6 +170,7 @@ class BaseTrainer(TrainerInterface):
     def _get_callbacks(self) -> List[callbacks.Callback]:
         return super()._get_callbacks() + [
             callbacks.RichProgressBar(leave=True, theme=RichProgressBarTheme(metrics_format=".5e")),
+            callbacks.LearningRateMonitor(logging_interval='epoch', log_momentum=True),
         ]
 
     def _get_loggers(self) -> List[Logger]:
@@ -193,11 +194,14 @@ class BaseTrainer(TrainerInterface):
         else:
             if self.interrupted:
                 raise KeyboardInterrupt("Training interrupted by user")
+            if self._debug:
+                return model
+
             # Find the best model and load it, otherwise leave the last one
             ckpt_c = self.checkpoint_callback
             best_model_path = ckpt_c.best_model_path if ckpt_c is not None else None
             # IF the path exist and is not the last one
-            if (self._debug or best_model_path is None or best_model_path == ""
+            if (best_model_path is None or best_model_path == ""
                     or not os.path.exists(best_model_path) or ckpt_c.best_model_score is None
                     or ckpt_c.best_model_score.item() == ckpt_c.current_score.item()):
                 # if the best model path is not correct we take the last one
@@ -223,7 +227,7 @@ class BaseFasterTrainer(BaseTrainer):
     def _get_callbacks(self) -> List[callbacks.Callback]:
         return super()._get_callbacks() + [
             callbacks.EarlyStopping(monitor="val_loss", mode="min", verbose=self._debug,
-                                    patience=int(self._max_epochs * 1 / self._check_val_freq / 4))
+                                    patience=int(self._max_epochs * 1 / self._check_val_freq / 2))
         ]
 
 
@@ -266,14 +270,14 @@ class OptunaTrainer(BaseTrainer):
 
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], trial: Optional[optuna.Trial] = None, **kwargs
-                         ) -> "OptunaTrainer":
-        limit_train_batches = config.get("limit_train_batches", 1)  # Use get for backward compatibility
-        debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
+                         ) -> Self:
+        if kwargs is None:
+            kwargs = {}
 
+        kwargs["limit_train_batches"] = config.get("limit_train_batches", 1)  # Use get for backward compatibility
         if trial is None:
-            trial = config.get('trial', None)
+            kwargs["trial"] = config.get('trial', None)
         if trial is None:
             raise ValueError("Trail not found in config")
 
-        return cls(max_epochs=max_epochs, trial=trial, save_dir=save_dir, debug=debug,
-                   limit_train_batches=limit_train_batches, **kwargs)
+        return super().load_from_config(config, **kwargs)
