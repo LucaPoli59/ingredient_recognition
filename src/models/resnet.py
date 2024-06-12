@@ -161,7 +161,7 @@ class _BaseResnet(BaseModel):
 class Resnet18(_BaseResnet):
     def __init__(self, num_classes, pretrained=True):
         super().__init__(num_classes, pretrained)
-        weights = torchvision.models.ResNet18_Weights if pretrained else None
+        weights = torchvision.models.ResNet18_Weights.DEFAULT if pretrained else None
         self.model = torchvision.models.resnet18(weights=weights)
         self.model.fc = nn.Linear(self.model.fc.in_features, num_classes)
 
@@ -176,7 +176,7 @@ class Resnet50(_BaseResnet):
     def __init__(self, num_classes, pretrained=True):
         super().__init__(num_classes, pretrained)
 
-        weights = torchvision.models.ResNet50_Weights if pretrained else None
+        weights = torchvision.models.ResNet50_Weights.DEFAULT if pretrained else None
         self.model = torchvision.models.resnet50(weights=weights)
         self.model.fc = nn.Linear(self.model.fc.in_features, num_classes)
 
@@ -189,12 +189,16 @@ class Resnet50(_BaseResnet):
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = ResnetLikeV1(183).to(device)
+    resnet18 = Resnet18(183).to(device)
+    resnet_like1 = ResnetLikeV1(183).to(device)
     x = torch.randn(1, 3, 224, 224).to(device)
 
     from torchinfo import summary
 
-    # summary(model, input_size=(1, 3, 224, 224))
-    print(model(x).shape)
+    print(resnet18)
+    print(resnet_like1)
 
-    print(type(model))
+    summary(resnet18, input_size=(1, 3, 224, 224), depth=2)
+    summary(resnet_like1, input_size=(1, 3, 224, 224), depth=1)
+
+

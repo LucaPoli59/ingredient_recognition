@@ -17,7 +17,7 @@ from settings.config import FOOD_CATEGORIES, IMAGES_PATH, RECIPES_PATH, DEF_BATC
 from settings.commons import tokenize_category
 from src.commons.utils import register_hparams
 
-from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
+from src.data_processing.labels_encoders import MultiLabelBinarizerRobust, LabelEncoderInterface
 
 
 class _ImagesRecipesDataset(Dataset):
@@ -46,7 +46,7 @@ class _ImagesRecipesDataset(Dataset):
 
         return image, torch.tensor(label, dtype=torch.float32)
 
-    def to_light_dataset(self, label_encoder: Optional[MultiLabelBinarizerRobust | anySkTransformer] = None
+    def to_light_dataset(self, label_encoder: Optional[LabelEncoderInterface] = None
                          ) -> 'LightImagesRecipesDataset':
         label_data = self.label_data
         if label_encoder is not None and label_encoder.fitted:
@@ -66,7 +66,7 @@ class LightImagesRecipesDataset(_ImagesRecipesDataset):
     def from_json(cls, data: Dict[str, Any]) -> 'LightImagesRecipesDataset':
         return cls([pathlib.Path(p) for p in data['images_paths']], data['label_data'])
 
-    def to_light_dataset(self, label_encoder: Optional[MultiLabelBinarizerRobust | anySkTransformer] = None
+    def to_light_dataset(self, label_encoder: Optional[LabelEncoderInterface] = None
                          ) -> 'LightImagesRecipesDataset':
         return self
 
@@ -103,6 +103,7 @@ def get_transform_plain(image_shape: Tuple[int, int] = (224, 224)):
         v2.ToDtype(torch.float32, scale=True)
     ])
 
+
 class ImagesRecipesDataModule(lgn.LightningDataModule):
     def __init__(
             self,
@@ -111,7 +112,7 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
             food_categories: List[str] = FOOD_CATEGORIES,
             category: str = None,
             recipe_feature_label: str = "ingredients_ok",
-            label_encoder: None | MultiLabelBinarizerRobust | anySkTransformer = None,
+            label_encoder: None | LabelEncoderInterface  = None,
             image_shape: Tuple[int, int] = (224, 224),
             batch_size: int = DEF_BATCH_SIZE,
             num_workers: int | None = None
@@ -281,7 +282,7 @@ def _recipes_filter_by_category(recipes: List[Dict], category: str | None = None
 def _encode_recipes(
         recipes: List[Dict],
         label_encoder: anySkTransformer | MultiLabelBinarizerRobust,
-        feature_label: str) -> Tuple[ndarray, anySkTransformer | MultiLabelBinarizerRobust]:
+        feature_label: str) -> Tuple[ndarray, LabelEncoderInterface]:
     # Fit the encoder to the label feature if it is not already fitted, and then transform it
     label_data_raw = pd.DataFrame(recipes)[feature_label].values
     if not label_encoder.fitted:  # warning: this doesn't work for anySkTransformer

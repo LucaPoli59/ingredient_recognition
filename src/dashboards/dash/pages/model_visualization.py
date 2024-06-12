@@ -24,7 +24,8 @@ from dash.exceptions import PreventUpdate
 from settings.config import EXPERIMENTS_PATH, HTUNER_CONFIG_FILE, BLANK_IMG_PATH, PROJECT_PATH
 from src.dashboards._commons import recursive_listdir, DASH_CACHE, open_img, dash_get_asset_url, img_from_ndarray
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
-from src.data_processing.data_handling import LightImagesRecipesDataset, get_transform_plain, MultiLabelBinarizerRobust
+from src.data_processing.data_handling import LightImagesRecipesDataset, get_transform_plain
+from src.data_processing.labels_encoders import LabelEncoderInterface
 from src.commons.visualizations import gradcam, feature_factorization, correct_legend_factor
 from src.commons.utils import pred_digits_to_values
 
@@ -346,7 +347,7 @@ def _find_checkpoint_from_trial(trial_path: str | os.PathLike) -> str | None:
 
 
 def _create_labels_tables(labels: List[str] | List[int],
-                          label_encoder: Optional[MultiLabelBinarizerRobust] = None) -> dbc.Table:
+                          label_encoder: Optional[LabelEncoderInterface] = None) -> dbc.Table:
     if label_encoder is not None and len(labels) > 0 and isinstance(labels[0], int):
         labels = label_encoder.decode_labels(labels)
 
@@ -356,7 +357,7 @@ def _create_labels_tables(labels: List[str] | List[int],
     return labels_table
 
 
-def _create_preds_table(preds: np.ndarray, label_encoder: Optional[MultiLabelBinarizerRobust] = None) -> dbc.Table:
+def _create_preds_table(preds: np.ndarray, label_encoder: Optional[LabelEncoderInterface] = None) -> dbc.Table:
     best_preds = np.argsort(preds)[::-1][:20]
     preds_confidence = preds[best_preds]
 

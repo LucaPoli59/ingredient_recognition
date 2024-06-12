@@ -90,7 +90,9 @@ class DensenetLikeV1(_BaseDensenetLike):  # Like DenseNet-121
         self.transition_3 = TransitionLayer(out_chs, DenseLayer.reduction_factor)  # 1024 -> 512
 
         self.dense_4, out_chs = self._make_block(DenseLayer, 512, 16)  # 512 -> 1024
+
         self.bn_final = nn.BatchNorm2d(out_chs)
+        self.final_relu = nn.ReLU()
 
         self.classifier = nn.Sequential(
             nn.AdaptiveAvgPool2d((1, 1)),
@@ -99,14 +101,14 @@ class DensenetLikeV1(_BaseDensenetLike):  # Like DenseNet-121
         )
 
         self.classifier_target_layer = self.classifier[-1]
-        self.conv_target_layer = self.dense_4[-1]
+        self.conv_target_layer = self.final_relu
 
     def forward(self, x):
         out = self.conv1(x)
         out = self.transition_1(self.dense_1(out))
         out = self.transition_2(self.dense_2(out))
         out = self.transition_3(self.dense_3(out))
-        out = self.bn_final(self.dense_4(out))
+        out = self.final_relu(self.bn_final(self.dense_4(out)))
 
         return self.classifier(out)
 
@@ -126,7 +128,9 @@ class DensenetLikeV2(_BaseDensenetLike):  # Like DenseNet-201
         self.transition_3 = TransitionLayer(out_chs, DenseLayer.reduction_factor)  # 1792 -> 896
 
         self.dense_4, out_chs = self._make_block(DenseLayer, 896, 32)  # 896 -> 1920
+
         self.bn_final = nn.BatchNorm2d(out_chs)
+        self.final_relu = nn.ReLU()
 
         self.classifier = nn.Sequential(
             nn.AdaptiveAvgPool2d((1, 1)),
@@ -135,14 +139,14 @@ class DensenetLikeV2(_BaseDensenetLike):  # Like DenseNet-201
         )
 
         self.classifier_target_layer = self.classifier[-1]
-        self.conv_target_layer = self.dense_4[-1]
+        self.conv_target_layer = self.final_relu
 
     def forward(self, x):
         out = self.conv1(x)
         out = self.transition_1(self.dense_1(out))
         out = self.transition_2(self.dense_2(out))
         out = self.transition_3(self.dense_3(out))
-        out = self.bn_final(self.dense_4(out))
+        out = self.final_relu(self.bn_final(self.dense_4(out)))
 
         return self.classifier(out)
 
@@ -187,15 +191,21 @@ class Densenet201(_BaseDensenet):
     def forward(self, x):
         return self.model(x)
 
-if __name__ == "__main__":
 
+if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = Densenet121(183).to(device)
     x = torch.randn(1, 3, 224, 224).to(device)
+    densenet121 = Densenet121(183).to(device)
+    densenet_like1 = DensenetLikeV1(183).to(device)
 
     from torchinfo import summary
 
     # summary(model, input_size=(1, 3, 224, 224))
-    print(model(x).shape)
+    print(densenet121(x).shape)
+    print(densenet_like1(x).shape)
 
-    print(type(model))
+    print(densenet121)
+    print(densenet_like1)
+
+    summary(densenet121, input_size=(1, 3, 224, 224), depth=3)
+    summary(densenet_like1, input_size=(1, 3, 224, 224), depth=1)

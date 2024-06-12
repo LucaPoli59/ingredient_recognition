@@ -112,10 +112,10 @@ class BaseLGNM(lgn.LightningModule):
         weight_decay = 0 if self.weight_decay_val is None else self.weight_decay_val
         if self.optimizer == torch.optim.SGD:
             momentum = 0 if self.momentum_val is None else self.momentum_val
-            self.optimizer = self.optimizer(self.model.parameters(), lr=self.hparams.lr, momentum=momentum,
+            self.optimizer = self.optimizer(self.model.parameters(), lr=self._lr, momentum=momentum,
                                             weight_decay=weight_decay)
         else:
-            self.optimizer = self.optimizer(self.model.parameters(), lr=self.hparams.lr, weight_decay=weight_decay)
+            self.optimizer = self.optimizer(self.model.parameters(), lr=self._lr, weight_decay=weight_decay)
         return self.optimizer
 
     def _base_step(self, batch, metrics) -> Tuple[float, Dict[str, torch.Tensor]]:

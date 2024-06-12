@@ -170,7 +170,7 @@ class ExpConfig:
 
     @property
     def torch_model(self) -> Dict[str, Any]:
-        return self.idx(self._config, self._config_map["model"])
+        return self.idx(self._config, self._config_map["torch_model"])
 
     @property
     def label_encoder(self) -> Dict[str, Any]:

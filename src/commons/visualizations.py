@@ -6,7 +6,7 @@ from pytorch_grad_cam import GradCAM, DeepFeatureFactorization
 from pytorch_grad_cam.utils.image import show_cam_on_image, show_factorization_on_image
 from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 
-from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
+from src.data_processing.labels_encoders import LabelEncoderInterface
 
 
 def gradcam(model: torch.nn.Module,
@@ -53,7 +53,7 @@ def feature_factorization(model: torch.nn.Module,
                           target_conv: torch.nn.Module,
                           target_classifier: torch.nn.Module,
                           input_x: torch.Tensor,
-                          label_encoder: Optional[MultiLabelBinarizerRobust] = None,
+                          label_encoder: Optional[LabelEncoderInterface] = None,
                           n_components: int = 2,
                           top_k: int = 2,
                           img_weight: float = 0.5,

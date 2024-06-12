@@ -26,20 +26,31 @@ if __name__ == "__main__":
     #                                    lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM, optimizer=torch.optim.SGD,
     #                                    momentum=0.9, weight_decay=5e-4)
 
-    print("Training ResnetLikeV2 ....")
-    trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
-                                       tm_type=ResnetLikeV2, dm_category="all", tr_type=BaseFasterTrainer,
-                                       lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM, optimizer=torch.optim.SGD,
-                                       momentum=0.9, weight_decay=5e-4)
+    # print("Training ResnetLikeV2 ....")
+    # trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
+    #                                    tm_type=ResnetLikeV2, dm_category="all", tr_type=BaseFasterTrainer,
+    #                                    lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM, optimizer=torch.optim.SGD,
+    #                                    momentum=0.9, weight_decay=5e-4)
+    #
+    # print("Training Resnet18 ....")
+    # trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
+    #                                    tm_type=Resnet18, tm_pretrained=False, dm_category="all",
+    #                                    tr_type=BaseFasterTrainer, lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM,
+    #                                    optimizer=torch.optim.SGD, momentum=0.9, weight_decay=5e-4)
+    #
+    # print("Training Resnet50 ....")
+    # trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
+    #                                    tm_type=Resnet50, tm_pretrained=False, dm_category="all",
+    #                                    tr_type=BaseFasterTrainer, lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM,
+    #                                    optimizer=torch.optim.SGD, momentum=0.9, weight_decay=5e-4)
 
-    print("Training Resnet18 ....")
+    # print("Training Resnet18 pretrained ....")
+    # trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
+    #                                    tm_type=Resnet18, tm_pretrained=True, dm_category="all",
+    #                                    tr_type=BaseFasterTrainer, lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM,
+    #                                    optimizer=torch.optim.SGD, momentum=0.9, weight_decay=5e-4)
+    print("Training Resnet50 pretrained ....")
     trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
-                                       tm_type=Resnet18, tm_pretrained=False, dm_category="all",
-                                       tr_type=BaseFasterTrainer, lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM,
-                                       optimizer=torch.optim.SGD, momentum=0.9, weight_decay=5e-4)
-
-    print("Training Resnet50 ....")
-    trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
-                                       tm_type=Resnet50, tm_pretrained=False, dm_category="all",
+                                       tm_type=Resnet50, tm_pretrained=True, dm_category="all",
                                        tr_type=BaseFasterTrainer, lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM,
                                        optimizer=torch.optim.SGD, momentum=0.9, weight_decay=5e-4)
