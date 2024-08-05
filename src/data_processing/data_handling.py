@@ -2,6 +2,7 @@ import json
 import pathlib
 
 import lightning as lgn
+import numpy as np
 import pandas as pd
 from PIL import Image
 from numpy import ndarray
@@ -9,15 +10,17 @@ from torchvision.transforms import v2
 import torch
 from torch.utils.data import DataLoader, Dataset
 import os
-from sklearn.base import TransformerMixin as anySkTransformer
-from typing import Tuple, List, Dict, Optional, Any
+from typing import Tuple, List, Dict, Optional, Any, Callable, Sequence
 from typing_extensions import Self
+from abc import ABC, abstractmethod
 
-from settings.config import FOOD_CATEGORIES, IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE
+from settings.config import FOOD_CATEGORIES, YUMMLY_PATH, YUMMLY_RECIPES_PATH, DEF_BATCH_SIZE, YUMMLY_IMG_STATS_PATH, \
+    METADATA_FILENAME
 from settings.commons import tokenize_category
 from src.commons.utils import register_hparams
 
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust, LabelEncoderInterface
+from src.data_processing.transformations import transform_plain_base, transform_aug_base, transformations_wrapper
 
 
 class _ImagesRecipesDataset(Dataset):
@@ -76,8 +79,8 @@ class ImagesRecipesDataset(_ImagesRecipesDataset):
     It loads the images from a general directory and the recipes from a json file, filters them by category,
     encodes the recipes to pass everything to the base class."""
 
-    def __init__(self, image_dir, recipes_file, transform=None, category=None, label_encoder=None,
-                 recipe_feature_label="ingredients_ok"):
+    def __init__(self, data_dir, transform=None, category=None, label_encoder=None,
+                 metadata_filename="metadata.json", feature_label="ingredients_ok"):
 
         # Check validity of parameters
         if transform is None:
@@ -90,48 +93,103 @@ class ImagesRecipesDataset(_ImagesRecipesDataset):
                 raise ValueError(f'Invalid category: {category}')
 
         # Compute images_path, Load recipes filter them by category and encode them to get the label data
-        images_paths, label_data, label_encoder = images_recipes_processing(image_dir, recipes_file, category,
-                                                                            label_encoder, recipe_feature_label)
+        images_paths, label_data, label_encoder = images_recipes_processing(data_dir, metadata_filename, category,
+                                                                            label_encoder, feature_label)
 
         super().__init__(images_paths, label_data, transform)
 
 
-def get_transform_plain(image_shape: Tuple[int, int] = (224, 224)):
-    return v2.Compose([
-        v2.ToImage(),
-        v2.Resize(image_shape),
-        v2.ToDtype(torch.float32, scale=True)
-    ])
+class BaseDataModule(ABC, lgn.LightningDataModule):
+    t_transform = Callable[[Image.Image | np.ndarray | torch.Tensor], torch.Tensor]
+
+    def __init__(self, images_stats_path: str | os.PathLike, transform_aug: Optional[t_transform] = None,
+                 transform_plain: Optional[t_transform] = None):
+        super().__init__()
+        self.classes_weights = None
+        self.images_stats_path = images_stats_path
+        self._transform_aug = self._def_transform_aug() if transform_aug is None else transform_aug
+        self._transform_plain = self._def_transform_plain() if transform_plain is None else transform_plain
+
+        self.prepared = False
+
+    @staticmethod
+    def _def_transform_aug(num_magnitude_bins=31):
+        return transform_aug_base(num_magnitude_bins=num_magnitude_bins)
+
+    @staticmethod
+    def _def_transform_plain():
+        return transform_plain_base()
+
+    @abstractmethod
+    def get_num_classes(self):
+        pass
+
+    @abstractmethod
+    def _compute_classes_weights(self) -> torch.tensor:
+        pass
+
+    @staticmethod
+    def _init_transform(transform: list[v2.Transform] | v2.Transform, mean: Sequence[float], std: Sequence[float]
+                        ) -> v2.Transform:
+        if type(transform) is list:
+            return transformations_wrapper(transform, mean, std)
+        if isinstance(transform, v2.Transform):
+            return transform
+        raise ValueError("Invalid transform type")
+
+    def prepare_data(self) -> None:
+        self.classes_weights = self._compute_classes_weights()
+
+        if not os.path.exists(self.images_stats_path):
+            raise FileNotFoundError(f'Images stats file not found: {self.images_stats_path}')
+        mean, std = pd.read_csv(self.images_stats_path, index_col=0).values  # TODO: quando ci sarà il sistema che salva i risultati in un file, anche questi dati verranno calcolati e salvati in quel file, e poi caricati
+
+        self._transform_aug = self._init_transform(self._transform_aug, mean, std)
+        self._transform_plain = self._init_transform(self._transform_plain, mean, std)
+
+        self.prepared = True
+
+    @property
+    def transform_aug(self):
+        if not self.prepared:
+            raise ValueError("prepare_data() must be called first")
+        return self._transform_aug
+
+    @property
+    def transform_plain(self):
+        if not self.prepared:
+            raise ValueError("prepare_data() must be called first")
+        return self._transform_plain
 
 
-class ImagesRecipesDataModule(lgn.LightningDataModule):
+class ImagesRecipesBaseDataModule(BaseDataModule):
     def __init__(
             self,
-            global_images_dir: os.path = IMAGES_PATH,
-            recipes_dir: os.path = RECIPES_PATH,
+            data_dir: os.path = YUMMLY_PATH,
+            metadata_filename: str = METADATA_FILENAME,
+            images_stats_path: str | os.PathLike = YUMMLY_IMG_STATS_PATH,
             food_categories: List[str] = FOOD_CATEGORIES,
             category: str = None,
-            recipe_feature_label: str = "ingredients_ok",
-            label_encoder: None | LabelEncoderInterface  = None,
-            image_shape: Tuple[int, int] = (224, 224),
+            feature_label: str = "ingredients_ok",
+            label_encoder: None | LabelEncoderInterface = None,
             batch_size: int = DEF_BATCH_SIZE,
-            num_workers: int | None = None
+            num_workers: int | None = None,
+            transform_aug: Optional[BaseDataModule.t_transform] = None,
+            transform_plain: Optional[BaseDataModule.t_transform] = None,
     ):
-        super().__init__()  # Setting parameters
-        self.images_dir, self.recipes_dir, = global_images_dir, recipes_dir,
-        self.recipe_feature_label, self.food_categories = recipe_feature_label, food_categories
-        self.image_shape, self.batch_size = image_shape, batch_size
-        self.label_encoder, self.category, self.num_workers = label_encoder, category, num_workers
+        super().__init__(images_stats_path, transform_aug=transform_aug, transform_plain=transform_plain)  # Setting parameters
+        self.data_dir, self.metadata_filename, = data_dir, metadata_filename,
+        self.recipe_feature_label, self.food_categories = feature_label, food_categories
+        self.batch_size, self.num_workers = batch_size, num_workers
+        self.label_encoder, self.category = label_encoder, category
         self._set_def_params()
 
-        register_hparams(self, ["global_images_dir", "recipes_dir", "category", "recipe_feature_label", "image_shape",
+        register_hparams(self, ["data_dir", "metadata_filename", "category", "feature_label",
                                 {"label_encoder": self.label_encoder.to_config()}, {"type": self.__class__},
-                                {"num_workers": self.num_workers}], log=False)
+                                {"num_workers": self.num_workers}, {}],
+                         log=False)
 
-        self.transform_aug = self._get_transform_aug()
-        self.transform_plain = self._get_transform_plain()
-
-        self._images_dir, self._recipes_files = {}, {}  # Local paths for each stage
+        self._stage_data_dir = {}  # Local paths for each stage
         self._check_paths_and_set_locals()
 
         # Images paths and the label data for each stage (final data used by the datasets)
@@ -155,62 +213,63 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
     def _check_paths_and_set_locals(self):
         """Checks if the global images and recipes directories exist and sets the local paths for each stage"""
         # Checks if the global images and recipes directories exist
-        if not os.path.exists(self.images_dir):
-            raise FileNotFoundError(f'Images directory not found: {self.images_dir}')
-        if not os.path.exists(self.recipes_dir):
-            raise FileNotFoundError(f'Recipes directory not found: {self.recipes_dir}')
+        if not os.path.exists(self.data_dir):
+            raise FileNotFoundError(f'Dataset directory not found: {self.data_dir}')
 
         # Checks if the images and recipes directories for each stage exist and sets the local paths
         for stage in ["train", "val", "test"]:
-            imgs_path = os.path.join(self.images_dir, stage)
-            recipes_file = os.path.join(self.recipes_dir, f"{stage}.json")
-            if not os.path.exists(imgs_path):
-                raise FileNotFoundError(f'Images directory for {stage} stage not found: {imgs_path}')
+            stage_data_dir = os.path.join(self.data_dir, stage)
+            recipes_file = os.path.join(stage_data_dir, self.metadata_filename)
             if not os.path.exists(recipes_file):
                 raise FileNotFoundError(f'Recipes file for {stage} stage not found: {recipes_file}')
 
-            self._images_dir[stage] = imgs_path
-            self._recipes_files[stage] = recipes_file
+            self._stage_data_dir[stage] = stage_data_dir
 
         self._set_local_path_predict()
 
     def _set_local_path_predict(self):
         """Sets the local paths for the predict stage"""
-        predict_imgs_path = os.path.join(self.images_dir, "predict")
-        predict_recipes_file = os.path.join(self.recipes_dir, "predict.json")
-        if not os.path.exists(predict_imgs_path) and not os.path.exists(predict_recipes_file):
+        predict_data_dir = os.path.join(self.data_dir, "predict")
+        predict_recipes_file = os.path.join(predict_data_dir, self.metadata_filename)
+        if not os.path.exists(predict_data_dir) and not os.path.exists(predict_recipes_file):
             # If the predict directories do not exist, set the predict dataset equal to the test dataset
-            self._images_dir["predict"] = self._images_dir["test"]
-            self._recipes_files["predict"] = self._recipes_files["test"]
+            self._stage_data_dir["predict"] = self._stage_data_dir["test"]
 
         else:  # If one of the paths exists, both of them must exist
-            if not os.path.exists(predict_imgs_path):
-                raise FileNotFoundError(f'Images directory for predict stage not found: {predict_imgs_path}')
+            if not os.path.exists(predict_data_dir):
+                raise FileNotFoundError(f'Dataset directory for predict stage not found: {predict_data_dir}')
             if not os.path.exists(predict_recipes_file):
                 raise FileNotFoundError(f'Recipes file for predict stage not found: {predict_recipes_file}')
-            self._images_dir["predict"] = predict_imgs_path
-            self._recipes_files["predict"] = predict_recipes_file
+            self._stage_data_dir["predict"] = predict_data_dir
 
-    def _get_transform_aug(self, num_magnitude_bins=31):
-        return v2.Compose([
-            v2.ToImage(),
-            v2.Resize(self.image_shape),
-            v2.TrivialAugmentWide(num_magnitude_bins=num_magnitude_bins),
-            v2.ToDtype(torch.float32, scale=True)
-        ])
+    def _compute_classes_weights(self, stage_target="train", minority_inversion=True, standardize=True
+                                 ) -> torch.tensor:
+        """Computes the class weights for the dataset labels"""
 
-    def _get_transform_plain(self):
-        return get_transform_plain(self.image_shape)
+        classes_occ = np.sum(self._label_data[stage_target], axis=0, dtype=np.float32)
+        classes_occ[classes_occ == 0] = np.NaN  # Put NaNs in the classes that are not present in the dataset
+
+        class_weights = np.nansum(classes_occ) / classes_occ
+
+        if not minority_inversion:
+            class_weights = 1 / class_weights
+
+        if standardize:
+            class_weights = class_weights / class_weights[~np.isnan(class_weights)].min()
+
+        return torch.tensor(np.nan_to_num(class_weights), dtype=torch.float32)
 
     def prepare_data(
             self):  # todo: fare il sistema che salva i risultati in un file, in modo che non vengano ricalcolati ogni volta (e che si possano rimuovere volendo dal checkpointing)
         """Prepares the data for the datasets by processing the images and recipes data."""
         for stage in ['train', 'val', 'test', 'predict']:
-            res = images_recipes_processing(self._images_dir[stage], self._recipes_files[stage], self.category,
+            res = images_recipes_processing(self._stage_data_dir[stage], self.metadata_filename, self.category,
                                             self.label_encoder, self.recipe_feature_label)
             self._images_paths[stage], self._label_data[stage], self.label_encoder = res
 
         self.hparams['label_encoder'] = self.label_encoder.to_config()
+
+        super().prepare_data()
 
     def setup(self, stage=None):
         if stage == 'fit' or stage is None:
@@ -242,34 +301,39 @@ class ImagesRecipesDataModule(lgn.LightningDataModule):
                           pin_memory=True, persistent_workers=True)
 
     def get_num_classes(self):
-        return len(self.label_encoder.classes) + 1
+        return self.label_encoder.num_classes
 
     @classmethod
-    def load_from_config(cls, config: Dict[str, any], batch_size: int, **kwargs
+    def load_from_config(cls, config: Dict[str, any], batch_size: int,
+                         transform_aug: Optional[BaseDataModule.t_transform] = None,
+                         transform_plain: Optional[BaseDataModule.t_transform] = None,
+                         **kwargs
                          ) -> Self:
-        image_dir_path, recipe_dir_path = config['global_images_dir'], config['recipes_dir']
-        category, recipe_feature_label = config['category'], config['recipe_feature_label']
-        num_workers, image_shape = config['num_workers'], config['image_shape']
-        le_type = config['label_encoder']['type']
+        data_dir_path, metadata_filename = config['data_dir'], config['metadata_filename']
+        category, feature_label = config['category'], config['feature_label']
+        num_workers, le_type = config['num_workers'], config['label_encoder']['type']
 
         label_encoder = le_type.load_from_config(config['label_encoder'])
-        return cls(global_images_dir=image_dir_path, recipes_dir=recipe_dir_path, category=category,
-                   image_shape=image_shape, batch_size=batch_size, recipe_feature_label=recipe_feature_label,
-                   num_workers=num_workers, label_encoder=label_encoder, **kwargs)
+        return cls(data_dir=data_dir_path, metadata_filename=metadata_filename, category=category,
+                   batch_size=batch_size, feature_label=feature_label,
+                   num_workers=num_workers, label_encoder=label_encoder,
+                   transform_plain=transform_plain, transform_aug=transform_aug, **kwargs)
 
 
 def images_recipes_processing(
-        images_dir: os.path, recipes_file: os.path, category: str | None = None,
-        label_encoder: anySkTransformer | MultiLabelBinarizerRobust = None,
-        recipe_feature_label: str = "ingredients_ok"
-) -> Tuple[List[pathlib.Path], ndarray, anySkTransformer | MultiLabelBinarizerRobust]:
+        data_dir: os.path, metadata_filename: str = METADATA_FILENAME, category: str | None = None,
+        label_encoder: LabelEncoderInterface = None, recipe_feature_label: str = "ingredients_ok",
+        image_field: str = "image"
+) -> Tuple[List[pathlib.Path], ndarray, LabelEncoderInterface]:
     """Function that processes the images and recipes data, filtering them by category, encoding the recipes and
     returning the images paths, the label data and the label encoder."""
 
-    images_paths = _compute_images_paths(images_dir, category)
-    recipes = json.load(open(recipes_file))
+    recipes = json.load(open(os.path.join(data_dir, metadata_filename)))
     recipes = _recipes_filter_by_category(recipes, category)
+
+    images_paths = _compute_images_paths(recipes, data_dir, image_field)
     label_data, label_encoder = _encode_recipes(recipes, label_encoder, recipe_feature_label)
+
     return images_paths, label_data, label_encoder
 
 
@@ -281,7 +345,7 @@ def _recipes_filter_by_category(recipes: List[Dict], category: str | None = None
 
 def _encode_recipes(
         recipes: List[Dict],
-        label_encoder: anySkTransformer | MultiLabelBinarizerRobust,
+        label_encoder: LabelEncoderInterface,
         feature_label: str) -> Tuple[ndarray, LabelEncoderInterface]:
     # Fit the encoder to the label feature if it is not already fitted, and then transform it
     label_data_raw = pd.DataFrame(recipes)[feature_label].values
@@ -290,8 +354,8 @@ def _encode_recipes(
     return label_encoder.transform(label_data_raw), label_encoder
 
 
-def _compute_images_paths(images_dir: os.path, category: str) -> List[pathlib.Path]:
-    if category is None or category == "all":
-        return list(pathlib.Path(images_dir).glob('*.jpg'))
-    else:
-        return list(pathlib.Path(images_dir).glob(f'*{tokenize_category(category)}.jpg'))
+def _compute_images_paths(metadata: List[Dict], data_dir: str | os.PathLike, image_field: str = "image"
+                          ) -> List[pathlib.Path]:
+    metadata_df = pd.DataFrame(metadata)
+    metadata_df[image_field] = metadata_df[image_field].apply(lambda img_path: os.path.join(data_dir, img_path))
+    return metadata_df[image_field].values.tolist()

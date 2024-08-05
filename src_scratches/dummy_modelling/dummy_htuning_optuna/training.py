@@ -6,7 +6,7 @@ import optuna
 from optuna_integration import PyTorchLightningPruningCallback
 
 from settings.config import *
-from src.data_processing.data_handling import ImagesRecipesDataModule
+from src.data_processing.data_handling import ImagesRecipesBaseDataModule
 from src_scratches.dummy_modelling.dummy_htuning_optuna.LightningModel import LightningModel
 from src_scratches.dummy_modelling.dummy_htuning_optuna.model import DummyModel
 from src.dashboards.start_optuna import start_optuna
@@ -92,8 +92,8 @@ if __name__ == "__main__":
     OPTIMIZER, LR = torch.optim.Adam, 1e-3
     ACCURACY_FN = multi_label_accuracy
 
-    data_module = ImagesRecipesDataModule(IMAGES_PATH, RECIPES_PATH, category=CATEGORY,
-                                          image_size=INPUT_SHAPE, batch_size=BATCH_SIZE, num_workers=NUM_WORKERS)
+    data_module = ImagesRecipesBaseDataModule(YUMMLY_PATH, category=CATEGORY,
+                                              batch_size=BATCH_SIZE, num_workers=NUM_WORKERS)
 
     data_module.prepare_data()
     data_module.setup()

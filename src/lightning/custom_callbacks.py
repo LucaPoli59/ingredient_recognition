@@ -25,6 +25,12 @@ class CSVLoggerEncode(CSVLoggerQuiet):
         super().log_hyperparams(enc_config_to_yaml(encode_config(params)))
 
 
+class WandbLoggerEncode(lgn.pytorch.loggers.WandbLogger):
+    """Simple wrapper for lighting WandbLogger that encodes the hyperparameters in a more readable way"""
+
+    def log_hyperparams(self, params: Dict[str, Any]) -> None:
+        super().log_hyperparams(enc_config_to_yaml(encode_config(params)))
+
 class FullModelCheckpoint(callbacks.ModelCheckpoint):
     """Custom ModelCheckpoint that saves also some information about the data used and trainer configuration"""
 

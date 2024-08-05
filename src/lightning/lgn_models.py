@@ -9,11 +9,13 @@ import inspect
 from src.commons.utils import register_hparams
 from src.commons.visualizations import gradcam
 from src.models.commons import BaseModel
+from src.data_processing.data_handling import BaseDataModule
 
 
 class BaseLGNM(lgn.LightningModule):
     def __init__(self, model: BaseModel, lr: float, batch_size: int, optimizer: Type[torch.optim.Optimizer],
-                 loss_fn: torch.nn.Module, momentum: Optional[float] = None, weight_decay: Optional[float] = None,
+                 loss_fn: torch.nn.Module, weight_loss: bool = False, momentum: Optional[float] = None,
+                 weight_decay: Optional[float] = None, use_swa: bool = False,
                  metrics: Optional[Type[Metric] | Dict[str, Type[Metric] | Dict[str, Dict[str, Any] | Type[Metric]]]
                                    ] = None,
                  model_name: Optional[str] = None,
@@ -25,8 +27,10 @@ class BaseLGNM(lgn.LightningModule):
         :param batch_size: batch size
         :param optimizer: optimized to use (provided as a class)
         :param loss_fn: loss function to use (provided as a class)
+        :param weight_loss: if True, the loss function will be weighted
         :param momentum: momentum for the optimizer (by default is None) [works only with SGD]
         :param weight_decay: weight decay for the optimizer (by default is None)
+        :param use_swa: if True, the model will use Stochastic Weight Averaging
         :param metrics: metrics to use (provided as a class or a dict with the name as key and as value a dict with
                         the keys 'type' (metric class) and 'init_params' (dict) and 'logging_params' (dict))
                         (by default is empty)
@@ -36,24 +40,27 @@ class BaseLGNM(lgn.LightningModule):
         :param hparams_to_register:
         """
         super().__init__()
+        self.prepared = False
         self._model = model
         self._lr = lr
         self._batch_size = batch_size
         self.loss_fn = loss_fn  # loss class
-        self.metrics_config = self._parse_metrics_config(metrics)  # dict to metrics class pointer and their parameters
+        self.weight_loss = weight_loss
         self.optimizer = optimizer  # Optimizer class
         self.momentum_val = momentum
         self.weight_decay_val = weight_decay
+        self.use_swa = use_swa
+        self.metrics_config = self._parse_metrics_config(metrics)  # dict to metrics class pointer and their parameters
+        self.model_name = model_name
 
         self.num_classes = self._model.num_classes
         self.torch_model_type = type(self._model)
-        self.model_name = model_name
-
         self.gradcam_target_layer = getattr(self._model, "gradcam_target_layer", None)
 
         hparams = ([{"lr": self._lr}, {"batch_size": self._batch_size}, {"optimizer": self.optimizer},
                     {"momentum": self.momentum_val}, {"weight_decay": self.weight_decay_val},
-                    {"loss_fn": self.loss_fn}, {"lgn_model_type": self.__class__},
+                    {"loss_fn": self.loss_fn}, {"weight_loss": self.weight_loss}, {"lgn_model_type": self.__class__},
+                    {"use_swa": self.use_swa},
                     {"torch_model": self._model.to_config()}, {"metrics": self.metrics_config},
                     {"num_classes": self.num_classes}] + (["model_name"] if model_name is not None else []))
 
@@ -62,11 +69,18 @@ class BaseLGNM(lgn.LightningModule):
 
         register_hparams(self, hparams)
 
-        self.loss_fn = loss_fn()  # After registering the loss_fn, we need to instantiate it
         metrics = MetricCollection(self._init_metrics())  # Initialize the metrics
         self.train_metrics = metrics.clone(prefix="train_")
         self.val_metrics = metrics.clone(prefix="val_")
         self.test_metrics = metrics.clone(prefix="test_")
+
+    def startup_model(self, datamodule: BaseDataModule):
+        if not self.prepared:
+            self._startup(datamodule)
+            self.prepared = True
+
+    def _startup(self, datamodule: BaseDataModule):
+        self._init_loss(datamodule)
 
     @staticmethod
     def _parse_metrics_config(metrics_in) -> Dict[str, Dict[str, Type[Metric] | Dict[str, Any]]]:
@@ -117,6 +131,29 @@ class BaseLGNM(lgn.LightningModule):
         else:
             self.optimizer = self.optimizer(self.model.parameters(), lr=self._lr, weight_decay=weight_decay)
         return self.optimizer
+
+    def configure_callbacks(self) -> List[lgn.pytorch.callbacks.Callback] | lgn.pytorch.callbacks.Callback:
+        callbacks = []
+        if self.use_swa:
+            callbacks += [lgn.pytorch.callbacks.StochasticWeightAveraging(swa_lrs=0.5 * self.lr)]
+
+        return callbacks
+
+    def setup(self, stage: str) -> None:  # Called by the fit of super() before training loop
+        if not self._prepared:
+            raise ValueError(f"Model not prepared. Call startup_model before {stage}")
+
+    def _init_loss(self, datamodule: BaseDataModule):
+        if not self.weighted_loss:
+            self.loss_fn = self.loss_fn()
+        else:
+            weights = datamodule.classes_weights
+            if self.loss_fn == torch.nn.BCEWithLogitsLoss:
+                self.loss_fn = self.loss_fn(pos_weight=weights)
+            elif self.loss_fn == torch.nn.CrossEntropyLoss:
+                self.loss_fn = self.loss_fn(weight=weights)
+            else:
+                raise ValueError(f"Loss type {self.loss_fn} not recognized")
 
     def _base_step(self, batch, metrics) -> Tuple[float, Dict[str, torch.Tensor]]:
         X, y = batch
@@ -171,11 +208,23 @@ class BaseLGNM(lgn.LightningModule):
     def batch_size(self):
         return self.hparams.batch_size
 
+    @property
+    def lr_swa(self):
+        return self.hparams.lr * 0.5
+
     @batch_size.setter
     def batch_size(self, batch_size):
         if batch_size < 1:
             raise ValueError("Batch size must be greater than 0")
         self.hparams.batch_size = batch_size
+
+    @property
+    def transform_plain(self):
+        return self._model.transform_plain
+
+    @property
+    def transform_aug(self):
+        return self._model.transform_aug
 
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], torch_model_kwargs: Optional[Dict[str, Any]] = None,
@@ -191,13 +240,14 @@ class BaseLGNM(lgn.LightningModule):
         batch_size, lr = config['batch_size'], config['lr']
         loss_fn, metrics = config['loss_fn'], config['metrics']
         momentum, weight_decay = config.get('momentum', None), config.get('weight_decay', None)
+        use_swa = config.get('use_swa', False)
         optimizer, model_name = config['optimizer'], config.get('model_name', None)
 
         torch_model_config = config['torch_model']
         torch_model = torch_model_config['type'].load_from_config(torch_model_config, **torch_model_kwargs)
 
         lgn_model = cls(torch_model, lr, batch_size, optimizer, loss_fn, momentum=momentum, weight_decay=weight_decay,
-                        metrics=metrics, model_name=model_name,
+                        use_swa=use_swa, metrics=metrics, model_name=model_name,
                         **lgn_model_kwargs)
         return lgn_model
 
@@ -207,7 +257,7 @@ class BaseLGNM(lgn.LightningModule):
 
 class BaseWithSchedulerLGNM(BaseLGNM):
     def __init__(self, model: BaseModel, lr: float, batch_size: int, optimizer: Type[torch.optim.Optimizer],
-                 loss_fn: torch.nn.Module, momentum: Optional[float] = None, weight_decay: Optional[float] = None,
+                 loss_fn: torch.nn.Module, weighted_loss: bool = False, momentum: Optional[float] = None, weight_decay: Optional[float] = None,
                  lr_scheduler: Optional[Type[torch.optim.lr_scheduler.LRScheduler]] = None,
                  lr_scheduler_params: Optional[Dict[str, Any]] = None,
                  metrics: Optional[Type[Metric] | Dict[str, Type[Metric] | Dict[str, Dict[str, Any] | Type[Metric]]]
@@ -216,18 +266,13 @@ class BaseWithSchedulerLGNM(BaseLGNM):
                  hparams_to_register: Optional[List[str]] = None):
 
         # by using a scheduler we can increase the starting LR
-        if lr_scheduler is not None:
-            lr = min(1e-1, lr * 10)
-
-
-        super().__init__(model, lr, batch_size, optimizer, loss_fn, momentum, weight_decay, metrics, model_name,
-                         hparams_to_register)
+        super().__init__(model, lr, batch_size, optimizer, loss_fn, weighted_loss, momentum, weight_decay,
+                         metrics, model_name, hparams_to_register)
 
         if lr_scheduler_params is None:
             lr_scheduler_params = {}
         self.lr_scheduler_params = lr_scheduler_params
         self.lr_scheduler = lr_scheduler
-
 
         hparams = [{"lr_scheduler": self.lr_scheduler}, {"lr_scheduler_params": self.lr_scheduler_params}]
 
@@ -236,6 +281,9 @@ class BaseWithSchedulerLGNM(BaseLGNM):
 
         register_hparams(self, hparams)
 
+    @property
+    def lr_swa(self):
+        return max(self.hparams.lr / 100, self.lr_scheduler_params['min_lr']) * 0.5
 
     def configure_optimizers(self) -> OptimizerLRScheduler:
         self.optimizer = super().configure_optimizers()

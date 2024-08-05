@@ -15,7 +15,7 @@ from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, OPTUNA_JOURNAL_FI
                              OPTUNA_JOURNAL_PATH)
 from src.training._commons import set_torch_constants, model_training, init_optuna_storage, load_datamodule
 
-from src.data_processing.data_handling import ImagesRecipesDataModule
+from src.data_processing.data_handling import ImagesRecipesBaseDataModule
 from src.lightning.lgn_trainers import TrainerInterface, OptunaTrainer
 from src.models.dummy import DummyModel
 from src.commons.exp_config import ExpConfig, HGeneratorConfig, HTunerExpConfig
@@ -210,7 +210,7 @@ def save_best_trial(study: optuna.study.Study, save_dir: str | os.PathLike, exp_
     return trainer, model
 
 
-def _objective_wrapper(trial: optuna.Trial, exp_config: ExpConfig, data_module: ImagesRecipesDataModule,
+def _objective_wrapper(trial: optuna.Trial, exp_config: ExpConfig, data_module: ImagesRecipesBaseDataModule,
                        hparam_gen_config: HGeneratorConfig, check_for_resume: bool = False
                        ) -> float:
     trial_config = copy.deepcopy(exp_config)

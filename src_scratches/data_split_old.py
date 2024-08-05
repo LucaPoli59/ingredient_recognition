@@ -8,11 +8,11 @@ from settings.commons import tokenize_category
 
 # Create the directories for train, val, and test data
 for phase in ["train", "val", "test"]:  # delete and recreate the directories
-    if os.path.exists(os.path.join(IMAGES_PATH, phase)):
-        shutil.rmtree(os.path.join(IMAGES_PATH, phase))
-    os.mkdir(os.path.join(IMAGES_PATH, phase))
+    if os.path.exists(os.path.join(YUMMLY_PATH, phase)):
+        shutil.rmtree(os.path.join(YUMMLY_PATH, phase))
+    os.mkdir(os.path.join(YUMMLY_PATH, phase))
 
-recipes = json.load(open(os.path.join(RECIPES_PATH, "recipes_sorted.json")))
+recipes = json.load(open(os.path.join(YUMMLY_RECIPES_PATH, "recipes_sorted.json")))
 
 seed = 42
 full_md_train, full_md_test, full_md_val = [], [], []
@@ -46,7 +46,7 @@ for category in os.listdir(RAW_IMAGES_PATH):
     for phase, image_dataset in zip(["train", "val", "test"], [images_train, images_val, images_test]):
         for image in tqdm(image_dataset, desc=f"Copying {category} images of {phase} phase"):
             shutil.copy(str(os.path.join(RAW_IMAGES_PATH, category, image)),
-                        str(os.path.join(IMAGES_PATH, phase, tokenize_category(category.lower()) + image)))
+                        str(os.path.join(YUMMLY_PATH, phase, tokenize_category(category.lower()) + image)))
 
     full_md_train.extend(metadata_train)
     full_md_val.extend(metadata_val)
@@ -58,11 +58,11 @@ for category in os.listdir(RAW_IMAGES_PATH):
 
 
 # Save the metadata
-json.dump(full_md_train, open(os.path.join(METADATA_PATH, "train.json"), "w"))
-json.dump(full_md_val, open(os.path.join(METADATA_PATH, "val.json"), "w"))
-json.dump(full_md_test, open(os.path.join(METADATA_PATH, "test.json"), "w"))
+json.dump(full_md_train, open(os.path.join(YUMMLY_METADATA_PATH, "train.json"), "w"))
+json.dump(full_md_val, open(os.path.join(YUMMLY_METADATA_PATH, "val.json"), "w"))
+json.dump(full_md_test, open(os.path.join(YUMMLY_METADATA_PATH, "test.json"), "w"))
 
-json.dump(full_r_train, open(os.path.join(RECIPES_PATH, "train.json"), "w"))
-json.dump(full_r_val, open(os.path.join(RECIPES_PATH, "val.json"), "w"))
-json.dump(full_r_test, open(os.path.join(RECIPES_PATH, "test.json"), "w"))
+json.dump(full_r_train, open(os.path.join(YUMMLY_RECIPES_PATH, "train.json"), "w"))
+json.dump(full_r_val, open(os.path.join(YUMMLY_RECIPES_PATH, "val.json"), "w"))
+json.dump(full_r_test, open(os.path.join(YUMMLY_RECIPES_PATH, "test.json"), "w"))
 

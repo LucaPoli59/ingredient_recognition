@@ -1,19 +1,20 @@
 import torch
-import torch.functional as F
 import torchvision
 from torch import nn
 from typing import Dict, Any, Tuple
-
 from typing_extensions import Self
+from abc import ABC
 
+from settings.config import DEF_IMAGE_SHAPE
 from src.models.commons import BaseModel
+from src.data_processing.transformations import transform_aug_imagenet, transform_plain_imagenet
 
 
-class _BaseDensenetLike(BaseModel):
-    def __init__(self, num_classes):
-        """NB: densenet convs follow the pattern of bn -> relu -> conv"""
-        super().__init__(num_classes=num_classes)
-        self.num_classes = num_classes
+class _BaseDensenetLike(BaseModel, ABC):
+    """NB: densenet convs follow the pattern of bn -> relu -> conv"""
+
+    def __init__(self, num_classes, input_shape):
+        super().__init__(num_classes=num_classes, input_shape=input_shape)
 
         self.conv1 = nn.Sequential(
             nn.Conv2d(3, 64, 7, padding=3, stride=2, bias=False),
@@ -23,9 +24,10 @@ class _BaseDensenetLike(BaseModel):
 
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
-        if "num_classes" not in config:
-            raise ValueError("The configuration must contain the key 'num_classes' with the number of classes")
-        return cls(config["num_classes"])
+        for key in ["num_classes", "input_shape"]:
+            if key not in config:
+                raise ValueError(f"The configuration must contain the key '{key}'")
+        return cls(config["num_classes"], config["input_shape"])
 
     @staticmethod
     def _make_block(layer_type, in_channel, num_layers) -> Tuple[nn.Sequential, int]:
@@ -76,9 +78,8 @@ class TransitionLayer(torch.nn.Module):
 
 
 class DensenetLikeV1(_BaseDensenetLike):  # Like DenseNet-121
-    def __init__(self, num_classes):
-        super().__init__(num_classes)
-        self.num_classes = num_classes
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE):
+        super().__init__(num_classes, input_shape)
 
         self.dense_1, out_chs = self._make_block(DenseLayer, 64, 6)  # 64 -> 256
         self.transition_1 = TransitionLayer(out_chs, DenseLayer.reduction_factor)  # 256 -> 128
@@ -100,8 +101,6 @@ class DensenetLikeV1(_BaseDensenetLike):  # Like DenseNet-121
             nn.Linear(out_chs, num_classes, bias=True)
         )
 
-        self.classifier_target_layer = self.classifier[-1]
-        self.conv_target_layer = self.final_relu
 
     def forward(self, x):
         out = self.conv1(x)
@@ -111,6 +110,14 @@ class DensenetLikeV1(_BaseDensenetLike):  # Like DenseNet-121
         out = self.final_relu(self.bn_final(self.dense_4(out)))
 
         return self.classifier(out)
+
+    @property
+    def conv_target_layer(self):
+        return self.final_relu
+
+    @property
+    def classifier_target_layer(self):
+        return self.classifier[-1]
 
 
 class DensenetLikeV2(_BaseDensenetLike):  # Like DenseNet-201
@@ -138,9 +145,6 @@ class DensenetLikeV2(_BaseDensenetLike):  # Like DenseNet-201
             nn.Linear(out_chs, num_classes, bias=True)
         )
 
-        self.classifier_target_layer = self.classifier[-1]
-        self.conv_target_layer = self.final_relu
-
     def forward(self, x):
         out = self.conv1(x)
         out = self.transition_1(self.dense_1(out))
@@ -150,46 +154,73 @@ class DensenetLikeV2(_BaseDensenetLike):  # Like DenseNet-201
 
         return self.classifier(out)
 
+    @property
+    def conv_target_layer(self):
+        return self.final_relu
 
-class _BaseDensenet(BaseModel):
-    def __init__(self, num_classes, pretrained):
-        super().__init__(num_classes=num_classes, pretrained=pretrained)
-        self.num_classes = num_classes
+    @property
+    def classifier_target_layer(self):
+        return self.classifier[-1]
+
+
+class _BaseDensenet(BaseModel, ABC):
+    def __init__(self, num_classes, input_shape, pretrained):
+        super().__init__(num_classes=num_classes, input_shape=input_shape, pretrained=pretrained)
+        self.pretrained = pretrained
 
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
-        for key in ["num_classes", "pretrained"]:
+        for key in ["num_classes", "input_shape", "pretrained"]:
             if key not in config:
                 raise ValueError(f"The configuration must contain the key '{key}'")
-        return cls(config["num_classes"], config["pretrained"])
+        return cls(config["num_classes"], config["input_shape"], config["pretrained"])
+
+    @property
+    def transform_aug(self):
+        return transform_aug_imagenet(self.tr_weights, self.input_shape)
+
+    @property
+    def transform_plain(self):
+        return transform_plain_imagenet(self.tr_weights, self.input_shape)
 
 
 class Densenet121(_BaseDensenet):
-    def __init__(self, num_classes, pretrained=True):
-        super().__init__(num_classes, pretrained)
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, pretrained=True):
+        super().__init__(num_classes, input_shape, pretrained)
         weights = torchvision.models.DenseNet121_Weights.DEFAULT if pretrained else None
         self.model = torchvision.models.densenet121(weights=weights)
         self.model.classifier = nn.Linear(self.model.classifier.in_features, num_classes)
 
-        self.classifier_target_layer = self.model.classifier
-        self.conv_target_layer = self.model.features[-1]
-
     def forward(self, x):
         return self.model(x)
 
+    @property
+    def conv_target_layer(self):
+        return self.model.features[-1]
+
+    @property
+    def classifier_target_layer(self):
+        return self.model.classifier
+
 
 class Densenet201(_BaseDensenet):
-    def __init__(self, num_classes, pretrained=True):
-        super().__init__(num_classes, pretrained)
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, pretrained=True):
+        super().__init__(num_classes, input_shape, pretrained)
         weights = torchvision.models.DenseNet201_Weights.DEFAULT if pretrained else None
         self.model = torchvision.models.densenet201(weights=weights)
         self.model.classifier = nn.Linear(self.model.classifier.in_features, num_classes)
 
-        self.classifier_target_layer = self.model.classifier
-        self.conv_target_layer = self.model.features[-1]
 
     def forward(self, x):
         return self.model(x)
+
+    @property
+    def conv_target_layer(self):
+        return self.model.features[-1]
+
+    @property
+    def classifier_target_layer(self):
+        return self.model.classifier
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ from ray.tune.search.hyperopt import HyperOptSearch
 from ray import tune, train
 
 from settings.config import *
-from src.data_processing.data_handling import ImagesRecipesDataModule
+from src.data_processing.data_handling import ImagesRecipesBaseDataModule
 from src_scratches.dummy_modelling.dummy_htuning_ray.model import DummyModel
 from src_scratches.dummy_modelling.dummy_htuning_ray.LightningModel import LightningModel
 
@@ -87,8 +87,8 @@ if __name__ == "__main__":
     OPTIMIZER, LR = torch.optim.Adam, 1e-3
     ACCURACY_FN = multi_label_accuracy
 
-    data_module = ImagesRecipesDataModule(IMAGES_PATH, RECIPES_PATH, category=CATEGORY,
-                                          image_size=INPUT_SHAPE, batch_size=BATCH_SIZE, num_workers=NUM_WORKERS)
+    data_module = ImagesRecipesBaseDataModule(YUMMLY_PATH, YUMMLY_RECIPES_PATH, category=CATEGORY,
+                                              image_size=INPUT_SHAPE, batch_size=BATCH_SIZE, num_workers=NUM_WORKERS)
 
     data_module.prepare_data()
     data_module.setup()

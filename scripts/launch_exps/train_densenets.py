@@ -2,7 +2,7 @@ import os
 import lightning as lgn
 import torch
 
-from settings.config import (EXPERIMENTS_PATH, DEF_LR)
+from settings.config import (EXPERIMENTS_PATH, DEF_LR, DEF_LR_INIT)
 from src.lightning.lgn_trainers import BaseFasterTrainer
 from src.models.densenet import DensenetLikeV1, DensenetLikeV2, Densenet121, Densenet201
 from src.training.one_shot_exp import make_one_shot_exp
@@ -18,28 +18,29 @@ if __name__ == "__main__":
     else:
         print(f"WARNING: Experiment {exp_name} already exists in {exp_dir}")
 
+    lr = DEF_LR_INIT
     debug = False
 
     # print("Training DensenetLikeV1 ....")
     # trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
     #                                    tm_type=DensenetLikeV1, dm_category="all", tr_type=BaseFasterTrainer,
-    #                                    lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM, optimizer=torch.optim.SGD,
+    #                                    lr=lr, lgn_model_type=BaseWithSchedulerLGNM, optimizer=torch.optim.SGD,
     #                                    momentum=0.9, weight_decay=5e-4)
     #
     # print("Training DensenetLikeV2 ....")
     # trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
     #                                    tm_type=DensenetLikeV2, dm_category="all", tr_type=BaseFasterTrainer,
-    #                                    lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM, optimizer=torch.optim.SGD,
+    #                                    lr=lr, lgn_model_type=BaseWithSchedulerLGNM, optimizer=torch.optim.SGD,
     #                                    momentum=0.9, weight_decay=5e-4)
 
     print("Training Densenet121 ....")
     trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
                                        tm_type=Densenet121, tm_pretrained=False, dm_category="all",
-                                       tr_type=BaseFasterTrainer, lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM,
+                                       tr_type=BaseFasterTrainer, lr=lr, lgn_model_type=BaseWithSchedulerLGNM,
                                        optimizer=torch.optim.SGD, momentum=0.9, weight_decay=5e-4)
 
     print("Training Densenet201 ....")
     trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=debug,
                                        tm_type=Densenet201, tm_pretrained=False, dm_category="all",
-                                       tr_type=BaseFasterTrainer, lr=DEF_LR, lgn_model_type=BaseWithSchedulerLGNM,
+                                       tr_type=BaseFasterTrainer, lr=lr, lgn_model_type=BaseWithSchedulerLGNM,
                                        optimizer=torch.optim.SGD, momentum=0.9, weight_decay=5e-4)

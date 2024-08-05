@@ -6,12 +6,13 @@ from torchmetrics import Accuracy, HammingDistance, Precision, Recall
 import optuna
 
 from src.commons.config_enc_dec import encode_config, decode_config
-from settings.config import IMAGES_PATH, RECIPES_PATH, DEF_BATCH_SIZE, DEF_LR, DEF_UNKNOWN_TOKEN, DEF_N_TRIALS
+from settings.config import YUMMLY_PATH, YUMMLY_RECIPES_PATH, DEF_BATCH_SIZE, DEF_LR, DEF_UNKNOWN_TOKEN, DEF_N_TRIALS, \
+    METADATA_FILENAME
 from src.models.dummy import DummyModel
 from src.lightning.lgn_models import BaseLGNM
 from src.lightning.lgn_trainers import BaseTrainer
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
-from src.data_processing.data_handling import ImagesRecipesDataModule
+from src.data_processing.data_handling import ImagesRecipesBaseDataModule
 from src.commons.utils import MyMLAccuracy
 
 DEF_METRIC_INIT_P = {
@@ -31,9 +32,11 @@ DEF_EXP_CONFIG = {
         "batch_size": DEF_BATCH_SIZE,
         "lr": DEF_LR,
         "loss_fn": torch.nn.BCEWithLogitsLoss,
+        "weighted_loss": False,
         "optimizer": torch.optim.Adam,
         "momentum": None,
         "weight_decay": None,
+        "use_swa": False,
         "lr_scheduler": torch.optim.lr_scheduler.ReduceLROnPlateau,  #  this works only with BaeWithSchedulerLGNM
         "lr_scheduler_params": {
             "mode": "min",
@@ -46,6 +49,7 @@ DEF_EXP_CONFIG = {
             "type": DummyModel,
             "input_shape": (224, 224),
             "num_classes": None,
+            "lp_phase": None,
         },
         "metrics": {
             "acc": {'type': Accuracy, 'init_params': DEF_METRIC_INIT_P, 'logging_params': DEF_METRIC_LOGGING_P},
@@ -64,14 +68,15 @@ DEF_EXP_CONFIG = {
         "limit_train_batches": 1.0,
         "limit_predict_batches": 1,
         "log_every_n_steps": 50,
+        "early_stop": None,  # used only if the trainer has the early stopping callback
     },
     "datamodule_hyper_parameters": {  # in questo caso non serve
-        "type": ImagesRecipesDataModule,
+        "type": ImagesRecipesBaseDataModule,
         "image_shape": (224, 224),
-        "global_images_dir": IMAGES_PATH,
-        "recipes_dir": RECIPES_PATH,
+        "data_dir": YUMMLY_PATH,
+        "metadata_filename": METADATA_FILENAME,
         "category": None,
-        "recipe_feature_label": "ingredients_ok",
+        "feature_label": "ingredients_ok",
         "num_workers": os.cpu_count(),
         "label_encoder": {
             "type": MultiLabelBinarizerRobust,

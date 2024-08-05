@@ -1,33 +1,26 @@
 import os
 
 import dash
-from typing import Any, Tuple, List, Optional
+from typing import Tuple, List, Optional
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc
 import jsonpickle
 import numpy as np
 from dash_iconify import DashIconify
-import yaml
-from dash import html, Dash, dcc, callback, Input, Output, Patch, dash_table, State
-import dash_uploader
-import base64
+from dash import html, dcc, callback, Input, Output, State
 import plotly.express as px
-import cv2
 import pandas as pd
 import torch
-import io
-import timeit
 from PIL import Image
-import io
 
 from dash.exceptions import PreventUpdate
-from settings.config import EXPERIMENTS_PATH, HTUNER_CONFIG_FILE, BLANK_IMG_PATH, PROJECT_PATH
-from src.dashboards._commons import recursive_listdir, DASH_CACHE, open_img, dash_get_asset_url, img_from_ndarray
+from settings.config import EXPERIMENTS_PATH, HTUNER_CONFIG_FILE, BLANK_IMG_PATH
+from src.dashboards._commons import recursive_listdir, DASH_CACHE, dash_get_asset_url
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
-from src.data_processing.data_handling import LightImagesRecipesDataset, get_transform_plain
+from src.data_processing.data_handling import LightImagesRecipesDataset
+from src.data_processing.transformations import transform_plain_base
 from src.data_processing.labels_encoders import LabelEncoderInterface
 from src.commons.visualizations import gradcam, feature_factorization, correct_legend_factor
-from src.commons.utils import pred_digits_to_values
 
 DEVICE = "cpu"  # needed since the library uses the model on CPU
 MODEL_CACHE_PATH = os.path.join(DASH_CACHE, "model_cache.pt")
@@ -191,6 +184,7 @@ def load_experiment(_, selected_exp, selected_htrial, upload_contents, upload_fi
     datamodule.setup()
 
     dataset = datamodule.val_dataloader().dataset.to_light_dataset(datamodule.label_encoder)
+    # TODO: AGGIUNGERE IL SALVATAGGIO DEL METODO DI TRANSFORMAZIONE (plain) PER LE IMMAGINI
     label_encoder = jsonpickle.encode(datamodule.label_encoder)
 
     ingredients = pd.Series(dataset.label_data).explode().value_counts().index
@@ -272,7 +266,7 @@ def make_inference(_, target, imgs_shape, img_index_data, imgs_data, img_weight,
 
     targets = [target] if target is not None else None
     model.eval()
-    imgs_transform = get_transform_plain(imgs_shape)
+    imgs_transform = transform_plain_base(imgs_shape)
     img_path = imgs_data[img_index_data["curr"]]["img"]
     img = imgs_transform(Image.open(img_path))
     label_encoder = jsonpickle.decode(label_encoder)

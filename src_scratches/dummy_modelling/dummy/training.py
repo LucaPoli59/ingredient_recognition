@@ -103,7 +103,7 @@ def train(model: torch.nn.Module,
 if __name__ == "__main__":
     # Load the dataset
     INPUT_SHAPE = 224
-    CATEGORY = "mexican"
+    CATEGORY = "all"
 
     transform = v2.Compose([
         v2.ToImage(),
@@ -114,9 +114,9 @@ if __name__ == "__main__":
 
     # Load the dataset
     mlb = MultiLabelBinarizerRobust()
-    train_dataset = ImagesRecipesDataset(os.path.join(IMAGES_PATH, "train"), os.path.join(RECIPES_PATH, "train.json"),
+    train_dataset = ImagesRecipesDataset(os.path.join(YUMMLY_PATH, "train"), os.path.join(YUMMLY_RECIPES_PATH, "train.json"),
                                          transform=transform, label_encoder=mlb, category=CATEGORY)
-    val_dataset = ImagesRecipesDataset(os.path.join(IMAGES_PATH, "val"), os.path.join(RECIPES_PATH, "val.json"),
+    val_dataset = ImagesRecipesDataset(os.path.join(YUMMLY_PATH, "val"), os.path.join(YUMMLY_RECIPES_PATH, "val.json"),
                                        transform=transform, label_encoder=mlb, category=CATEGORY)
 
     BATCH_SIZE = 128
@@ -125,7 +125,9 @@ if __name__ == "__main__":
     val_dataloader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS)
 
     # Creation of the model
-    model = DummyModel(INPUT_SHAPE, len(mlb.classes)+1)
+    # model = DummyModel(mlb.num_classes, INPUT_SHAPE)
+    from src.models.resnet import ResnetLikeV1
+    model = ResnetLikeV1(mlb.num_classes, (INPUT_SHAPE, INPUT_SHAPE))
 
     # Training hyperparameters
     loss_fn = torch.nn.BCEWithLogitsLoss()

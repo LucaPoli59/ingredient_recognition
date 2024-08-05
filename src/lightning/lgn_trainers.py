@@ -10,13 +10,15 @@ from lightning.pytorch.callbacks.progress.rich_progress import RichProgressBarTh
 from lightning.pytorch.loggers import Logger
 from lightning.pytorch.profilers import SimpleProfiler, AdvancedProfiler
 from optuna_integration import PyTorchLightningPruningCallback
+import wandb
 
-from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH
+from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH, WANDB_PROJECT_NAME, EXPERIMENTS_WANDB_PATH, DEF_LR
 from src.commons.utils import extract_name_trial_dir
 
 from src.lightning.lgn_models import BaseLGNM
+from src.data_processing.data_handling import BaseDataModule
 from src.lightning.custom_callbacks import (FullModelCheckpoint, LightModelCheckpoint, TensorBoardEncodeLogger,
-                                            CSVLoggerEncode)
+                                            CSVLoggerEncode, WandbLoggerEncode)
 
 
 class TrainerInterface(ABC, lgn.Trainer):
@@ -24,6 +26,8 @@ class TrainerInterface(ABC, lgn.Trainer):
                  max_epochs: int,
                  save_dir: Optional[str | os.PathLike] = None,
                  debug: bool = False,
+                 log_every_n_steps: int = 50,
+                 limit_predict_batches: int | float = 1.0,
                  **kwargs):
         self._max_epochs = max_epochs
         self._debug = debug
@@ -42,8 +46,12 @@ class TrainerInterface(ABC, lgn.Trainer):
         self._grad_clip_val = kwargs.pop("gradient_clip_val", grad_clip_val)
         self._grad_clip_algo = kwargs.pop("gradient_clip_algorithm", grad_clip_algo)
 
+        self.log_every_n_steps = log_every_n_steps
+        self.limit_predict_batches = limit_predict_batches
+
         self.hparams = {'max_epochs': self._max_epochs, 'save_dir': self._save_dir, 'debug': self._debug,
-                        'type': self.__class__}
+                        'type': self.__class__, 'log_every_n_steps': self.log_every_n_steps,
+                        'limit_predict_batches': self.limit_predict_batches} | kwargs
 
         super().__init__(
             max_epochs=self._max_epochs,
@@ -56,6 +64,9 @@ class TrainerInterface(ABC, lgn.Trainer):
             precision=self._precision,
             gradient_clip_val=self._grad_clip_val,
             gradient_clip_algorithm=self._grad_clip_algo,
+
+            log_every_n_steps=log_every_n_steps,
+            limit_predict_batches=limit_predict_batches,
 
             num_sanity_val_steps=1,
             enable_model_summary=self._debug,
@@ -105,6 +116,9 @@ class TrainerInterface(ABC, lgn.Trainer):
     def checkpoint_callback(self) -> Optional[FullModelCheckpoint]:
         return super().checkpoint_callback
 
+    def log_hparams(self, params: Dict[str, Any]) -> None:
+        self.hparams.update(params)
+
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
         debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
@@ -112,9 +126,12 @@ class TrainerInterface(ABC, lgn.Trainer):
         return cls(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
                    limit_predict_batches=limit_predict_batches, **kwargs)
 
-    def fit(self, model, train_dataloaders=None, val_dataloaders=None, datamodule=None,
+    def fit(self, model: BaseLGNM, train_dataloaders=None, val_dataloaders=None,
+            datamodule: Optional[BaseDataModule] = None,
             ckpt_path=None) -> None:
         """Slightingly overrided fit method that return the best model (in this case the last one)"""
+        if datamodule is not None:
+            model.startup_model(datamodule)
         super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
                     datamodule=datamodule, ckpt_path=ckpt_path)
 
@@ -124,7 +141,8 @@ class TrainerInterface(ABC, lgn.Trainer):
 
 class LiteTrainer(TrainerInterface):
     def __init__(self, max_epochs: int, debug: bool = False, **kwargs):
-        super().__init__(max_epochs=max_epochs, save_dir=kwargs.pop("save_dir", None), debug=debug, **kwargs)
+        super().__init__(max_epochs=max_epochs, save_dir=kwargs.pop("save_dir", None), debug=debug,
+                         **kwargs)
 
     def _get_def_save_dir(self) -> Optional[str | os.PathLike]:
         return None
@@ -138,9 +156,14 @@ class LiteTrainer(TrainerInterface):
 
 class BaseTrainer(TrainerInterface):
 
-    def __init__(self, max_epochs: int, save_dir: str | os.PathLike | None = None, debug: bool = False, **kwargs):
-        super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, min_epochs=int(max_epochs / 3),
-                         **kwargs)
+    def __init__(self, max_epochs: int, save_dir: str | os.PathLike | None = None, debug: bool = False,
+                 log_every_n_steps: int = 50, limit_predict_batches: int | float = 1.0,
+                 **kwargs):
+        self.wandb_logger = None
+        super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
+                         limit_predict_batches=limit_predict_batches, min_epochs=int(max_epochs / 3), **kwargs)
+
+        self.wandb_log_freq = int(2 * self.log_every_n_steps)
 
     def _get_def_save_dir(self) -> Optional[str | os.PathLike]:
         base_path = EXPERIMENTS_PATH
@@ -175,9 +198,13 @@ class BaseTrainer(TrainerInterface):
 
     def _get_loggers(self) -> List[Logger]:
         exp_dir, exp_name, trial = extract_name_trial_dir(self._save_dir)
+        self.wandb_logger = WandbLoggerEncode(project=WANDB_PROJECT_NAME, version=0,
+                                              name=f"{os.path.relpath(exp_dir, EXPERIMENTS_PATH)}/{exp_name}",
+                                              save_dir=EXPERIMENTS_WANDB_PATH)
         return [
             TensorBoardEncodeLogger(save_dir=exp_dir, name=exp_name, version=trial),
-            CSVLoggerEncode(save_dir=exp_dir, name=exp_name, version=trial)
+            CSVLoggerEncode(save_dir=exp_dir, name=exp_name, version=trial),
+            self.wandb_logger
         ]
 
     def _get_profiler(self) -> SimpleProfiler:
@@ -186,6 +213,8 @@ class BaseTrainer(TrainerInterface):
     def fit(self, model: BaseLGNM, train_dataloaders=None, val_dataloaders=None, datamodule=None,
             ckpt_path=None) -> lgn.LightningModule:
         """Slightingly overrided fit method that return the best model"""
+
+        self.wandb_logger.watch(model.model, log="all", log_freq=self.wandb_log_freq)
         try:
             super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
                         datamodule=datamodule, ckpt_path=ckpt_path)
@@ -211,12 +240,26 @@ class BaseTrainer(TrainerInterface):
             os.rename(best_model_path, os.path.join(self._save_dir, "best_model.ckpt"))
             if os.path.exists(os.path.join(self._save_dir, "checkpoints", "last.ckpt")):
                 os.remove(os.path.join(self._save_dir, "checkpoints", "last.ckpt"))
+        finally:
+            self.wandb_logger.experiment.unwatch(model.model)
             return model
+
+    @classmethod
+    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
+        if kwargs is None:
+            kwargs = {}
+        return super().load_from_config(config, **kwargs)
 
 
 class BaseFasterTrainer(BaseTrainer):
-    def __init__(self, max_epochs: int, save_dir: str | os.PathLike | None = None, debug: bool = False, **kwargs):
-        super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, benchmark=True, **kwargs)
+    def __init__(self, max_epochs: int, save_dir: str | os.PathLike | None = None, debug: bool = False,
+                 log_every_n_steps: int = 50, limit_predict_batches: int | float = 1.0,
+                 early_stop: Optional[bool] = True, **kwargs):
+        super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
+                         limit_predict_batches=limit_predict_batches, benchmark=True, **kwargs)
+        self._early_stop = early_stop if early_stop is not None else True
+
+        self.log_hparams(dict(early_stop=self._early_stop))
 
     def _get_precision(self) -> str:
         return '16-mixed'
@@ -225,18 +268,27 @@ class BaseFasterTrainer(BaseTrainer):
         return 5
 
     def _get_callbacks(self) -> List[callbacks.Callback]:
+        early_callback = callbacks.EarlyStopping(monitor="val_loss", mode="min", verbose=self._debug,
+                                                 patience=int(self._max_epochs * 1 / self._check_val_freq / 2))
+
         return super()._get_callbacks() + [
-            callbacks.EarlyStopping(monitor="val_loss", mode="min", verbose=self._debug,
-                                    patience=int(self._max_epochs * 1 / self._check_val_freq / 2))
-        ]
+        ] + ([early_callback] if self._early_stop else [])
+
+    @classmethod
+    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
+        if kwargs is None:
+            kwargs = {}
+
+        kwargs["early_stop"] = config.get("early_stop", True)
+        return super().load_from_config(config, **kwargs)
 
 
 class OptunaTrainer(BaseTrainer):
     def __init__(self, max_epochs: int, trial: optuna.Trial, save_dir: str | os.PathLike | None = None,
-                 debug: bool = False, limit_train_batches: float = 1.0, **kwargs):
+                 debug: bool = False, log_every_n_steps: int = 50, limit_predict_batches: int | float = 1.0, **kwargs):
         self.trial = trial
-        super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, limit_train_batches=limit_train_batches,
-                         **kwargs)
+        super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
+                         limit_predict_batches=limit_predict_batches, benchmark=True, **kwargs)
 
     def _get_def_save_dir(self) -> Optional[str | os.PathLike]:
         raise ValueError("OptunaTrainer must have a save_dir (that depends on the trial)")

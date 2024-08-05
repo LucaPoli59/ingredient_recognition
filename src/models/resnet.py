@@ -1,30 +1,32 @@
 import torch
-import torch.functional as F
 import torchvision
 from torch import nn
-from typing import Dict, Any
-
+from typing import Dict, Any, List, Optional
 from typing_extensions import Self
+from abc import ABC
 
+from settings.config import DEF_IMAGE_SHAPE, LP_MAX_PHASE
 from src.models.commons import BaseModel
+from src.data_processing.transformations import transform_aug_imagenet, transform_plain_imagenet
 
 
-class _BaseResnetLike(BaseModel):
-    def __init__(self, num_classes):
-        super().__init__(num_classes=num_classes)
-        self.num_classes = num_classes
-
+class _BaseResnetLike(BaseModel, ABC):
+    def __init__(self, num_classes, input_shape, lp_phase=None, layers_expansion=1):
+        self.layers_expansion = layers_expansion
+        super().__init__(num_classes=num_classes, input_shape=input_shape, lp_phase=lp_phase)
         self.conv1 = nn.Sequential(
             nn.Conv2d(3, 64, 7, padding=3, stride=2, bias=False),
             nn.BatchNorm2d(64), nn.ReLU(),
             nn.MaxPool2d(3, 2, padding=1)
         )
 
+
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
-        if "num_classes" not in config:
-            raise ValueError("The configuration must contain the key 'num_classes' with the number of classes")
-        return cls(config["num_classes"])
+        for key in ["num_classes", "input_shape", "lp_phase"]:
+            if key not in config:
+                raise ValueError(f"The configuration must contain the key '{key}'")
+        return cls(config["num_classes"], config["input_shape"], lp_phase=config["lp_phase"])
 
     @staticmethod
     def _make_layer(block_type, in_channel, out_channel, num_blocks, stride=1):
@@ -33,6 +35,43 @@ class _BaseResnetLike(BaseModel):
         for _ in range(1, num_blocks):
             blocks.append(block_type(in_channel, out_channel))
         return nn.Sequential(*blocks)
+
+    def _make_classifier(self, in_features, num_classes, device=None):
+        if device is None:
+            device = self.device
+        return nn.Sequential(
+            nn.AdaptiveAvgPool2d((1, 1)),
+            nn.Flatten(),
+            nn.Linear(int(in_features * self.layers_expansion), num_classes, bias=True)
+        ).to(device)
+
+    def _lp_init_layer(self, phase, as_placeholder=True, placeholder=torch.nn.Identity()):
+        if as_placeholder:
+            setattr(self, f"layer{phase}", placeholder)
+            if phase == 0:
+                self.classifier = self._make_classifier(self.conv1[0].weight.shape[0], self.num_classes)
+        else:
+            if phase > 0:
+                setattr(self, f"layer{phase}", getattr(self, f"_layer{phase}"))
+
+    def _lp_post_reset(self):
+        # in the normal case, don't need to replace the classifier
+        if not self._lp_phase == LP_MAX_PHASE:
+            last_layer = getattr(self, f"layer{self._lp_phase}")
+            out_channel = list(last_layer.parameters())[-1].shape[0]
+            self.classifier = self._make_classifier(out_channel, self.num_classes)
+
+    def _lp_get_last_trained_layers(self) -> List[nn.Module] | None:
+        if self._lp_phase == 0:
+            return [getattr(self, "conv1")]
+        return [getattr(self, f"layer{self._lp_phase}")]
+
+    def _lp_step_phase(self):
+        new_layer = getattr(self, f"_layer{self._lp_phase + 1}")
+        setattr(self, f"layer{self._lp_phase + 1}", new_layer)
+        out_channel = list(new_layer.parameters())[-1].shape[0]
+        self.classifier = self._make_classifier(out_channel, self.num_classes)
+
 
 
 class BasicBlock(torch.nn.Module):
@@ -55,11 +94,20 @@ class BasicBlock(torch.nn.Module):
         else:
             self.downsample = nn.Identity()
 
+        self.in_channel = in_channel
+        self.out_channel = out_channel
+
     def forward(self, x):
         out = self.relu(self.bn1(self.conv1(x)))
         out = self.bn2(self.conv2(out))
         out += self.downsample(x)  # Skip connection
         return self.relu(out)
+
+
+class BasicBlockLVariant(BasicBlock):
+    def __init__(self, in_channel, out_channel, stride=1):
+        super().__init__(in_channel, out_channel, stride)
+        self.relu = nn.LeakyReLU()
 
 
 class BottleneckBlock(torch.nn.Module):
@@ -99,92 +147,155 @@ class BottleneckBlock(torch.nn.Module):
 
 
 class ResnetLikeV1(_BaseResnetLike):  #Like Resnet18
-    def __init__(self, num_classes):
-        super().__init__(num_classes)
-        self.layer1 = self._make_layer(BasicBlock, 64, 64, 2)
-        self.layer2 = self._make_layer(BasicBlock, 64, 128, 2, stride=2)
-        self.layer3 = self._make_layer(BasicBlock, 128, 256, 2, stride=2)
-        self.layer4 = self._make_layer(BasicBlock, 256, 512, 2, stride=2)
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, lp_phase=-1):
+        if lp_phase is None:
+            lp_phase = -1
+        super().__init__(num_classes, input_shape, lp_phase=lp_phase)
 
-        self.classifier = nn.Sequential(
-            nn.AdaptiveAvgPool2d((1, 1)),
-            nn.Flatten(),
-            nn.Linear(512, num_classes, bias=True)
-        )
+        self._layer1 = self._make_layer(BasicBlock, 64, 64, 2)
+        self._layer2 = self._make_layer(BasicBlock, 64, 128, 2, stride=2)
+        self._layer3 = self._make_layer(BasicBlock, 128, 256, 2, stride=2)
+        self._layer4 = self._make_layer(BasicBlock, 256, 512, 2, stride=2)
 
-        self.classifier_target_layer = self.classifier[-1]
+        self.classifier = self._make_classifier(512, num_classes)
+        self._lp_init_layers()
 
-        self.conv_target_layer = self.layer4[-1]
 
     def forward(self, x):
         out = self.layer4(self.layer3(self.layer2(self.layer1(self.conv1(x)))))
         return self.classifier(out)
 
+    @property
+    def conv_target_layer(self):
+        return self._layer4[-1]
+
+    @property
+    def classifier_target_layer(self):
+        return self.classifier[-1]
+
+
+class ResnetLikeV1LVariant(ResnetLikeV1):  #Like Resnet18
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, lp_phase=LP_MAX_PHASE):
+        super().__init__(num_classes, input_shape, lp_phase=lp_phase)
+
+        self.layer1 = self._make_layer(BasicBlockLVariant, 64, 64, 2)
+        self.layer2 = self._make_layer(BasicBlockLVariant, 64, 128, 2, stride=2)
+        self.layer3 = self._make_layer(BasicBlockLVariant, 128, 256, 2, stride=2)
+        self.layer4 = self._make_layer(BasicBlockLVariant, 256, 512, 2, stride=2)
+
+        self._lp_init_layers()
+
 
 class ResnetLikeV2(_BaseResnetLike):  #Like Resnet50
-    def __init__(self, num_classes):
-        super().__init__(num_classes)
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE):
+        super().__init__(num_classes, input_shape)
+        self.layers_expansion = BottleneckBlock.expansion
 
         self.layer1 = self._make_layer(BottleneckBlock, 64, 64, 3)
         self.layer2 = self._make_layer(BottleneckBlock, 256, 128, 4, stride=2)
         self.layer3 = self._make_layer(BottleneckBlock, 512, 256, 6, stride=2)
         self.layer4 = self._make_layer(BottleneckBlock, 1024, 512, 3, stride=2)
 
-        self.classifier = nn.Sequential(
-            nn.AdaptiveAvgPool2d((1, 1)),
-            nn.Flatten(),
-            nn.Linear(int(512 * BottleneckBlock.expansion), num_classes, bias=True)
-        )
+        self.classifier = self._make_classifier(512, num_classes)
 
-        self.classifier_target_layer = self.classifier[-1]
+        self._lp_init_layers()
 
-        self.conv_target_layer = self.layer4[-1]
 
     def forward(self, x):
         out = self.layer4(self.layer3(self.layer2(self.layer1(self.conv1(x)))))
         return self.classifier(out)
 
+    @property
+    def conv_target_layer(self):
+        return self.layer4[-1]
 
-class _BaseResnet(BaseModel):
-    def __init__(self, num_classes, pretrained):
-        super().__init__(num_classes=num_classes, pretrained=pretrained)
-        self.num_classes = num_classes
+    @property
+    def classifier_target_layer(self):
+        return self.classifier[-1]
+
+
+class _BaseResnet(BaseModel, ABC):
+    def __init__(self, num_classes, input_shape, pretrained, lp_phase=None):
+        super().__init__(num_classes=num_classes, input_shape=input_shape, pretrained=pretrained, lp_phase=lp_phase)
+        self.pretrained = pretrained
 
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
-        for key in ["num_classes", "pretrained"]:
+        for key in ["num_classes", "input_shape", "pretrained", "lp_phase"]:
             if key not in config:
                 raise ValueError(f"The configuration must contain the key '{key}'")
-        return cls(config["num_classes"], config["pretrained"])
+        return cls(config["num_classes"], config["input_shape"], config["pretrained"], lp_phase=config["lp_phase"])
+
+    @property
+    def transform_aug(self):
+        return transform_aug_imagenet(self.tr_weights, self.input_shape)
+
+    @property
+    def transform_plain(self):
+        return transform_plain_imagenet(self.tr_weights, self.input_shape)
 
 
 class Resnet18(_BaseResnet):
-    def __init__(self, num_classes, pretrained=True):
-        super().__init__(num_classes, pretrained)
-        weights = torchvision.models.ResNet18_Weights.DEFAULT if pretrained else None
-        self.model = torchvision.models.resnet18(weights=weights)
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, pretrained=True):
+        super().__init__(num_classes, input_shape, pretrained)
+        self.tr_weights = torchvision.models.ResNet18_Weights.DEFAULT if pretrained else None
+        self.model = torchvision.models.resnet18(weights=self.tr_weights)
         self.model.fc = nn.Linear(self.model.fc.in_features, num_classes)
-
-        self.conv_target_layer = self.model.layer4[-1]
-        self.classifier_target_layer = self.model.fc
 
     def forward(self, x):
         return self.model(x)
+
+    @property
+    def conv_target_layer(self):
+        return self.model.layer4[-1]
+
+    @property
+    def classifier_target_layer(self):
+        return self.model.fc
+
+    @property
+    def transform_aug(self):
+        if self.tr_weights is None:
+            return super().transform_aug
+        pass
+
+    @property
+    def transform_plain(self):
+        if self.tr_weights is None:
+            return super().transform_plain
+        return self.tr_weights.transforms(crop_size=self.input_shape[0])
 
 
 class Resnet50(_BaseResnet):
-    def __init__(self, num_classes, pretrained=True):
-        super().__init__(num_classes, pretrained)
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, pretrained=True):
+        super().__init__(num_classes, input_shape, pretrained)
 
-        weights = torchvision.models.ResNet50_Weights.DEFAULT if pretrained else None
-        self.model = torchvision.models.resnet50(weights=weights)
+        self.tr_weights = torchvision.models.ResNet50_Weights.DEFAULT if pretrained else None
+        self.model = torchvision.models.resnet50(weights=self.tr_weights)
         self.model.fc = nn.Linear(self.model.fc.in_features, num_classes)
-
-        self.conv_target_layer = self.model.layer4[-1]
-        self.classifier_target_layer = self.model.fc
 
     def forward(self, x):
         return self.model(x)
+
+    @property
+    def conv_target_layer(self):
+        return self.model.layer4[-1]
+
+    @property
+    def classifier_target_layer(self):
+        return self.model.fc
+
+    @property
+    def transform_aug(self):
+        if self.tr_weights is None:
+            return super().transform_aug
+        pass
+
+    @property
+    def transform_plain(self):
+        if self.tr_weights is None:
+            return super().transform_plain
+        return self.tr_weights.transforms(crop_size=self.input_shape[0])
 
 
 if __name__ == "__main__":
@@ -200,5 +311,3 @@ if __name__ == "__main__":
 
     summary(resnet18, input_size=(1, 3, 224, 224), depth=2)
     summary(resnet_like1, input_size=(1, 3, 224, 224), depth=1)
-
-

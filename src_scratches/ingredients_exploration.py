@@ -10,11 +10,7 @@ val_recipes = pd.DataFrame(json.load(open(os.path.join(YUMMLY_RECIPES_PATH, 'val
 test_recipes = pd.DataFrame(json.load(open(os.path.join(YUMMLY_RECIPES_PATH, 'test.json'))))
 
 
-print("Train: ", train_recipes['cuisine'].value_counts(), "\n\n")
-print("Val: ", val_recipes['cuisine'].value_counts(), "\n\n")
-print("Test: ", test_recipes['cuisine'].value_counts(), "\n\n")
-
-
-print("Train len ", len(train_recipes))
-print("Val len ", len(val_recipes))
-print("Test len ", len(test_recipes))
+normalize = True
+print(train_recipes['ingredients_ok'].explode().value_counts(normalize=normalize), "\n\n")
+print(val_recipes['ingredients_ok'].explode().value_counts(normalize=normalize), "\n\n")
+print(test_recipes['ingredients_ok'].explode().value_counts(normalize=normalize), "\n\n")

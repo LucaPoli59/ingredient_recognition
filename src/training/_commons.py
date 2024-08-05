@@ -8,7 +8,8 @@ import lightning as lgn
 
 from settings.config import OPTUNA_JOURNAL_PATH
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
-from src.data_processing.data_handling import ImagesRecipesDataModule
+from src.data_processing.data_handling import ImagesRecipesBaseDataModule, BaseDataModule
+from src.lightning.lgn_trainers import BaseTrainer
 
 
 def set_torch_constants():
@@ -17,7 +18,7 @@ def set_torch_constants():
     torch.backends.cudnn.benchmark = True
 
 
-def model_training(exp_config: ExpConfig, data_module: Optional[lgn.LightningDataModule] = None,
+def model_training(exp_config: ExpConfig, data_module: Optional[BaseDataModule] = None,
                    ckpt_path: Optional[str | os.PathLike] = None, torch_model_kwargs: Optional[Dict[str, Any]] = None,
                    lgn_model_kwargs: Optional[Dict[str, Any]] = None, trainer_kwargs: Optional[Dict[str, Any]] = None
                    ) -> Tuple[lgn.Trainer, lgn.LightningModule]:
@@ -38,7 +39,11 @@ def model_training(exp_config: ExpConfig, data_module: Optional[lgn.LightningDat
 
     if data_module is None:
         dm_config = exp_config.datamodule
-        data_module = dm_config['type'].load_from_config(dm_config, batch_size=lgn_model.batch_size)
+        data_module = dm_config['type'].load_from_config(dm_config, batch_size=lgn_model.batch_size,
+                                                         transform_aug=lgn_model.transform_aug,
+                                                         transform_plain=lgn_model.transform_plain)
+    else:
+        data_module.transform_plain, data_module.transform_aug = lgn_model.transform_plain, lgn_model.transform_aug
 
     if trainer.debug:
         print("Data Module, Models and Trainer loaded, " + ("training started" if resuming else "resume training"))
@@ -64,7 +69,7 @@ def init_optuna_storage(path: Optional[os.PathLike | str] = None) -> optuna.stor
     )
 
 
-def load_datamodule(exp_config: ExpConfig | HTunerExpConfig) -> ImagesRecipesDataModule:
+def load_datamodule(exp_config: ExpConfig | HTunerExpConfig) -> ImagesRecipesBaseDataModule:
     dm_config = exp_config.datamodule
     dm_type = dm_config["type"]
     data_module = dm_type.load_from_config(dm_config, batch_size=exp_config.lgn_model["batch_size"])

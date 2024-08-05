@@ -6,9 +6,9 @@ from settings.config import *
 
 shapes = []
 names = []
-for category in os.listdir(IMAGES_PATH):
-    for image in os.listdir(os.path.join(IMAGES_PATH, category))[:3]:
-        img = cv2.imread(os.path.join(IMAGES_PATH, category, image))
+for category in os.listdir(YUMMLY_PATH):
+    for image in os.listdir(os.path.join(YUMMLY_PATH, category))[:3]:
+        img = cv2.imread(os.path.join(YUMMLY_PATH, category, image))
         shapes.append(list(img.shape))
         names.append(category + "_" + image.strip('.jpg'))
 

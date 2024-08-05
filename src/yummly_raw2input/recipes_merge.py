@@ -8,5 +8,5 @@ for name in os.listdir(RAW_RECIPES_PATH):
         recipes.extend(json.load(f))
 
 
-with open(os.path.join(RECIPES_PATH, 'all_recipes.json'), 'w') as f:
+with open(os.path.join(YUMMLY_RECIPES_PATH, 'all_recipes.json'), 'w') as f:
     json.dump(recipes, f, indent=4, sort_keys=True)

@@ -135,9 +135,9 @@ if __name__ == "__main__":
 
     # Load the dataset
     mlb = MultiLabelBinarizerRobust()
-    train_dataset = ImagesRecipesDataset(os.path.join(IMAGES_PATH, "train"), os.path.join(RECIPES_PATH, "train.json"),
+    train_dataset = ImagesRecipesDataset(os.path.join(YUMMLY_PATH, "train"), os.path.join(YUMMLY_RECIPES_PATH, "train.json"),
                                          transform=transform, label_encoder=mlb, category=CATEGORY)
-    val_dataset = ImagesRecipesDataset(os.path.join(IMAGES_PATH, "val"), os.path.join(RECIPES_PATH, "val.json"),
+    val_dataset = ImagesRecipesDataset(os.path.join(YUMMLY_PATH, "val"), os.path.join(YUMMLY_RECIPES_PATH, "val.json"),
                                        transform=transform, label_encoder=mlb, category=CATEGORY)
 
     BATCH_SIZE = 128
