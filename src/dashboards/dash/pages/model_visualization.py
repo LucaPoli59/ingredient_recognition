@@ -17,7 +17,7 @@ from dash.exceptions import PreventUpdate
 from settings.config import EXPERIMENTS_PATH, HTUNER_CONFIG_FILE, BLANK_IMG_PATH
 from src.dashboards._commons import recursive_listdir, DASH_CACHE, dash_get_asset_url
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
-from src.data_processing.data_handling import LightImagesRecipesDataset
+from src.data_processing.images_recipes import LightImagesRecipesDataset
 from src.data_processing.transformations import transform_plain_base
 from src.data_processing.labels_encoders import LabelEncoderInterface
 from src.commons.visualizations import gradcam, feature_factorization, correct_legend_factor

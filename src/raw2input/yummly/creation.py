@@ -31,7 +31,7 @@ for phase, recipes_dataset in zip(["train", "val", "test"], [recipes_train, reci
     out_recipes = []
     for recipe in tqdm(recipes_dataset, desc=f"Copying {phase} recipes"):
         # Copy rhe image from /RAW/cuisine/id.jpg to /IMAGES/phase/int_id____cuisine.jpg
-        img_src_path = os.path.join(RAW_IMAGES_PATH, recipe['cuisine'], str(recipe['id']) + ".jpg")
+        img_src_path = os.path.join(RAW_YUMMLY_IMAGES_PATH, recipe['cuisine'], str(recipe['id']) + ".jpg")
         img_final_name = str(int_id).zfill(id_encode_len) + tokenize_category(recipe['cuisine'].lower()) + ".jpg"
         img_dest_path = os.path.join(YUMMLY_PATH, phase, img_final_name)
 
@@ -48,8 +48,9 @@ for phase, recipes_dataset in zip(["train", "val", "test"], [recipes_train, reci
     print(f"Images not found during {phase} phase: {images_not_found}")
     json.dump(out_recipes, open(os.path.join(YUMMLY_PATH, phase, METADATA_FILENAME), "w"), indent=4)
 
-if os.path.exists(YUMMLY_IMG_STATS_PATH):
-    os.remove(YUMMLY_IMG_STATS_PATH)
+yummly_img_stats = os.path.join(YUMMLY_PATH, IMG_STATS_FILENAME)
+if os.path.exists(yummly_img_stats):
+    os.remove(yummly_img_stats)
 
 
 # Remember to run the compute_img_stats.py script to compute the mean and std of the training images

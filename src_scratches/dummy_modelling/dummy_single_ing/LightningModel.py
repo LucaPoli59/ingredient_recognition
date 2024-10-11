@@ -28,7 +28,7 @@ def compute_classes_weights(label_data, minority_inversion=True, standardize=Tru
 
 class LightningModel(lgn.LightningModule):
     def __init__(self, model, lr, optimizer, loss_fn, accuracy_fn, n_samples, batch_size, total_steps,
-                 momentum=None, weight_decay=None, swa=False, weighted_loss=False, easy_problem=True,
+                 momentum=None, weight_decay=None, swa=False, weighted_loss=False, problem=True,
                  model_pretrained=False, lr_scheduler=None):
         super().__init__()
         self._prepared = False
@@ -41,7 +41,7 @@ class LightningModel(lgn.LightningModule):
         self.n_samples = n_samples
         self.swa = swa
         self.weighted_loss = weighted_loss
-        self.easy_problem = easy_problem
+        self.problem = problem
         self.model_pretrained = model_pretrained
         self.lr_scheduler = lr_scheduler
 

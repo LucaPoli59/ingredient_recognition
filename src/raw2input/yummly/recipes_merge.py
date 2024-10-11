@@ -3,8 +3,8 @@ import json
 from settings.config import *
 
 recipes = []
-for name in os.listdir(RAW_RECIPES_PATH):
-    with open(os.path.join(RAW_RECIPES_PATH, name), 'r') as f:
+for name in os.listdir(RAW_YUMMLY_RECIPES_PATH):
+    with open(os.path.join(RAW_YUMMLY_RECIPES_PATH, name), 'r') as f:
         recipes.extend(json.load(f))
 
 

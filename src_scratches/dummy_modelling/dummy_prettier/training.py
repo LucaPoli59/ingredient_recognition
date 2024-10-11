@@ -6,7 +6,7 @@ from torchvision.transforms import v2
 from tqdm.auto import tqdm
 
 from settings.config import *
-from src.data_processing.data_handling import ImagesRecipesDataset
+from src.data_processing.images_recipes import ImagesRecipesDataset
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
 from test_scratches.dummy_modelling.dummy_prettier.model import DummyModel
 from settings.commons import TrainingTQDM

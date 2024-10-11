@@ -18,10 +18,10 @@ seed = 42
 full_md_train, full_md_test, full_md_val = [], [], []
 full_r_train, full_r_test, full_r_val = [], [], []
 
-for category in os.listdir(RAW_IMAGES_PATH):
+for category in os.listdir(RAW_YUMMLY_IMAGES_PATH):
 
-    metadata_s = json.load(open(os.path.join(RAW_METADATA_PATH, category + ".json")))
-    images_s = os.listdir(os.path.join(RAW_IMAGES_PATH, category))
+    metadata_s = json.load(open(os.path.join(RAW_YUMMLY_METADATA_PATH, category + ".json")))
+    images_s = os.listdir(os.path.join(RAW_YUMMLY_IMAGES_PATH, category))
     recipes_cat = list(filter(lambda recipe: recipe['cuisine'] == category, recipes))
 
     # since some recipes are not present in the dataset, we need to filter them out
@@ -45,7 +45,7 @@ for category in os.listdir(RAW_IMAGES_PATH):
     # Copy the images and metadata to the new directories
     for phase, image_dataset in zip(["train", "val", "test"], [images_train, images_val, images_test]):
         for image in tqdm(image_dataset, desc=f"Copying {category} images of {phase} phase"):
-            shutil.copy(str(os.path.join(RAW_IMAGES_PATH, category, image)),
+            shutil.copy(str(os.path.join(RAW_YUMMLY_IMAGES_PATH, category, image)),
                         str(os.path.join(YUMMLY_PATH, phase, tokenize_category(category.lower()) + image)))
 
     full_md_train.extend(metadata_train)

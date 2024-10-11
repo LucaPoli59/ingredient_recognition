@@ -81,9 +81,16 @@ def transform_plain_imagenet(weights: Optional[Weights] = None, image_shape: Tup
 
 def trasnform_aug_adv(image_shape: Tuple[int, int] = DEF_IMAGE_SHAPE) -> List[v2.Transform]:
     return [
-    v2.RandomResizedCrop(image_shape, scale=(0.3, 1.0), ratio=(0.5, 2.0)),
-    v2.RandomHorizontalFlip(0.3),
-    v2.RandomVerticalFlip(0.3),
-    v2.RandomRotation(0.3),
-    v2.RandomErasing(0.3, scale=(0.02, 0.33), ratio=(0.3, 3.3)),
+    v2.RandomResizedCrop(image_shape, scale=(0.33, 1.0), ratio=(0.5, 2.0)),
+    v2.RandomHorizontalFlip(0.5),
+    v2.RandomVerticalFlip(0.5),
+    v2.RandomRotation(0.5),
     ]
+
+    # ]
+    # v2.RandomResizedCrop(image_shape, scale=(0.3, 1.0), ratio=(0.5, 2.0)),
+    # v2.RandomHorizontalFlip(0.3),
+    # v2.RandomVerticalFlip(0.3),
+    # v2.RandomRotation(0.3),
+    # v2.RandomErasing(0.3, scale=(0.02, 0.33), ratio=(0.3, 3.3)),
+    # ]

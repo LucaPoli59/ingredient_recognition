@@ -9,7 +9,7 @@ import inspect
 from src.commons.utils import register_hparams
 from src.commons.visualizations import gradcam
 from src.models.commons import BaseModel
-from src.data_processing.data_handling import BaseDataModule
+from src.data_processing.common import BaseDataModule
 
 
 class BaseLGNM(lgn.LightningModule):

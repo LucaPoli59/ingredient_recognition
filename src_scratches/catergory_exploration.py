@@ -2,8 +2,8 @@ import json
 import pandas as pd
 from settings.config import *
 
-# for category in os.listdir(RAW_IMAGES_PATH):
-#     print(len(os.listdir(os.path.join(RAW_IMAGES_PATH, category))))
+# for category in os.listdir(RAW_YUMMLY_IMAGES_PATH):
+#     print(len(os.listdir(os.path.join(RAW_YUMMLY_IMAGES_PATH, category))))
 
 train_recipes = pd.DataFrame(json.load(open(os.path.join(YUMMLY_RECIPES_PATH, 'train.json'))))
 val_recipes = pd.DataFrame(json.load(open(os.path.join(YUMMLY_RECIPES_PATH, 'val.json'))))

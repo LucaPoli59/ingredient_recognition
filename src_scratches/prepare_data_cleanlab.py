@@ -5,7 +5,7 @@ import pandas as pd
 import torch
 import shutil
 
-from src.data_processing.data_handling import _recipes_filter_by_category, _compute_images_paths
+from src.data_processing.images_recipes import _recipes_filter_by_category, _compute_images_paths
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
 
 from settings.config import YUMMLY_PATH, YUMMLY_RECIPES_PATH, DATA_PATH

@@ -10,7 +10,7 @@ import subprocess
 import wandb
 
 from settings.config import *
-from src.data_processing.data_handling import ImagesRecipesDataset
+from src.data_processing.images_recipes import ImagesRecipesDataset
 from src.data_processing.labels_encoders import OneVSAllLabelEncoder, MultiLabelBinarizerRobust
 from src.data_processing.transformations import _transform_core_base, transformations_wrapper, trasnform_aug_adv
 from src.models.resnet import ResnetLikeV2
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         if MODEL_PRETRAINED:
             mean, std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
         else:
-            mean, std = pd.read_csv(YUMMLY_IMG_STATS_PATH, index_col=0).values
+            mean, std = pd.read_csv(os.path.join(YUMMLY_PATH, IMG_STATS_FILENAME), index_col=0).values
     else:
         mean, std = [0, 0, 0], [1, 1, 1]
 

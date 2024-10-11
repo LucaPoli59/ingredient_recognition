@@ -1,7 +1,6 @@
 import json
 import pathlib
 
-import lightning as lgn
 import numpy as np
 import pandas as pd
 from PIL import Image
@@ -10,17 +9,15 @@ from torchvision.transforms import v2
 import torch
 from torch.utils.data import DataLoader, Dataset
 import os
-from typing import Tuple, List, Dict, Optional, Any, Callable, Sequence
+from typing import Tuple, List, Dict, Optional, Any
 from typing_extensions import Self
-from abc import ABC, abstractmethod
 
-from settings.config import FOOD_CATEGORIES, YUMMLY_PATH, YUMMLY_RECIPES_PATH, DEF_BATCH_SIZE, YUMMLY_IMG_STATS_PATH, \
-    METADATA_FILENAME
-from settings.commons import tokenize_category
+from settings.config import FOOD_CATEGORIES, YUMMLY_PATH, DEF_BATCH_SIZE, IMG_STATS_FILENAME, \
+    METADATA_FILENAME, DEF_PAD_TOKEN
 from src.commons.utils import register_hparams
+from src.data_processing.common import BaseDataModule
 
-from src.data_processing.labels_encoders import MultiLabelBinarizerRobust, LabelEncoderInterface
-from src.data_processing.transformations import transform_plain_base, transform_aug_base, transformations_wrapper
+from src.data_processing.labels_encoders import MultiLabelBinarizerRobust, LabelEncoderInterface, MultiLabelBinarizer, TextIntEncoder
 
 
 class _ImagesRecipesDataset(Dataset):
@@ -56,6 +53,19 @@ class _ImagesRecipesDataset(Dataset):
             label_data = label_encoder.inverse_transform(label_data)
             label_data = [label.tolist() for label in label_data if isinstance(label, ndarray)]
         return LightImagesRecipesDataset(self.images_paths, label_data)
+
+class _RecipesDataset(Dataset):
+    def __init__(self, label_data):
+        self.label_data = label_data
+        super().__init__()
+
+    def __len__(self):
+        return len(self.label_data)
+
+    def __getitem__(self, idx: int) -> torch.tensor:
+        label = self.label_data[idx]
+
+        return torch.tensor(np.array(label, dtype=np.float32), dtype=torch.float32)
 
 
 class LightImagesRecipesDataset(_ImagesRecipesDataset):
@@ -98,68 +108,128 @@ class ImagesRecipesDataset(_ImagesRecipesDataset):
 
         super().__init__(images_paths, label_data, transform)
 
+class RecipesDataset(_RecipesDataset):
+    LAZY_ENCODING = False
+    def __init__(self, data_dir, category=None, label_encoder=None,
+                 metadata_filename="metadata.json", feature_label="ingredients_ok"):
 
-class BaseDataModule(ABC, lgn.LightningDataModule):
-    t_transform = Callable[[Image.Image | np.ndarray | torch.Tensor], torch.Tensor]
+        # Check validity of parameters
+        if label_encoder is None:
+            label_encoder = MultiLabelBinarizer()  # default encoder
+        if category is not None:
+            category = category.lower()
+            if category not in FOOD_CATEGORIES:
+                raise ValueError(f'Invalid category: {category}')
 
-    def __init__(self, images_stats_path: str | os.PathLike, transform_aug: Optional[t_transform] = None,
-                 transform_plain: Optional[t_transform] = None):
-        super().__init__()
-        self.classes_weights = None
-        self.images_stats_path = images_stats_path
-        self._transform_aug = self._def_transform_aug() if transform_aug is None else transform_aug
-        self._transform_plain = self._def_transform_plain() if transform_plain is None else transform_plain
+        # Compute images_path, Load recipes filter them by category and encode them to get the label data
+        _, label_data, label_encoder = images_recipes_processing(data_dir, metadata_filename, category,
+                                                     label_encoder, feature_label, encoding=not self.LAZY_ENCODING)
 
-        self.prepared = False
+        self.label_encoder = label_encoder
+        super().__init__(label_data)
+
+
+class RecipesFlavorDataset(RecipesDataset):
+    LAZY_ENCODING = False
+    def __init__(self, data_dir, category=None, label_encoder=None,
+                 metadata_filename="metadata.json", feature_label="flavors"):
+
+        super().__init__(data_dir, category, label_encoder, metadata_filename)
+        flavor_data = _load_recipes_data(data_dir, feature_label, metadata_filename, category)[1]
+        self.flavor_data, self.flavor_columns, recipes_kept = _preprocess_flavor(flavor_data)
+        self.dim_target = len(self.flavor_columns)
+
+        self.flavor_data = torch.tensor(self.flavor_data, dtype=torch.float32)
+        self.label_data = self.label_data[recipes_kept]
+
+    def __getitem__(self, index):
+        labels, flavors = super().__getitem__(index), self.flavor_data[index]
+        return labels, flavors
+
+
+class _RecipesIntEncodingDataset(_RecipesDataset):
+    LAZY_ENCODING = False
+    def __init__(self, data_dir, category=None, label_encoder: Optional[TextIntEncoder] = None,
+                 metadata_filename="metadata.json", feature_label="ingredients_ok"):
+
+        if label_encoder is None:
+            label_encoder = TextIntEncoder()
+        elif not isinstance(label_encoder, TextIntEncoder):
+            raise ValueError(f"X Label encoder must be a TextIntEncoder, got {type(label_encoder)}")
+        if category is not None:
+            category = category.lower()
+            if category not in FOOD_CATEGORIES:
+                raise ValueError(f'Invalid category: {category}')
+
+        # Compute images_path, Load recipes filter them by category and encode them to get the label data
+        _, label_data, label_encoder = images_recipes_processing(data_dir, metadata_filename, category,
+                                                     label_encoder, feature_label, encoding=not self.LAZY_ENCODING)
+
+
+        self.label_encoder: TextIntEncoder | LabelEncoderInterface = label_encoder
+
+        super().__init__(label_data)
+        self.lb_dict_offset = len(self.label_encoder.tokens) - 1 # offset for the tokens (-1 for the none token)
+        self.dim_vocab = self.label_encoder.num_classes
+
+    def ingr_int2hot(self, ingr_int):
+        ingr_encoded = torch.zeros(self.label_encoder.num_classes - self.lb_dict_offset)  # -len because of the tokens
+        ingr_encoded[ingr_int - self.lb_dict_offset] = 1
+        return ingr_encoded
+
+    def ingr_hot2int(self, ingr_hot):
+        return np.argmax(ingr_hot) + self.lb_dict_offset
 
     @staticmethod
-    def _def_transform_aug(num_magnitude_bins=31):
-        return transform_aug_base(num_magnitude_bins=num_magnitude_bins)
+    def collate_fn(batch):
+        labels, target = zip(*batch)
+        labels = torch.nn.utils.rnn.pad_sequence(labels, batch_first=True, padding_value=0)
+        return labels, torch.tensor(np.array(target))
 
-    @staticmethod
-    def _def_transform_plain():
-        return transform_plain_base()
+class RecipesIntMaskingDataset(_RecipesIntEncodingDataset):
+    LAZY_ENCODING = False
+    def __init__(self, data_dir, category=None, label_encoder: Optional[TextIntEncoder]=None,
+                 metadata_filename="metadata.json", feature_label="ingredients_ok", p_mask: float = 0.85):
 
-    @abstractmethod
-    def get_num_classes(self):
-        pass
+        if p_mask < 0 or p_mask > 1:
+            raise ValueError(f"p_mask must be in [0, 1], got {p_mask}")
+        super().__init__(data_dir, category, label_encoder, metadata_filename, feature_label)
 
-    @abstractmethod
-    def _compute_classes_weights(self) -> torch.tensor:
-        pass
+        self.dim_target = self.label_encoder.num_classes - self.lb_dict_offset
+        self.p_mask = p_mask
 
-    @staticmethod
-    def _init_transform(transform: list[v2.Transform] | v2.Transform, mean: Sequence[float], std: Sequence[float]
-                        ) -> v2.Transform:
-        if type(transform) is list:
-            return transformations_wrapper(transform, mean, std)
-        if isinstance(transform, v2.Transform):
-            return transform
-        raise ValueError("Invalid transform type")
 
-    def prepare_data(self) -> None:
-        self.classes_weights = self._compute_classes_weights()
+    def __getitem__(self, index):
+        labels = self.label_data[index]
 
-        if not os.path.exists(self.images_stats_path):
-            raise FileNotFoundError(f'Images stats file not found: {self.images_stats_path}')
-        mean, std = pd.read_csv(self.images_stats_path, index_col=0).values  # TODO: quando ci sarà il sistema che salva i risultati in un file, anche questi dati verranno calcolati e salvati in quel file, e poi caricati
+        p_rand = torch.rand(1, 1).item()
+        if p_rand < self.p_mask: # masking
+            masked_idx = torch.randint(0, len(labels), (1,))
+            masked_label = labels[masked_idx]
+            labels[masked_idx] = self.label_encoder.tokens["mask"][1]
+        else: # not masking
+            masked_label = self.label_encoder.tokens['none'][1]
 
-        self._transform_aug = self._init_transform(self._transform_aug, mean, std)
-        self._transform_plain = self._init_transform(self._transform_plain, mean, std)
+        masked_label_encoded = self.ingr_int2hot(masked_label)
+        return torch.tensor(labels, dtype=torch.int32), np.array(masked_label_encoded)
 
-        self.prepared = True
+class RecipesIntFlavorDataset(_RecipesIntEncodingDataset):
+    LAZY_ENCODING = False
+    def __init__(self, data_dir, category=None, label_encoder: Optional[TextIntEncoder] = None,
+                 metadata_filename="metadata.json", feature_label="flavors"):
 
-    @property
-    def transform_aug(self):
-        if not self.prepared:
-            raise ValueError("prepare_data() must be called first")
-        return self._transform_aug
+        super().__init__(data_dir, category, label_encoder, metadata_filename)
+        flavor_data = _load_recipes_data(data_dir, feature_label, metadata_filename, category)[1]
+        self.flavor_data, self.flavor_columns, recipes_kept = _preprocess_flavor(flavor_data)
+        self.dim_target = len(self.flavor_columns)
 
-    @property
-    def transform_plain(self):
-        if not self.prepared:
-            raise ValueError("prepare_data() must be called first")
-        return self._transform_plain
+        self.label_data = self.label_data[recipes_kept]
+        self.flavor_data = np.array(self.flavor_data, dtype=np.float32)
+
+    def __getitem__(self, index):
+        labels, flavors = self.label_data[index], self.flavor_data[index]
+        return torch.tensor(labels, dtype=torch.int32), flavors
+
 
 
 class ImagesRecipesBaseDataModule(BaseDataModule):
@@ -167,7 +237,7 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
             self,
             data_dir: os.path = YUMMLY_PATH,
             metadata_filename: str = METADATA_FILENAME,
-            images_stats_path: str | os.PathLike = YUMMLY_IMG_STATS_PATH,
+            images_stats_path: str | os.PathLike = os.path.join(YUMMLY_PATH, IMG_STATS_FILENAME),
             food_categories: List[str] = FOOD_CATEGORIES,
             category: str = None,
             feature_label: str = "ingredients_ok",
@@ -320,19 +390,19 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
                    transform_plain=transform_plain, transform_aug=transform_aug, **kwargs)
 
 
+
 def images_recipes_processing(
         data_dir: os.path, metadata_filename: str = METADATA_FILENAME, category: str | None = None,
         label_encoder: LabelEncoderInterface = None, recipe_feature_label: str = "ingredients_ok",
-        image_field: str = "image"
+        image_field: str = "image", encoding: bool=True,
 ) -> Tuple[List[pathlib.Path], ndarray, LabelEncoderInterface]:
     """Function that processes the images and recipes data, filtering them by category, encoding the recipes and
     returning the images paths, the label data and the label encoder."""
 
-    recipes = json.load(open(os.path.join(data_dir, metadata_filename)))
-    recipes = _recipes_filter_by_category(recipes, category)
+    recipes, label_data_raw = _load_recipes_data(data_dir, recipe_feature_label, metadata_filename, category)
 
     images_paths = _compute_images_paths(recipes, data_dir, image_field)
-    label_data, label_encoder = _encode_recipes(recipes, label_encoder, recipe_feature_label)
+    label_data, label_encoder = _encode_recipes(label_data_raw, label_encoder, recipe_feature_label, transform=encoding)
 
     return images_paths, label_data, label_encoder
 
@@ -342,16 +412,25 @@ def _recipes_filter_by_category(recipes: List[Dict], category: str | None = None
         return recipes
     return list(filter(lambda recipe: recipe['cuisine'].lower() == category, recipes))
 
+def _load_recipes_data(data_dir: os.PathLike, feature_label: str, metadata_filename: str = METADATA_FILENAME,
+                       category: str | None = None) -> Tuple[List[Dict], ndarray]:
+    recipes = json.load(open(os.path.join(data_dir, metadata_filename)))
+    recipes = _recipes_filter_by_category(recipes, category)
+    label_data = pd.DataFrame(recipes)[feature_label].values
+    return recipes, label_data
 
 def _encode_recipes(
-        recipes: List[Dict],
+        label_data_raw: ndarray,
         label_encoder: LabelEncoderInterface,
-        feature_label: str) -> Tuple[ndarray, LabelEncoderInterface]:
+        feature_label: str,
+        transform: bool = True
+) -> Tuple[ndarray, LabelEncoderInterface]:
     # Fit the encoder to the label feature if it is not already fitted, and then transform it
-    label_data_raw = pd.DataFrame(recipes)[feature_label].values
     if not label_encoder.fitted:  # warning: this doesn't work for anySkTransformer
         label_encoder.fit(label_data_raw)
-    return label_encoder.transform(label_data_raw), label_encoder
+
+    label_data = label_encoder.transform(label_data_raw) if transform else label_data_raw
+    return label_data, label_encoder
 
 
 def _compute_images_paths(metadata: List[Dict], data_dir: str | os.PathLike, image_field: str = "image"
@@ -359,3 +438,25 @@ def _compute_images_paths(metadata: List[Dict], data_dir: str | os.PathLike, ima
     metadata_df = pd.DataFrame(metadata)
     metadata_df[image_field] = metadata_df[image_field].apply(lambda img_path: os.path.join(data_dir, img_path))
     return metadata_df[image_field].values.tolist()
+
+
+def _preprocess_flavor(flavor_data: List[Dict[str, float]] | ndarray) -> Tuple[ndarray, List[str], ndarray]:
+    """
+    Function that preprocess the flavor data, filtering the rows with missing values and returning the values, the columns and the
+    index of corresponding recipes kept in the original data (useful for sync with other datasets).
+    :param flavor_data:
+    :return:
+    """
+    flavor_data = pd.Series(flavor_data)
+
+    def filter_row(row: Dict[str, int] or None) -> bool:
+        if row is None or row == {}:
+            return False
+        if any([elem is None for elem in row.values()]):
+            return False
+        return True
+
+    flavor_data = flavor_data[flavor_data.apply(filter_row)]
+    flavor_kept = flavor_data.index
+    flavor_df = pd.DataFrame([elem.values() for elem in flavor_data], columns=flavor_data.iloc[0].keys())
+    return flavor_df.values, flavor_df.columns.tolist(), flavor_kept

@@ -1,6 +1,7 @@
 import shutil
 
 import lightning as lgn
+import pandas as pd
 import torch
 import torchmetrics.classification
 import torchmetrics.functional.classification
@@ -13,7 +14,7 @@ from lightning.pytorch.profilers import SimpleProfiler
 
 from settings.config import *
 from src.commons.visualizations import h_stack_imgs, gradcam
-from src.data_processing.data_handling import ImagesRecipesDataset
+from src.data_processing.images_recipes import ImagesRecipesDataset
 from src.data_processing.labels_encoders import OneVSAllLabelEncoder, MultiLabelBinarizer, MultiLabelBinarizerRobust
 from src.models.resnet import ResnetLikeV2
 from src_scratches.dummy_modelling.dummy.training import train
@@ -53,7 +54,7 @@ if __name__ == "__main__":
         raise ValueError(f"Model type {MODEL_TYPE} not recognized")
 
     if NORMALIZE_IMGS:
-        mean, std = pd.read_csv(YUMMLY_IMG_STATS_PATH, index_col=0).values
+        mean, std = pd.read_csv(os.path.join(YUMMLY_PATH, IMG_STATS_FILENAME), index_col=0).values
     else:
         mean, std = [0, 0, 0], [1, 1, 1]
 

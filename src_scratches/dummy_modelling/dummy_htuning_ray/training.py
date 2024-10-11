@@ -14,7 +14,7 @@ from ray.tune.search.hyperopt import HyperOptSearch
 from ray import tune, train
 
 from settings.config import *
-from src.data_processing.data_handling import ImagesRecipesBaseDataModule
+from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
 from src_scratches.dummy_modelling.dummy_htuning_ray.model import DummyModel
 from src_scratches.dummy_modelling.dummy_htuning_ray.LightningModel import LightningModel
 

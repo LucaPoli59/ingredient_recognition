@@ -8,7 +8,8 @@ import lightning as lgn
 
 from settings.config import OPTUNA_JOURNAL_PATH
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
-from src.data_processing.data_handling import ImagesRecipesBaseDataModule, BaseDataModule
+from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
+from src.data_processing.common import BaseDataModule
 from src.lightning.lgn_trainers import BaseTrainer
 
 

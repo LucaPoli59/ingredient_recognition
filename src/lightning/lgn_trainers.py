@@ -16,7 +16,7 @@ from settings.config import EXPERIMENTS_PATH, EXPERIMENTS_TRASH_PATH, WANDB_PROJ
 from src.commons.utils import extract_name_trial_dir
 
 from src.lightning.lgn_models import BaseLGNM
-from src.data_processing.data_handling import BaseDataModule
+from src.data_processing.common import BaseDataModule
 from src.lightning.custom_callbacks import (FullModelCheckpoint, LightModelCheckpoint, TensorBoardEncodeLogger,
                                             CSVLoggerEncode, WandbLoggerEncode)
 

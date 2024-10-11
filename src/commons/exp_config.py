@@ -12,7 +12,7 @@ from src.models.dummy import DummyModel
 from src.lightning.lgn_models import BaseLGNM
 from src.lightning.lgn_trainers import BaseTrainer
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
-from src.data_processing.data_handling import ImagesRecipesBaseDataModule
+from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
 from src.commons.utils import MyMLAccuracy
 
 DEF_METRIC_INIT_P = {

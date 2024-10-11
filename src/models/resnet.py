@@ -175,29 +175,33 @@ class ResnetLikeV1(_BaseResnetLike):  #Like Resnet18
 
 
 class ResnetLikeV1LVariant(ResnetLikeV1):  #Like Resnet18
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, lp_phase=LP_MAX_PHASE):
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, lp_phase=-1):
+        if lp_phase is None:
+            lp_phase = -1
         super().__init__(num_classes, input_shape, lp_phase=lp_phase)
 
-        self.layer1 = self._make_layer(BasicBlockLVariant, 64, 64, 2)
-        self.layer2 = self._make_layer(BasicBlockLVariant, 64, 128, 2, stride=2)
-        self.layer3 = self._make_layer(BasicBlockLVariant, 128, 256, 2, stride=2)
-        self.layer4 = self._make_layer(BasicBlockLVariant, 256, 512, 2, stride=2)
+        self._layer1 = self._make_layer(BasicBlockLVariant, 64, 64, 2)
+        self._layer2 = self._make_layer(BasicBlockLVariant, 64, 128, 2, stride=2)
+        self._layer3 = self._make_layer(BasicBlockLVariant, 128, 256, 2, stride=2)
+        self._layer4 = self._make_layer(BasicBlockLVariant, 256, 512, 2, stride=2)
 
+        self.classifier = self._make_classifier(512, num_classes)
         self._lp_init_layers()
 
 
 class ResnetLikeV2(_BaseResnetLike):  #Like Resnet50
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE):
-        super().__init__(num_classes, input_shape)
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, lp_phase=-1):
+        if lp_phase is None:
+            lp_phase = -1
+        super().__init__(num_classes, input_shape, lp_phase=lp_phase)
         self.layers_expansion = BottleneckBlock.expansion
 
-        self.layer1 = self._make_layer(BottleneckBlock, 64, 64, 3)
-        self.layer2 = self._make_layer(BottleneckBlock, 256, 128, 4, stride=2)
-        self.layer3 = self._make_layer(BottleneckBlock, 512, 256, 6, stride=2)
-        self.layer4 = self._make_layer(BottleneckBlock, 1024, 512, 3, stride=2)
+        self._layer1 = self._make_layer(BottleneckBlock, 64, 64, 3)
+        self._layer2 = self._make_layer(BottleneckBlock, 256, 128, 4, stride=2)
+        self._layer3 = self._make_layer(BottleneckBlock, 512, 256, 6, stride=2)
+        self._layer4 = self._make_layer(BottleneckBlock, 1024, 512, 3, stride=2)
 
         self.classifier = self._make_classifier(512, num_classes)
-
         self._lp_init_layers()
 
 
@@ -215,16 +219,16 @@ class ResnetLikeV2(_BaseResnetLike):  #Like Resnet50
 
 
 class _BaseResnet(BaseModel, ABC):
-    def __init__(self, num_classes, input_shape, pretrained, lp_phase=None):
-        super().__init__(num_classes=num_classes, input_shape=input_shape, pretrained=pretrained, lp_phase=lp_phase)
+    def __init__(self, num_classes, input_shape, pretrained):
+        super().__init__(num_classes=num_classes, input_shape=input_shape, pretrained=pretrained, lp_phase=None)
         self.pretrained = pretrained
 
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
-        for key in ["num_classes", "input_shape", "pretrained", "lp_phase"]:
+        for key in ["num_classes", "input_shape", "pretrained"]:
             if key not in config:
                 raise ValueError(f"The configuration must contain the key '{key}'")
-        return cls(config["num_classes"], config["input_shape"], config["pretrained"], lp_phase=config["lp_phase"])
+        return cls(config["num_classes"], config["input_shape"], config["pretrained"], lp_phase=None)
 
     @property
     def transform_aug(self):

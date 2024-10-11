@@ -18,6 +18,12 @@ def multi_label_accuracy(y_pred: torch.Tensor, y_true: torch.Tensor) -> float | 
     # num of hits / num of classes mean over the batch
     return torch.mean((y_pred == y_true).sum(dim=1) / y_pred.size(1))
 
+def accuracy(y_pred: torch.Tensor, y_true: torch.Tensor) -> float | torch.Tensor:
+    true_classes = torch.argmax(y_true, dim=1)
+    pred_classes = torch.argmax(torch.sigmoid(y_pred), dim=1)
+    # num of hits / num of classes mean over the batch
+    return (true_classes == pred_classes).sum() / y_pred.size(0)
+
 
 class MyMLAccuracy(Metric):
     is_differentiable = False

@@ -10,7 +10,7 @@ import subprocess
 import wandb
 
 from settings.config import *
-from src.data_processing.data_handling import ImagesRecipesDataset
+from src.data_processing.images_recipes import ImagesRecipesDataset
 from src.data_processing.labels_encoders import OneVSAllLabelEncoder, MultiLabelBinarizerRobust
 from src.data_processing.transformations import _transform_core_base, transformations_wrapper, trasnform_aug_adv
 from src.models.resnet import ResnetLikeV2
@@ -24,7 +24,6 @@ if __name__ == "__main__":
 
     # Load the dataset
     INPUT_SHAPE = 224
-    TARGET_INGREDIENT = "salt"
     model_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "model")
     if not os.path.exists(model_path):
         os.makedirs(os.path.join(model_path, "lightning_logs"))
@@ -54,7 +53,7 @@ if __name__ == "__main__":
         if MODEL_PRETRAINED:
             mean, std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
         else:
-            mean, std = pd.read_csv(YUMMLY_IMG_STATS_PATH, index_col=0).values
+            mean, std = pd.read_csv(str(os.path.join(YUMMLY_PATH, IMG_STATS_FILENAME)), index_col=0).values
     else:
         mean, std = [0, 0, 0], [1, 1, 1]
 
@@ -74,19 +73,15 @@ if __name__ == "__main__":
     # val_dataset = torchvision.datasets.CIFAR100(root='./data', train=False, download=True, transform=transform_val,
     #                                            target_transform=encode_target)
 
-    if EASY_PROBLEM:
-        label_encoder = OneVSAllLabelEncoder(target_ingredient=TARGET_INGREDIENT)
-    else:
-        label_encoder = MultiLabelBinarizerRobust()
 
-    feature_label = "ingredients" + ("_ok" if not CLEANLAB else "_corr")
-    src = os.path.join(INPUT_PATH, 'yummly_corrected') if CLEANLAB else YUMMLY_PATH
-    train_dataset = ImagesRecipesDataset(os.path.join(src, "train"),
+    label_encoder = LABEL_ENCODER
+    src = YUMMLY_PATH
+    train_dataset = ImagesRecipesDataset(os.path.join(src, "train"), metadata_filename=RECIPES_FILENAME,
                                          transform=transform_train, label_encoder=label_encoder, category=CATEGORY,
-                                         feature_label=feature_label)
-    val_dataset = ImagesRecipesDataset(os.path.join(src, "val"),
+                                         feature_label=FEATURE_LABEL)
+    val_dataset = ImagesRecipesDataset(os.path.join(src, "val"), metadata_filename=RECIPES_FILENAME,
                                        transform=transform_val, label_encoder=label_encoder, category=CATEGORY,
-                                       feature_label=feature_label)
+                                       feature_label=FEATURE_LABEL)
 
     if N_SAMPLES is not None:
         train_dataset = torch.utils.data.Subset(train_dataset, range(N_SAMPLES))
@@ -108,7 +103,7 @@ if __name__ == "__main__":
                                                    project="dummy_single_ing", save_dir=model_path, id=f"{RUN_ID}")
     wandb_logger.watch(model, log="all", log_freq=10)
     wandb_logger.experiment.config.update({"MODEL_TYPE": str(MODEL_TYPE), "NORM_IMG": NORMALIZE_IMGS,
-                                           "AUGMENTING_IMGS": AUGMENTING_IMGS, "CLEANLAB": CLEANLAB,
+                                           "AUGMENTING_IMGS": AUGMENTING_IMGS,
                                            "NOTES": "AFTER FIXING SHUFFLE ISSUES"})
 
     total_steps = len(train_dataloader) * EPOCHS
@@ -116,7 +111,7 @@ if __name__ == "__main__":
     lighting_model = LightningModel(model, LR, OPTIMIZER, LOSS_TYPE, ACCURACY_FN, N_SAMPLES, BATCH_SIZE, total_steps,
                                     momentum=MOMENTUM,
                                     weight_decay=WEIGHT_DECAY, swa=SWA, weighted_loss=WEIGHT_LOSS,
-                                    easy_problem=EASY_PROBLEM, model_pretrained=MODEL_PRETRAINED,
+                                    problem=PROBLEM, model_pretrained=MODEL_PRETRAINED,
                                     lr_scheduler=LR_SCHEDULER)
     bar_callback = lgn.pytorch.callbacks.RichProgressBar(leave=True)
     device_stats_callback = lgn.pytorch.callbacks.DeviceStatsMonitor(cpu_stats=False)

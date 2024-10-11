@@ -6,7 +6,7 @@ import optuna
 from optuna_integration import PyTorchLightningPruningCallback
 
 from settings.config import *
-from src.data_processing.data_handling import ImagesRecipesBaseDataModule
+from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
 from src_scratches.dummy_modelling.dummy_htuning_optuna.LightningModel import LightningModel
 from src_scratches.dummy_modelling.dummy_htuning_optuna.model import DummyModel
 from src.dashboards.start_optuna import start_optuna
