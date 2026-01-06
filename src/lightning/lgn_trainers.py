@@ -27,6 +27,7 @@ class TrainerInterface(ABC, lgn.Trainer):
                  save_dir: Optional[str | os.PathLike] = None,
                  debug: bool = False,
                  log_every_n_steps: int = 50,
+                 limit_train_batches: int | float = 1.0,
                  limit_predict_batches: int | float = 1.0,
                  **kwargs):
         self._max_epochs = max_epochs
@@ -47,6 +48,7 @@ class TrainerInterface(ABC, lgn.Trainer):
         self._grad_clip_algo = kwargs.pop("gradient_clip_algorithm", grad_clip_algo)
 
         self.log_every_n_steps = log_every_n_steps
+        self.limit_train_batches = limit_train_batches
         self.limit_predict_batches = limit_predict_batches
 
         self.hparams = {'max_epochs': self._max_epochs, 'save_dir': self._save_dir, 'debug': self._debug,
@@ -66,9 +68,10 @@ class TrainerInterface(ABC, lgn.Trainer):
             gradient_clip_algorithm=self._grad_clip_algo,
 
             log_every_n_steps=log_every_n_steps,
+            limit_train_batches=limit_train_batches,
             limit_predict_batches=limit_predict_batches,
 
-            num_sanity_val_steps=1,
+            num_sanity_val_steps=2,
             enable_model_summary=self._debug,
             fast_dev_run=self._debug,
 
@@ -123,8 +126,9 @@ class TrainerInterface(ABC, lgn.Trainer):
     def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
         debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
         log_every_n_steps, limit_predict_batches = config['log_every_n_steps'], config['limit_predict_batches']
+        limit_train_batches = config.get("limit_train_batches", 1)  # Use get for backward compatibility
         return cls(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
-                   limit_predict_batches=limit_predict_batches, **kwargs)
+                   limit_predict_batches=limit_predict_batches, limit_train_batches=limit_train_batches, **kwargs)
 
     def fit(self, model: BaseLGNM, train_dataloaders=None, val_dataloaders=None,
             datamodule: Optional[BaseDataModule] = None,
@@ -132,9 +136,10 @@ class TrainerInterface(ABC, lgn.Trainer):
         """Slightingly overrided fit method that return the best model (in this case the last one)"""
         if datamodule is not None:
             model.startup_model(datamodule)
+
+
         super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
                     datamodule=datamodule, ckpt_path=ckpt_path)
-
         for file in os.listdir(EXPERIMENTS_TRASH_PATH):
             os.remove(os.path.join(EXPERIMENTS_TRASH_PATH, file))
 
@@ -158,10 +163,11 @@ class BaseTrainer(TrainerInterface):
 
     def __init__(self, max_epochs: int, save_dir: str | os.PathLike | None = None, debug: bool = False,
                  log_every_n_steps: int = 50, limit_predict_batches: int | float = 1.0,
-                 **kwargs):
+                 limit_train_batches: int | float = 1.0, **kwargs):
         self.wandb_logger = None
         super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
-                         limit_predict_batches=limit_predict_batches, min_epochs=int(max_epochs / 3), **kwargs)
+                         limit_predict_batches=limit_predict_batches, limit_train_batches=limit_train_batches,
+                         min_epochs=int(max_epochs / 3), **kwargs)
 
         self.wandb_log_freq = int(2 * self.log_every_n_steps)
 
@@ -198,9 +204,9 @@ class BaseTrainer(TrainerInterface):
 
     def _get_loggers(self) -> List[Logger]:
         exp_dir, exp_name, trial = extract_name_trial_dir(self._save_dir)
-        self.wandb_logger = WandbLoggerEncode(project=WANDB_PROJECT_NAME, version=0,
-                                              name=f"{os.path.relpath(exp_dir, EXPERIMENTS_PATH)}/{exp_name}",
-                                              save_dir=EXPERIMENTS_WANDB_PATH)
+        trial_full_name = f"{os.path.relpath(exp_dir, EXPERIMENTS_PATH)}/{exp_name}/{trial}"
+        self.wandb_logger = WandbLoggerEncode(project=WANDB_PROJECT_NAME, id=trial_full_name.replace("/", "-"), offline=True,
+                                              name=trial_full_name, save_dir=EXPERIMENTS_WANDB_PATH)
         return [
             TensorBoardEncodeLogger(save_dir=exp_dir, name=exp_name, version=trial),
             CSVLoggerEncode(save_dir=exp_dir, name=exp_name, version=trial),
@@ -211,38 +217,46 @@ class BaseTrainer(TrainerInterface):
         return SimpleProfiler(dirpath=self._save_dir, filename="profiler")
 
     def fit(self, model: BaseLGNM, train_dataloaders=None, val_dataloaders=None, datamodule=None,
-            ckpt_path=None) -> lgn.LightningModule:
+            ckpt_path=None, wandb_notes=None, wandb_log_config=None) -> lgn.LightningModule:
         """Slightingly overrided fit method that return the best model"""
 
+        if wandb_notes is None:
+            wandb_notes = ""
+        if wandb_log_config is None:
+            wandb_log_config = ""
+
         self.wandb_logger.watch(model.model, log="all", log_freq=self.wandb_log_freq)
+        self.wandb_logger.experiment.config.update({"MODEL_NAME": str(model.model_name), "NOTES": str(wandb_notes),
+                                                    "FULL_CONFIG": str(wandb_log_config)})
+
         try:
             super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
                         datamodule=datamodule, ckpt_path=ckpt_path)
-        except (Exception, KeyboardInterrupt) as e:
-            raise e
+        except (Exception, KeyboardInterrupt) as error:
+            raise error
         else:
             if self.interrupted:
                 raise KeyboardInterrupt("Training interrupted by user")
-            if self._debug:
-                return model
+            if not self._debug:
+                # Find the best model and load it, otherwise leave the last one
+                ckpt_c = self.checkpoint_callback
+                best_model_path = ckpt_c.best_model_path if ckpt_c is not None else None
+                # IF the path exist and is not the last one
+                if (best_model_path is None or best_model_path == ""
+                        or not os.path.exists(best_model_path) or ckpt_c.best_model_score is None
+                        or ckpt_c.best_model_score.item() == ckpt_c.current_score.item()):
+                    # if the best model path is not correct we take the last one
+                    best_model_path = os.path.join(self._save_dir, "checkpoints", "last.ckpt")
 
-            # Find the best model and load it, otherwise leave the last one
-            ckpt_c = self.checkpoint_callback
-            best_model_path = ckpt_c.best_model_path if ckpt_c is not None else None
-            # IF the path exist and is not the last one
-            if (best_model_path is None or best_model_path == ""
-                    or not os.path.exists(best_model_path) or ckpt_c.best_model_score is None
-                    or ckpt_c.best_model_score.item() == ckpt_c.current_score.item()):
-                # if the best model path is not correct we take the last one
-                best_model_path = os.path.join(self._save_dir, "checkpoints", "last.ckpt")
-
-            model.load_weights_from_checkpoint(best_model_path)
-            os.rename(best_model_path, os.path.join(self._save_dir, "best_model.ckpt"))
-            if os.path.exists(os.path.join(self._save_dir, "checkpoints", "last.ckpt")):
-                os.remove(os.path.join(self._save_dir, "checkpoints", "last.ckpt"))
+                model.load_weights_from_checkpoint(best_model_path)
+                os.rename(best_model_path, os.path.join(self._save_dir, "best_model.ckpt"))
+                if os.path.exists(os.path.join(self._save_dir, "checkpoints", "last.ckpt")):
+                    os.remove(os.path.join(self._save_dir, "checkpoints", "last.ckpt"))
         finally:
-            self.wandb_logger.experiment.unwatch(model.model)
-            return model
+            # todo capire come wandb gestisce le run interrotte
+            self.wandb_logger.experiment.finish()
+            # self.wandb_logger.experiment.unwatch(model.model)
+        return model
 
     @classmethod
     def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
@@ -254,10 +268,12 @@ class BaseTrainer(TrainerInterface):
 class BaseFasterTrainer(BaseTrainer):
     def __init__(self, max_epochs: int, save_dir: str | os.PathLike | None = None, debug: bool = False,
                  log_every_n_steps: int = 50, limit_predict_batches: int | float = 1.0,
-                 early_stop: Optional[bool] = True, **kwargs):
-        super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
-                         limit_predict_batches=limit_predict_batches, benchmark=True, **kwargs)
+                 limit_train_batches: int | float = 1.0, early_stop: Optional[bool] = True, **kwargs):
         self._early_stop = early_stop if early_stop is not None else True
+
+        super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
+                         limit_predict_batches=limit_predict_batches, limit_train_batches=limit_train_batches,
+                         benchmark=True, **kwargs)
 
         self.log_hparams(dict(early_stop=self._early_stop))
 
@@ -326,10 +342,9 @@ class OptunaTrainer(BaseTrainer):
         if kwargs is None:
             kwargs = {}
 
-        kwargs["limit_train_batches"] = config.get("limit_train_batches", 1)  # Use get for backward compatibility
         if trial is None:
             kwargs["trial"] = config.get('trial', None)
-        if trial is None:
-            raise ValueError("Trail not found in config")
+        if kwargs["trial"] is None:
+            raise ValueError("Trial must be provided through the config or the argument")
 
         return super().load_from_config(config, **kwargs)

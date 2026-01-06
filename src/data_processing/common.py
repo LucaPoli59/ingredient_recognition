@@ -9,11 +9,10 @@ import torch
 from PIL import Image
 from torchvision.transforms import v2
 
-from src.data_processing.transformations import transform_aug_base, transform_plain_base, transformations_wrapper
+from src.data_processing.transformations import transform_aug_base, transform_plain_base, transformations_wrapper, t_transform
 
 
 class BaseDataModule(ABC, lgn.LightningDataModule):
-    t_transform = Callable[[Image.Image | np.ndarray | torch.Tensor], torch.Tensor]
 
     def __init__(self, images_stats_path: str | os.PathLike, transform_aug: Optional[t_transform] = None,
                  transform_plain: Optional[t_transform] = None):
@@ -50,7 +49,7 @@ class BaseDataModule(ABC, lgn.LightningDataModule):
             return transform
         raise ValueError("Invalid transform type")
 
-    def prepare_data(self) -> None:
+    def prepare_data(self) -> None:  # Prepare data, by computing classes weights and initializing transformations
         self.classes_weights = self._compute_classes_weights()
 
         if not os.path.exists(self.images_stats_path):
@@ -73,3 +72,11 @@ class BaseDataModule(ABC, lgn.LightningDataModule):
         if not self.prepared:
             raise ValueError("prepare_data() must be called first")
         return self._transform_plain
+
+    @transform_plain.setter
+    def transform_plain(self, value):
+        self._transform_plain = value
+
+    @transform_aug.setter
+    def transform_aug(self, value):
+        self._transform_aug = value

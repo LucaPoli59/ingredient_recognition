@@ -1,3 +1,4 @@
+import copy
 import logging
 import os
 from typing import Tuple, Dict, Any, Optional
@@ -20,12 +21,10 @@ def set_torch_constants():
 
 
 def model_training(exp_config: ExpConfig, data_module: Optional[BaseDataModule] = None,
-                   ckpt_path: Optional[str | os.PathLike] = None, torch_model_kwargs: Optional[Dict[str, Any]] = None,
-                   lgn_model_kwargs: Optional[Dict[str, Any]] = None, trainer_kwargs: Optional[Dict[str, Any]] = None
+                   ckpt_path: Optional[str | os.PathLike] = None, lgn_model_kwargs: Optional[Dict[str, Any]] = None,
+                   trainer_kwargs: Optional[Dict[str, Any]] = None
                    ) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """General function that trains a model with the given configuration."""
-    if torch_model_kwargs is None:
-        torch_model_kwargs = {}
     if lgn_model_kwargs is None:
         lgn_model_kwargs = {}
     if trainer_kwargs is None:
@@ -34,8 +33,7 @@ def model_training(exp_config: ExpConfig, data_module: Optional[BaseDataModule] 
     resuming = ckpt_path is None
     model_config, trainer_config = exp_config.lgn_model, exp_config.trainer
 
-    lgn_model = model_config['lgn_model_type'].load_from_config(model_config, lgn_model_kwargs=lgn_model_kwargs,
-                                                                torch_model_kwargs=torch_model_kwargs)
+    lgn_model = model_config['lgn_model_type'].load_from_config(model_config, lgn_model_kwargs=lgn_model_kwargs)
     trainer = trainer_config['type'].load_from_config(trainer_config, **trainer_kwargs)
 
     if data_module is None:
@@ -49,10 +47,18 @@ def model_training(exp_config: ExpConfig, data_module: Optional[BaseDataModule] 
     if trainer.debug:
         print("Data Module, Models and Trainer loaded, " + ("training started" if resuming else "resume training"))
 
+    if exp_config.logging["log_exp_config"]:
+        exp_confing_log = copy.deepcopy(exp_config)
+        exp_confing_log.drop("lb")
+    else:
+        exp_confing_log = None
+
     trained_model = trainer.fit(
         model=lgn_model,
         datamodule=data_module,
-        ckpt_path=ckpt_path
+        ckpt_path=ckpt_path,
+        wandb_notes = exp_config.logging["wandb_notes"],
+        wandb_log_config = exp_confing_log
     )
 
     if trainer.debug:

@@ -12,7 +12,7 @@ import wandb
 from settings.config import *
 from src.data_processing.images_recipes import ImagesRecipesDataset
 from src.data_processing.labels_encoders import OneVSAllLabelEncoder, MultiLabelBinarizerRobust
-from src.data_processing.transformations import _transform_core_base, transformations_wrapper, trasnform_aug_adv
+from src.data_processing.transformations import transform_core_base, transformations_wrapper, transform_aug_adv
 from src.models.resnet import ResnetLikeV2
 from src_scratches.dummy_modelling.dummy_single_ing.LightningModel import LightningModel
 
@@ -60,9 +60,9 @@ if __name__ == "__main__":
         mean, std = [0, 0, 0], [1, 1, 1]
 
     if AUGMENTING_IMGS:
-        transform_train = trasnform_aug_adv((INPUT_SHAPE, INPUT_SHAPE))
+        transform_train = transform_aug_adv((INPUT_SHAPE, INPUT_SHAPE))
     else:
-        transform_train = _transform_core_base((INPUT_SHAPE, INPUT_SHAPE))
+        transform_train = transform_core_base((INPUT_SHAPE, INPUT_SHAPE))
 
     transform_train = transformations_wrapper(transform_train, mean, std)
 

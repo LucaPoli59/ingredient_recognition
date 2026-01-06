@@ -13,6 +13,7 @@ def gradcam(model: torch.nn.Module,
             target_layer: torch.nn.Module,
             input_x: torch.Tensor,
             targets: Optional[List[int]] = None,
+            imgs_show: Optional[torch.Tensor] = None,
             img_weight: float = 0.5,
             ) -> Tuple[List[np.ndarray], np.ndarray, List[int], torch.Tensor]:
     """
@@ -26,10 +27,16 @@ def gradcam(model: torch.nn.Module,
     :param input_x: batch or single image to visualize
     :param targets: target classes to visualize (if None, it will use the class with the highest score)
     :param img_weight: weight of the image respect to the gradcam mask (img_weight * img + (1-img_weight) * mask)
+    :param imgs_show: images to show in the visualization (if None, it will use the input_x)
     :return: images with the gradcam masked, gradcam mask and the targets selected, and the output of the model
     """
     cam = GradCAM(model=model, target_layers=[target_layer])
     input_x_cf, input_x_cl = _manage_input(input_x)
+
+    if imgs_show is None:
+        imgs_show = input_x_cl
+    else:
+        _, imgs_show = _manage_input(imgs_show)
 
     if targets is not None:
         if len(targets) != len(input_x_cf):
@@ -39,7 +46,7 @@ def gradcam(model: torch.nn.Module,
     cam_masks = cam(input_tensor=input_x_cf, targets=targets)
 
     imgs = np.array([show_cam_on_image(x.cpu().numpy(), cam_mask, use_rgb=True, image_weight=img_weight)
-                     for x, cam_mask in zip(input_x_cl, cam_masks)]) / 255
+                     for x, cam_mask in zip(imgs_show, cam_masks)]) / 255
 
     if targets is None:
         targets = torch.argmax(cam.outputs.detach(), dim=-1).cpu().numpy()
@@ -54,8 +61,9 @@ def feature_factorization(model: torch.nn.Module,
                           target_classifier: torch.nn.Module,
                           input_x: torch.Tensor,
                           label_encoder: Optional[LabelEncoderInterface] = None,
-                          n_components: int = 2,
-                          top_k: int = 2,
+                          n_components: int = 5,
+                          top_k: int = 1,
+                          imgs_show: torch.Tensor = None,
                           img_weight: float = 0.5,
                           ) -> np.ndarray:
     """
@@ -81,19 +89,24 @@ def feature_factorization(model: torch.nn.Module,
     :param n_components: number of components to extract (notes: a high value can lead to missed convergence
     :param top_k: number of top classes to show in the labels
     :param img_weight: weight of the image respect to the factorization components
+    :param imgs_show: images to show in the visualization (if None, it will use the input_x)
     :return: images with the factorization components masked
     """
 
     dff = DeepFeatureFactorization(model=model, target_layer=target_conv, computation_on_concepts=target_classifier)
 
     input_x_cf, input_x_cl = _manage_input(input_x)
+    if imgs_show is None:
+        imgs_show = input_x_cl
+    else:
+        _, imgs_show = _manage_input(imgs_show)
 
     concepts, batch_explanations, concept_outputs = dff(input_x_cf, n_components=n_components)
     concept_labels = _create_labels(concept_outputs, label_encoder=label_encoder, top_k=top_k)
     visualizations = np.array(
         [show_factorization_on_image(x.cpu().numpy(), batch_expl, concept_labels=concept_labels,
                                      image_weight=img_weight)
-         for x, batch_expl in zip(input_x_cl, batch_explanations)]) / 255
+         for x, batch_expl in zip(imgs_show, batch_explanations)]) / 255
 
     return visualizations
 

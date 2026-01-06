@@ -33,7 +33,7 @@ def enc_config_to_yaml(config: Dict[str, Tuple[str, str | Dict]]) -> Dict[str, A
     return {key: value[1] if value[0] != "config" else enc_config_to_yaml(value[1]) for key, value in config.items()}
 
 
-def decode_config(config: Dict[str, Tuple[str, str | Dict]]) -> Dict[str, Any]:
+def decode_config(config: Dict[str, Tuple[str, str | Dict]], raise_lambda=True) -> Dict[str, Any]:
     """Function that decodes the config dictionary, converting the values to the original type"""
     new_config = {}
     for key, (type_str, value) in config.items():
@@ -45,13 +45,19 @@ def decode_config(config: Dict[str, Tuple[str, str | Dict]]) -> Dict[str, Any]:
             case "class":
                 new_config[key] = str_to_class(value)
             case "function":
-                new_config[key] = str_to_func(value)
+                if str_func_is_lambda(value):
+                    if raise_lambda:
+                        raise ValueError("Lambda functions are not supported")
+                    else:
+                        new_config[key] = None
+                else:
+                    new_config[key] = str_to_func(value)
             case "list":
                 new_config[key] = json.loads(value)
             case "ndarray":
                 new_config[key] = np.array(json.loads(value))
             case "config":
-                new_config[key] = decode_config(value)
+                new_config[key] = decode_config(value, raise_lambda=raise_lambda)
 
     return new_config
 
@@ -72,3 +78,12 @@ def str_to_func(func_str):
     module_name, func_name = func_str.rsplit(".", 1)
     module = importlib.import_module(module_name)
     return getattr(module, func_name)
+
+
+def str_func_is_lambda(func_str):
+    func_str = func_str.removeprefix("<function '").removesuffix("'>")
+    module_name, func_name = func_str.rsplit(".", 1)
+    return module_name == "__main__" and func_name == "<lambda>"
+
+def is_lambda(func):
+    return callable(func) and func.__name__ == "<lambda>"

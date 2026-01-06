@@ -1,5 +1,7 @@
 import copy
+import json
 import os
+import random
 import shutil
 import warnings
 from typing import Tuple, Type, Optional, List
@@ -7,13 +9,16 @@ from typing import Tuple, Type, Optional, List
 import lightning as lgn
 import numpy as np
 import optuna
+import torch
+from tornado.gen import sleep
 
+from config import HTUNING_TRIAL_CONFIG_FILE, HGEN_CONFIG_FILE
 from src.dashboards.start_optuna import start_optuna
 
 from src.commons.utils import extract_name_trial_dir
 from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, OPTUNA_JOURNAL_FILENAME, HTUNER_CONFIG_FILE,
-                             OPTUNA_JOURNAL_PATH)
-from src.training._commons import set_torch_constants, model_training, init_optuna_storage, load_datamodule
+                             OPTUNA_JOURNAL_PATH, HTUNING_TRIAL_CONFIG_FILE)
+from src.training.commons import set_torch_constants, model_training, init_optuna_storage, load_datamodule
 
 from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
 from src.lightning.lgn_trainers import TrainerInterface, OptunaTrainer
@@ -28,6 +33,7 @@ def silence_optuna_warnings():
 def make_htuning_exp(
         experiment_name: str,
         hgen_config: HGeneratorConfig,
+        exp_config: Optional[HTunerExpConfig] = None,
         experiment_dir: str | None = None,
         max_epochs: int = 20,
         batch_size: Optional[int] = DEF_BATCH_SIZE,
@@ -36,6 +42,9 @@ def make_htuning_exp(
 ) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """Function that creates an experiment with hyperparameters tuning with the given configuration and run it.
     If the experiment is resumable, it will resume the last trial.
+
+    The configuration can be passed as an ExpConfig object or as keyword arguments. If both are passed, the keyword
+    arguments will be used to update the ExpConfig object.
 
     Note: Other configuration parameters must be passed as keyword arguments, by following the design pattern
     of the ExpConfig class.
@@ -53,10 +62,14 @@ def make_htuning_exp(
     if to_resume:
         return _resume_exp(save_dir)
 
-    exp_config = HTunerExpConfig(**config_kwargs)
+    if exp_config is None:
+        exp_config = HTunerExpConfig(**config_kwargs)
+    else:
+        exp_config.update_config(**config_kwargs)
+
     _assert_lgn_model_trainer_compatibility(exp_config.lgn_model["lgn_model_type"], exp_config.trainer["type"])
     exp_config.update_config(tr_save_dir=save_dir, tr_debug=debug, tr_max_epochs=max_epochs, batch_size=batch_size,
-                             ht_save_dir=os.path.dirname(save_dir))
+                             ht_save_dir=save_dir)
     return _run_new_exp(exp_config, hgen_config)
 
 
@@ -77,7 +90,7 @@ def _setup_or_resume_dir(experiment_dir: str | os.PathLike, experiment_name: str
 
     storage = init_optuna_storage()
     studies = optuna.get_all_study_names(storage)
-    return os.path.join(experiment_dir, experiment_name), experiment_name in studies
+    return os.path.join(experiment_dir, experiment_name), f"{experiment_dir}/{experiment_name}" in studies
 
 
 def _restore_study(study_name: str, storage: optuna.storages.BaseStorage,
@@ -112,14 +125,15 @@ def _resume_exp(save_dir: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.Lightning
     study_name = f"{exp_dir}/{exp_name}"
 
     htuner_config = exp_config.htuner
-    sampler = htuner_config["sampler"]()
-    pruner = htuner_config["pruner"]()
+    sampler = htuner_config["sampler"](**htuner_config["sampler_kwargs"])
+    pruner = htuner_config["pruner"](**htuner_config["pruner_kwargs"])
 
     study = optuna.load_study(study_name=study_name, storage=storage, sampler=sampler, pruner=pruner)
     if len(study.trials) == 0:
         raise ValueError("No trials found in the study.")
 
-    exp_gen_config = HGeneratorConfig(**study.trials[0].distributions)
+    exp_gen_config = HGeneratorConfig.load_from_file_with_dist(os.path.join(save_dir, HGEN_CONFIG_FILE),
+                                                               study.trials[0].distributions)  # probabilmente sta roba non funziona
     data_module = load_datamodule(exp_config)
     exp_config.drop("lb")
 
@@ -160,8 +174,6 @@ def _run_new_exp(exp_config: HTunerExpConfig, exp_gen_config: HGeneratorConfig
                  ) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """Function that runs a new experiment with the given configuration."""
 
-    debug = exp_config.trainer['debug']
-
     # Load the dataset
     data_module = load_datamodule(exp_config)
     exp_config.update_config(dm_label_encoder=data_module.label_encoder.to_config(),
@@ -170,10 +182,11 @@ def _run_new_exp(exp_config: HTunerExpConfig, exp_gen_config: HGeneratorConfig
     # Save the configuration to file
     exp_config.save_to_file(str(os.path.join(exp_config.trainer["save_dir"], HTUNER_CONFIG_FILE)))
     exp_config.drop("lb")  # From this point is useless to carry the label encoder in the config
+    exp_gen_config.save_to_file(str(os.path.join(exp_config.trainer["save_dir"], HGEN_CONFIG_FILE)))
 
     htuner_config = exp_config.htuner
-    sampler = htuner_config["sampler"]()
-    pruner = htuner_config["pruner"]()
+    sampler = htuner_config["sampler"](**htuner_config["sampler_kwargs"])
+    pruner = htuner_config["pruner"](**htuner_config["pruner_kwargs"])
     direction = htuner_config["direction"]
 
     storage = init_optuna_storage()
@@ -182,7 +195,9 @@ def _run_new_exp(exp_config: HTunerExpConfig, exp_gen_config: HGeneratorConfig
     study = optuna.create_study(sampler=sampler, direction=direction, study_name=study_name,
                                 storage=storage, pruner=pruner)
 
-    if debug:
+    study.set_metric_names(["val_loss"])
+
+    if exp_config.trainer['debug']:
         print("Starting Optimization...")
 
     study.optimize(
@@ -219,11 +234,15 @@ def _objective_wrapper(trial: optuna.Trial, exp_config: ExpConfig, data_module: 
     hparams = hparam_gen_config.generate_hparams_on_trial(trial)
     variable_hparams_names = [key for key, value in hparam_gen_config.lgn_model.items() if value is not None]
 
+    if not exp_config.trainer['debug']: # todo remove not
+        print(f"\nNew trial: {trial.number}, hparams: {hparams}\n\n")
+
     trial_path = os.path.join(trial_config.trainer["save_dir"], f"trial_{trial.number}")
     resume_path = _prepare_trial_dir(trial_path, check_for_resume)
 
     # Update the configuration with the generated hyperparameters and the trial
     trial_config.update_config(**hparams, tr_trial=trial, tr_save_dir=trial_path)
+    trial_config.save_to_file(os.path.join(trial_path, HTUNING_TRIAL_CONFIG_FILE))
 
     # Run the experiment
     trainer, model = model_training(trial_config, data_module, ckpt_path=resume_path,
@@ -240,8 +259,7 @@ if __name__ == "__main__":
     silence_optuna_warnings()
     exp_dir, exp_name = os.path.join(EXPERIMENTS_PATH, "dummy_htuning"), "dummy_experiment"
     debug = False
-    # random_int = random.randint(0, 100)
-    random_int = 69
+    random_int = random.randint(0, 100)
     exp_name = f"{exp_name}_{random_int}"
     print(exp_name)
 
@@ -255,3 +273,4 @@ if __name__ == "__main__":
     make_htuning_exp(exp_name, hgen_config, experiment_dir=exp_dir, max_epochs=3, debug=debug,
                      torch_model_type=DummyModel, tr_type=OptunaTrainer, dm_category="mexican", hp_lr=None,
                      tr_limit_train_batches=25, ht_n_trials=3)
+

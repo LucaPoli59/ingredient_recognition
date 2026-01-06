@@ -19,7 +19,7 @@ from src.data_processing.labels_encoders import OneVSAllLabelEncoder, MultiLabel
 from src.models.resnet import ResnetLikeV2
 from src_scratches.dummy_modelling.dummy.training import train
 from src_scratches.dummy_modelling.dummy_single_ing.training import accuracy, encode_target
-from src.data_processing.transformations import transform_aug_base, transformations_wrapper, trasnform_aug_adv
+from src.data_processing.transformations import transform_aug_base, transformations_wrapper, transform_aug_adv
 from src_scratches.dummy_modelling.dummy_single_ing.LightningModel import LightningModel
 
 from _commons import *
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         mean, std = [0, 0, 0], [1, 1, 1]
 
     if AUGMENTING_IMGS:
-        transform_train = trasnform_aug_adv((INPUT_SHAPE, INPUT_SHAPE))
+        transform_train = transform_aug_adv((INPUT_SHAPE, INPUT_SHAPE))
     else:
         transform_train = transform_aug_base((INPUT_SHAPE, INPUT_SHAPE))
 

@@ -3,8 +3,9 @@ import os
 import dash
 from typing import Tuple, List, Optional
 import dash_bootstrap_components as dbc
+import dash_ag_grid as dag
 import dash_mantine_components as dmc
-import jsonpickle
+import jsonpickle, pickle, codecs
 import numpy as np
 from dash_iconify import DashIconify
 from dash import html, dcc, callback, Input, Output, State
@@ -14,7 +15,9 @@ import torch
 from PIL import Image
 
 from dash.exceptions import PreventUpdate
-from settings.config import EXPERIMENTS_PATH, HTUNER_CONFIG_FILE, BLANK_IMG_PATH
+from torchvision.transforms import v2
+
+from settings.config import EXPERIMENTS_PATH, HTUNER_CONFIG_FILE, BLANK_IMG_PATH, HTUNING_TRIAL_CONFIG_FILE
 from src.dashboards._commons import recursive_listdir, DASH_CACHE, dash_get_asset_url
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
 from src.data_processing.images_recipes import LightImagesRecipesDataset
@@ -25,7 +28,26 @@ from src.commons.visualizations import gradcam, feature_factorization, correct_l
 DEVICE = "cpu"  # needed since the library uses the model on CPU
 MODEL_CACHE_PATH = os.path.join(DASH_CACHE, "model_cache.pt")
 IMG_WIDTH, IMG_HEIGHT = "600px", "400px"
-TABLES_PARAMS = dict(bordered=True, hover=True, responsive=True, striped=True, size='lg')
+TABLES_PARAMS = {"resizable": True, "sortable": True, "filter": True, "wrapHeaderText": True, "autoHeaderHeight": True}
+# CONFIDENCE_COLUMN_STYLE = {"styleConditions": [{"condition": "params.value >= 0.5", "style": {"backgroundColor": "mediumaquamarine"}}],
+#                            "defaultStyle": {"backgroundColor": "lightcoral"}}
+
+
+IMG_LABELS_TABLE_COLS_DEF = (lambda list_ingr_sel, list_ingr_full: [
+    {"field": "Ingredients", "cellStyle": {"styleConditions": [{"condition": f"{list_ingr_sel}.includes(params.value)",
+                                                               "style": {"backgroundColor": "mediumaquamarine"}},
+                                                               {"condition": f"{list_ingr_full}.includes(params.value)",
+                                                                "style": {"backgroundColor": "#fce883"}}
+                                                               ]}}
+])
+
+IMG_PREDS_TABLE_COLS_DEF = (lambda list_ingr: [
+    {"field": "Ingredients", "cellStyle": {"styleConditions": [{"condition": f"{list_ingr}.includes(params.value)",
+                                                               "style": {"backgroundColor": "#add8e6"}}]}},
+    {"field": "Confidence"}
+])
+
+
 DEF_GRADCAM_TARGET = [{"value": None, "label": "Most Probable"}]
 
 dash.register_page(__name__, path="/model_visualization", name="Model Visualization", title="Model Visualization",
@@ -33,6 +55,7 @@ dash.register_page(__name__, path="/model_visualization", name="Model Visualizat
 
 experiments = recursive_listdir(EXPERIMENTS_PATH)
 experiments_str = [exp.replace(EXPERIMENTS_PATH, "")[1:] for exp in experiments]
+
 
 layout = dbc.Container(fluid=True, children=[
     dcc.Location(id='url', refresh=False),
@@ -90,8 +113,12 @@ layout = dbc.Container(fluid=True, children=[
                 dbc.Tooltip("Next Image", target="img_bt_next", placement="top", style={"font-size": "0.6rem"}),
             ], style={"position": "relative", "width": IMG_WIDTH, "max-width": IMG_WIDTH}),
 
-            html.Div(id="img_labels_table", style={"overflow": "auto"}),
-            html.Div(id="img_preds_table", style={"overflow": "auto"}),
+            dag.AgGrid(id="img_labels_table", columnSize='responsiveSizeToFit', rowData=[],
+                       columnDefs=IMG_LABELS_TABLE_COLS_DEF([], []), defaultColDef=TABLES_PARAMS,
+                       style={"max-width": "150px"}),
+            dag.AgGrid(id="img_preds_table", columnSize='responsiveSizeToFit', rowData=[],
+                       columnDefs=IMG_PREDS_TABLE_COLS_DEF([]), defaultColDef=TABLES_PARAMS,
+                       style={"max-width": "300px"}),
 
         ], style={"height": IMG_HEIGHT, "max-height": IMG_HEIGHT}),
 
@@ -107,8 +134,8 @@ layout = dbc.Container(fluid=True, children=[
               dismissable=True, class_name="position-absolute top-0 end-0 me-3", style={"margin-top": "60px"}),
 
     dcc.Store(id='store_data_loader', data={}, storage_type="memory"),  # todo put in session
+    dcc.Store(id='store_transform_method', data={}, storage_type="memory"),
     dcc.Store(id='store_label_encoder', data={}, storage_type="memory"),
-    dcc.Store(id='store_imgs_shape', data={}, storage_type="memory"),
     # Make this to the transform method loaded similar to the config
     dcc.Store(id='store_imgs_data', data={}, storage_type="memory"),
     dcc.Store(id='store_img_index', data={"curr": None, "max": None}, storage_type="memory"),
@@ -129,16 +156,21 @@ def update_trial_selector(selected_exp):
         return [], True, None
 
     paths = [os.path.join(selected_exp, elem) for elem in elems if elem.startswith("trial_")]
-    paths_str = [os.path.basename(elem).replace("trial_", "").upper() for elem in paths]
+    # creation of names for the trials (using the number of the trial)
+
+    paths_int = [(int(os.path.basename(elem).replace("trial_", "").upper())) for elem in paths]
+    paths, paths_int = zip(*sorted(zip(paths, paths_int), key=lambda x: x[1]))
+
+    paths_str = [str(elem) for elem in paths_int]
     return [{'label': exp_str, 'value': exp} for exp, exp_str in zip(paths, paths_str)], False, paths[-1]
 
 
 @callback(Output("store_data_loader", "data"),
+          Output("store_transform_method", "data"),
           Output("store_label_encoder", "data"),
-          Output("store_imgs_shape", "data"),
           Output("store_model_loaded", "data", allow_duplicate=True),
-          Output('gradcam_target_select', 'data'),
-          Output('gradcam_target_select', 'value'),
+          Output('gradcam_target_select', 'data', allow_duplicate=True),
+          Output('gradcam_target_select', 'value', allow_duplicate=True),
           Output('loading_notify', 'is_open', allow_duplicate=True),
           Output('loading_notify', 'children'),
           Output('loading_notify', 'icon'),
@@ -184,18 +216,20 @@ def load_experiment(_, selected_exp, selected_htrial, upload_contents, upload_fi
     datamodule.setup()
 
     dataset = datamodule.val_dataloader().dataset.to_light_dataset(datamodule.label_encoder)
-    # TODO: AGGIUNGERE IL SALVATAGGIO DEL METODO DI TRANSFORMAZIONE (plain) PER LE IMMAGINI
+    transform = datamodule.transform_plain
+    transform_encoded = codecs.encode(pickle.dumps(transform), "base64").decode()
+
     label_encoder = jsonpickle.encode(datamodule.label_encoder)
 
     ingredients = pd.Series(dataset.label_data).explode().value_counts().index
     target_options = (DEF_GRADCAM_TARGET +
-                      [{"value": datamodule.label_encoder.get_index(ingredient), "label": ingredient}
+                      [{"value": ingredient, "label": ingredient.capitalize()}
                        for ingredient in ingredients])
 
-    imgs_shape = datamodule.image_shape
+
     torch.save(model.model, MODEL_CACHE_PATH)
 
-    return (dataset.to_json(), label_encoder, imgs_shape, True, target_options, target_options[1]['value'],
+    return (dataset.to_json(), transform_encoded, label_encoder, True, target_options, target_options[1]['value'],
             True, feedback, "success")
 
 
@@ -204,8 +238,10 @@ def load_experiment(_, selected_exp, selected_htrial, upload_contents, upload_fi
           Output('img_display', 'src', allow_duplicate=True),
           Output('img_bt_prev', 'disabled'),
           Output('img_bt_next', 'disabled'),
-          Output('img_labels_table', 'children', allow_duplicate=True),
-          Output('img_preds_table', 'children', allow_duplicate=True),
+          Output('img_labels_table', 'rowData', allow_duplicate=True),
+          Output('img_labels_table', 'columnDefs', allow_duplicate=True),
+          Output('img_preds_table', 'rowData', allow_duplicate=True),
+          Output('img_preds_table', 'columnDefs', allow_duplicate=True),
           Output('store_model_loaded', 'data', allow_duplicate=True),
           Input('store_data_loader', 'data'), prevent_initial_call=True)
 def load_images(store_data_loader):
@@ -215,15 +251,18 @@ def load_images(store_data_loader):
     data = [{"img": str(img_path), "labels": labels}
             for img_path, labels in zip(dataset.images_paths, dataset.label_data)]
 
-    labels_table = _create_labels_tables(data[0]["labels"])
-    return (data, {"curr": 0, "max": len(data) - 1}, dash_get_asset_url(data[0]["img"]), False, False, labels_table,
-            dbc.Table(), True)
+    labels = data[0]["labels"]
+    labels_table_data = _create_labels_tables(labels).to_dict(orient="records")
+    return (data, {"curr": 0, "max": len(data) - 1}, dash_get_asset_url(data[0]["img"]), False, False, 
+            labels_table_data, IMG_LABELS_TABLE_COLS_DEF([], []), [], IMG_PREDS_TABLE_COLS_DEF(labels), True)
 
 
 @callback(Output('img_display', 'src', allow_duplicate=True),
           Output('store_img_index', 'data', allow_duplicate=True),
-          Output('img_labels_table', 'children', allow_duplicate=True),
-          Output('img_preds_table', 'children', allow_duplicate=True),
+          Output('img_labels_table', 'rowData', allow_duplicate=True),
+          Output('img_labels_table', 'columnDefs', allow_duplicate=True),
+          Output('img_preds_table', 'rowData', allow_duplicate=True),
+          Output('img_preds_table', 'columnDefs', allow_duplicate=True),
           Input('img_bt_next', 'n_clicks'),
           Input('img_bt_prev', 'n_clicks'),
           State('store_img_index', 'data'),
@@ -233,12 +272,16 @@ def scroll_img(_, __, index_data, imgs_data):
     curr_idx, max_idx = index_data["curr"], index_data["max"]
     next_idx = (curr_idx + idx_mod) % (max_idx + 1)
 
-    labels_table = _create_labels_tables(imgs_data[next_idx]["labels"])
-    return dash_get_asset_url(imgs_data[next_idx]["img"]), {"curr": next_idx, "max": max_idx}, labels_table, dbc.Table()
+    labels = imgs_data[next_idx]["labels"]
+
+    labels_table_data = _create_labels_tables(labels).to_dict(orient="records")
+    return (dash_get_asset_url(imgs_data[next_idx]["img"]), {"curr": next_idx, "max": max_idx},
+            labels_table_data, IMG_LABELS_TABLE_COLS_DEF([], []), [], IMG_PREDS_TABLE_COLS_DEF(labels))
+
 
 
 @callback(Output('load_preds_btn', 'disabled'),
-          Output("gradcam_target_select", "disabled"),
+          Output("gradcam_target_select", "disabled", allow_duplicate=True),
           Input('store_model_loaded', 'data'), prevent_initial_call=True)
 def enable_model_use(model_loaded):
     return [not model_loaded] * 2
@@ -246,47 +289,71 @@ def enable_model_use(model_loaded):
 
 @callback(Output('preds_gradcam', 'figure', allow_duplicate=True),
           Output('preds_factors', 'figure', allow_duplicate=True),
-          Output('img_preds_table', 'children', allow_duplicate=True),
+          Output('img_labels_table', 'columnDefs', allow_duplicate=True),
+          Output('img_preds_table', 'rowData', allow_duplicate=True),
           Output('loading_notify', 'is_open', allow_duplicate=True),
           Output('inference_notify', 'is_open'),
           Output('inference_notify', 'children'),
           Output('inference_notify', 'icon'),
           Input('load_preds_btn', 'n_clicks'),
           State('gradcam_target_select', 'value'),
-          State('store_imgs_shape', 'data'),
           State('store_img_index', 'data'),
           State('store_imgs_data', 'data'),
           State("img_preds_weight_slider", 'value'),
+          State("store_transform_method", "data"),
           State("store_label_encoder", "data"), prevent_initial_call=True)
-def make_inference(_, target, imgs_shape, img_index_data, imgs_data, img_weight, label_encoder, device=DEVICE):
+def make_inference(_, target, img_index_data, imgs_data, img_weight, imgs_transform, label_encoder, device=DEVICE):
     try:
         model = _load_model().to(device)
     except Exception as e:
         return dash.no_update, dash.no_update, dash.no_update, dash.no_update, True, f"Error: {e}", "danger"
 
-    targets = [target] if target is not None else None
-    model.eval()
-    imgs_transform = transform_plain_base(imgs_shape)
+    imgs_transform = pickle.loads(codecs.decode(imgs_transform.encode(), "base64"))
+    imgs_transform_no_mean = v2.Compose(imgs_transform.transforms[:-1])
+
     img_path = imgs_data[img_index_data["curr"]]["img"]
     img = imgs_transform(Image.open(img_path))
+    img_show = imgs_transform_no_mean(Image.open(img_path))
+
     label_encoder = jsonpickle.decode(label_encoder)
+    targets = [label_encoder.get_index(target)] if target is not None else None
+
+    model.eval()
 
     gradcam_imgs, gradcam_masks, gradcam_target, outputs = gradcam(model, model.conv_target_layer, img.to(device),
-                                                                   targets=targets, img_weight=1 - img_weight)
+                                                                   imgs_show=img_show.to(device), targets=targets,
+                                                                   img_weight=1 - img_weight)
     gradcam_img, gradcam_mask, gradcam_target, output = gradcam_imgs[0], gradcam_masks[0], gradcam_target[0], outputs[0]
 
     if not isinstance(gradcam_target, str):
         gradcam_target = label_encoder.decode_labels([[int(gradcam_target)]])[0][0]
 
     factors_img = feature_factorization(model, model.conv_target_layer, model.classifier_target_layer,
-                                        img.to(device), img_weight=1 - img_weight, label_encoder=label_encoder)[0]
+                                        img.to(device), imgs_show=img_show.to(device), label_encoder=label_encoder,
+                                        img_weight=1 - img_weight)[0]
     gradcam_img = _create_img_plot(gradcam_img
                                    ).add_annotation(x=0.95, y=0.99, text=f"Target: {gradcam_target}", showarrow=False,
                                                     font_size=20, font_color="black", xref="paper", yref="paper")
     factors_img = _create_img_plot(correct_legend_factor(factors_img, ratio=0.75))
-    preds_table = _create_preds_table(torch.sigmoid(output).cpu().detach().numpy(), label_encoder=label_encoder)
+    preds_table_df = _create_preds_table(torch.sigmoid(output).cpu().detach().numpy(), label_encoder=label_encoder)
 
-    return gradcam_img, factors_img, preds_table, False, True, "Inference completed", "success"
+    pred_ingr_sel = preds_table_df.loc[preds_table_df['Confidence'] >= 0.5, "Ingredients"].values.tolist()
+    pred_ing = preds_table_df["Ingredients"].values.tolist()
+
+    return (gradcam_img, factors_img, IMG_LABELS_TABLE_COLS_DEF(pred_ingr_sel, pred_ing),
+            preds_table_df.to_dict(orient="records"), False, True, "Inference completed", "success")
+
+@callback(Output('gradcam_target_select', 'value', allow_duplicate=True),
+          Output("load_preds_btn", "n_clicks"),
+          Input('img_labels_table', 'cellDoubleClicked'),
+          Input('img_preds_table', 'cellDoubleClicked'), prevent_initial_call=True)
+def select_gradcam_target_from_table(labels_cell, preds_cell):
+    if dash.callback_context.triggered_id == "img_labels_table":
+        return labels_cell['value'], 1
+
+    if preds_cell['colId'] == "Ingredients":
+        return preds_cell['value'], 1
+    return dash.no_update, dash.no_update
 
 
 def _create_img_plot(img_array: np.ndarray):
@@ -298,23 +365,26 @@ def _load_exp_from_select(select_value, selected_htrial, device=DEVICE) -> Tuple
     if selected_htrial is None:
         ckpt_path = _find_checkpoint_from_trial(select_value)
         if ckpt_path is None:
-            raise ValueError("No checkpoint found in the selected trial")
+            raise ValueError("No checkpoint found in the selected experiment")
 
-        exp_config = ExpConfig.load_from_ckpt_data(torch.load(ckpt_path))
+        exp_config = ExpConfig.load_from_ckpt_data(torch.load(ckpt_path, weights_only=False))
         model = exp_config.lgn_model['lgn_model_type'].load_from_config(exp_config.lgn_model).to(device)
-        model.load_weights_from_checkpoint(ckpt_path)
+        model.load_weights_from_checkpoint(ckpt_path)  # exclude pos_weight for weighted BCE if present
 
         output = f"Loaded experiment from {os.path.basename(ckpt_path)}"
 
     else:
-        ckpt_weights_path = _find_checkpoint_from_trial(selected_htrial)
-        config_path = os.path.join(select_value, HTUNER_CONFIG_FILE)
+        ckpt_weights_path = _find_checkpoint_from_trial(selected_htrial)  #todo: controlla che probabilmente non funziona
+        if ckpt_weights_path is None:
+            raise ValueError("No checkpoint found in the selected trial")
+
+        config_path = os.path.join(selected_htrial, HTUNING_TRIAL_CONFIG_FILE)
         if not os.path.exists(config_path):
-            raise ValueError(f"Config file not found in {selected_htrial}")
+            raise ValueError(f"Trial Config file not found in {selected_htrial}")
 
         exp_config = HTunerExpConfig.load_from_file(str(config_path))
         model = exp_config.lgn_model['lgn_model_type'].load_from_config(exp_config.lgn_model).to(device)
-        model.load_weights_from_checkpoint(ckpt_weights_path)
+        model.load_weights_from_checkpoint(ckpt_weights_path, drop_fields=['loss_fn.pos_weight'])
 
         output = (f"Loaded experiment from "
                   f"{os.path.join(os.path.basename(selected_htrial), os.path.basename(ckpt_weights_path))}")
@@ -340,30 +410,29 @@ def _find_checkpoint_from_trial(trial_path: str | os.PathLike) -> str | None:
     return os.path.join(trial_path, "checkpoints", ckpts[-1])
 
 
+
 def _create_labels_tables(labels: List[str] | List[int],
-                          label_encoder: Optional[LabelEncoderInterface] = None) -> dbc.Table:
+                          label_encoder: Optional[LabelEncoderInterface] = None) -> pd.DataFrame:
     if label_encoder is not None and len(labels) > 0 and isinstance(labels[0], int):
         labels = label_encoder.decode_labels(labels)
 
     labels_df = pd.DataFrame(labels, columns=["Ingredients"])
-    labels_table = dbc.Table.from_dataframe(labels_df, **TABLES_PARAMS)
 
-    return labels_table
+    return labels_df
 
 
-def _create_preds_table(preds: np.ndarray, label_encoder: Optional[LabelEncoderInterface] = None) -> dbc.Table:
+def _create_preds_table(preds: np.ndarray, label_encoder: Optional[LabelEncoderInterface] = None) ->  pd.DataFrame:
     best_preds = np.argsort(preds)[::-1][:20]
     preds_confidence = preds[best_preds]
 
     best_preds_decoded = label_encoder.decode_labels([best_preds])[0] if label_encoder is not None else best_preds
     preds_df = pd.DataFrame({"Ingredients": best_preds_decoded, "Confidence": preds_confidence})
-    preds_df['Confidence'] = np.round(preds_df['Confidence'], 4)
-    preds_table = dbc.Table.from_dataframe(preds_df, **TABLES_PARAMS)
-    return preds_table
+    preds_df['Confidence'] = np.round(preds_df['Confidence'], 6)
+    return preds_df
 
 
 def _load_model():
-    model = torch.load(MODEL_CACHE_PATH)
+    model = torch.load(MODEL_CACHE_PATH, weights_only=False)
     if getattr(model, "conv_target_layer", None) is None:
         raise ValueError("The model does not have a convolution target layer for the visualization, "
                          "select another model")

@@ -16,7 +16,7 @@ from settings.config import FOOD_CATEGORIES, YUMMLY_PATH, DEF_BATCH_SIZE, IMG_ST
     METADATA_FILENAME, DEF_PAD_TOKEN
 from src.commons.utils import register_hparams
 from src.data_processing.common import BaseDataModule
-
+from src.data_processing.transformations import t_transform
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust, LabelEncoderInterface, MultiLabelBinarizer, TextIntEncoder
 
 
@@ -43,8 +43,7 @@ class _ImagesRecipesDataset(Dataset):
         label = self.label_data[idx]
         if self.transform:
             image = self.transform(image)
-
-        return image, torch.tensor(label, dtype=torch.float32)
+        return image, torch.tensor(label.astype(np.float32), dtype=torch.float32)
 
     def to_light_dataset(self, label_encoder: Optional[LabelEncoderInterface] = None
                          ) -> 'LightImagesRecipesDataset':
@@ -82,6 +81,12 @@ class LightImagesRecipesDataset(_ImagesRecipesDataset):
     def to_light_dataset(self, label_encoder: Optional[LabelEncoderInterface] = None
                          ) -> 'LightImagesRecipesDataset':
         return self
+
+    def __getitem__(self, idx: int) -> Tuple[Image.Image, torch.tensor]:
+        """Note: this Dataset is designed to be used on the dash app, so this method is not usually used"""
+        image = self.load_image(idx)
+        label = self.label_data[idx]
+        return image, label
 
 
 class ImagesRecipesDataset(_ImagesRecipesDataset):
@@ -244,8 +249,8 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
             label_encoder: None | LabelEncoderInterface = None,
             batch_size: int = DEF_BATCH_SIZE,
             num_workers: int | None = None,
-            transform_aug: Optional[BaseDataModule.t_transform] = None,
-            transform_plain: Optional[BaseDataModule.t_transform] = None,
+            transform_aug: Optional[t_transform] = None,
+            transform_plain: Optional[t_transform] = None,
     ):
         super().__init__(images_stats_path, transform_aug=transform_aug, transform_plain=transform_plain)  # Setting parameters
         self.data_dir, self.metadata_filename, = data_dir, metadata_filename,
@@ -375,15 +380,18 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
 
     @classmethod
     def load_from_config(cls, config: Dict[str, any], batch_size: int,
-                         transform_aug: Optional[BaseDataModule.t_transform] = None,
-                         transform_plain: Optional[BaseDataModule.t_transform] = None,
+                         transform_aug: Optional[t_transform] = None,
+                         transform_plain: Optional[t_transform] = None,
                          **kwargs
                          ) -> Self:
         data_dir_path, metadata_filename = config['data_dir'], config['metadata_filename']
-        category, feature_label = config['category'], config['feature_label']
-        num_workers, le_type = config['num_workers'], config['label_encoder']['type']
+        category, feature_label, num_workers = config['category'], config['feature_label'], config['num_workers']
 
-        label_encoder = le_type.load_from_config(config['label_encoder'])
+        if "label_encoder" not in config or config['label_encoder'] is None or config['label_encoder'] == {}:
+            label_encoder = None
+        else:
+            label_encoder =  config['label_encoder']['type'].load_from_config(config['label_encoder'])
+
         return cls(data_dir=data_dir_path, metadata_filename=metadata_filename, category=category,
                    batch_size=batch_size, feature_label=feature_label,
                    num_workers=num_workers, label_encoder=label_encoder,

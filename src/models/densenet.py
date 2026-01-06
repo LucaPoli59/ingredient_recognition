@@ -1,33 +1,32 @@
 import torch
 import torchvision
 from torch import nn
-from typing import Dict, Any, Tuple
+from typing import Dict, Any, Tuple, Optional, Callable, List
+
+from torchvision.transforms import v2
 from typing_extensions import Self
 from abc import ABC
 
+from models.resnet import _BaseResnet
 from settings.config import DEF_IMAGE_SHAPE
 from src.models.commons import BaseModel
-from src.data_processing.transformations import transform_aug_imagenet, transform_plain_imagenet
+from src.data_processing.transformations import transform_aug_imagenet, transform_plain_imagenet, \
+    transform_core_imagenet
 
 
 class _BaseDensenetLike(BaseModel, ABC):
+    PRETTY_NAME = "BaseDensenetLike"
     """NB: densenet convs follow the pattern of bn -> relu -> conv"""
 
-    def __init__(self, num_classes, input_shape):
-        super().__init__(num_classes=num_classes, input_shape=input_shape)
+    def __init__(self, num_classes, input_shape, trns_aug=None, trns_bld_aug=None, trns_bld_plain=None, lp_phase=None):
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=None)  # LP not supported
 
         self.conv1 = nn.Sequential(
             nn.Conv2d(3, 64, 7, padding=3, stride=2, bias=False),
             nn.BatchNorm2d(64), nn.ReLU(),
             nn.MaxPool2d(3, 2, padding=1)
         )
-
-    @classmethod
-    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
-        for key in ["num_classes", "input_shape"]:
-            if key not in config:
-                raise ValueError(f"The configuration must contain the key '{key}'")
-        return cls(config["num_classes"], config["input_shape"])
 
     @staticmethod
     def _make_block(layer_type, in_channel, num_layers) -> Tuple[nn.Sequential, int]:
@@ -78,8 +77,11 @@ class TransitionLayer(torch.nn.Module):
 
 
 class DensenetLikeV1(_BaseDensenetLike):  # Like DenseNet-121
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE):
-        super().__init__(num_classes, input_shape)
+    PRETTY_NAME = "DensenetLikeV1"
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, trns_aug=None, trns_bld_aug=None, trns_bld_plain=None,
+                 lp_phase=None):
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=lp_phase)
 
         self.dense_1, out_chs = self._make_block(DenseLayer, 64, 6)  # 64 -> 256
         self.transition_1 = TransitionLayer(out_chs, DenseLayer.reduction_factor)  # 256 -> 128
@@ -121,9 +123,11 @@ class DensenetLikeV1(_BaseDensenetLike):  # Like DenseNet-121
 
 
 class DensenetLikeV2(_BaseDensenetLike):  # Like DenseNet-201
-    def __init__(self, num_classes):
-        super().__init__(num_classes)
-        self.num_classes = num_classes
+    PRETTY_NAME = "DensenetLikeV2"
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, trns_aug=None, trns_bld_aug=None, trns_bld_plain=None,
+                 lp_phase=None):
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=lp_phase)
 
         self.dense_1, out_chs = self._make_block(DenseLayer, 64, 6)  # 64 -> 256
         self.transition_1 = TransitionLayer(out_chs, DenseLayer.reduction_factor)  # 256 -> 128
@@ -164,27 +168,46 @@ class DensenetLikeV2(_BaseDensenetLike):  # Like DenseNet-201
 
 
 class _BaseDensenet(BaseModel, ABC):
-    def __init__(self, num_classes, input_shape, pretrained):
-        super().__init__(num_classes=num_classes, input_shape=input_shape, pretrained=pretrained)
+    PRETTY_NAME = "BaseDensenet"
+
+    trns_bld_form = Callable[[Optional[torch.tensor], Tuple[int, int]], List[v2.Transform]]
+    DEF_TRNS_BLD_AUG = transform_aug_imagenet
+    DEF_TRNS_BLD_PLAIN = transform_plain_imagenet
+    DEF_TRNS_BLD_BASE = transform_core_imagenet
+
+    def __init__(self, num_classes, input_shape, pretrained, trns_aug=None, trns_bld_aug: Optional[trns_bld_form] = None,
+                 trns_bld_plain: Optional[trns_bld_form] = None, lp_phase=None):
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=lp_phase)
         self.pretrained = pretrained
 
+    def to_config(self):
+        config = super().to_config()
+        config["pretrained"] = self.pretrained
+        return config
+
     @classmethod
-    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
-        for key in ["num_classes", "input_shape", "pretrained"]:
-            if key not in config:
-                raise ValueError(f"The configuration must contain the key '{key}'")
-        return cls(config["num_classes"], config["input_shape"], config["pretrained"])
+    def _load_config(cls, config: Dict[str, Any]) -> Dict[str, Any]:
+        params = super()._load_config(config)
+        params["pretrained"] = config["pretrained"]
+        params["lp_phase"] = None  # default value
+        return params
 
     @property
     def transform_aug(self):
-        return transform_aug_imagenet(self.tr_weights, self.input_shape)
+        if self.trns_aug is not None:
+            return self.__class__.DEF_TRNS_BLD_BASE(self.tr_weights, self.input_shape, augmentations=self.trns_aug())
+        return self.trns_bld_aug(self.tr_weights, self.input_shape)
 
     @property
     def transform_plain(self):
-        return transform_plain_imagenet(self.tr_weights, self.input_shape)
+        if self.trns_aug is not None:
+            return self.__class__.DEF_TRNS_BLD_BASE(self.tr_weights, self.input_shape, augmentations=None)
+        return self.trns_bld_plain(self.tr_weights, self.input_shape)
 
 
 class Densenet121(_BaseDensenet):
+    PRETTY_NAME = "Densenet121"
     def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, pretrained=True):
         super().__init__(num_classes, input_shape, pretrained)
         weights = torchvision.models.DenseNet121_Weights.DEFAULT if pretrained else None
@@ -204,8 +227,13 @@ class Densenet121(_BaseDensenet):
 
 
 class Densenet201(_BaseDensenet):
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, pretrained=True):
-        super().__init__(num_classes, input_shape, pretrained)
+    PRETTY_NAME = "Densenet201"
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, trns_aug=None,
+                 trns_bld_aug: Optional[_BaseResnet.trns_bld_form] = None,
+                 trns_bld_plain: Optional[_BaseResnet.trns_bld_form] = None,
+                 pretrained=True, lp_phase=None):
+        super().__init__(num_classes, input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug, trns_bld_plain=trns_bld_plain,
+                         lp_phase=lp_phase, pretrained=pretrained)
         weights = torchvision.models.DenseNet201_Weights.DEFAULT if pretrained else None
         self.model = torchvision.models.densenet201(weights=weights)
         self.model.classifier = nn.Linear(self.model.classifier.in_features, num_classes)

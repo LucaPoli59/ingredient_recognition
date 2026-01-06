@@ -5,7 +5,7 @@ import lightning as lgn
 import torch
 
 from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, DEF_LR)
-from src.training._commons import set_torch_constants, model_training, load_datamodule
+from src.training.commons import set_torch_constants, model_training, load_datamodule
 
 from src.lightning.lgn_models import BaseLGNM, BaseWithSchedulerLGNM
 from src.lightning.lgn_trainers import TrainerInterface, BaseFasterTrainer
@@ -17,13 +17,17 @@ from src.commons.exp_config import ExpConfig
 def make_one_shot_exp(
         experiment_name: str,
         experiment_dir: str | None = None,
-        max_epochs: int = 20,
-        batch_size: Optional[int] = DEF_BATCH_SIZE,
-        debug: bool = False,
+        exp_config: Optional[ExpConfig] = None,
+        max_epochs: Optional[int] = None,
+        batch_size: Optional[int] = None,
+        debug: Optional[bool] = None,
         **config_kwargs
 ) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """Function that creates a one-shot experiment with the given configuration and run it. If the experiment is
     resumable, it will resume the last trial.
+
+    The configuration can be passed as an ExpConfig object or as keyword arguments. If both are passed, the keyword
+    arguments will be used to update the ExpConfig object.
 
     Note: Other configuration parameters must be passed as keyword arguments, by following the design pattern
     of the ExpConfig class.
@@ -33,7 +37,11 @@ def make_one_shot_exp(
     if to_resume:
         return _resume_exp(str(os.path.join(save_dir, "checkpoints", "last.ckpt")))
 
-    exp_config = ExpConfig(**config_kwargs)
+    if exp_config is None:
+        exp_config = ExpConfig(**config_kwargs)
+    else:
+        exp_config.update_config(**config_kwargs)
+
     _assert_lgn_model_trainer_compatibility(exp_config.lgn_model["lgn_model_type"], exp_config.trainer["type"])
     exp_config.update_config(tr_save_dir=save_dir, tr_debug=debug, tr_max_epochs=max_epochs, batch_size=batch_size)
     return _run_new_exp(exp_config)
@@ -93,7 +101,7 @@ def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.Lightnin
     """Function that resumes the experiment from the given checkpoint path."""
     set_torch_constants()
     warnings.filterwarnings("ignore", "Checkpoint directory .*. exists and is not empty.")
-    checkpoint_data: Dict[str, Any] = torch.load(ckpt_path)
+    checkpoint_data: Dict[str, Any] = torch.load(ckpt_path, weights_only=False)
     return model_training(ExpConfig.load_from_ckpt_data(checkpoint_data), ckpt_path=ckpt_path)
 
 
@@ -102,8 +110,9 @@ def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.Lightnin
 if __name__ == "__main__":
     exp_dir, exp_name = os.path.join(EXPERIMENTS_PATH, "dummy"), "dummy_experiment"
     trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=False,
-                                       tm_type=DummyBNModel, dm_category="all", tr_type=BaseFasterTrainer,
+                                       tm_type=ResnetLikeV1, dm_category="all", tr_type=BaseFasterTrainer,
                                        lgn_model_type=BaseWithSchedulerLGNM,
-                                       optimizer=torch.optim.SGD, momentum=0.9, weight_decay=5e-4)
+                                       optimizer=torch.optim.SGD, momentum=0.9, weight_decay=1e-4,
+                                       lgg_log_exp_config=True)
 
 

@@ -7,8 +7,7 @@ from typing_extensions import Self
 from abc import ABC, abstractmethod
 import torch
 
-from config import DEF_MAKS_TOKEN
-from settings.config import DEF_UNKNOWN_TOKEN, DEF_PAD_TOKEN, DEF_NONE_TOKEN
+from settings.config import DEF_UNKNOWN_TOKEN, DEF_PAD_TOKEN, DEF_NONE_TOKEN, DEF_MAKS_TOKEN
 
 
 class LabelEncoderInterface(ABC):
@@ -141,10 +140,10 @@ class MultiLabelBinarizer(LabelEncoderInterface):
         return encoded_labels
 
     def _inverse(self, encoded_labels: List[int]):
-        return np.array([label for label, index in self.encode_map.items() if encoded_labels[index] == 1], dtype=np.int32)
+        return np.array([label for label, index in self.encode_map.items() if encoded_labels[index] == 1], dtype=str)
 
     def _decode_labels(self, encoded_labels: List[int]):
-        return np.array([self.inverted_encode_map[value] for value in encoded_labels], dtype=np.int32)
+        return np.array([self.inverted_encode_map[value] for value in encoded_labels], dtype=str)
 
 
 class MultiLabelBinarizerRobust(MultiLabelBinarizer):

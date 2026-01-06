@@ -9,12 +9,7 @@ from src.models.commons import BaseModel
 
 
 class _BaseDummy(BaseModel, ABC):
-    def __init__(self, num_classes, input_shape):
-        super().__init__(num_classes=num_classes, input_shape=input_shape)
-
-    @classmethod
-    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
-        return cls(config["num_classes"], config["input_shape"])
+    PRETTY_NAME = "Dummy"
 
 
 class DummyBlock(torch.nn.Module):
@@ -35,9 +30,15 @@ class DummyBlock(torch.nn.Module):
 
 
 class DummyModel(_BaseDummy):
+    PRETTY_NAME = "Dummy"
 
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE):
-        super().__init__(num_classes, input_shape)
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, trns_aug=None, trns_bld_aug=None, trns_bld_plain=None,
+                 lp_phase=-1):
+        if lp_phase is None:
+            lp_phase = -1
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=lp_phase)
+
         self.block_1 = DummyBlock(3, 16)
         self.block_2 = DummyBlock(16, 32)
         self.block_3 = DummyBlock(32, 64)
@@ -80,8 +81,14 @@ class DummyNBBlock(torch.nn.Module):
 
 
 class DummyBNModel(_BaseDummy):
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE):
-        super().__init__(num_classes, input_shape)
+    PRETTY_NAME = "DummyBN"
+
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, trns_aug=None, trns_bld_aug=None, trns_bld_plain=None,
+                 lp_phase=-1):
+        if lp_phase is None:
+            lp_phase = -1
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=lp_phase)
         self.block_1 = DummyNBBlock(3, 16)
         self.block_2 = DummyNBBlock(16, 32)
         self.block_3 = DummyNBBlock(32, 64)

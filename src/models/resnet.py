@@ -1,32 +1,28 @@
 import torch
 import torchvision
 from torch import nn
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Tuple, Callable
+
+from torchvision.transforms import v2
 from typing_extensions import Self
 from abc import ABC
 
 from settings.config import DEF_IMAGE_SHAPE, LP_MAX_PHASE
 from src.models.commons import BaseModel
-from src.data_processing.transformations import transform_aug_imagenet, transform_plain_imagenet
+from src.data_processing.transformations import transform_aug_imagenet, transform_plain_imagenet, transform_core_imagenet
 
 
 class _BaseResnetLike(BaseModel, ABC):
-    def __init__(self, num_classes, input_shape, lp_phase=None, layers_expansion=1):
-        self.layers_expansion = layers_expansion
-        super().__init__(num_classes=num_classes, input_shape=input_shape, lp_phase=lp_phase)
+    PRETTY_NAME = "BaseResnetLike"
+    LAYER_EXPANSION = 1
+    def __init__(self, num_classes, input_shape, trns_aug=None, trns_bld_aug=None, trns_bld_plain=None, lp_phase=None):
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=lp_phase)
         self.conv1 = nn.Sequential(
             nn.Conv2d(3, 64, 7, padding=3, stride=2, bias=False),
             nn.BatchNorm2d(64), nn.ReLU(),
             nn.MaxPool2d(3, 2, padding=1)
         )
-
-
-    @classmethod
-    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
-        for key in ["num_classes", "input_shape", "lp_phase"]:
-            if key not in config:
-                raise ValueError(f"The configuration must contain the key '{key}'")
-        return cls(config["num_classes"], config["input_shape"], lp_phase=config["lp_phase"])
 
     @staticmethod
     def _make_layer(block_type, in_channel, out_channel, num_blocks, stride=1):
@@ -42,7 +38,7 @@ class _BaseResnetLike(BaseModel, ABC):
         return nn.Sequential(
             nn.AdaptiveAvgPool2d((1, 1)),
             nn.Flatten(),
-            nn.Linear(int(in_features * self.layers_expansion), num_classes, bias=True)
+            nn.Linear(int(in_features * self.LAYER_EXPANSION), num_classes, bias=True)
         ).to(device)
 
     def _lp_init_layer(self, phase, as_placeholder=True, placeholder=torch.nn.Identity()):
@@ -147,10 +143,14 @@ class BottleneckBlock(torch.nn.Module):
 
 
 class ResnetLikeV1(_BaseResnetLike):  #Like Resnet18
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, lp_phase=-1):
+    PRETTY_NAME = "ResnetLikeV1"
+    LAYER_EXPANSION = BasicBlock.expansion
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, trns_aug=None, trns_bld_aug=None, trns_bld_plain=None,
+                 lp_phase=-1):
         if lp_phase is None:
             lp_phase = -1
-        super().__init__(num_classes, input_shape, lp_phase=lp_phase)
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=lp_phase)
 
         self._layer1 = self._make_layer(BasicBlock, 64, 64, 2)
         self._layer2 = self._make_layer(BasicBlock, 64, 128, 2, stride=2)
@@ -175,10 +175,14 @@ class ResnetLikeV1(_BaseResnetLike):  #Like Resnet18
 
 
 class ResnetLikeV1LVariant(ResnetLikeV1):  #Like Resnet18
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, lp_phase=-1):
+    PRETTY_NAME = "ResnetLikeV1LeakyReLUVariant"
+    LAYER_EXPANSION = BasicBlockLVariant.expansion
+
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, trns_bld_aug=None, trns_bld_plain=None, lp_phase=-1):
         if lp_phase is None:
             lp_phase = -1
-        super().__init__(num_classes, input_shape, lp_phase=lp_phase)
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=lp_phase)
 
         self._layer1 = self._make_layer(BasicBlockLVariant, 64, 64, 2)
         self._layer2 = self._make_layer(BasicBlockLVariant, 64, 128, 2, stride=2)
@@ -190,11 +194,15 @@ class ResnetLikeV1LVariant(ResnetLikeV1):  #Like Resnet18
 
 
 class ResnetLikeV2(_BaseResnetLike):  #Like Resnet50
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, lp_phase=-1):
+    PRETTY_NAME = "ResnetLikeV2"
+    LAYER_EXPANSION = BottleneckBlock.expansion
+
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, trns_aug=None, trns_bld_aug=None, trns_bld_plain=None,
+                 lp_phase=-1):
         if lp_phase is None:
             lp_phase = -1
-        super().__init__(num_classes, input_shape, lp_phase=lp_phase)
-        self.layers_expansion = BottleneckBlock.expansion
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=lp_phase)
 
         self._layer1 = self._make_layer(BottleneckBlock, 64, 64, 3)
         self._layer2 = self._make_layer(BottleneckBlock, 256, 128, 4, stride=2)
@@ -219,29 +227,53 @@ class ResnetLikeV2(_BaseResnetLike):  #Like Resnet50
 
 
 class _BaseResnet(BaseModel, ABC):
-    def __init__(self, num_classes, input_shape, pretrained):
-        super().__init__(num_classes=num_classes, input_shape=input_shape, pretrained=pretrained, lp_phase=None)
+    PRETTY_NAME = "BaseResnet"
+
+    trns_bld_form = Callable[[Optional[torch.tensor], Tuple[int, int]], List[v2.Transform]]
+    DEF_TRNS_BLD_AUG = transform_aug_imagenet
+    DEF_TRNS_BLD_PLAIN = transform_plain_imagenet
+    DEF_TRNS_BLD_BASE = transform_core_imagenet
+
+    def __init__(self, num_classes, input_shape, pretrained, trns_aug=None, trns_bld_aug: Optional[trns_bld_form] = None,
+                 trns_bld_plain: Optional[trns_bld_form] = None, lp_phase=None):
+        super().__init__(num_classes=num_classes, input_shape=input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug,
+                         trns_bld_plain=trns_bld_plain, lp_phase=None)  # LP not supported
         self.pretrained = pretrained
 
+    def to_config(self):
+        config = super().to_config()
+        config["pretrained"] = self.pretrained
+        return config
+
     @classmethod
-    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
-        for key in ["num_classes", "input_shape", "pretrained"]:
-            if key not in config:
-                raise ValueError(f"The configuration must contain the key '{key}'")
-        return cls(config["num_classes"], config["input_shape"], config["pretrained"], lp_phase=None)
+    def _load_config(cls, config: Dict[str, Any]) -> Dict[str, Any]:
+        params = super()._load_config(config)
+        params["pretrained"] = config["pretrained"]
+        params["lp_phase"] = None  # default value
+        return params
 
     @property
     def transform_aug(self):
-        return transform_aug_imagenet(self.tr_weights, self.input_shape)
+        if self.trns_aug is not None:
+            return self.__class__.DEF_TRNS_BLD_BASE(self.tr_weights, self.input_shape, augmentations=self.trns_aug())
+        return self.trns_bld_aug(self.tr_weights, self.input_shape)
 
     @property
     def transform_plain(self):
-        return transform_plain_imagenet(self.tr_weights, self.input_shape)
+        if self.trns_aug is not None:
+            return self.__class__.DEF_TRNS_BLD_BASE(self.tr_weights, self.input_shape, augmentations=None)
+        return self.trns_bld_plain(self.tr_weights, self.input_shape)
 
 
 class Resnet18(_BaseResnet):
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, pretrained=True):
-        super().__init__(num_classes, input_shape, pretrained)
+    PRETTY_NAME = "Resnet18"
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, trns_aug=None,
+                 trns_bld_aug: Optional[_BaseResnet.trns_bld_form] = None,
+                 trns_bld_plain: Optional[_BaseResnet.trns_bld_form] = None,
+                 pretrained=True, lp_phase=None):
+        super().__init__(num_classes, input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug, trns_bld_plain=trns_bld_plain,
+                         lp_phase=lp_phase, pretrained=pretrained)
+
         self.tr_weights = torchvision.models.ResNet18_Weights.DEFAULT if pretrained else None
         self.model = torchvision.models.resnet18(weights=self.tr_weights)
         self.model.fc = nn.Linear(self.model.fc.in_features, num_classes)
@@ -257,22 +289,15 @@ class Resnet18(_BaseResnet):
     def classifier_target_layer(self):
         return self.model.fc
 
-    @property
-    def transform_aug(self):
-        if self.tr_weights is None:
-            return super().transform_aug
-        pass
-
-    @property
-    def transform_plain(self):
-        if self.tr_weights is None:
-            return super().transform_plain
-        return self.tr_weights.transforms(crop_size=self.input_shape[0])
-
 
 class Resnet50(_BaseResnet):
-    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, pretrained=True):
-        super().__init__(num_classes, input_shape, pretrained)
+    PRETTY_NAME = "Resnet50"
+    def __init__(self, num_classes, input_shape=DEF_IMAGE_SHAPE, trns_aug=None,
+                 trns_bld_aug: Optional[_BaseResnet.trns_bld_form] = None,
+                 trns_bld_plain: Optional[_BaseResnet.trns_bld_form] = None,
+                 pretrained=True, lp_phase=None):
+        super().__init__(num_classes, input_shape, trns_aug=trns_aug, trns_bld_aug=trns_bld_aug, trns_bld_plain=trns_bld_plain,
+                         lp_phase=lp_phase, pretrained=pretrained)
 
         self.tr_weights = torchvision.models.ResNet50_Weights.DEFAULT if pretrained else None
         self.model = torchvision.models.resnet50(weights=self.tr_weights)
@@ -289,18 +314,8 @@ class Resnet50(_BaseResnet):
     def classifier_target_layer(self):
         return self.model.fc
 
-    @property
-    def transform_aug(self):
-        if self.tr_weights is None:
-            return super().transform_aug
-        pass
 
-    @property
-    def transform_plain(self):
-        if self.tr_weights is None:
-            return super().transform_plain
-        return self.tr_weights.transforms(crop_size=self.input_shape[0])
-
+from src.data_processing.transformations import transform_aug_imagenet_adv
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
