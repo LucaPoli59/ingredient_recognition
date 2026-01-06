@@ -1,0 +1,18 @@
+Tutto è stato misurato sul train set
+
+Testing dell'F1 sulle best 3 trials dell esperimento 25k + 1 trial uguale alla 1° ma con weighted loss a True
+
+Valutazione delle F1, tramite medie e grafici
+
+Scelta degli ingredienti basandosi sulle F1 delle 4 run + media delle 4 (detta trial None) 
+
+Criterio di scelta per le F1::  valore q3 della media su tutte e 5 le configurazioni(ottenedo quindi 5 selezioni)
+
+Confronto delle 5 selezioni possibili tramite tabella setxor (misura gli elementi esterni all'intersezione di due set)
+
+Criterio di scelta per le sezioni: inteersezione comune (o quello o una delle 5 selezioni)
+
+Aggiornamento dei dataset, mantenendo solo le ricette con 3 o più ingredienti, con dimensioni dei dataset di:
+- train: 54724 -> 50866
+- val: 5210 -> 4802
+- test: 5212 -> 4854

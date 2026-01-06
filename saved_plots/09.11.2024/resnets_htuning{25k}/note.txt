@@ -1,0 +1,1 @@
+Esperimento 1 in cui ho effettuato il tuning delle resnets, trovando gli iperparaametri più impattanti e le configurazioni migliori
