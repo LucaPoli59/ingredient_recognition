@@ -6,7 +6,6 @@ import copy
 from typing import Dict, Any, Optional, List
 from typing_extensions import Self
 
-from tifffile import update_kwargs
 from torchmetrics import Accuracy, HammingDistance, Precision, Recall, F1Score
 import optuna
 

@@ -322,7 +322,7 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
         """Computes the class weights for the dataset labels"""
 
         classes_occ = np.sum(self._label_data[stage_target], axis=0, dtype=np.float32)
-        classes_occ[classes_occ == 0] = np.NaN  # Put NaNs in the classes that are not present in the dataset
+        classes_occ[classes_occ == 0] = np.nan  # Put NaNs in the classes that are not present in the dataset
 
         class_weights = np.nansum(classes_occ) / classes_occ
 

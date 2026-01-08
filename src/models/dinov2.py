@@ -3,6 +3,7 @@ import torch.nn as nn
 from abc import ABC
 from typing import Callable, Optional, Tuple, List, Any, Dict
 
+from torchinfo import summary
 from torchvision.transforms import v2
 
 from config import DEF_IMAGE_SHAPE
@@ -120,4 +121,5 @@ if __name__ == "__main__":
     print(model.conv_target_layer, "\n")
     print(model.classifier_target_layer, "\n")
     x = torch.randn(1, 3, 224, 224).to(device)
+    summary(model, input_data=x)
     print(model(x), "\n")
