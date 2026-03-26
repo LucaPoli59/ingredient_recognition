@@ -8,9 +8,10 @@ from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, DEF_LR)
 from src.training.commons import set_torch_constants, model_training, load_datamodule
 
 from src.lightning.lgn_models import BaseLGNM, BaseWithSchedulerLGNM
-from src.lightning.lgn_trainers import TrainerInterface, BaseFasterTrainer
+from src.lightning.lgn_trainers import TrainerInterface, BaseFasterTrainer, BaseTrainer
 from src.models.dummy import DummyModel, DummyBNModel
 from src.models.resnet import ResnetLikeV1, ResnetLikeV2
+from src.models.dinov2 import DinoV2B14
 from src.commons.exp_config import ExpConfig
 
 
@@ -108,10 +109,11 @@ def _resume_exp(ckpt_path: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.Lightnin
 
 
 if __name__ == "__main__":
-    exp_dir, exp_name = os.path.join(EXPERIMENTS_PATH, "dummy"), "dummy_experiment"
+    exp_dir, exp_name = os.path.join(EXPERIMENTS_PATH, "dummy"), "dummy_dino_experiment"
     trainer, model = make_one_shot_exp(exp_name, experiment_dir=exp_dir, max_epochs=50, batch_size=128, debug=False,
-                                       tm_type=ResnetLikeV1, dm_category="all", tr_type=BaseFasterTrainer,
-                                       lgn_model_type=BaseWithSchedulerLGNM,
+                                       tm_type=DinoV2B14, tm_pretrained=True, tm_freeze_backbone=True,
+                                       dm_category="all", tr_type=BaseTrainer,
+                                       lgn_model_type=BaseLGNM,
                                        optimizer=torch.optim.SGD, momentum=0.9, weight_decay=1e-4,
                                        lgg_log_exp_config=True)
 
