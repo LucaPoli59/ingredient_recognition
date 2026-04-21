@@ -1,14 +1,18 @@
-import torch
-import torch.nn as nn
+import ctypes
+import os
+
 from abc import ABC
 from typing import Callable, Optional, Tuple, List, Any, Dict
 
+import torch
+import torch.nn as nn
 from torchinfo import summary
 from torchvision.transforms import v2
 
 from config import DEF_IMAGE_SHAPE
 from data_processing.transformations import transform_aug_dino, transform_plain_dino, transform_core_dino
 from src.models.commons import BaseModel
+
 
 class _BaseDinoV2(BaseModel, ABC):
     PRETTY_NAME = "BaseDinoV2"
@@ -80,6 +84,7 @@ class _BaseDinoV2(BaseModel, ABC):
             if not name.startswith("linear_head"):
                 param.requires_grad = True
 
+    @property
     def conv_target_layer(self):
         """
         Target convolutional-like layer (can be used for visualization).
@@ -113,13 +118,22 @@ class DinoV2B14(_BaseDinoV2):
 
 if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = DinoV2B14(num_classes=180).to(device)
-    print(model, "\n")
-    print(model.to_config(), "\n")
-    print(model.transform_aug, "\n")
-    print(model.transform_plain, "\n")
-    print(model.conv_target_layer, "\n")
-    print(model.classifier_target_layer, "\n")
+    print("Device:", device)
+    print("CUDA available:", torch.cuda.is_available())
+
+    # Test bare CUDA first, before loading the model
+    t = torch.randn(1, 3, 224, 224).to(device)
+    t2 = torch.nn.Conv2d(3, 64, 3, padding=1).to(device)
+    with torch.no_grad():
+        out = t2(t)
+    print("Bare CUDA conv works:", out.shape)  # if this fails, it's a system issue
+
+    model = DinoV2B14(num_classes=10).to(device)
+
+    # Now test on GPU
     x = torch.randn(1, 3, 224, 224).to(device)
-    summary(model, input_data=x)
-    print(model(x), "\n")
+    with torch.no_grad():
+        out_gpu = model(x)
+    print("GPU forward pass works:", out_gpu.shape)
+
+    summary(model, input_data=x, device=device)
