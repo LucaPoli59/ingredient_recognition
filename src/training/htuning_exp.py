@@ -13,6 +13,7 @@ import torch
 from tornado.gen import sleep
 
 from config import HTUNING_TRIAL_CONFIG_FILE, HGEN_CONFIG_FILE
+from src.lightning.lgn_models import BaseLGNM
 from src.dashboards.start_optuna import start_optuna
 
 from src.commons.utils import extract_name_trial_dir
@@ -218,8 +219,9 @@ def save_best_trial(study: optuna.study.Study, save_dir: str | os.PathLike, exp_
         exp_config = HTunerExpConfig.load_from_file(
             file_path=os.path.join(best_trial_path_out, HTUNER_CONFIG_FILE))  # Questa parte andrà solo dopo il resume
 
-    trainer = exp_config.trainer["type"].load_from_config(exp_config.trainer, trial=study.best_trial)
-    model = exp_config.lgn_model["lgn_model_type"].load_from_config(exp_config.lgn_model)
+    model: BaseLGNM = exp_config.lgn_model["lgn_model_type"].load_from_config(exp_config.lgn_model)
+    trainer = exp_config.trainer["type"].load_from_config(exp_config.trainer, grad_accum=model.grad_accum,
+                                                          trial=study.best_trial)
 
     model = model.load_weights_from_checkpoint(os.path.join(best_trial_path_out, "best_model.ckpt"))
     return trainer, model

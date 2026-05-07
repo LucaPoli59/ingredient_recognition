@@ -5,6 +5,7 @@ from lightning.pytorch.utilities.types import OptimizerLRScheduler
 import torch
 from torchmetrics import Metric, MetricCollection
 import inspect
+import math
 
 import src.models.custom_schedulers
 from src.commons.utils import register_hparams
@@ -67,6 +68,7 @@ class BaseLGNM(lgn.LightningModule):
             hparams = [hparam for hparam in hparams if list(hparam.keys())[0] in hparams_to_register]
 
         register_hparams(self, hparams)
+        self._init_effective_batch_size()
 
         metrics = MetricCollection(self._init_metrics())  # Initialize the metrics
         self.train_metrics = metrics.clone(prefix="train_")
@@ -113,6 +115,24 @@ class BaseLGNM(lgn.LightningModule):
             metrics[metric_name] = metric_conf['type'](**metric_conf['init_params'])
             # metrics[metric_name].persistent(True)
         return metrics
+
+    def _init_effective_batch_size(self):
+        max_bs = self.model.max_allowed_batch_size
+        target_bs = self._batch_size
+        if self.model.max_allowed_batch_size is None:
+            self._effective_batch_size = self._batch_size
+            self.grad_accum = None
+        else:
+            if target_bs <= max_bs:
+                # no memory issue, use batch size as-is
+                self._effective_batch_size = target_bs
+                self.grad_accum = 1
+            else:
+                # find the smallest real_bs that divides target_bs evenly and fits in memory
+                # grad_accum * real_bs = target_bs
+                self.grad_accum = math.ceil(target_bs / max_bs)
+                self._effective_batch_size = math.ceil(target_bs / self.grad_accum)
+
 
     def _log_metric_collections(self, metric_out, prefix):
         for metric_name, metric in metric_out.items():

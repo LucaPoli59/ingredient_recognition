@@ -7,6 +7,7 @@ import optuna
 import torch
 import lightning as lgn
 
+from src.lightning.lgn_models import BaseLGNM
 from settings.config import OPTUNA_JOURNAL_PATH
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
 from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
@@ -35,8 +36,8 @@ def model_training(exp_config: ExpConfig, data_module: Optional[BaseDataModule] 
     resuming = ckpt_path is None
     model_config, trainer_config = exp_config.lgn_model, exp_config.trainer
 
-    lgn_model = model_config['lgn_model_type'].load_from_config(model_config, lgn_model_kwargs=lgn_model_kwargs)
-    trainer = trainer_config['type'].load_from_config(trainer_config, **trainer_kwargs)
+    lgn_model: BaseLGNM = model_config['lgn_model_type'].load_from_config(model_config, lgn_model_kwargs=lgn_model_kwargs)
+    trainer = trainer_config['type'].load_from_config(trainer_config, grad_accum=lgn_model.grad_accum, **trainer_kwargs)
 
     if data_module is None:
         dm_config = exp_config.datamodule

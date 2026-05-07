@@ -101,6 +101,10 @@ class BaseModel(ABC, torch.nn.Module):
         return params
 
     @property
+    def max_allowed_batch_size(self) -> int | None:
+        return None
+
+    @property
     @abstractmethod
     def conv_target_layer(self):
         pass

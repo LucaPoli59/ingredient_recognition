@@ -1,5 +1,6 @@
 import os
 import random
+import traceback
 from abc import ABC, abstractmethod
 from typing import Optional, List, Tuple, Dict, Any
 import optuna
@@ -26,6 +27,7 @@ class TrainerInterface(ABC, lgn.Trainer):
                  max_epochs: int,
                  save_dir: Optional[str | os.PathLike] = None,
                  debug: bool = False,
+                 grad_accum: int = 1,
                  log_every_n_steps: int = 50,
                  limit_train_batches: int | float = 1.0,
                  limit_predict_batches: int | float = 1.0,
@@ -35,7 +37,6 @@ class TrainerInterface(ABC, lgn.Trainer):
 
         self._save_dir = save_dir if save_dir is not None else self._get_def_save_dir()
         self._precision = kwargs.pop("precision", self._get_precision())
-        self._grad_accum = kwargs.pop("accumulate_grad_batches", self._get_grad_accum())
         self._check_val_freq = kwargs.pop("check_val_every_n_epoch", self._compute_check_val_freq())
 
         self._chkp_callback = kwargs.pop("model_checkpoint_callback", self._get_chkp_callback())
@@ -47,6 +48,7 @@ class TrainerInterface(ABC, lgn.Trainer):
         self._grad_clip_val = kwargs.pop("gradient_clip_val", grad_clip_val)
         self._grad_clip_algo = kwargs.pop("gradient_clip_algorithm", grad_clip_algo)
 
+        self._grad_accum = grad_accum or 1
         self.log_every_n_steps = log_every_n_steps
         self.limit_train_batches = limit_train_batches
         self.limit_predict_batches = limit_predict_batches
@@ -103,9 +105,6 @@ class TrainerInterface(ABC, lgn.Trainer):
     def _get_precision(self) -> Optional[str]:
         return None
 
-    def _get_grad_accum(self) -> int:
-        return 1
-
     def _get_grad_clip(self) -> Tuple[Optional[float], Optional[str]]:
         return None, None
 
@@ -123,12 +122,13 @@ class TrainerInterface(ABC, lgn.Trainer):
         self.hparams.update(params)
 
     @classmethod
-    def load_from_config(cls, config: Dict[str, Any], **kwargs) -> Self:
+    def load_from_config(cls, config: Dict[str, Any], grad_accum: int = 1, **kwargs) -> Self:
         debug, max_epochs, save_dir = config['debug'], config['max_epochs'], config['save_dir']
         log_every_n_steps, limit_predict_batches = config['log_every_n_steps'], config['limit_predict_batches']
         limit_train_batches = config.get("limit_train_batches", 1)  # Use get for backward compatibility
         return cls(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
-                   limit_predict_batches=limit_predict_batches, limit_train_batches=limit_train_batches, **kwargs)
+                   grad_accum=grad_accum, limit_predict_batches=limit_predict_batches,
+                   limit_train_batches=limit_train_batches, **kwargs)
 
     def fit(self, model: BaseLGNM, train_dataloaders=None, val_dataloaders=None,
             datamodule: Optional[BaseDataModule] = None,
@@ -166,12 +166,12 @@ class LiteTrainer(TrainerInterface):
 class BaseTrainer(TrainerInterface):
 
     def __init__(self, max_epochs: int, save_dir: str | os.PathLike | None = None, debug: bool = False,
-                 log_every_n_steps: int = 50, limit_predict_batches: int | float = 1.0,
+                 grad_accum: int = 1, log_every_n_steps: int = 50, limit_predict_batches: int | float = 1.0,
                  limit_train_batches: int | float = 1.0, **kwargs):
         self.wandb_logger = None
         super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
-                         limit_predict_batches=limit_predict_batches, limit_train_batches=limit_train_batches,
-                         min_epochs=int(max_epochs / 3), **kwargs)
+                         grad_accum = grad_accum, limit_predict_batches=limit_predict_batches,
+                         limit_train_batches=limit_train_batches, min_epochs=int(max_epochs / 3), **kwargs)
 
         self.wandb_log_freq = int(2 * self.log_every_n_steps)
 
@@ -271,21 +271,18 @@ class BaseTrainer(TrainerInterface):
 
 class BaseFasterTrainer(BaseTrainer):
     def __init__(self, max_epochs: int, save_dir: str | os.PathLike | None = None, debug: bool = False,
-                 log_every_n_steps: int = 50, limit_predict_batches: int | float = 1.0,
+                 grad_accum: int = 1, log_every_n_steps: int = 50, limit_predict_batches: int | float = 1.0,
                  limit_train_batches: int | float = 1.0, early_stop: Optional[bool] = True, **kwargs):
         self._early_stop = early_stop if early_stop is not None else True
 
         super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
-                         limit_predict_batches=limit_predict_batches, limit_train_batches=limit_train_batches,
-                         benchmark=True, **kwargs)
+                         grad_accum = grad_accum, limit_predict_batches=limit_predict_batches,
+                         limit_train_batches=limit_train_batches, benchmark=True, **kwargs)
 
         self.log_hparams(dict(early_stop=self._early_stop))
 
     def _get_precision(self) -> str:
         return '16-mixed'
-
-    def _get_grad_accum(self) -> int:
-        return 5
 
     def _get_callbacks(self) -> List[callbacks.Callback]:
         early_callback = callbacks.EarlyStopping(monitor="val_loss", mode="min", verbose=self._debug,
@@ -305,10 +302,11 @@ class BaseFasterTrainer(BaseTrainer):
 
 class OptunaTrainer(BaseTrainer):
     def __init__(self, max_epochs: int, trial: optuna.Trial, save_dir: str | os.PathLike | None = None,
-                 debug: bool = False, log_every_n_steps: int = 50, limit_predict_batches: int | float = 1.0, **kwargs):
+                 debug: bool = False, grad_accum: int = 1, log_every_n_steps: int = 50,
+                 limit_predict_batches: int | float = 1.0, **kwargs):
         self.trial = trial
         super().__init__(max_epochs=max_epochs, save_dir=save_dir, debug=debug, log_every_n_steps=log_every_n_steps,
-                         limit_predict_batches=limit_predict_batches, benchmark=True, **kwargs)
+                         grad_accum=grad_accum, limit_predict_batches=limit_predict_batches, benchmark=True, **kwargs)
 
     def _get_def_save_dir(self) -> Optional[str | os.PathLike]:
         raise ValueError("OptunaTrainer must have a save_dir (that depends on the trial)")
@@ -316,8 +314,6 @@ class OptunaTrainer(BaseTrainer):
     def _get_precision(self) -> str:
         return '16-mixed'
 
-    def _get_grad_accum(self) -> int:
-        return 5
 
     def _get_chkp_callback(self, save_freq: int = 2, save_top_k: int = 2, save_all: bool = True
                            ) -> callbacks.ModelCheckpoint:

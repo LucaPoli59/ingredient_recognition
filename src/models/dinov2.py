@@ -8,6 +8,7 @@ import torch
 import torch.nn as nn
 from torchinfo import summary
 from torchvision.transforms import v2
+from typing_extensions import override
 
 from config import DEF_IMAGE_SHAPE
 from data_processing.transformations import transform_aug_dino, transform_plain_dino, transform_core_dino
@@ -16,6 +17,7 @@ from src.models.commons import BaseModel
 
 class _BaseDinoV2(BaseModel, ABC):
     PRETTY_NAME = "BaseDinoV2"
+    MAX_ALLOWED_BATCH_SIZE = 8
 
     trns_bld_form = Callable[[Optional[torch.tensor], Tuple[int, int]], List[v2.Transform]]
     DEF_TRNS_BLD_AUG = transform_aug_dino
@@ -55,6 +57,11 @@ class _BaseDinoV2(BaseModel, ABC):
         params["freeze_backbone"] = config["freeze_backbone"]
         params["lp_phase"] = None  # default value
         return params
+
+    @override
+    @property
+    def max_allowed_batch_size(self) -> int | None:
+        return self.MAX_ALLOWED_BATCH_SIZE
 
     @property
     def transform_aug(self):
