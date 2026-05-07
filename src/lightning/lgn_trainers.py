@@ -137,9 +137,13 @@ class TrainerInterface(ABC, lgn.Trainer):
         if datamodule is not None:
             model.startup_model(datamodule)
 
+        try:
+            super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
+                        datamodule=datamodule, ckpt_path=ckpt_path)
+        except Exception as e:
+            traceback.print_exc()
+            raise
 
-        super().fit(model=model, train_dataloaders=train_dataloaders, val_dataloaders=val_dataloaders,
-                    datamodule=datamodule, ckpt_path=ckpt_path)
         for file in os.listdir(EXPERIMENTS_TRASH_PATH):
             os.remove(os.path.join(EXPERIMENTS_TRASH_PATH, file))
 

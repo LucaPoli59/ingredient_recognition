@@ -12,9 +12,11 @@ from src.commons.exp_config import ExpConfig, HTunerExpConfig
 from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
 from src.data_processing.common import BaseDataModule
 from src.lightning.lgn_trainers import BaseTrainer
+import torch.multiprocessing as mp
 
 
 def set_torch_constants():
+    mp.set_start_method("spawn", force=True)
     logging.getLogger("lightning.pytorch").setLevel(logging.ERROR)  # to remove warning messages
     torch.set_float32_matmul_precision('medium')  # For better performance with cuda
     torch.backends.cudnn.benchmark = True

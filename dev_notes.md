@@ -1,7 +1,7 @@
 # NOTES
 
 
-- [] setup env 
+- [X] setup env 
   - start: 26/03/2026
   - mi manca da rilanciare il pip install per torch 2.8.0 (fare da sito) e per installare la versione giusta di xformers
   - 30/03/2026 env installato
