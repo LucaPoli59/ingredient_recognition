@@ -14,11 +14,12 @@ from src.data_processing.transformations import transform_aug_base, transform_pl
 
 class BaseDataModule(ABC, lgn.LightningDataModule):
 
-    def __init__(self, images_stats_path: str | os.PathLike, transform_aug: Optional[t_transform] = None,
-                 transform_plain: Optional[t_transform] = None):
+    def __init__(self, images_stats_path: str | os.PathLike, batch_size: Optional[int] = None,
+                 transform_aug: Optional[t_transform] = None, transform_plain: Optional[t_transform] = None):
         super().__init__()
         self.classes_weights = None
         self.images_stats_path = images_stats_path
+        self.batch_size = batch_size
         self._transform_aug = self._def_transform_aug() if transform_aug is None else transform_aug
         self._transform_plain = self._def_transform_plain() if transform_plain is None else transform_plain
 

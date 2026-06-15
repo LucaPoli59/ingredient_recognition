@@ -252,7 +252,8 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
             transform_aug: Optional[t_transform] = None,
             transform_plain: Optional[t_transform] = None,
     ):
-        super().__init__(images_stats_path, transform_aug=transform_aug, transform_plain=transform_plain)  # Setting parameters
+        super().__init__(images_stats_path, batch_size=batch_size, transform_aug=transform_aug,
+                         transform_plain=transform_plain)  # Setting parameters
         self.data_dir, self.metadata_filename, = data_dir, metadata_filename,
         self.recipe_feature_label, self.food_categories = feature_label, food_categories
         self.batch_size, self.num_workers = batch_size, num_workers

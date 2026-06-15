@@ -46,6 +46,7 @@ def model_training(exp_config: ExpConfig, data_module: Optional[BaseDataModule] 
                                                          transform_plain=lgn_model.transform_plain)
     else:
         data_module.transform_plain, data_module.transform_aug = lgn_model.transform_plain, lgn_model.transform_aug
+        data_module.batch_size = lgn_model.batch_size
 
     if trainer.debug:
         print("Data Module, Models and Trainer loaded, " + ("training started" if resuming else "resume training"))

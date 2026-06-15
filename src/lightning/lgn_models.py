@@ -233,7 +233,7 @@ class BaseLGNM(lgn.LightningModule):
 
     @property
     def batch_size(self):
-        return self.hparams.batch_size
+        return self._effective_batch_size or self._batch_size
 
     @property
     def lr_swa(self):
