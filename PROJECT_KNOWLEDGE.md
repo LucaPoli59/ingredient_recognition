@@ -34,7 +34,7 @@ Dataset raw (Yummly / Recipes1M / recipes)
 
 ### Percorsi e convenzioni
 
-`settings/config.py` definisce i percorsi assoluti a partire dalla root del repository. I dati elaborati vivono in `data/input`; quelli sorgente in `data/raw_input`.
+`settings/config.py` centralizza le configurazioni e le costanti del progetto, inclusi percorsi assoluti calcolati a partire dalla root del repository, parametri predefiniti e impostazioni operative come W&B. I dati elaborati vivono in `data/input`; quelli sorgente in `data/raw_input`.
 
 Il `DataModule` di default usa `data/input/yummly`. Ogni split deve contenere un `metadata.json` e le immagini indicate dal campo `image`. Quando non esiste uno split `predict`, viene riutilizzato lo split `test`.
 
@@ -81,6 +81,8 @@ Le immagini sono normalmente ridimensionate a 224×224. Per i modelli generici i
 
 `src/training/htuning_exp.py` gestisce l'ottimizzazione con Optuna: persiste lo studio nel journal configurato, salva configurazione fissa e generatore di iperparametri, crea `trial_N` e copia il trial migliore in `trial_best`.
 
+Le run W&B sono prodotte offline. Per sincronizzarle, `scripts/sync_wandb_runs.py` richiama `wandb beta sync` specificando esplicitamente `WANDB_ENTITY` e `WANDB_PROJECT_NAME`, definiti in `settings/config.py`; questo evita upload senza entity (URL del tipo `wandb.ai//...`) e aggira il problema del sync classico che rigenera ripetutamente `wandb-summary.json`. A ogni tentativo lo script assegna al caricamento un ID remoto nuovo, formato dall'ID locale e dal suffisso casuale `-sync-<UUID breve>`, così una run eliminata in precedenza non causa un errore HTTP 409. La run configuration PyCharm `sync_wandb_runs` carica `.env`, che deve contenere `WANDB_API_KEY`.
+
 Le configurazioni sono oggetti `ExpConfig`, `HTunerExpConfig` e `HGeneratorConfig` in `src/commons/exp_config.py`. Consentono ai launcher di passare override con prefissi (ad esempio modello, trainer e DataModule) e di ricostruire esperimenti dai checkpoint.
 
 ## Launcher degli esperimenti
@@ -108,6 +110,28 @@ Gli script hanno parametri e nomi esperimento hard-coded: vanno verificati/adatt
 
 Lo stack è Python con PyTorch 2.8, torchvision 0.23, Lightning 2.6, Optuna, scikit-learn, Dash, W&B, TensorBoard e librerie di analisi/visualizzazione. Il progetto è orientato a CUDA; `set_torch_constants()` abilita benchmark cuDNN, precisione matmul `medium` e multiprocess start method `spawn`.
 
+### Ambiente locale e WSL verificato
+
+Le run configuration PyCharm condivisibili sono raccolte in `pycharm_run_config/` (non necessariamente tracciate da Git). Sono parte del flusso operativo del progetto e definiscono directory di lavoro e interprete per i comandi comuni.
+
+| Configurazione | Script | SDK/interprete |
+| --- | --- | --- |
+| `one_shot_exp` | `src/training/one_shot_exp.py` | SDK di progetto `image_pytorch` |
+| `app` | `src/dashboards/dash/app.py` | `image_pytorch` |
+| `start_optuna` | `src/dashboards/start_optuna.py` | `image_pytorch` |
+| `start_tensorboard` | `src/dashboards/start_tensorboard.py` | `image_pytorch` |
+| `sync_wandb_runs` | `scripts/sync_wandb_runs.py` | `wsl_image_pytorch` |
+
+Per alcuni modelli e run GPU va usato WSL2 con la distribuzione `Ubuntu-22.04` (Ubuntu 22.04.2 LTS). Al 22 luglio 2026 è stato verificato il seguente ambiente:
+
+- kernel WSL: `6.18.33.2-microsoft-standard-WSL2`;
+- GPU esposta in WSL: NVIDIA GeForce RTX 4060, 8188 MiB, driver 596.21;
+- interprete corretto: `/root/miniconda3/envs/wsl_image_pytorch/bin/python`;
+- Python 3.10.18; PyTorch 2.8.0+cu129, torchvision 0.23.0+cu129, torchaudio 2.8.0+cu129, Lightning 2.6.1;
+- CUDA runtime PyTorch 12.9 e `torch.cuda.is_available()` restituisce `True`.
+
+L'interprete di sistema WSL (`/usr/bin/python3`, Python 3.10.12) non include PyTorch: per eseguire codice del progetto in WSL occorre usare l'ambiente Conda `wsl_image_pytorch`, non quello di sistema.
+
 Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi pacchetti CUDA `.deb` e alcuni asset locali risultano non tracciati nel worktree alla data della ricognizione e non fanno parte di questa documentazione funzionale.
 
 ## Punti da approfondire o verificare
@@ -117,6 +141,7 @@ Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi
 - Verificare e, se necessario, uniformare alcuni import che dipendono dalla directory di avvio (`config`, `models`, `data_processing` vs `settings.config`, `src.*`).
 - Verificare la gestione di ripresa dello studio Optuna, che condivide un journal globale configurato in `experiments/journal.log`.
 - Correggere o documentare la differenza fra porta Optuna dichiarata (8051) e quella usata dallo script (8055).
+- Definire quali launcher richiedono formalmente l'SDK WSL `wsl_image_pytorch` oltre alla sincronizzazione W&B, invece dell'ambiente locale `image_pytorch`.
 
 ## Regola di aggiornamento
 
