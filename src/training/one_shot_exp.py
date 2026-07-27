@@ -22,6 +22,7 @@ def make_one_shot_exp(
         max_epochs: Optional[int] = None,
         batch_size: Optional[int] = None,
         debug: Optional[bool] = None,
+        force_no_resume: Optional[bool] = False,
         **config_kwargs
 ) -> Tuple[lgn.Trainer, lgn.LightningModule]:
     """Function that creates a one-shot experiment with the given configuration and run it. If the experiment is
@@ -35,7 +36,7 @@ def make_one_shot_exp(
     """
 
     save_dir, to_resume = _setup_or_resume_dir(experiment_dir, experiment_name)
-    if to_resume:
+    if not force_no_resume and to_resume:
         return _resume_exp(str(os.path.join(save_dir, "checkpoints", "last.ckpt")))
 
     if exp_config is None:
@@ -115,6 +116,6 @@ if __name__ == "__main__":
                                        dm_category="all", tr_type=BaseTrainer,
                                        lgn_model_type=BaseLGNM,
                                        optimizer=torch.optim.SGD, momentum=0.9, weight_decay=1e-4,
-                                       lgg_log_exp_config=True)
+                                       lgg_log_exp_config=True, force_no_resume=True)
 
 
