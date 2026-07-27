@@ -66,6 +66,7 @@ HGEN_CONFIG_FILE = 'hparam_gen_config.json'
 HTUNING_TRIAL_CONFIG_FILE = 'trial_config.json'
 
 WANDB_PROJECT_NAME = 'ingredient_recognition'
+WANDB_ENTITY = 'luca-bicocca'
 
 
 LP_MAX_PHASE = 4  # LAYER-WISE PRETRAINING MAX PHASES
