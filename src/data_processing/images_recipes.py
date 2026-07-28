@@ -12,7 +12,7 @@ import os
 from typing import Tuple, List, Dict, Optional, Any
 from typing_extensions import Self
 
-from settings.config import FOOD_CATEGORIES, YUMMLY_PATH, DEF_BATCH_SIZE, IMG_STATS_FILENAME, \
+from settings.config import DATA_PATH, FOOD_CATEGORIES, YUMMLY_PATH, DEF_BATCH_SIZE, IMG_STATS_FILENAME, \
     METADATA_FILENAME, DEF_PAD_TOKEN
 from src.commons.utils import register_hparams
 from src.data_processing.common import BaseDataModule
@@ -385,7 +385,8 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
                          transform_plain: Optional[t_transform] = None,
                          **kwargs
                          ) -> Self:
-        data_dir_path, metadata_filename = config['data_dir'], config['metadata_filename']
+        data_dir_path = _resolve_data_dir_path(config['data_dir'])
+        metadata_filename = config['metadata_filename']
         category, feature_label, num_workers = config['category'], config['feature_label'], config['num_workers']
 
         if "label_encoder" not in config or config['label_encoder'] is None or config['label_encoder'] == {}:
@@ -397,6 +398,29 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
                    batch_size=batch_size, feature_label=feature_label,
                    num_workers=num_workers, label_encoder=label_encoder,
                    transform_plain=transform_plain, transform_aug=transform_aug, **kwargs)
+
+
+def _resolve_data_dir_path(data_dir: str | os.PathLike) -> str:
+    """Map a saved Windows/WSL project data path to the current platform.
+
+    Experiment checkpoints store ``data_dir`` as an absolute path.  The
+    repository is shared between Windows and WSL, so a path saved by the other
+    platform is invalid locally even though the same ``data/...`` tree exists.
+    """
+    data_dir = os.fspath(data_dir)
+    if os.path.exists(data_dir):
+        return data_dir
+
+    windows_path = pathlib.PureWindowsPath(data_dir)
+    posix_path = pathlib.PurePosixPath(data_dir)
+    path_parts = windows_path.parts if windows_path.drive else posix_path.parts
+    data_index = next((i for i, part in enumerate(path_parts) if part.lower() == "data"), None)
+
+    if data_index is None:
+        return data_dir
+
+    local_data_dir = os.path.join(DATA_PATH, *path_parts[data_index + 1:])
+    return local_data_dir if os.path.exists(local_data_dir) else data_dir
 
 
 

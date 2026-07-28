@@ -313,43 +313,48 @@ def enable_model_use(model_loaded):
 def make_inference(_, target, img_index_data, imgs_data, img_weight, imgs_transform, label_encoder, device=DEVICE):
     try:
         model = _load_model().to(device)
-    except Exception as e:
-        return dash.no_update, dash.no_update, dash.no_update, dash.no_update, True, f"Error: {e}", "danger"
+        imgs_transform = pickle.loads(codecs.decode(imgs_transform.encode(), "base64"))
+        imgs_transform_no_mean = v2.Compose(imgs_transform.transforms[:-1])
 
-    imgs_transform = pickle.loads(codecs.decode(imgs_transform.encode(), "base64"))
-    imgs_transform_no_mean = v2.Compose(imgs_transform.transforms[:-1])
+        img_path = imgs_data[img_index_data["curr"]]["img"]
+        logger.info("Starting inference for image %s (target=%s, device=%s)", img_path, target, device)
+        img = imgs_transform(Image.open(img_path))
+        img_show = imgs_transform_no_mean(Image.open(img_path))
 
-    img_path = imgs_data[img_index_data["curr"]]["img"]
-    img = imgs_transform(Image.open(img_path))
-    img_show = imgs_transform_no_mean(Image.open(img_path))
+        label_encoder = jsonpickle.decode(label_encoder)
+        targets = [label_encoder.get_index(target)] if target is not None else None
 
-    label_encoder = jsonpickle.decode(label_encoder)
-    targets = [label_encoder.get_index(target)] if target is not None else None
+        model.eval()
 
-    model.eval()
+        gradcam_imgs, gradcam_masks, gradcam_target, outputs = gradcam(model, model.conv_target_layer, img.to(device),
+                                                                       imgs_show=img_show.to(device), targets=targets,
+                                                                       img_weight=1 - img_weight)
+        gradcam_img, gradcam_mask, gradcam_target, output = (gradcam_imgs[0], gradcam_masks[0], gradcam_target[0],
+                                                              outputs[0])
 
-    gradcam_imgs, gradcam_masks, gradcam_target, outputs = gradcam(model, model.conv_target_layer, img.to(device),
-                                                                   imgs_show=img_show.to(device), targets=targets,
-                                                                   img_weight=1 - img_weight)
-    gradcam_img, gradcam_mask, gradcam_target, output = gradcam_imgs[0], gradcam_masks[0], gradcam_target[0], outputs[0]
+        if not isinstance(gradcam_target, str):
+            gradcam_target = label_encoder.decode_labels([[int(gradcam_target)]])[0][0]
 
-    if not isinstance(gradcam_target, str):
-        gradcam_target = label_encoder.decode_labels([[int(gradcam_target)]])[0][0]
+        factors_img = feature_factorization(model, model.conv_target_layer, model.classifier_target_layer,
+                                            img.to(device), imgs_show=img_show.to(device), label_encoder=label_encoder,
+                                            img_weight=1 - img_weight)[0]
+        gradcam_img = _create_img_plot(gradcam_img
+                                       ).add_annotation(x=0.95, y=0.99, text=f"Target: {gradcam_target}", showarrow=False,
+                                                        font_size=20, font_color="black", xref="paper", yref="paper")
+        factors_img = _create_img_plot(correct_legend_factor(factors_img, ratio=0.75))
+        preds_table_df = _create_preds_table(torch.sigmoid(output).cpu().detach().numpy(), label_encoder=label_encoder)
 
-    factors_img = feature_factorization(model, model.conv_target_layer, model.classifier_target_layer,
-                                        img.to(device), imgs_show=img_show.to(device), label_encoder=label_encoder,
-                                        img_weight=1 - img_weight)[0]
-    gradcam_img = _create_img_plot(gradcam_img
-                                   ).add_annotation(x=0.95, y=0.99, text=f"Target: {gradcam_target}", showarrow=False,
-                                                    font_size=20, font_color="black", xref="paper", yref="paper")
-    factors_img = _create_img_plot(correct_legend_factor(factors_img, ratio=0.75))
-    preds_table_df = _create_preds_table(torch.sigmoid(output).cpu().detach().numpy(), label_encoder=label_encoder)
+        pred_ingr_sel = preds_table_df.loc[preds_table_df['Confidence'] >= 0.5, "Ingredients"].values.tolist()
+        pred_ing = preds_table_df["Ingredients"].values.tolist()
 
-    pred_ingr_sel = preds_table_df.loc[preds_table_df['Confidence'] >= 0.5, "Ingredients"].values.tolist()
-    pred_ing = preds_table_df["Ingredients"].values.tolist()
-
-    return (gradcam_img, factors_img, IMG_LABELS_TABLE_COLS_DEF(pred_ingr_sel, pred_ing),
-            preds_table_df.to_dict(orient="records"), False, True, "Inference completed", "success")
+        logger.info("Inference completed for image %s", img_path)
+        return (gradcam_img, factors_img, IMG_LABELS_TABLE_COLS_DEF(pred_ingr_sel, pred_ing),
+                preds_table_df.to_dict(orient="records"), False, True, "Inference completed", "success")
+    except Exception:
+        logger.exception("Inference failed (image=%s, target=%s, device=%s)",
+                         locals().get("img_path", "<not selected>"), target, device)
+        return (dash.no_update, dash.no_update, dash.no_update, dash.no_update,
+                False, True, "Inference failed; see application logs for details.", "danger")
 
 @callback(Output('gradcam_target_select', 'value', allow_duplicate=True),
           Output("load_preds_btn", "n_clicks"),
