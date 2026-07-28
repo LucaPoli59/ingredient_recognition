@@ -1,4 +1,4 @@
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Callable
 import torch
 import numpy as np
 import cv2
@@ -15,6 +15,7 @@ def gradcam(model: torch.nn.Module,
             targets: Optional[List[int]] = None,
             imgs_show: Optional[torch.Tensor] = None,
             img_weight: float = 0.5,
+            reshape_transform: Optional[Callable] = None,
             ) -> Tuple[List[np.ndarray], np.ndarray, List[int], torch.Tensor]:
     """
     Function that wraps the gradcam class, it performs the forward and backward pass with the model over the input,
@@ -30,8 +31,12 @@ def gradcam(model: torch.nn.Module,
     :param imgs_show: images to show in the visualization (if None, it will use the input_x)
     :return: images with the gradcam masked, gradcam mask and the targets selected, and the output of the model
     """
-    cam = GradCAM(model=model, target_layers=[target_layer])
+    cam = GradCAM(model=model, target_layers=[target_layer], reshape_transform=reshape_transform)
     input_x_cf, input_x_cl = _manage_input(input_x)
+    # Grad-CAM needs gradients at the target layer.  A frozen backbone otherwise
+    # produces detached activations because neither its parameters nor its input
+    # require gradients.
+    input_x_cf = input_x_cf.detach().requires_grad_(True)
 
     if imgs_show is None:
         imgs_show = input_x_cl
@@ -65,6 +70,7 @@ def feature_factorization(model: torch.nn.Module,
                           top_k: int = 1,
                           imgs_show: torch.Tensor = None,
                           img_weight: float = 0.5,
+                          reshape_transform: Optional[Callable] = None,
                           ) -> np.ndarray:
     """
     Function that extract the factorization components from some images, by targeting the last conv layer and the
@@ -93,7 +99,20 @@ def feature_factorization(model: torch.nn.Module,
     :return: images with the factorization components masked
     """
 
-    dff = DeepFeatureFactorization(model=model, target_layer=target_conv, computation_on_concepts=target_classifier)
+    try:
+        classifier_device = next(target_classifier.parameters()).device
+    except StopIteration:
+        classifier_device = input_x.device
+
+    def classify_concepts(concepts: torch.Tensor) -> torch.Tensor:
+        # DeepFeatureFactorization builds NMF concepts on CPU even when the
+        # input/model run on CUDA. Move only the small concept matrix to the
+        # classifier device before the final projection.
+        return target_classifier(concepts.to(classifier_device))
+
+    dff = DeepFeatureFactorization(model=model, target_layer=target_conv,
+                                   reshape_transform=reshape_transform,
+                                   computation_on_concepts=classify_concepts)
 
     input_x_cf, input_x_cl = _manage_input(input_x)
     if imgs_show is None:

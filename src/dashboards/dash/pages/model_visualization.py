@@ -328,16 +328,18 @@ def make_inference(_, target, img_index_data, imgs_data, img_weight, imgs_transf
 
         gradcam_imgs, gradcam_masks, gradcam_target, outputs = gradcam(model, model.conv_target_layer, img.to(device),
                                                                        imgs_show=img_show.to(device), targets=targets,
-                                                                       img_weight=1 - img_weight)
+                                                                       img_weight=1 - img_weight,
+                                                                       reshape_transform=model.gradcam_reshape_transform)
         gradcam_img, gradcam_mask, gradcam_target, output = (gradcam_imgs[0], gradcam_masks[0], gradcam_target[0],
                                                               outputs[0])
 
         if not isinstance(gradcam_target, str):
             gradcam_target = label_encoder.decode_labels([[int(gradcam_target)]])[0][0]
 
-        factors_img = feature_factorization(model, model.conv_target_layer, model.classifier_target_layer,
+        factors_img = feature_factorization(model, model.conv_target_layer, model.factorization_classifier_layer,
                                             img.to(device), imgs_show=img_show.to(device), label_encoder=label_encoder,
-                                            img_weight=1 - img_weight)[0]
+                                            img_weight=1 - img_weight,
+                                            reshape_transform=model.gradcam_reshape_transform)[0]
         gradcam_img = _create_img_plot(gradcam_img
                                        ).add_annotation(x=0.95, y=0.99, text=f"Target: {gradcam_target}", showarrow=False,
                                                         font_size=20, font_color="black", xref="paper", yref="paper")

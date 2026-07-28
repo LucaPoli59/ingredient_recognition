@@ -1,4 +1,5 @@
 import ctypes
+import math
 import os
 
 from abc import ABC
@@ -94,9 +95,26 @@ class _BaseDinoV2(BaseModel, ABC):
     @property
     def conv_target_layer(self):
         """
-        Target convolutional-like layer (can be used for visualization).
+        Last pre-attention normalization. Its token activations directly affect
+        the final transformer block and therefore the classifier output.
         """
-        return self.model.backbone.norm
+        return self.model.backbone.blocks[-1].norm1
+
+    @property
+    def gradcam_reshape_transform(self):
+        """Map ViT tokens to the patch grid expected by Grad-CAM and DFF."""
+        num_register_tokens = self.model.backbone.num_register_tokens
+
+        def reshape_transform(tokens: torch.Tensor) -> torch.Tensor:
+            # Drop [CLS] and the register tokens: neither has a location in the image.
+            patch_tokens = tokens[:, 1 + num_register_tokens:, :]
+            batch_size, num_patches, channels = patch_tokens.shape
+            side = math.isqrt(num_patches)
+            if side * side != num_patches:
+                raise ValueError(f"DINOv2 Grad-CAM expects a square patch grid, got {num_patches} patches")
+            return patch_tokens.reshape(batch_size, side, side, channels).permute(0, 3, 1, 2).contiguous()
+
+        return reshape_transform
 
 
     @property
@@ -106,6 +124,31 @@ class _BaseDinoV2(BaseModel, ABC):
         """
 
         return self.model.linear_head
+
+    @property
+    def factorization_classifier_layer(self):
+        """Score a 768-D patch concept through the patch-pooling slice of the LC head."""
+        return _DinoV2PatchClassifier(self.model.linear_head, self.model.backbone.embed_dim)
+
+
+class _DinoV2PatchClassifier(nn.Module):
+    """Projection used by DFF for patch-token concepts.
+
+    The hub ``*_lc`` head receives four CLS tokens plus the mean of final patch
+    tokens. A DFF concept is a single patch-channel vector, hence only the last
+    (mean-patch) slice of the trained linear head is applicable.
+    """
+
+    def __init__(self, linear_head: nn.Linear, embed_dim: int):
+        super().__init__()
+        self.linear_head = linear_head
+        self.embed_dim = embed_dim
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # DeepFeatureFactorization constructs its NMF concepts on CPU even when
+        # the model is on CUDA.
+        x = x.to(self.linear_head.weight.device)
+        return torch.nn.functional.linear(x, self.linear_head.weight[:, -self.embed_dim:], self.linear_head.bias)
 
 
 class DinoV2B14(_BaseDinoV2):

@@ -115,6 +115,16 @@ class BaseModel(ABC, torch.nn.Module):
         pass
 
     @property
+    def gradcam_reshape_transform(self):
+        """Optional transform from a target-layer activation to ``[B, C, H, W]`` for Grad-CAM."""
+        return None
+
+    @property
+    def factorization_classifier_layer(self):
+        """Classifier used to score feature-factorization concepts."""
+        return self.classifier_target_layer
+
+    @property
     def transform_aug(self):
         if self.trns_aug is not None:
             return self.__class__.DEF_TRNS_BLD_BASE(self.input_shape, augmentations=self.trns_aug())
