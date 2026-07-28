@@ -1,5 +1,7 @@
 # Deep dive: DINOv2 ViT-B/14 per la predizione degli ingredienti
 
+**Data di creazione:** 28 luglio 2026
+
 ## Scopo e perimetro
 
 `DinoV2B14` (`src/models/dinov2.py`) adatta al problema multi-label il checkpoint upstream `dinov2_vitb14_reg_lc` di `facebookresearch/dinov2`. In questa pipeline non è un modello generativo né viene rieseguito l'obiettivo self-supervised DINO: è un estrattore Vision Transformer già preaddestrato, a cui il repository applica una testa lineare supervisionata per stimare gli ingredienti.
@@ -208,7 +210,9 @@ La configurazione salva anche callable di trasformazione quando vengono passate 
 
 ## Interpretabilità e limiti degli hook
 
-`classifier_target_layer` restituisce `self.model.linear_head`, quindi rappresenta correttamente l'ultimo mapping verso gli ingredienti. `conv_target_layer` restituisce invece `self.model.backbone.norm`. È un'approssimazione deliberata: DINOv2 non ha un ultimo layer convoluzionale. Gli strumenti Grad-CAM/factorization della dashboard devono quindi gestire un output transformer, non presumere automaticamente una mappa `[B, C, H, W]` come nei ResNet/DenseNet.
+`classifier_target_layer` restituisce `self.model.linear_head`, quindi rappresenta correttamente l'ultimo mapping verso gli ingredienti. Per Grad-CAM e factorization, `conv_target_layer` restituisce `self.model.backbone.blocks[-1].norm1`: è l'ultima normalizzazione pre-attention, le cui attivazioni influenzano direttamente l'ultimo blocco e l'head. DINOv2 non ha un ultimo layer convoluzionale; `gradcam_reshape_transform` rimuove CLS e i quattro register token, quindi converte i rimanenti patch token da `[B, 256, 768]` a `[B, 768, 16, 16]` per l'input standard `224×224`.
+
+Questo reshape è indispensabile perché Grad-CAM e Deep Feature Factorization lavorano su mappe spaziali `[B, C, H, W]`, mentre il ViT produce sequenze. Il wrapper Grad-CAM rende inoltre l'input differenziabile: senza questo passaggio, un backbone congelato non produce gradienti al target layer e Grad-CAM non può calcolare i pesi della mappa.
 
 Quando si interpretano predizioni per ingrediente, la heatmap risultante dipende anche da come l'utilità di visualizzazione riconverte token e feature; la sola scelta di `backbone.norm` non garantisce una mappa spaziale semanticamente equivalente a Grad-CAM su una CNN.
 

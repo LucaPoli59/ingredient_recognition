@@ -67,7 +67,7 @@ Il parametro `pretrained` viene conservato nella configurazione, ma l'implementa
 
 ### Preprocessing e interpretabilità
 
-DINOv2 usa builder dedicati (`transform_*_dino`). Se viene passata una funzione di augmentation, il train abilita `random_crop=True`, mentre validation/inferenza usa `random_crop=False`; senza override vengono impiegati direttamente i builder configurati. Per gli strumenti di visualizzazione, il target assimilato a uno strato convoluzionale è `backbone.norm`, mentre il classificatore è `linear_head`.
+DINOv2 usa builder dedicati (`transform_*_dino`). Se viene passata una funzione di augmentation, il train abilita `random_crop=True`, mentre validation/inferenza usa `random_crop=False`; senza override vengono impiegati direttamente i builder configurati. Per Grad-CAM il target è `backbone.blocks[-1].norm1`: le sue attivazioni token vengono riconvertite nella griglia delle patch, rimuovendo CLS e register token. Il classificatore resta `linear_head`.
 
 ## Wrapper torchvision ResNet
 
