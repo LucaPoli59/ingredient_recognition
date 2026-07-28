@@ -4,6 +4,7 @@ import diskcache
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc  # todo migrare a 0.14
 import os
+import sys
 from flask import send_from_directory
 from whitenoise import WhiteNoise
 
@@ -72,4 +73,7 @@ app.layout = html.Div([
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=DASH_PORT)
+    # Werkzeug cannot safely reconstruct PyCharm's debugger command on Windows
+    # when its installation path contains spaces. Keep hot reload for normal
+    # runs, but disable the extra reloader process while a debugger is attached.
+    app.run(debug=True, port=DASH_PORT, use_reloader=sys.gettrace() is None)
