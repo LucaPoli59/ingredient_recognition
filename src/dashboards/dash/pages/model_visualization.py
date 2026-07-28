@@ -29,7 +29,7 @@ from src.commons.visualizations import gradcam, feature_factorization, correct_l
 
 logger = logging.getLogger(__name__)
 
-DEVICE = "cpu"  # needed since the library uses the model on CPU
+DEVICE = "cuda"  # needed since the library uses the model on CPU
 MODEL_CACHE_PATH = os.path.join(DASH_CACHE, "model_cache.pt")
 IMG_WIDTH, IMG_HEIGHT = "600px", "400px"
 TABLES_PARAMS = {"resizable": True, "sortable": True, "filter": True, "wrapHeaderText": True, "autoHeaderHeight": True}
