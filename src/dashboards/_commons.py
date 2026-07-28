@@ -23,13 +23,6 @@ for p in [DASH_CACHE, DASH_STATIC, DASH_ASSETS]:
     if not os.path.exists(p):
         os.mkdir(p)
 
-# Create a symlink to the data folder (so the Dash app can access the data)
-if not os.path.exists(os.path.join(DASH_ASSETS, "data")):
-    try:
-        os.symlink(DATA_PATH, os.path.join(DASH_ASSETS, "data"), target_is_directory=True)
-    except PermissionError:
-        print("PermissionError: run this with admin privileges")
-
 
 def recursive_listdir(path: str, stop_at: str = "trial_",
                       stop_dir_contains: Optional[List[str] | str] = HTUNER_CONFIG_FILE,

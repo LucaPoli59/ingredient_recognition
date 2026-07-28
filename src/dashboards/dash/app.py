@@ -4,10 +4,12 @@ import diskcache
 import dash_bootstrap_components as dbc
 import dash_mantine_components as dmc  # todo migrare a 0.14
 import os
+from flask import send_from_directory
 from whitenoise import WhiteNoise
 
-from src.dashboards._commons import DASH_PORT, OPTUNA_PORT, TENSORBOARD_PORT, DASH_PAGES_APP, DASH_CACHE
-from settings.config import PROJECT_PATH, BLANK_IMG_PATH
+from src.dashboards._commons import (DASH_PORT, OPTUNA_PORT, TENSORBOARD_PORT, DASH_PAGES_APP, DASH_CACHE,
+                                     DASH_STATIC)
+from settings.config import DATA_PATH
 
 cache = diskcache.Cache(os.path.join(DASH_CACHE, "_cache"))
 background_callback_manager = DiskcacheManager(cache)
@@ -20,7 +22,15 @@ app = Dash(__name__, use_pages=True, external_stylesheets=external_stylesheets,
            pages_folder=DASH_PAGES_APP
            )
 server = app.server
-server.wsgi_app = WhiteNoise(server.wsgi_app, root='static/')
+
+
+@server.get('/assets/data/<path:resource>')
+def serve_dataset_asset(resource):
+    """Serve one dataset image without making the complete dataset static."""
+    return send_from_directory(DATA_PATH, resource)
+
+
+server.wsgi_app = WhiteNoise(server.wsgi_app, root=DASH_STATIC)
 
 
 app.layout = html.Div([

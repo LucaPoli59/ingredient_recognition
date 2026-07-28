@@ -13,6 +13,7 @@ import plotly.express as px
 import pandas as pd
 import torch
 from PIL import Image
+import logging
 
 from dash.exceptions import PreventUpdate
 from torchvision.transforms import v2
@@ -24,6 +25,9 @@ from src.data_processing.images_recipes import LightImagesRecipesDataset
 from src.data_processing.transformations import transform_plain_base
 from src.data_processing.labels_encoders import LabelEncoderInterface
 from src.commons.visualizations import gradcam, feature_factorization, correct_legend_factor
+
+
+logger = logging.getLogger(__name__)
 
 DEVICE = "cpu"  # needed since the library uses the model on CPU
 MODEL_CACHE_PATH = os.path.join(DASH_CACHE, "model_cache.pt")
@@ -193,6 +197,7 @@ def update_trial_selector(selected_exp):
           # ]
           )
 def load_experiment(_, selected_exp, selected_htrial, upload_contents, upload_filenames):
+    logger.info("Started loading for exp {selected_exp}" + (f", htrial {selected_htrial}" if selected_htrial else ""))
     try:
         if dash.callback_context.triggered_id == "load_exp_button":
             if selected_exp is None:
@@ -205,29 +210,32 @@ def load_experiment(_, selected_exp, selected_htrial, upload_contents, upload_fi
         else:
             raise ValueError("Unknown trigger")
 
+
+        dm_config = exp_config.datamodule
+        dm_type = dm_config["type"]
+        datamodule = dm_type.load_from_config(dm_config, batch_size=exp_config.lgn_model["batch_size"])
+        datamodule.prepare_data()
+        datamodule.setup()
+
+        dataset = datamodule.val_dataloader().dataset.to_light_dataset(datamodule.label_encoder)
+        transform = datamodule.transform_plain
+        transform_encoded = codecs.encode(pickle.dumps(transform), "base64").decode()
+
+        label_encoder = jsonpickle.encode(datamodule.label_encoder)
+
+        ingredients = pd.Series(dataset.label_data).explode().value_counts().index
+        target_options = (DEF_GRADCAM_TARGET +
+                          [{"value": ingredient, "label": ingredient.capitalize()}
+                           for ingredient in ingredients])
+
+
+        torch.save(model.model, MODEL_CACHE_PATH)
+
     except Exception as e:
+        logger.exception(f"Error during experiment loading for exp {selected_exp}" + (f", htrial {selected_htrial}" if selected_htrial else ""))
         return (dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update,
                 True, f"Error: {e}", "danger")
 
-    dm_config = exp_config.datamodule
-    dm_type = dm_config["type"]
-    datamodule = dm_type.load_from_config(dm_config, batch_size=exp_config.lgn_model["batch_size"])
-    datamodule.prepare_data()
-    datamodule.setup()
-
-    dataset = datamodule.val_dataloader().dataset.to_light_dataset(datamodule.label_encoder)
-    transform = datamodule.transform_plain
-    transform_encoded = codecs.encode(pickle.dumps(transform), "base64").decode()
-
-    label_encoder = jsonpickle.encode(datamodule.label_encoder)
-
-    ingredients = pd.Series(dataset.label_data).explode().value_counts().index
-    target_options = (DEF_GRADCAM_TARGET +
-                      [{"value": ingredient, "label": ingredient.capitalize()}
-                       for ingredient in ingredients])
-
-
-    torch.save(model.model, MODEL_CACHE_PATH)
 
     return (dataset.to_json(), transform_encoded, label_encoder, True, target_options, target_options[1]['value'],
             True, feedback, "success")
@@ -369,7 +377,7 @@ def _load_exp_from_select(select_value, selected_htrial, device=DEVICE) -> Tuple
 
         exp_config = ExpConfig.load_from_ckpt_data(torch.load(ckpt_path, weights_only=False))
         model = exp_config.lgn_model['lgn_model_type'].load_from_config(exp_config.lgn_model).to(device)
-        model.load_weights_from_checkpoint(ckpt_path)  # exclude pos_weight for weighted BCE if present
+        model.load_weights_from_checkpoint(ckpt_path, drop_fields=['loss_fn.pos_weight'])
 
         output = f"Loaded experiment from {os.path.basename(ckpt_path)}"
 

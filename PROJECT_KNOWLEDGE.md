@@ -2,7 +2,7 @@
 
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
-**Ultimo aggiornamento:** 22 luglio 2026  
+**Ultimo aggiornamento:** 28 luglio 2026
 **Stato della ricognizione:** architettura e flusso principale verificati nel codice; risultati numerici, completezza dei dataset e percorsi di esecuzione non sono stati eseguiti in questa ricognizione.
 
 ## Scopo
@@ -101,6 +101,7 @@ Gli script hanno parametri e nomi esperimento hard-coded: vanno verificati/adatt
 ## Visualizzazione e analisi
 
 - `src/dashboards/dash/app.py` avvia una web app Dash sulla porta 8050.
+- Le immagini in `data/` sono servite singolarmente dalla route Flask `/assets/data/<percorso>`; non deve esistere il precedente symlink `dash/static/assets/data`, perche WhiteNoise indicizza ricorsivamente gli asset all'avvio e blocca la dashboard sui dataset grandi.
 - La pagina `model_visualization.py` carica esperimenti/checkpoint, mostra immagini e predizioni, e produce Grad-CAM e feature factorization per l'interpretabilità.
 - `start_tensorboard.py` serve gli esperimenti con TensorBoard.
 - `start_optuna.py` avvia Optuna Dashboard; nel codice corrente la porta effettiva è 8055, mentre la costante di navigazione della Dash app è 8051: possibile incoerenza da verificare.
