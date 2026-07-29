@@ -95,6 +95,7 @@ Esempi già presenti:
 
 - `resnet/train_resnets.py` per confronti tra ResNet e backbone pretrained;
 - script equivalenti in `densenet/`;
+- `dinov2/htuning_dinov2.py` per l'hyperparameter tuning di DINOv2 ViT-B/14 in linear probing;
 - `htuning_*.py` per Optuna;
 - `test_best_for_f1.py` per validare trial selezionati con F1 per ingrediente.
 
