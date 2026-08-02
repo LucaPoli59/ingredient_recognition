@@ -3,7 +3,7 @@
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
 **Ultimo aggiornamento:** 2 agosto 2026
-**Stato della ricognizione:** architettura e flusso principale verificati nel codice; risultati numerici, completezza dei dataset e percorsi di esecuzione non sono stati eseguiti in questa ricognizione.
+**Stato della ricognizione:** architettura e flusso principale verificati nel codice; il dataset Yummly è stato analizzato integralmente su metadata e 65.146 immagini, con audit riproducibili di target, provenienza, duplicati, qualità visiva e contaminazione degli split.
 
 ## Scopo
 
@@ -65,11 +65,17 @@ Tutti i modelli di visione discendono da `BaseModel`, che centralizza configuraz
 
 La struttura, la lingua e la metodologia di scrittura della documentazione sono definite in `docs/README.md`. Tutti i documenti sotto `docs/` devono essere scritti in inglese. Per approfondimenti tecnici sulle architetture e sulla ricerca di riferimento, consultare `docs/models_deepdive/`. Al momento è disponibile `docs/models_deepdive/dinov2.md`, dedicato a DINOv2 ViT-B/14; la panoramica dei modelli è in `docs/implementation_details/models.md`.
 
+L'obiettivo di ricerca e il relativo audit dei dati sono formalizzati in `docs/project_objective/`. Il dataset attivo è esclusivamente Yummly: l'audit ha ricostruito la derivazione locale da Yummly-66K, dimostrato che le etichette `ingredients_ok` correnti non sono esattamente riproducibili, quantificato collisioni lessicali, duplicati tra split, immagini non valide e limiti di osservabilità. Le decisioni vincolanti per il nuovo benchmark sono in `docs/project_objective/benchmark_decisions.md`: rigenerare i target dalle righe originali, rivedere l'ontologia, escludere immagini non valide, creare famiglie di ricette e uno split grouped 80/10/10, rimuovere `<UNK>`, usare mAP macro sulle etichette e micro F1 come metriche primarie abbinate e calibrare/sogliare soltanto sulla validation.
+
+Lo stato di avanzamento dell'intero progetto di tesi è mantenuto in `docs/next_steps.md`. Il tracker conserva lo storico ed è organizzato nelle macro-sezioni fondazione, dati, selezione degli ingredienti, ricerca e implementazione di modelli aggiuntivi, training e hyperparameter tuning, confronto dei risultati e scrittura della tesi. La priorità corrente è costruire e congelare il benchmark Yummly riproducibile.
+
+Il dataset corrente da 65.146 record e 182 etichette resta un artefatto legacy per diagnostica. Non deve sostenere claim finali sui modelli.
+
 Le immagini sono normalmente ridimensionate a 224×224. Per i modelli generici il DataModule applica resize, `TrivialAugmentWide` in training e normalizzazione con statistiche del dataset. I wrapper torchvision usano le trasformazioni/normalizzazioni dei pesi ImageNet. DINOv2 usa normalizzazione ImageNet e crop dedicati.
 
 ## Addestramento e valutazione
 
-`src/lightning/lgn_models.py` incapsula un `BaseModel` in un `LightningModule`. La configurazione predefinita usa `BCEWithLogitsLoss` per la classificazione multi-label, con sigmoid in fase di calcolo metriche/inferenza. Le metriche di default includono accuracy, precision, recall e Hamming distance; F1 complessiva e per-etichetta sono configurabili.
+`src/lightning/lgn_models.py` incapsula un `BaseModel` in un `LightningModule`. La configurazione predefinita usa `BCEWithLogitsLoss` per la classificazione multi-label, con sigmoid in fase di calcolo metriche/inferenza. Le metriche di default includono accuracy, precision, recall e Hamming distance con media weighted; F1 non è abilitata di default e mancano average precision, calibrazione e selezione esplicita delle soglie. Questa configurazione è legacy e non coincide con il protocollo deciso per il nuovo benchmark.
 
 `src/lightning/lgn_trainers.py` fornisce:
 
@@ -142,7 +148,7 @@ Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi
 ## Punti da approfondire o verificare
 
 - Eseguire una prova end-to-end su un piccolo subset per confermare i comandi di lancio e le versioni correnti delle dipendenze.
-- Stabilire quale dataset e quale campo etichetta siano attualmente canonici (Yummly/`ingredients_ok` oppure Recipes1M/`ingredients_ner`).
+- Implementare il nuovo benchmark Yummly definito in `docs/project_objective/benchmark_decisions.md`, includendo manifest di provenienza, target, esclusioni, gruppi e split.
 - Verificare e, se necessario, uniformare alcuni import che dipendono dalla directory di avvio (`config`, `models`, `data_processing` vs `settings.config`, `src.*`).
 - Verificare la gestione di ripresa dello studio Optuna, che condivide un journal globale configurato in `experiments/journal.log`.
 - Correggere o documentare la differenza fra porta Optuna dichiarata (8051) e quella usata dallo script (8055).

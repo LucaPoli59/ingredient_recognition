@@ -16,11 +16,25 @@ When an existing document is translated, preserve its technical meaning, Markdow
 ```text
 docs/
 ├── README.md
+├── next_steps.md
 ├── implementation_details/
 │   └── <component>.md
 ├── models_deepdive/
 │   ├── README.md
 │   └── <model_name>.md
+├── project_objective/
+│   ├── README.md
+│   └── <files>.md
+├── research/
+│   ├── README.md
+│   ├── topics/
+│   │   └── <topic>/
+│   │       ├── README.md
+│   │       └── <files>.md
+│   └── discovery/
+│       └── <discovery_date>/
+│           ├── README.md
+│           └── <files>.md
 └── technical_details/
     ├── README.md
     └── <area>/<problem_title>/explaination.md
@@ -34,9 +48,21 @@ Use this directory for documentation tied directly to the repository implementat
 
 Use this directory for research-oriented explanations of model architectures. A deep dive may cover internal representations, tensor shapes, architectural blocks, pretraining objectives, downstream adaptation, trade-offs, and implications for ingredient recognition. Follow the additional conventions in [`models_deepdive/README.md`](models_deepdive/README.md).
 
+### `project_objective/`
+
+Use this directory to formalize the research project's problem, objectives, scope, constraints, assumptions, and success criteria before conducting discovery research. Follow the local conventions in [`project_objective/README.md`](project_objective/README.md).
+
 ### `technical_details/`
 
 Use this directory for durable analyses of cross-cutting technical problems or concepts, such as gradient behavior, data-processing constraints, library limitations, or interpretability assumptions. These notes explain the phenomenon, its causes, and its implications; they are not patch instructions or changelogs. Follow the additional conventions in [`technical_details/README.md`](technical_details/README.md).
+
+### `research/`
+
+Use this directory for research records that support future project decisions. Topic-focused investigations belong in [`research/topics/`](research/topics/README.md); broad state-of-the-art scans belong in [`research/discovery/`](research/discovery/README.md). Follow the local conventions in those directories.
+
+## Project roadmap
+
+[`next_steps.md`](next_steps.md) is the permanent progress tracker for the whole thesis project. It is organized into macro-sections for project foundation, data, ingredient selection, model research, additional model implementation, training and hyperparameter tuning, result comparison, and thesis writing. It preserves completed and superseded work in an append-only history log and must be updated whenever tracked work changes state.
 
 ## Writing methodology
 

@@ -1,0 +1,501 @@
+rank,kind,size,cross_split,split_counts,cuisine_count,label_set_count,representative_split,representative_image,representative_name
+1,perceptual,26,True,"{""test"": 3, ""train"": 21, ""val"": 2}",5,26,train,001474____mexican.jpg,Lupe's Pork Tamales
+2,exact,25,True,"{""test"": 2, ""train"": 21, ""val"": 2}",5,25,train,001474____mexican.jpg,Lupe's Pork Tamales
+3,exact,13,True,"{""train"": 12, ""val"": 1}",3,13,train,002383____french.jpg,Gefüllte Schweinelendchen
+4,exact,13,True,"{""train"": 12, ""val"": 1}",4,13,train,005016____chinese.jpg,Chinese Roast Chicken
+5,exact,10,True,"{""test"": 1, ""train"": 7, ""val"": 2}",1,10,train,013306____japanese.jpg,Miso Nikomi Udon
+6,perceptual,10,False,"{""train"": 10}",6,10,train,002293____thai.jpg,Thai Spiced Butternut Squash Soup
+7,exact,8,False,"{""train"": 8}",6,8,train,002293____thai.jpg,Thai Spiced Butternut Squash Soup
+8,exact,7,False,"{""train"": 7}",5,7,train,011697____mexican.jpg,Mexican Cucumber Tomato Gazpacho
+9,exact,6,False,"{""train"": 6}",1,1,train,000930____mexican.jpg,Paleo Chicken Enchiladas
+10,exact,6,True,"{""test"": 1, ""train"": 5}",3,6,train,001300____indian.jpg,Peachy Mango Macadamia Chutney
+11,perceptual,6,True,"{""test"": 1, ""train"": 4, ""val"": 1}",1,1,train,002868____japanese.jpg,Hot Parmesan Green Chile Popper Dip
+12,exact,5,True,"{""train"": 4, ""val"": 1}",3,5,train,000073____french.jpg,"Partridge with Jerusalem artichoke purée, caramelised apple and chicken sauce"
+13,exact,5,True,"{""train"": 4, ""val"": 1}",1,1,train,003827____spanish.jpg,Challah Bread Pudding with Kahlua Cream Sauce
+14,exact,5,True,"{""test"": 1, ""train"": 4}",3,5,train,009753____thai.jpg,Thai Mango Sticky Rice (Rice Cooker)
+15,perceptual,5,True,"{""train"": 4, ""val"": 1}",1,1,train,001882____indian.jpg,Tandoori-Style Chicken
+16,perceptual,5,False,"{""train"": 5}",3,5,train,002457____thai.jpg,Pad Thai with Shrimp
+17,perceptual,5,False,"{""train"": 5}",3,5,train,003206____thai.jpg,Zesty Thai Lemon-Lime Shrimp
+18,perceptual,5,False,"{""train"": 5}",1,1,train,023983____italian.jpg,Pan Roasted Fish Fillets With Herb Butter
+19,exact,4,False,"{""train"": 4}",1,1,train,000317____french.jpg,French Toast
+20,exact,4,False,"{""train"": 4}",1,1,train,000537____french.jpg,Pate Brisee
+21,exact,4,True,"{""test"": 1, ""train"": 3}",4,4,train,001650____american.jpg,Katy's Cranberry and Jam Tart
+22,exact,4,False,"{""train"": 4}",3,4,train,002457____thai.jpg,Pad Thai with Shrimp
+23,exact,4,False,"{""train"": 4}",1,1,train,002643____italian.jpg,Ligurian Risotto
+24,exact,4,True,"{""train"": 3, ""val"": 1}",1,1,train,004876____japanese.jpg,Linguine with Green Olive Sauce and Zesty Breadcrumbs
+25,exact,4,True,"{""test"": 1, ""train"": 3}",1,1,train,005052____italian.jpg,Pasta alla Norma
+26,exact,4,True,"{""test"": 1, ""train"": 3}",1,1,train,006506____thai.jpg,Thai Coconut Sticky Rice With Mango (Khao Niao Mamuang)
+27,exact,4,True,"{""train"": 2, ""val"": 2}",1,1,train,006610____italian.jpg,Italian Soup
+28,exact,4,True,"{""train"": 3, ""val"": 1}",1,1,train,006704____mexican.jpg,Chicken Enchiladas With Salsa Verde 
+29,exact,4,True,"{""test"": 1, ""train"": 2, ""val"": 1}",1,1,train,006745____italian.jpg,Shrimp and Pancetta on Polenta
+30,exact,4,True,"{""train"": 3, ""val"": 1}",1,1,train,015296____japanese.jpg,Hot Parmesan Green Chile Pepper Dip
+31,exact,4,True,"{""test"": 1, ""train"": 3}",1,2,train,016533____italian.jpg,Toasted Cheese Raviolis with Italian Sausage
+32,exact,4,False,"{""train"": 4}",2,4,train,016549____american.jpg,Citrus Vinaigrette
+33,exact,4,False,"{""train"": 4}",2,4,train,017041____mexican.jpg,Que Pasta Mexican Mac 'n' Cheese
+34,exact,4,True,"{""train"": 3, ""val"": 1}",1,1,train,023915____greek.jpg,Frozen Yogurt Bark
+35,exact,4,False,"{""train"": 4}",1,1,train,023983____italian.jpg,Pan Roasted Fish Fillets With Herb Butter
+36,exact,4,True,"{""train"": 3, ""val"": 1}",1,1,train,030170____indian.jpg,Dal Bukhara
+37,perceptual,4,False,"{""train"": 4}",1,1,train,000033____thai.jpg,Thai Coconut Pumpkin Soup
+38,perceptual,4,True,"{""train"": 3, ""val"": 1}",1,1,train,000064____mexican.jpg,Mexican Corn Salad
+39,perceptual,4,False,"{""train"": 4}",3,4,train,001638____thai.jpg,Thai Coconut Chicken Noodle Soup (gluten-free!)
+40,perceptual,4,False,"{""train"": 4}",1,1,train,002026____french.jpg,French Onion Oven Potatoes
+41,perceptual,4,True,"{""train"": 3, ""val"": 1}",1,1,train,003442____chinese.jpg,General Tso’s Chicken
+42,perceptual,4,True,"{""train"": 3, ""val"": 1}",1,1,train,003535____spanish.jpg,Bobby Flay’s Pan-Roasted Chicken With Mint Sauce
+43,perceptual,4,False,"{""train"": 4}",2,3,train,005112____mexican.jpg,Salsa Trio and Homemade Tortilla Chips
+44,perceptual,4,False,"{""train"": 4}",1,1,train,005600____chinese.jpg,Hot And Sour Soup
+45,perceptual,4,True,"{""train"": 3, ""val"": 1}",1,1,train,017869____mexican.jpg,Quick and Easy Mexican Chicken
+46,perceptual,4,True,"{""test"": 1, ""train"": 2, ""val"": 1}",1,1,train,018792____spanish.jpg,Sweet-and-Spicy Mixed Nuts
+47,perceptual,4,False,"{""train"": 4}",1,1,train,022283____spanish.jpg,Spanish Rice Bake
+48,perceptual,4,False,"{""train"": 4}",1,1,train,024662____chinese.jpg,Slow Cooker Cashew Chicken
+49,perceptual,4,False,"{""train"": 4}",3,4,train,030694____thai.jpg,Thai Green Curry Paste
+50,perceptual,4,True,"{""test"": 1, ""train"": 2, ""val"": 1}",1,1,train,035374____thai.jpg,22-Minute Pad Thai
+51,exact,3,False,"{""train"": 3}",1,1,train,000033____thai.jpg,Thai Coconut Pumpkin Soup
+52,exact,3,False,"{""train"": 3}",1,1,train,000299____mexican.jpg,Cheesy Chicken Enchilada Skillet
+53,exact,3,True,"{""test"": 1, ""train"": 2}",1,1,train,000512____japanese.jpg,Cauliflower Tots
+54,exact,3,False,"{""train"": 3}",1,2,train,000586____thai.jpg,Thai Beef Stew
+55,exact,3,False,"{""train"": 3}",1,2,train,000931____mexican.jpg,Mexican Street Corn Nachos
+56,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,000991____thai.jpg,Thai Steak and Noodle Salad
+57,exact,3,False,"{""train"": 3}",3,3,train,001964____thai.jpg,Culinarius' Thai Chicken Stew
+58,exact,3,False,"{""train"": 3}",1,2,train,002617____japanese.jpg,Japanese Chicken-Scallion Rice Bowl
+59,exact,3,True,"{""test"": 1, ""train"": 2}",1,1,train,003030____italian.jpg,{Easy Dinner Recipe} Italian Chicken Bake
+60,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,003442____chinese.jpg,General Tso’s Chicken
+61,exact,3,False,"{""train"": 3}",1,1,train,004515____greek.jpg,Avocado Dip Recipe (Avocado Crema)
+62,exact,3,False,"{""train"": 3}",2,3,train,005112____mexican.jpg,Salsa Trio and Homemade Tortilla Chips
+63,exact,3,False,"{""train"": 3}",3,3,train,005172____indian.jpg,Mango Lassi (yogurt drink)
+64,exact,3,False,"{""train"": 3}",1,1,train,005304____japanese.jpg,Crispy Baked Chicken Tenders
+65,exact,3,False,"{""train"": 3}",1,1,train,005600____chinese.jpg,Hot And Sour Soup
+66,exact,3,False,"{""train"": 3}",3,3,train,005818____french.jpg,French
+67,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,006066____spanish.jpg,Ina Garten's Pasta alla Vecchia Bettola
+68,exact,3,True,"{""test"": 1, ""train"": 2}",1,1,train,006094____indian.jpg,Slow-Cooker Indian Spiced Chicken with Tomato and Cream
+69,exact,3,True,"{""test"": 1, ""train"": 2}",1,1,train,006251____french.jpg,Slow Cooker French Toast Casserole
+70,exact,3,False,"{""train"": 3}",3,3,train,006539____french.jpg,Baked Bean Quesadillas
+71,exact,3,False,"{""train"": 3}",1,1,train,006998____spanish.jpg,Red Wine-Braised Chicken with Chorizo and Chickpeas
+72,exact,3,True,"{""test"": 1, ""train"": 2}",1,1,train,007149____chinese.jpg,Dry Beef Hor Fun
+73,exact,3,False,"{""train"": 3}",1,1,train,007227____american.jpg,Crab-and-Shrimp Étouffée
+74,exact,3,False,"{""train"": 3}",1,1,train,008062____mexican.jpg,One Skillet Mexican Rice Casserole
+75,exact,3,False,"{""train"": 3}",1,1,train,008145____chinese.jpg,Orange Chicken
+76,exact,3,False,"{""train"": 3}",3,3,train,008212____thai.jpg,Daeji Bulgogi (Spicy Korean Pork Barbecue)
+77,exact,3,False,"{""train"": 3}",1,1,train,008782____italian.jpg,30 Minute Hearty Italian Basil Sausage Soup
+78,exact,3,False,"{""train"": 3}",1,1,train,010083____italian.jpg,Italian Meatballs
+79,exact,3,False,"{""train"": 3}",1,1,train,010191____italian.jpg,Italian Lentil Soup
+80,exact,3,False,"{""train"": 3}",1,1,train,010323____japanese.jpg,Grilled Halloumi and Vegetables
+81,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,011064____indian.jpg,Pressure Cooker Indian Butter Chicken
+82,exact,3,False,"{""train"": 3}",1,1,train,013021____italian.jpg,Cacio e Pepe
+83,exact,3,False,"{""train"": 3}",1,1,train,013145____mexican.jpg,Pico de Gallo
+84,exact,3,False,"{""train"": 3}",1,1,train,013167____japanese.jpg,"Wasabi Salmon with Bok Choy, Green Cabbage, and Shiitakes"
+85,exact,3,True,"{""train"": 2, ""val"": 1}",2,3,train,013383____mexican.jpg,Zesty Mexican Soup
+86,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,013920____japanese.jpg,Tamago Kake Gohan (Japanese-Style Rice With Egg)
+87,exact,3,False,"{""train"": 3}",1,1,train,015605____mexican.jpg,25 Minute Spicy Mexican Corn Skillet with Sausage
+88,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,015903____italian.jpg,Sweet and Spicy Italian BBQ Grilled Chicken
+89,exact,3,False,"{""train"": 3}",1,1,train,016014____spanish.jpg,Blue Smoke Bloody Mary
+90,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,016166____thai.jpg,Cilantro Pesto Sauce
+91,exact,3,True,"{""train"": 2, ""val"": 1}",2,3,train,017914____mexican.jpg,Tofu Fajitas
+92,exact,3,True,"{""test"": 1, ""train"": 2}",1,1,train,019685____indian.jpg,Perfect Aloo Gobi
+93,exact,3,False,"{""train"": 3}",3,3,train,019771____indian.jpg,Stuffed Roast Chicken Indian Style
+94,exact,3,True,"{""train"": 2, ""val"": 1}",1,3,train,020276____american.jpg,Mississippi Mud Dessert Brownies
+95,exact,3,False,"{""train"": 3}",1,1,train,020820____chinese.jpg,Beef and Broccoli
+96,exact,3,False,"{""train"": 3}",2,3,train,020935____american.jpg,Wild-Mushroom Gravy
+97,exact,3,False,"{""train"": 3}",2,3,train,022788____greek.jpg,Caramel Yogurt
+98,exact,3,False,"{""train"": 3}",3,3,train,022814____thai.jpg,Thai Noodles with Fresh Herbs
+99,exact,3,False,"{""train"": 3}",1,1,train,022864____spanish.jpg,Persian Tamarind Fish
+100,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,024272____italian.jpg,Spicy Italian Pork Cutlets
+101,exact,3,False,"{""train"": 3}",1,2,train,026284____italian.jpg,Cheese Ravioli with Bolognese Sauce
+102,exact,3,False,"{""train"": 3}",1,1,train,026550____mexican.jpg,Mexican Pasta Salad with Creamy Avocado Dressing
+103,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,029046____mexican.jpg,Mexican Corn Salad
+104,exact,3,True,"{""test"": 1, ""train"": 2}",1,1,train,031429____spanish.jpg,Antipasto Tortellini Salad
+105,exact,3,False,"{""train"": 3}",1,1,train,031565____mexican.jpg,The Best Ever Guacamole - Copycat Chipotle's Restaurant
+106,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,033449____italian.jpg,Italian Baked Quinoa with Fresh Tomato Topping
+107,exact,3,False,"{""train"": 3}",1,1,train,034942____indian.jpg,Tandoori-Style Chicken
+108,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,036114____italian.jpg,"Our Favorite Lasagna with Sausage, Spinach, and Three Cheeses"
+109,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,037345____italian.jpg,Easy Homemade Italian Dressing
+110,exact,3,False,"{""train"": 3}",1,1,train,038269____indian.jpg,Chicken Curry
+111,exact,3,True,"{""test"": 1, ""train"": 2}",1,1,train,042319____italian.jpg,Spinach and Arugula Lasagna Roll-Ups
+112,exact,3,True,"{""train"": 2, ""val"": 1}",1,1,train,044094____greek.jpg,Strawberry Banana Greek Yogurt Pound Cake
+113,exact,3,True,"{""test"": 1, ""train"": 2}",1,3,train,045508____american.jpg,"Fennel, Carrot, and Apple Slaw"
+114,perceptual,3,False,"{""train"": 3}",1,1,train,000070____spanish.jpg,Roasted Apricot Chicken with Mint and Sage Butternut Squash
+115,perceptual,3,False,"{""train"": 3}",1,1,train,000334____greek.jpg,Greek 7 Layer Dip
+116,perceptual,3,False,"{""train"": 3}",1,1,train,001704____japanese.jpg,Hot Tofu (Yudofu)
+117,perceptual,3,False,"{""train"": 3}",1,1,train,002757____spanish.jpg,Buttermilk Fried Chicken Fingers
+118,perceptual,3,False,"{""train"": 3}",2,3,train,003582____chinese.jpg,Chinese White-cut Chicken Salad
+119,perceptual,3,False,"{""train"": 3}",1,1,train,003771____spanish.jpg,Roast Pork Shoulder with Star Anise and Soy Sauce
+120,perceptual,3,False,"{""train"": 3}",1,1,train,004048____italian.jpg,Ricotta Cheese Gnocchi
+121,perceptual,3,False,"{""train"": 3}",1,1,train,005054____mexican.jpg,Mexican Steak & Salsa Rice
+122,perceptual,3,False,"{""train"": 3}",1,1,train,007485____greek.jpg,Greek Yogurt Pancakes
+123,perceptual,3,True,"{""train"": 2, ""val"": 1}",1,1,train,007903____indian.jpg,Vegan Lentil Curry – Slow Cooked
+124,perceptual,3,False,"{""train"": 3}",1,1,train,008146____thai.jpg,Thai Chicken Skewers
+125,perceptual,3,False,"{""train"": 3}",1,1,train,008243____greek.jpg,Greek Style Salmon with Avocado Tzatziki
+126,perceptual,3,True,"{""train"": 2, ""val"": 1}",1,1,train,008584____japanese.jpg,Chicken Teriyaki
+127,perceptual,3,False,"{""train"": 3}",1,1,train,008663____chinese.jpg,Honey-Glazed Chinese Chicken
+128,perceptual,3,False,"{""train"": 3}",1,1,train,009934____spanish.jpg,Pasta With Smoky Pumpkin Cream Sauce
+129,perceptual,3,True,"{""train"": 2, ""val"": 1}",1,3,train,010145____american.jpg,Herbed Salad with Ginger Vinaigrette
+130,perceptual,3,False,"{""train"": 3}",1,1,train,010180____japanese.jpg,Panko-Parmesan Crusted Zucchini Fries
+131,perceptual,3,False,"{""train"": 3}",1,2,train,010397____french.jpg,Old-Fashioned Bread Pudding
+132,perceptual,3,True,"{""train"": 2, ""val"": 1}",1,2,train,010876____chinese.jpg,Slow-Cooked Pork Belly with Garlic and Chili Glaze
+133,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,1,train,011450____japanese.jpg,Clam Soup (Clam Miso Soup)
+134,perceptual,3,False,"{""train"": 3}",2,1,train,011486____japanese.jpg,Miso Soup with Udon Noodles
+135,perceptual,3,False,"{""train"": 3}",1,1,train,012344____greek.jpg,Greek Moussaka
+136,perceptual,3,False,"{""train"": 3}",1,1,train,012655____japanese.jpg,Wafu Dressing (Japanese Salad Dressing)
+137,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,1,train,012734____thai.jpg,5 Ingredient Thai Pumpkin Soup
+138,perceptual,3,True,"{""train"": 2, ""val"": 1}",1,1,train,012760____french.jpg,Baked Cinnamon French Toast
+139,perceptual,3,False,"{""train"": 3}",2,2,train,013462____american.jpg,Pie Dough
+140,perceptual,3,False,"{""train"": 3}",1,1,train,013898____spanish.jpg,Coke-Brined Fried Chicken
+141,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,1,train,015466____thai.jpg,Thai Basil Chicken
+142,perceptual,3,False,"{""train"": 3}",1,2,train,016946____mexican.jpg,Hearty Mexican Chicken Soup
+143,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,2,train,017289____italian.jpg,Italian Grilled Cheese Sandwiches
+144,perceptual,3,False,"{""train"": 3}",1,1,train,017403____french.jpg,FRENCH BREAKFAST DONUTS
+145,perceptual,3,True,"{""test"": 1, ""train"": 1, ""val"": 1}",3,3,train,018357____italian.jpg,Chicken and Zucchini Risotto
+146,perceptual,3,False,"{""train"": 3}",1,1,train,018987____mexican.jpg,Mexican Pasta
+147,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,1,train,019312____spanish.jpg,Caul-do Verde (Portuguese Caldo Verde with Cauliflower)
+148,perceptual,3,True,"{""train"": 2, ""val"": 1}",1,1,train,019762____mexican.jpg,Mexican Casserole
+149,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,3,train,020105____thai.jpg,Thai Chicken Satay with Spicy Peanut Sauce
+150,perceptual,3,False,"{""train"": 3}",1,1,train,020199____spanish.jpg,"Sheet-Pan Paella with Chorizo, Mussels, and Shrimp"
+151,perceptual,3,False,"{""train"": 3}",1,1,train,020285____french.jpg,French Bread Using Poolish
+152,perceptual,3,True,"{""train"": 1, ""val"": 2}",1,1,train,020305____japanese.jpg,Sesame Dressing
+153,perceptual,3,False,"{""train"": 3}",1,1,train,021592____american.jpg,Macaroni and Cheese
+154,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,1,train,021930____thai.jpg,Vegan Thai Chickpea Curry
+155,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,1,train,024722____thai.jpg,Thai Curry World's Best! (Easy too)
+156,perceptual,3,True,"{""test"": 1, ""train"": 1, ""val"": 1}",2,1,train,026089____japanese.jpg,Oyakodon (Chicken and Egg Rice Bowl)
+157,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,1,train,027219____greek.jpg,Greek Spinach Dip
+158,perceptual,3,False,"{""train"": 3}",1,1,train,027342____mexican.jpg,Mexican Corn on the Cob
+159,perceptual,3,False,"{""train"": 3}",1,1,train,033276____japanese.jpg,Chicken Katsu
+160,perceptual,3,False,"{""train"": 3}",1,1,train,034300____mexican.jpg,Roasted Chickpea Taco Salad
+161,perceptual,3,True,"{""train"": 2, ""val"": 1}",1,2,train,036758____chinese.jpg,Bacon & Egg Fried Rice
+162,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,1,train,037141____greek.jpg,Spiralized Greek Cucumber Salad with Lemon and Feta
+163,perceptual,3,False,"{""train"": 3}",1,3,train,040810____italian.jpg,Italian Cream Cake
+164,perceptual,3,True,"{""train"": 2, ""val"": 1}",1,1,train,043533____spanish.jpg,Creamy Roasted Tomato Gazpacho
+165,perceptual,3,True,"{""test"": 1, ""train"": 1, ""val"": 1}",1,2,train,043976____thai.jpg,Thai Beef Stew With Lemongrass and Noodles
+166,perceptual,3,True,"{""test"": 1, ""train"": 2}",1,3,train,045082____american.jpg,Turkey Brine
+167,perceptual,3,True,"{""train"": 1, ""val"": 2}",1,2,train,050385____chinese.jpg,Vegan Crispy Tofu with Sweet & Sour Orange Sauce
+168,perceptual,3,True,"{""test"": 2, ""train"": 1}",1,1,train,050808____italian.jpg,Italian Seasoning II
+169,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,000104____indian.jpg,Hyderabadi Lamb Biryani
+170,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,000165____spanish.jpg,"All Natural, Gluten Free, Homemade Taco Seasoning"
+171,exact,2,False,"{""train"": 2}",1,1,train,000184____chinese.jpg,Chinese Hoisin Chicken
+172,exact,2,False,"{""train"": 2}",1,2,train,000195____american.jpg,Poached Salmon with Lima Beans and Green Goddess Dressing
+173,exact,2,False,"{""train"": 2}",1,1,train,000210____italian.jpg,Philadelphia Italian Bread
+174,exact,2,False,"{""train"": 2}",1,1,train,000216____spanish.jpg,Cuban-Spiced Chicken Thighs with Chorizo and Rice
+175,exact,2,False,"{""train"": 2}",1,1,train,000235____french.jpg,French Onion Soup Pie
+176,exact,2,False,"{""train"": 2}",1,1,train,000255____italian.jpg,Italian Mac 'n Cheese
+177,exact,2,False,"{""train"": 2}",1,1,train,000314____spanish.jpg,Quick Paella
+178,exact,2,True,"{""train"": 1, ""val"": 1}",1,2,train,000315____american.jpg,Grilled Corn Salad
+179,exact,2,False,"{""train"": 2}",1,1,train,000334____greek.jpg,Greek 7 Layer Dip
+180,exact,2,False,"{""train"": 2}",1,1,train,000378____spanish.jpg,One Chicken 3 Family Meals – Spanish Tray Bake Chicken
+181,exact,2,False,"{""train"": 2}",1,1,train,000402____indian.jpg,Keema Pie (Indian Style Minced Lamb)
+182,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,000419____french.jpg,Pâte à Choux
+183,exact,2,False,"{""train"": 2}",1,1,train,000426____greek.jpg,Breakfast Parfaits
+184,exact,2,False,"{""train"": 2}",1,1,train,000488____spanish.jpg,Peanut and Dried Fruit Snack Mix
+185,exact,2,False,"{""train"": 2}",1,2,train,000495____american.jpg,Roasted Fingerling Potatoes with Crème Fraîche and Caviar
+186,exact,2,False,"{""train"": 2}",1,1,train,000541____italian.jpg,Italian Chicken Salad
+187,exact,2,False,"{""train"": 2}",1,2,train,000567____italian.jpg,Italian Chefs Show World The Correct Way
+188,exact,2,False,"{""train"": 2}",1,2,train,000573____chinese.jpg,Soy-Ginger Dipping Sauce
+189,exact,2,False,"{""train"": 2}",1,1,train,000599____french.jpg,French Toast Loaf
+190,exact,2,False,"{""train"": 2}",2,2,train,000614____chinese.jpg,Stir-Fried Tofu and Shiitake Mushrooms in Spicy Black Bean Sauce
+191,exact,2,False,"{""train"": 2}",1,1,train,000761____mexican.jpg,Mexican-style Rice & Bean Burritos
+192,exact,2,False,"{""train"": 2}",1,1,train,000781____mexican.jpg,The Best Mexican White Cheese Dip
+193,exact,2,False,"{""train"": 2}",1,1,train,000789____greek.jpg,Chopped Greek Salad with Chicken for Two
+194,exact,2,False,"{""train"": 2}",1,1,train,000792____mexican.jpg,Foil-Pack Chicken Enchiladas
+195,exact,2,False,"{""train"": 2}",1,1,train,000868____japanese.jpg,Buffalo Chicken Tenders
+196,exact,2,False,"{""train"": 2}",1,1,train,000910____thai.jpg,Spaghetti-Squash Pad Thai
+197,exact,2,False,"{""train"": 2}",1,1,train,000993____thai.jpg,Thai Basil Chicken
+198,exact,2,False,"{""train"": 2}",1,1,train,000996____spanish.jpg,Classic Andalusian Gazpacho
+199,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,001085____mexican.jpg,Mexican Cauliflower
+200,exact,2,False,"{""train"": 2}",1,1,train,001105____italian.jpg,Italian Fish Soup
+201,exact,2,False,"{""train"": 2}",1,1,train,001162____mexican.jpg,Marvelous Mexican-Style Fiesta Mini Meatloaves
+202,exact,2,False,"{""train"": 2}",1,2,train,001178____american.jpg,Flaky Pie Dough
+203,exact,2,False,"{""train"": 2}",1,1,train,001210____french.jpg,French Onion Melt
+204,exact,2,True,"{""train"": 1, ""val"": 1}",1,2,train,001214____mexican.jpg,The Best Rockin' Guacamole with Tomatillos + Lime
+205,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,001230____american.jpg,New-School Cranberry Salad
+206,exact,2,False,"{""train"": 2}",1,1,train,001311____spanish.jpg,Chicken Paprikash
+207,exact,2,False,"{""train"": 2}",1,1,train,001371____japanese.jpg,Teriyaki Burger
+208,exact,2,False,"{""train"": 2}",1,1,train,001372____thai.jpg,Thai Peanut Noodles
+209,exact,2,False,"{""train"": 2}",1,1,train,001400____indian.jpg,Mango Strawberry Pops
+210,exact,2,False,"{""train"": 2}",1,1,train,001415____italian.jpg,Italian-Style Chicken
+211,exact,2,True,"{""test"": 1, ""train"": 1}",1,2,train,001462____indian.jpg,Chicken Biryani
+212,exact,2,False,"{""train"": 2}",1,2,train,001499____french.jpg,Classic Aïoli
+213,exact,2,False,"{""train"": 2}",1,1,train,001584____thai.jpg,Healthy Thai Chopped Salad With Coconut-curry Dressing
+214,exact,2,False,"{""train"": 2}",1,1,train,001596____japanese.jpg,Glazed Eggplant with Sesame Seeds and Chives
+215,exact,2,False,"{""train"": 2}",1,1,train,001601____thai.jpg,Thai Chicken Coconut Soup (Tom Kha Gai)
+216,exact,2,False,"{""train"": 2}",2,2,train,001638____thai.jpg,Thai Coconut Chicken Noodle Soup (gluten-free!)
+217,exact,2,False,"{""train"": 2}",2,1,train,001657____italian.jpg,"Grilled Pizza With Steak, Pear, and Arugula"
+218,exact,2,False,"{""train"": 2}",1,1,train,001677____mexican.jpg,Mexican Lasagna with Fire-Roasted Tomato Sauce
+219,exact,2,False,"{""train"": 2}",1,1,train,001683____greek.jpg,Greek Yogurt Guacamole
+220,exact,2,False,"{""train"": 2}",1,1,train,001699____mexican.jpg,Mexican Black Bean Turkey Sausage Chili
+221,exact,2,False,"{""train"": 2}",1,1,train,001704____japanese.jpg,Hot Tofu (Yudofu)
+222,exact,2,False,"{""train"": 2}",1,1,train,001753____mexican.jpg,Mango-Barbecue Fish Tacos
+223,exact,2,False,"{""train"": 2}",1,1,train,001772____greek.jpg,Layered Hummus and Caramelized Onion Dip
+224,exact,2,False,"{""train"": 2}",1,1,train,001806____american.jpg,Hoppin' John Salad
+225,exact,2,False,"{""train"": 2}",1,2,train,001833____american.jpg,Maple-Glazed Sweet Potatoes with Cipollini Onions
+226,exact,2,False,"{""train"": 2}",1,1,train,001868____japanese.jpg,Teriyaki Chicken
+227,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,001874____thai.jpg,Spicy Sesame Noodles with Chopped Peanuts and Thai Basil
+228,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,001882____indian.jpg,Tandoori-Style Chicken
+229,exact,2,False,"{""train"": 2}",1,1,train,001913____thai.jpg,"Thai Cauliflower Fried ""Rice"""
+230,exact,2,False,"{""train"": 2}",1,1,train,001919____spanish.jpg,Gambas al Ajillo
+231,exact,2,False,"{""train"": 2}",1,1,train,001943____mexican.jpg,Esquites (Mexican Corn Salad)
+232,exact,2,False,"{""train"": 2}",1,1,train,002001____mexican.jpg,Mexican Pizza
+233,exact,2,False,"{""train"": 2}",1,1,train,002026____french.jpg,French Onion Oven Potatoes
+234,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,002043____mexican.jpg,Mexican Loaded Sweet Potato Fries
+235,exact,2,False,"{""train"": 2}",1,2,train,002087____american.jpg,Lemon-Herb Aioli
+236,exact,2,False,"{""train"": 2}",2,2,train,002124____spanish.jpg,Easy Cuban Rice Recipe - Arroz Cubano
+237,exact,2,False,"{""train"": 2}",1,1,train,002126____italian.jpg,Insalata di Baccala (Italian Salt Cod Salad)
+238,exact,2,False,"{""train"": 2}",1,1,train,002130____italian.jpg,Italian Orzo Spinach Soup
+239,exact,2,False,"{""train"": 2}",1,1,train,002131____thai.jpg,Pork Satay With Thai Spices and Peanut Sauce
+240,exact,2,False,"{""train"": 2}",1,1,train,002163____spanish.jpg,Best Gazpacho
+241,exact,2,False,"{""train"": 2}",1,1,train,002197____chinese.jpg,Taro or Yam Rice with Chinese Sausage
+242,exact,2,False,"{""train"": 2}",1,1,train,002228____japanese.jpg,Karaage | Japanese Fried Chicken
+243,exact,2,False,"{""train"": 2}",1,1,train,002297____spanish.jpg,Roasted Apricot Chicken with Mint and Sage Butternut Squash
+244,exact,2,False,"{""train"": 2}",1,1,train,002299____chinese.jpg,Pork Ramen with Mushrooms and Spinach
+245,exact,2,False,"{""train"": 2}",2,1,train,002324____japanese.jpg,Skinny Baked Mozzarella Sticks
+246,exact,2,True,"{""test"": 1, ""train"": 1}",1,2,train,002326____american.jpg,Pickled Red-Cabbage Slaw
+247,exact,2,False,"{""train"": 2}",1,1,train,002336____mexican.jpg,Slow Cooker Caldo de Pollo {Mexican Chicken Soup}
+248,exact,2,False,"{""train"": 2}",1,1,train,002359____thai.jpg,Thai Fish Green Curry with Asparagus and Peas
+249,exact,2,False,"{""train"": 2}",1,1,train,002373____indian.jpg,Palakoora Vepadu (Andhra-Style Sautéed Spinach)
+250,exact,2,False,"{""train"": 2}",1,1,train,002393____spanish.jpg,Fried Onion Rings
+251,exact,2,False,"{""train"": 2}",1,1,train,002395____italian.jpg,Mustard-Crusted Potatoes
+252,exact,2,False,"{""train"": 2}",1,1,train,002478____greek.jpg,Greek Kale Salad
+253,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,002527____greek.jpg,Cucumber Feta Rolls
+254,exact,2,False,"{""train"": 2}",1,1,train,002530____italian.jpg,Mario Batali’s Penne all’Arrabbiata
+255,exact,2,False,"{""train"": 2}",1,1,train,002560____spanish.jpg,Quick Paella
+256,exact,2,False,"{""train"": 2}",1,1,train,002575____french.jpg,Simple French Toast Bake
+257,exact,2,False,"{""train"": 2}",1,1,train,002578____greek.jpg,Marinated Greek Yogurt Cheese Balls (Labneh)
+258,exact,2,False,"{""train"": 2}",1,1,train,002585____italian.jpg,Italian Sub Crescent Ring
+259,exact,2,False,"{""train"": 2}",1,1,train,002605____greek.jpg,Baked Greek Shrimp With Tomatoes and Feta
+260,exact,2,False,"{""train"": 2}",1,1,train,002613____greek.jpg,Easy Patriotic Parfait
+261,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,002615____japanese.jpg,Japanese Potato Salad
+262,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,002653____greek.jpg,Summer Tomato Avocado Salad w/ our favorite homemade Greek dressing.
+263,exact,2,False,"{""train"": 2}",1,1,train,002744____french.jpg,Summer Greens with Mustardy Potatoes and Six-Minute Egg
+264,exact,2,False,"{""train"": 2}",1,1,train,002757____spanish.jpg,Buttermilk Fried Chicken Fingers
+265,exact,2,True,"{""test"": 1, ""train"": 1}",1,2,train,002765____italian.jpg,Grandma’s Italian Meatball Subs
+266,exact,2,False,"{""train"": 2}",1,1,train,002781____italian.jpg,Cioppino Recipe or Zuppa Di Pesce
+267,exact,2,False,"{""train"": 2}",1,1,train,002833____italian.jpg,Italian Spumoni Cookies
+268,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,002868____japanese.jpg,Hot Parmesan Green Chile Popper Dip
+269,exact,2,False,"{""train"": 2}",1,2,train,002880____indian.jpg,Mango Chutney
+270,exact,2,False,"{""train"": 2}",1,1,train,002887____french.jpg,French Onion Oven Potatoes
+271,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,002968____italian.jpg,Chicken Alfredo Italian Totchos
+272,exact,2,False,"{""train"": 2}",1,1,train,003019____mexican.jpg,Mexican Pasta Salad
+273,exact,2,False,"{""train"": 2}",1,2,train,003026____japanese.jpg,"Pickled Japanese Turnips with Shiso from 'Little Jars, Big Flavors'"
+274,exact,2,False,"{""train"": 2}",2,1,train,003033____italian.jpg,Chicago-Style Deep-Dish Pizza
+275,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,003064____greek.jpg,Whole Wheat Cinnamon Sugar Baked Donuts
+276,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,003086____thai.jpg,Crockpot Thai Beef Stew
+277,exact,2,False,"{""train"": 2}",1,1,train,003090____italian.jpg,"Pappardelle with Vegetable ""Bolognese"""
+278,exact,2,False,"{""train"": 2}",1,1,train,003155____greek.jpg,Easy Greek Chicken Gyros
+279,exact,2,False,"{""train"": 2}",1,1,train,003213____chinese.jpg,Stir-fried Char Siu Pork Mince With Broccolini
+280,exact,2,False,"{""train"": 2}",1,1,train,003231____italian.jpg,Penne alla Puttanesca with Shrimp
+281,exact,2,False,"{""train"": 2}",1,1,train,003285____indian.jpg,Lamb Burgers with Indian Spices and Yogurt-Mint Sauce
+282,exact,2,False,"{""train"": 2}",1,1,train,003322____italian.jpg,Southern Tortellini Minestrone
+283,exact,2,False,"{""train"": 2}",1,1,train,003333____mexican.jpg,Easy Chicken Enchiladas
+284,exact,2,False,"{""train"": 2}",1,1,train,003455____mexican.jpg,Panfried Bean Burritos
+285,exact,2,False,"{""train"": 2}",1,1,train,003520____spanish.jpg,Roasted Onion Soup
+286,exact,2,False,"{""train"": 2}",1,1,train,003527____indian.jpg,Bengali-Style Fish in Yogurt Curry
+287,exact,2,False,"{""train"": 2}",1,1,train,003535____spanish.jpg,Bobby Flay’s Pan-Roasted Chicken With Mint Sauce
+288,exact,2,False,"{""train"": 2}",2,2,train,003536____spanish.jpg,Weight Watchers German Potato Salad
+289,exact,2,False,"{""train"": 2}",1,1,train,003538____thai.jpg,Thai Steak Salad #WeekdaySupper
+290,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,003541____greek.jpg,Greek Feta Burger
+291,exact,2,False,"{""train"": 2}",2,2,train,003582____chinese.jpg,Chinese White-cut Chicken Salad
+292,exact,2,False,"{""train"": 2}",1,1,train,003621____italian.jpg,Italian Jam Crostata
+293,exact,2,False,"{""train"": 2}",1,1,train,003634____italian.jpg,Cheesy Italian Meatball Casserole
+294,exact,2,False,"{""train"": 2}",1,1,train,003668____french.jpg,Ginger and lime marshmallow cloud tarts recipe for Spring and the April cake collection
+295,exact,2,False,"{""train"": 2}",1,1,train,003733____chinese.jpg,Sriracha Fried Rice
+296,exact,2,False,"{""train"": 2}",1,1,train,003739____thai.jpg,Thai Chicken & Mushroom Soup
+297,exact,2,False,"{""train"": 2}",1,2,train,003740____chinese.jpg,Salade Met Krieltjes En Omeletreepjes
+298,exact,2,False,"{""train"": 2}",1,2,train,003756____mexican.jpg,Salsa Verde Honey Lime Pepper Jack Chicken Enchiladas
+299,exact,2,False,"{""train"": 2}",1,2,train,003779____mexican.jpg,Quinoa Burrito Bowl
+300,exact,2,False,"{""train"": 2}",1,1,train,003803____thai.jpg,Thai Spring Rolls with Cashew Dipping Sauce
+301,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,003872____italian.jpg,Parmesan Crusted Chicken
+302,exact,2,False,"{""train"": 2}",1,1,train,003889____french.jpg,Ham & Swiss Stromboli
+303,exact,2,False,"{""train"": 2}",1,1,train,003921____mexican.jpg,Mexican Rice made with Brown Rice
+304,exact,2,False,"{""train"": 2}",1,1,train,003925____italian.jpg,Sicilian-Style Pizza Dough
+305,exact,2,False,"{""train"": 2}",1,1,train,004032____greek.jpg,"Chicken Kapama – Greek Braised Cinnamon Chicken {gluten-free, paleo, dairy-free}"
+306,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,004087____mexican.jpg,Mexican-Style Chicken
+307,exact,2,False,"{""train"": 2}",1,2,train,004095____italian.jpg,Nancy's Pizza Rustica
+308,exact,2,False,"{""train"": 2}",1,1,train,004170____spanish.jpg,Whole-Wheat Penne with Oil-Cured Tuna (Penne Integrali al Tonno)
+309,exact,2,False,"{""train"": 2}",1,1,train,004240____mexican.jpg,Fish Tacos
+310,exact,2,False,"{""train"": 2}",1,1,train,004252____greek.jpg,Peanut Butter and Jelly Smoothie Bowl
+311,exact,2,False,"{""train"": 2}",1,1,train,004272____italian.jpg,MINI POLENTA PIZZAS
+312,exact,2,False,"{""train"": 2}",1,1,train,004286____greek.jpg,One Pan Greek Chicken
+313,exact,2,False,"{""train"": 2}",1,1,train,004314____american.jpg,Sweet Potato Pudding
+314,exact,2,False,"{""train"": 2}",1,1,train,004354____italian.jpg,Italian Love Nests (Cheesy Pasta Cups)
+315,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,004400____spanish.jpg,Spanish Shrimp
+316,exact,2,False,"{""train"": 2}",1,1,train,004458____chinese.jpg,Red Braised Pork Belly
+317,exact,2,False,"{""train"": 2}",1,1,train,004474____spanish.jpg,Shrimp and Sausage Paella
+318,exact,2,False,"{""train"": 2}",1,1,train,004510____indian.jpg,(Vegan) Easy Chickpea Tikka Masala
+319,exact,2,False,"{""train"": 2}",1,1,train,004536____japanese.jpg,Chicken and Scallion Yakitori
+320,exact,2,False,"{""train"": 2}",1,1,train,004540____italian.jpg,"Gefüllte Pizza ""prosciutto e funghi"""
+321,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,004553____spanish.jpg,The Silver Palate’s Chicken Marbella
+322,exact,2,False,"{""train"": 2}",1,1,train,004624____italian.jpg,Easy Beef Lasagna (featuring Ragu 2 Lb. 13 Oz. Jar)
+323,exact,2,False,"{""train"": 2}",1,1,train,004690____american.jpg,Chocolate-Cream Pie
+324,exact,2,False,"{""train"": 2}",1,1,train,004786____mexican.jpg,Chicken & Green Chili Enchiladas
+325,exact,2,False,"{""train"": 2}",1,1,train,004815____italian.jpg,Bowties and Italian Sausage
+326,exact,2,False,"{""train"": 2}",1,1,train,004857____greek.jpg,Chocolate Pudding Snack Hack
+327,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,004872____mexican.jpg,Holy Mole Chicken Chili
+328,exact,2,False,"{""train"": 2}",1,1,train,004965____mexican.jpg,Texas-Style Casserole
+329,exact,2,False,"{""train"": 2}",1,1,train,004976____mexican.jpg,Mexican Seafood Cocktail
+330,exact,2,False,"{""train"": 2}",1,1,train,005029____french.jpg,French Silk Pie
+331,exact,2,False,"{""train"": 2}",1,1,train,005049____spanish.jpg,Burrito Lasagna
+332,exact,2,False,"{""train"": 2}",1,1,train,005054____mexican.jpg,Mexican Steak & Salsa Rice
+333,exact,2,False,"{""train"": 2}",1,1,train,005067____indian.jpg,Indian-Spiced Grilled Shrimp and Okra
+334,exact,2,False,"{""train"": 2}",1,1,train,005085____american.jpg,Two-Cheese Squash Casserole
+335,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,005097____french.jpg,Blueberry Clafoutis
+336,exact,2,False,"{""train"": 2}",1,1,train,005188____italian.jpg,Italian Meatball Sandwich on Garlic Ciabatta
+337,exact,2,False,"{""train"": 2}",1,1,train,005219____french.jpg,Gorgonzola and Leek Crème Brûlée
+338,exact,2,False,"{""train"": 2}",1,1,train,005238____spanish.jpg,White Bean Soup with Kale and Chorizo
+339,exact,2,False,"{""train"": 2}",1,1,train,005258____italian.jpg,Creamy Italian Chicken
+340,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,005281____american.jpg,Classic Pound Cake
+341,exact,2,False,"{""train"": 2}",1,1,train,005303____chinese.jpg,Taiwanese Beef Noodle Soup
+342,exact,2,False,"{""train"": 2}",1,2,train,005364____chinese.jpg,Chinese Dumplings with Edamame & Shiitake Filling
+343,exact,2,False,"{""train"": 2}",2,1,train,005400____thai.jpg,Ramen Noodle Salad
+344,exact,2,False,"{""train"": 2}",1,1,train,005464____mexican.jpg,Spicy Black Bean Empanadas
+345,exact,2,True,"{""train"": 1, ""val"": 1}",1,2,train,005475____american.jpg,Pumpkin Soup
+346,exact,2,True,"{""train"": 1, ""val"": 1}",1,2,train,005527____spanish.jpg,Arizona Trail Mix
+347,exact,2,False,"{""train"": 2}",1,1,train,005547____thai.jpg,Thai Chicken Salad
+348,exact,2,False,"{""train"": 2}",1,1,train,005633____japanese.jpg,Brussels Sprouts Fritters
+349,exact,2,False,"{""train"": 2}",1,1,train,005655____indian.jpg,Slow Cooker Indian Chicken Stew
+350,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,005659____spanish.jpg,Parmesan and Root Vegetable Lasagna
+351,exact,2,False,"{""train"": 2}",1,1,train,005717____thai.jpg,Thai Chicken Zucchini Noodles with Spicy Peanut Sauce
+352,exact,2,False,"{""train"": 2}",1,1,train,005731____mexican.jpg,Mexican Zucchini Boats
+353,exact,2,False,"{""train"": 2}",1,1,train,005777____greek.jpg,Greek Turkey Burgers
+354,exact,2,False,"{""train"": 2}",1,1,train,005783____chinese.jpg,"Roergebakken Hamlappen Met Kerrie, Spitskool En Aardappel"
+355,exact,2,False,"{""train"": 2}",1,1,train,005850____italian.jpg,Arancini di Riso {Risotto Balls} with Quick Tomato Sauce
+356,exact,2,False,"{""train"": 2}",1,1,train,005851____thai.jpg,Easy Thai Chicken
+357,exact,2,False,"{""train"": 2}",1,1,train,005910____thai.jpg,Thai Inspired Basil Chicken Stir Fry
+358,exact,2,False,"{""train"": 2}",1,1,train,005924____mexican.jpg,MEXICAN STREET CORN DIP
+359,exact,2,False,"{""train"": 2}",1,1,train,005935____indian.jpg,Palak Paneer (homemade Indian cheese with spinach curry)
+360,exact,2,False,"{""train"": 2}",1,2,train,005951____american.jpg,Twice-Baked Sweet Potatoes
+361,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,005988____thai.jpg,Thai Black Rice Salad with Wild Salmon
+362,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,006030____mexican.jpg,Mexican Chicken Tortilla Casserole
+363,exact,2,False,"{""train"": 2}",1,1,train,006041____greek.jpg,Frozen Nutty Banana Nibblers
+364,exact,2,False,"{""train"": 2}",1,1,train,006260____chinese.jpg,Chinese Chicken Tacos
+365,exact,2,False,"{""train"": 2}",1,1,train,006366____mexican.jpg,Street Enchiladas
+366,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,006419____japanese.jpg,Japanese Cabbage Stew
+367,exact,2,False,"{""train"": 2}",1,2,train,006460____mexican.jpg,Cheesy Grilled Mexican Chicken
+368,exact,2,False,"{""train"": 2}",1,2,train,006467____american.jpg,Creole Bread Pudding with Bourbon Sauce
+369,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,006471____american.jpg,Poached Salmon with Green Goddess Dressing
+370,exact,2,False,"{""train"": 2}",1,1,train,006476____mexican.jpg,Posole Verde
+371,exact,2,False,"{""train"": 2}",1,1,train,006517____italian.jpg,Sweet Potato Gnocchi with Brown Butter and Sage
+372,exact,2,False,"{""train"": 2}",1,2,train,006571____italian.jpg,Italian Meatloaf
+373,exact,2,False,"{""train"": 2}",1,1,train,006580____italian.jpg,Ricotta Gnocchi
+374,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,006594____italian.jpg,Rustic Italian Farmhouse Pizza
+375,exact,2,False,"{""train"": 2}",1,1,train,006611____italian.jpg,Italian AntiPasto Salad
+376,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,006645____thai.jpg,Yam Samun Phrai (Northern Thai-style Herb Salad)
+377,exact,2,False,"{""train"": 2}",1,1,train,006686____japanese.jpg,Yaki Onigiri
+378,exact,2,False,"{""train"": 2}",1,1,train,006687____french.jpg,Kouign Amann
+379,exact,2,False,"{""train"": 2}",1,2,train,006690____mexican.jpg,Turkey and Black Bean Enchiladas
+380,exact,2,False,"{""train"": 2}",1,1,train,006692____french.jpg,Slow Cooker French Fries
+381,exact,2,False,"{""train"": 2}",1,1,train,006705____greek.jpg,How to make The Perfect Banana Mango Smoothie
+382,exact,2,False,"{""train"": 2}",1,1,train,006718____japanese.jpg,Niku-dango (Japanese Meatballs) with Sweet and Sour Sauce
+383,exact,2,False,"{""train"": 2}",1,1,train,006736____american.jpg,Cowboy Cookies
+384,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,006800____japanese.jpg,Better Than Takeout Orange Chicken
+385,exact,2,False,"{""train"": 2}",1,1,train,006833____mexican.jpg,Garlicky Shrimp-Cilantro Tacos (Tacos de Camarones al Mojo de Ajo)
+386,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,006844____italian.jpg,Antipasto Kabobs
+387,exact,2,False,"{""train"": 2}",1,1,train,006875____indian.jpg,Tandoori Shrimp
+388,exact,2,False,"{""train"": 2}",1,1,train,006882____japanese.jpg,Japanese Deviled Eggs
+389,exact,2,False,"{""train"": 2}",1,2,train,006901____mexican.jpg,Black Bean & Corn Salsa Salad
+390,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,006951____american.jpg,Miss Mattie's Southern Pimiento Cheese
+391,exact,2,False,"{""train"": 2}",1,1,train,006953____greek.jpg,Apple Vanilla Greek Yogurt Pancakes
+392,exact,2,False,"{""train"": 2}",1,1,train,006968____japanese.jpg,Sweet and Sassy Skinny Lemon Glazed Chicken
+393,exact,2,False,"{""train"": 2}",1,1,train,007000____mexican.jpg,Salted Mexican Chocolate Clusters from Ditch the Wheat
+394,exact,2,False,"{""train"": 2}",1,2,train,007017____italian.jpg,Antipasti
+395,exact,2,False,"{""train"": 2}",1,1,train,007027____spanish.jpg,Chorizo Hash Browns
+396,exact,2,False,"{""train"": 2}",1,1,train,007083____greek.jpg,Greek Yogurt Chicken
+397,exact,2,False,"{""train"": 2}",1,1,train,007138____japanese.jpg,Green Tea Double Banana Spinach Smoothie
+398,exact,2,False,"{""train"": 2}",1,1,train,007167____spanish.jpg,Coconut-Lime Pork Tacos with Black Beans and Avocado
+399,exact,2,False,"{""train"": 2}",1,2,train,007207____mexican.jpg,Mexican Style Meat – A Base for a TON of Meals!
+400,exact,2,False,"{""train"": 2}",1,1,train,007228____indian.jpg,Classic Lamb Curry
+401,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,007229____spanish.jpg,Baked Black Beans with Chorizo
+402,exact,2,False,"{""train"": 2}",1,1,train,007291____italian.jpg,Sausage Gnocchi with Tomato Alfredo Sauce
+403,exact,2,False,"{""train"": 2}",1,1,train,007307____chinese.jpg,Zhajiang Noodles with Eggplant
+404,exact,2,False,"{""train"": 2}",1,1,train,007314____mexican.jpg,"Chocolate Atole, Mexican Hot Chocolate"
+405,exact,2,False,"{""train"": 2}",1,1,train,007485____greek.jpg,Greek Yogurt Pancakes
+406,exact,2,False,"{""train"": 2}",1,1,train,007658____indian.jpg,Naan – Indian Flatbread
+407,exact,2,False,"{""train"": 2}",1,2,train,007733____american.jpg,Asiago Grits
+408,exact,2,False,"{""train"": 2}",1,1,train,007772____italian.jpg,Limoncello Tiramisù
+409,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,007897____greek.jpg,Creamy Greek Pasta Salad
+410,exact,2,False,"{""train"": 2}",1,1,train,007907____italian.jpg,Baked Garlic Butter Chicken
+411,exact,2,False,"{""train"": 2}",1,1,train,007942____spanish.jpg,Pumpkin and Yellow Pepper Soup with Smoked Paprika
+412,exact,2,False,"{""train"": 2}",1,1,train,008013____french.jpg,Crepes
+413,exact,2,False,"{""train"": 2}",1,1,train,008083____mexican.jpg,Mexican Meatza
+414,exact,2,False,"{""train"": 2}",2,2,train,008091____spanish.jpg,Brussels Sprouts and Wheat Berry Slaw with Smoked Paprika Dressing
+415,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,008102____greek.jpg,Layered Greek Dip
+416,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,008153____italian.jpg,Spicy Italian Pizza
+417,exact,2,False,"{""train"": 2}",1,1,train,008222____italian.jpg,Jalapeno Popper Sandwich
+418,exact,2,False,"{""train"": 2}",1,1,train,008243____greek.jpg,Greek Style Salmon with Avocado Tzatziki
+419,exact,2,False,"{""train"": 2}",1,1,train,008246____greek.jpg,Blueberry Greek Yogurt Muffins with Crystalized Ginger
+420,exact,2,False,"{""train"": 2}",1,2,train,008255____american.jpg,"Baked Sweet Potatoes Stuffed with Cranberries, Pears, and Pecans"
+421,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,008273____japanese.jpg,Sushi Rice
+422,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,008482____spanish.jpg,Chorizo and Shrimp with Toasted Pasta
+423,exact,2,False,"{""train"": 2}",1,1,train,008525____japanese.jpg,Japanese Style Grilled Corn
+424,exact,2,False,"{""train"": 2}",1,1,train,008608____italian.jpg,Chicken Parmesan
+425,exact,2,False,"{""train"": 2}",1,1,train,008619____mexican.jpg,Guacamole
+426,exact,2,False,"{""train"": 2}",1,1,train,008634____thai.jpg,Easy Thai Red Curry Soup
+427,exact,2,False,"{""train"": 2}",1,1,train,008663____chinese.jpg,Honey-Glazed Chinese Chicken
+428,exact,2,False,"{""train"": 2}",1,1,train,008678____italian.jpg,Spaghetti Aglio E Olio
+429,exact,2,False,"{""train"": 2}",1,1,train,008727____french.jpg,French Onion Soup
+430,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,008773____italian.jpg,Shrimp Scampi
+431,exact,2,False,"{""train"": 2}",1,1,train,008815____indian.jpg,Butter Chicken (Murgh Makhani)
+432,exact,2,False,"{""train"": 2}",1,2,train,008834____italian.jpg,Strawberry Daiquiri Italian Ices
+433,exact,2,False,"{""train"": 2}",1,1,train,008895____mexican.jpg,Stuffed Mexican Peppers
+434,exact,2,False,"{""train"": 2}",1,1,train,008918____thai.jpg,Crunchy Veg Bowl With Warm Peanut Sauce
+435,exact,2,True,"{""train"": 1, ""val"": 1}",1,2,train,009017____american.jpg,Hot Fudge Sauce
+436,exact,2,False,"{""train"": 2}",1,1,train,009043____spanish.jpg,Crab and Corn Chowder
+437,exact,2,False,"{""train"": 2}",1,2,train,009056____american.jpg,Pumpkin Pie with Spiced Walnut Streusel
+438,exact,2,False,"{""train"": 2}",1,2,train,009057____american.jpg,Dijon Vinaigrette
+439,exact,2,False,"{""train"": 2}",1,1,train,009095____thai.jpg,Skinny Crock Pot Thai Peanut Chicken
+440,exact,2,False,"{""train"": 2}",1,1,train,009096____thai.jpg,Three-Cup Chicken
+441,exact,2,False,"{""train"": 2}",1,1,train,009116____italian.jpg,Pasta and Chicken with Italian Cream
+442,exact,2,False,"{""train"": 2}",1,1,train,009126____italian.jpg,Linguine with Puttanesca Sauce
+443,exact,2,False,"{""train"": 2}",2,2,train,009150____indian.jpg,Chicken Mulligatawny Soup
+444,exact,2,False,"{""train"": 2}",1,2,train,009165____thai.jpg,Thai Basil Stir-Fry (Gaprao Moo Kai Daao)
+445,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,009175____greek.jpg,Greek Lemon Foil Roasted Potatoes
+446,exact,2,False,"{""train"": 2}",1,1,train,009193____italian.jpg,Kick Ass Chicken Lasagna
+447,exact,2,False,"{""train"": 2}",1,1,train,009211____french.jpg,Baked Rice
+448,exact,2,False,"{""train"": 2}",1,1,train,009281____japanese.jpg,Baked Butternut Squash Macaroni and Cheese
+449,exact,2,False,"{""train"": 2}",1,1,train,009303____mexican.jpg,Mexican Posole
+450,exact,2,False,"{""train"": 2}",1,1,train,009321____italian.jpg,Italian Dipping Sticks
+451,exact,2,False,"{""train"": 2}",1,2,train,009339____thai.jpg,Thai Chicken and Shrimp Noodle Salad
+452,exact,2,False,"{""train"": 2}",1,1,train,009365____indian.jpg,Padang-Style Chicken Curry (Gulai Ayam)
+453,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,009374____italian.jpg,Lasagna Soup - #Kinfolks 
+454,exact,2,False,"{""train"": 2}",1,1,train,009381____spanish.jpg,Seafood-and-Chicken Paella
+455,exact,2,False,"{""train"": 2}",1,1,train,009410____spanish.jpg,"Spicy Paella with Chile, Lime, and Cilantro"
+456,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,009435____mexican.jpg,Mexican Pizza
+457,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,009452____indian.jpg,Indian Style Oven Cooked Curried Fish
+458,exact,2,False,"{""train"": 2}",1,1,train,009522____indian.jpg,Tandoori Turkey Sliders with Mint Raita
+459,exact,2,False,"{""train"": 2}",1,1,train,009537____american.jpg,Maple Pecan Pie in Wheat-Flavored Crust
+460,exact,2,False,"{""train"": 2}",1,1,train,009546____greek.jpg,Grilled Greek Chicken
+461,exact,2,False,"{""train"": 2}",1,2,train,009576____italian.jpg,"Italian Sausage Soup with Green Pepper, Chickpeas, and Pesto"
+462,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,009606____spanish.jpg,Spanish Omelet with Fresh Avocado Salsa
+463,exact,2,False,"{""train"": 2}",1,1,train,009607____spanish.jpg,Smoky Beef-and-Bacon Chili
+464,exact,2,False,"{""train"": 2}",1,1,train,009615____mexican.jpg,Portobello and Poblano Enchiladas
+465,exact,2,False,"{""train"": 2}",1,1,train,009636____italian.jpg,Panzanella Panini
+466,exact,2,False,"{""train"": 2}",1,2,train,009664____mexican.jpg,Mexican Mole 
+467,exact,2,False,"{""train"": 2}",1,1,train,009741____spanish.jpg,Seafood Paella
+468,exact,2,True,"{""test"": 1, ""train"": 1}",2,1,train,009765____mexican.jpg,Lazy Day Salsa
+469,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,009789____mexican.jpg,"Slow Cooker Pork Carnitas with Lime, Chipotle, and Salsa Verde"
+470,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,009807____italian.jpg,Tiramisu
+471,exact,2,False,"{""train"": 2}",1,1,train,009887____indian.jpg,Paneer Korma Recipe - Indian Cottage Cheese Curry - mughlai shahi paneer
+472,exact,2,False,"{""train"": 2}",1,1,train,009916____italian.jpg,Eggplant Parmesan
+473,exact,2,False,"{""train"": 2}",1,1,train,009934____spanish.jpg,Pasta With Smoky Pumpkin Cream Sauce
+474,exact,2,False,"{""train"": 2}",1,1,train,009975____italian.jpg,Italian Lemon-Ricotta Cake
+475,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,010010____chinese.jpg,Best Chinese Broccoli Beef
+476,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,010050____spanish.jpg,Boliche (Cuban Stuffed Roast)
+477,exact,2,True,"{""train"": 1, ""val"": 1}",1,2,train,010145____american.jpg,Herbed Salad with Ginger Vinaigrette
+478,exact,2,False,"{""train"": 2}",1,1,train,010150____greek.jpg,Harley Pasternak Breakfast Smoothie
+479,exact,2,False,"{""train"": 2}",1,1,train,010171____greek.jpg,Cloud Bread
+480,exact,2,True,"{""train"": 1, ""val"": 1}",1,1,train,010177____thai.jpg,Paleo Pad Thai
+481,exact,2,False,"{""train"": 2}",1,1,train,010180____japanese.jpg,Panko-Parmesan Crusted Zucchini Fries
+482,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,010181____spanish.jpg,Cherry Limeade Sangria
+483,exact,2,False,"{""train"": 2}",1,1,train,010205____spanish.jpg,Chicken Marbella
+484,exact,2,False,"{""train"": 2}",1,1,train,010291____thai.jpg,Instant Meal-On-The-Go | Thai Peanut Noodles with Chicken & Vegetables
+485,exact,2,False,"{""train"": 2}",1,1,train,010304____chinese.jpg,Hainan Chicken Rice
+486,exact,2,False,"{""train"": 2}",1,1,train,010320____indian.jpg,Vegan Chickpea Meatballs in Creamy Curry Cashew Sauce
+487,exact,2,False,"{""train"": 2}",1,1,train,010340____italian.jpg,Italian Crockpot Chicken
+488,exact,2,False,"{""train"": 2}",1,2,train,010397____french.jpg,Old-Fashioned Bread Pudding
+489,exact,2,False,"{""train"": 2}",1,1,train,010431____mexican.jpg,Creamy Mango Salsa
+490,exact,2,False,"{""train"": 2}",1,1,train,010434____american.jpg,Roasted Beet and Citrus Salad
+491,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,010507____mexican.jpg,One Pot Enchilada Soup
+492,exact,2,False,"{""train"": 2}",1,1,train,010521____greek.jpg,Zucchini Noodles (Zoodles) Greek Salad
+493,exact,2,False,"{""train"": 2}",1,1,train,010547____greek.jpg,Greek Chia Parfait
+494,exact,2,True,"{""test"": 1, ""train"": 1}",1,1,train,010550____italian.jpg,Italian Sausage with Peppers and Tomatoes
+495,exact,2,False,"{""train"": 2}",1,1,train,010557____french.jpg,French Onion Soup
+496,exact,2,False,"{""train"": 2}",1,1,train,010569____thai.jpg,Thai Basil Cashew Chicken Skillet
+497,exact,2,False,"{""train"": 2}",1,1,train,010626____chinese.jpg,Chicken Lo Mein
+498,exact,2,False,"{""train"": 2}",1,2,train,010788____american.jpg,Roast Chicken My Way with Parsley-Lemon Oil
+499,exact,2,False,"{""train"": 2}",1,1,train,010812____italian.jpg,Creamy Chicken Spaghetti
+500,exact,2,False,"{""train"": 2}",1,1,train,010894____french.jpg,Basic Crepes
