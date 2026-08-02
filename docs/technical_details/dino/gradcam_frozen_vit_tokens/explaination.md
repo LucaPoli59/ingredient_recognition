@@ -1,154 +1,154 @@
-# Interpretabilità differenziabile in DINOv2: gradienti, token e rappresentazioni spaziali
+# Differentiable interpretability in DINOv2: gradients, tokens and spatial representations
 
-**Data di creazione:** 29 luglio 2026
+**Creation date:** 2026-07-29
 
-## Scopo della nota
+## Purpose of the note
 
-Questa nota conserva il ragionamento di machine learning dietro un problema di interpretabilità emerso con DINOv2: perché una predizione può essere calcolata correttamente mentre Grad-CAM non può farlo, e perché una rete Transformer richiede un passaggio esplicito dalla sequenza di token a una rappresentazione spaziale.
+This note preserves the machine learning reasoning behind an interpretability problem that arose with DINOv2: why a prediction can be computed correctly while Grad-CAM cannot, and why a Transformer network requires an explicit step from the sequence of tokens to a spatial representation.
 
-Non è una guida di modifica del codice. Il caso concreto riguarda `DinoV2B14` e una classificazione multi-label di ingredienti, ma i principi si applicano a qualsiasi Vision Transformer (ViT) usato con metodi di saliency basati sui gradienti.
+It is not a code editing guide. The concrete case involves `DinoV2B14` and a multi-label classification of ingredients, but the principles apply to any Vision Transformer (ViT) used with gradient-based saliency methods.
 
-## Predizione e spiegazione sono compiti diversi
+## Prediction and explanation are different tasks
 
-Una predizione in inferenza valuta una funzione:
+A prediction in inference evaluates a function:
 
 $$y = f_\theta(x),$$
 
-dove $x$ è l'immagine, $\theta$ sono i parametri del modello e $y$ sono i logit. Per classificazione multi-label, ogni componente $y^c$ è il punteggio indipendente di una classe $c$; non c'è una softmax che renda le classi mutuamente esclusive.
+where $x$ is the image, $\theta$ are the model parameters, and $y$ are the logits. For multi-label classification, each component $y^c$ is the independent score of a class $c$; there is no softmax that makes the classes mutually exclusive.
 
-Una spiegazione Grad-CAM non richiede soltanto $y^c$. Richiede come quel logit cambia al variare di una rappresentazione intermedia $A$:
+A Grad-CAM explanation requires more than just $y^c$. It asks how that logit changes as an intermediate representation $A$ changes:
 
 $$\frac{\partial y^c}{\partial A}.$$
 
-La predizione è quindi un problema di *forward pass*; Grad-CAM è un problema di forward pass più backward pass. È possibile che il primo sia perfettamente valido mentre il secondo sia impossibile o non definito nel grafo di autograd costruito per quell'inferenza.
+Prediction is therefore a *forward pass* problem; Grad-CAM is a forward pass plus backward pass problem. It is possible that the former is perfectly valid while the latter is impossible or undefined in the autograd graph constructed for that inference.
 
-## Grad-CAM come proiezione del gradiente su una mappa di feature
+## Grad-CAM as a projection of the gradient onto a feature map
 
-Per una CNN, si sceglie tipicamente un layer con attivazioni:
+For a CNN, you typically choose a layer with activations:
 
 $$A \in \mathbb{R}^{B \times C \times H \times W}.$$
 
-Per una classe $c$, Grad-CAM calcola un peso per canale facendo la media spaziale del gradiente:
+For a class $c$, Grad-CAM calculates a weight per channel by spatially averaging the gradient:
 
 $$\alpha_k^c = \frac{1}{HW}\sum_{i=1}^{H}\sum_{j=1}^{W}
 \frac{\partial y^c}{\partial A_{kij}}.$$
 
-La mappa di rilevanza è poi:
+The relevance map is then:
 
 $$L_{\mathrm{GradCAM}}^c = \operatorname{ReLU}\left(\sum_{k=1}^{C}\alpha_k^c A_k\right).$$
 
-L'intuizione è precisa: un canale riceve un peso alto quando aumentare le sue attivazioni aumenta il logit della classe osservata. La combinazione pesata conserva l'indice spaziale $(i,j)$, dunque può essere sovrapposta all'immagine.
+The intuition is precise: a channel receives a high weight when increasing its activations increases the logit of the observed class. The weighted combination preserves the spatial index $(i,j)$, so it can be superimposed on the image.
 
-Questa definizione implica due requisiti:
+This definition implies two requirements:
 
-1. deve esistere un gradiente del logit rispetto al layer scelto;
-2. le attivazioni devono poter essere interpretate come mappa spaziale, direttamente oppure tramite una trasformazione nota.
+1. there must be a gradient of the logit with respect to the chosen layer;
+2. the activations must be able to be interpreted as a spatial map, either directly or via a known transformation.
 
-## Congelamento, autograd e gradienti delle attivazioni
+## Freezing, autograd and activation gradients
 
-Congelare un backbone significa impostare `requires_grad=False` sui suoi parametri. In addestramento, questa scelta impedisce che il gradiente venga accumulato nei pesi congelati e che l'ottimizzatore li modifichi.
+Freezing a backbone means setting `requires_grad=False` on its parameters. In training, this choice prevents the gradient from being accumulated in the frozen weights and the optimizer from modifying them.
 
-Se, inoltre, l'input $x$ non richiede gradiente, PyTorch non ha motivo di costruire un grafo differenziabile per le operazioni del backbone. Le sue attivazioni intermedie risultano quindi non differenziabili rispetto al logit, pur essendo numericamente disponibili.
+Furthermore, if the input $x$ requires no gradient, PyTorch has no reason to build a differentiable graph for backbone operations. Its intermediate activations are therefore not differentiable with respect to the logit, despite being numerically available.
 
-Questo non è un errore del modello: è l'ottimizzazione corretta per una normale inferenza. Diventa un limite soltanto quando un metodo esplicativo necessita del backward pass.
+This is not a model error—it is the correct optimization for normal inference. It becomes a limitation only when an explanatory method requires a backward pass.
 
-È utile distinguere i concetti:
+It is useful to distinguish the concepts:
 
-| Concetto | Significato |
+| Concept | Meaning |
 | --- | --- |
-| Parametro congelato | Il peso non riceve gradiente e non viene aggiornato. |
-| Input differenziabile | È possibile calcolare come l'output cambia rispetto all'input e alle attivazioni lungo il percorso. |
-| Gradiente per Grad-CAM | È un gradiente temporaneo usato per stimare rilevanza, non un aggiornamento dei pesi. |
+| Frozen parameter | The weight receives no gradient and is not updated. |
+| Differentiable input | You can calculate how the output changes with respect to the input and activations along the way. |
+| Gradient for Grad-CAM | It is a temporary gradient used to estimate relevance, not an update of the weights. |
 
-Rendere l'input differenziabile basta a riaprire il percorso di gradienti attraverso operatori con pesi congelati. Questo permette di calcolare $\partial y^c / \partial A$ senza trasformare il modello in un modello allenabile e senza eseguire un aggiornamento di ottimizzazione.
+Making the input differentiable is enough to reopen the gradient path through operators with frozen weights. This allows you to calculate $\partial y^c / \partial A$ without transforming the model into a trainable model and without performing an optimization update.
 
-## Dalla griglia delle patch alla sequenza Transformer
+## From patch grid to Transformer sequence
 
-Una CNN mantiene esplicitamente assi spaziali `H×W` lungo la rete. Un ViT li trasforma invece in una sequenza.
+A CNN explicitly maintains `H×W` spatial axes along the network. A ViT instead transforms them into a sequence.
 
-Con patch di lato $P=14$ e immagine quadrata $H=W=224$, il numero di patch è:
+With patch size $P=14$ and a square image $H=W=224$, the number of patches is:
 
 $$N = \frac{H}{P}\frac{W}{P} = 16 \cdot 16 = 256.$$
 
-Ogni patch viene proiettata in un embedding di dimensione $D=768$. Il backbone lavora quindi su patch token:
+Each patch is projected into an embedding of size $D=768$. The backbone then works on patch tokens:
 
 $$E \in \mathbb{R}^{B \times N \times D}.
 $$
 
-DINOv2 ViT-B/14 con registers aggiunge alla sequenza un class token e quattro register token:
+DINOv2 ViT-B/14 with registers adds one class token and four register tokens to the sequence:
 
 $$Z \in \mathbb{R}^{B \times (1+4+256) \times 768}
 = \mathbb{R}^{B \times 261 \times 768}.$$
 
-Il class token è un vettore appreso usato per aggregare informazione globale. I register token sono slot di memoria appresi: non corrispondono a regioni dell'immagine e aiutano il modello a non usare patch di sfondo come memoria di lavoro. Entrambi partecipano alla self-attention, ma non hanno una coordinata $(i,j)$ nella griglia di patch.
+The class token is a learned vector used to aggregate global information. Register tokens are learned memory slots: they do not correspond to image regions and help prevent the model from using background patches as working memory. Both participate in self-attention, but they have no $(i,j)$ coordinate in the patch grid.
 
-## Perché una sequenza non è una heatmap
+## Why a sequence is not a heatmap
 
-Un layer Transformer restituisce normalmente un tensore `[B, T, D]`, con $T$ token. Grad-CAM classico, invece, assume canali e coordinate: `[B, C, H, W]`.
+A Transformer layer normally returns a `[B, T, D]` tensor containing $T$ tokens. Classical Grad-CAM, by contrast, assumes channels and spatial coordinates: `[B, C, H, W]`.
 
-Per ottenere una saliency map da un ViT bisogna esplicitare la corrispondenza:
+To obtain a saliency map from a ViT, the spatial correspondence must be made explicit:
 
 ```text
 [B, 261, 768]
-  → rimuovi class token e register token
+  → remove the class token and register tokens
 [B, 256, 768]
   → 256 = 16 × 16
 [B, 768, 16, 16]
 ```
 
-La trasformazione non è una semplice convenzione di shape: dichiara che ciascuno dei 256 token rimanenti rappresenta una precisa patch dell'immagine. Dopo il reshape, le 768 dimensioni di embedding diventano i canali della feature map e Grad-CAM può mediare i gradienti sulle 256 posizioni.
+This transformation is not merely a shape convention: it states that each of the 256 remaining tokens represents a specific image patch. After reshaping, the 768 embedding dimensions become the feature-map channels, and Grad-CAM can average gradients across the 256 positions.
 
-Se class token o register token fossero inclusi nel reshape, verrebbero assegnati artificialmente a una posizione dell'immagine e la heatmap non avrebbe più una semantica spaziale corretta.
+If the class token or register tokens were included in the reshape, they would be assigned artificially to image positions and the heatmap would no longer have correct spatial semantics.
 
-## Dove agganciare Grad-CAM in un Transformer
+## Where to hook Grad-CAM in a Transformer
 
-Il layer scelto deve soddisfare contemporaneamente tre proprietà:
+The selected layer must satisfy three properties:
 
-1. essere abbastanza profondo da codificare informazione semantica rilevante per la classe;
-2. trovarsi sul percorso differenziabile verso il logit;
-3. esporre token patch che possano essere ricostruiti in griglia.
+1. it must be deep enough to encode semantic information relevant to the class;
+2. it must lie on the differentiable path to the logit;
+3. it must expose patch tokens that can be reconstructed as a grid.
 
-Nel caso DINOv2, la LayerNorm prima della self-attention dell'ultimo blocco (`norm1`) è un punto naturale: le sue feature entrano nell'attenzione finale e influenzano l'output della rete. La normalizzazione finale del backbone è meno adatta come hook concettuale quando viene invocata più volte per estrarre più livelli intermedi: un singolo modulo può allora produrre più attivazioni nel medesimo forward e rendere ambigua l'associazione fra attivazione, gradiente e livello semantico.
+For DINOv2, the LayerNorm before self-attention in the final block (`norm1`) is a natural choice: its features enter the final attention operation and influence the network output. The backbone's final normalization is less suitable as a conceptual hook when it is invoked multiple times to extract several intermediate levels: a single module may then produce multiple activations during the same forward pass, making the association between activation, gradient, and semantic level ambiguous.
 
-Una heatmap ViT non è identica a una heatmap CNN. Ha risoluzione nativa pari alla griglia delle patch (`16×16` a input 224), perciò l'upsampling a 224×224 rende la visualizzazione più leggibile ma non crea dettaglio informativo nuovo sotto la dimensione di una patch.
+A ViT heatmap is not identical to a CNN heatmap. Its native resolution is the patch-grid resolution (`16×16` for a 224-pixel input), so upsampling to `224×224` makes the visualization easier to read but does not create new information below the size of a patch.
 
-## La head `_lc` e le rappresentazioni multi-livello
+## The `_lc` head and multi-level representations
 
-Il wrapper DINOv2 `_lc` usato nel progetto effettua una classificazione lineare su una rappresentazione composta. Non usa soltanto l'ultimo class token; concatena:
+The DINOv2 `_lc` wrapper used in the project performs linear classification on a composite representation. It does not use only the final class token; it concatenates:
 
 $$h = [c_9; c_{10}; c_{11}; c_{12}; \operatorname{mean}(E_{12})]
 \in \mathbb{R}^{3840}.$$
 
-I termini $c_9,\ldots,c_{12}$ sono i class token degli ultimi quattro blocchi; ognuno è un vettore da 768 dimensioni. $\operatorname{mean}(E_{12})$ è la media dei patch token dell'ultimo blocco, anch'essa di dimensione 768. La classificazione effettiva è:
+The terms $c_9,\ldots,c_{12}$ are the class tokens from the final four blocks; each is a 768-dimensional vector. $\operatorname{mean}(E_{12})$ is the mean of the patch tokens from the final block and is also 768-dimensional. The resulting classification is:
 
 $$y = Wh + b, \qquad W \in \mathbb{R}^{C \times 3840}.$$
 
-Questa costruzione mescola rappresentazioni globali di livelli profondi diversi con una sintesi delle feature distribuite sulle patch. Per un task multi-label, ogni riga di $W$ corrisponde a un ingrediente e produce il relativo logit.
+This construction combines global representations from several deep levels with a summary of the features distributed across patches. For a multi-label task, each row of $W$ corresponds to an ingredient and produces its logit.
 
-## Deep Feature Factorization e compatibilità dimensionale
+## Deep Feature Factorization and dimensional compatibility
 
-DFF applica una fattorizzazione non negativa alle attivazioni spaziali. Se la mappa è `[B, 768, 16, 16]`, ogni concetto ottenuto dalla fattorizzazione vive nello spazio dei canali:
+DFF applies non-negative factorization to spatial activations. If the map is `[B, 768, 16, 16]`, each concept produced by the factorization lies in channel space:
 
 $$z_q \in \mathbb{R}^{768}.$$
 
-Per assegnare etichette ai concetti, DFF applica un classificatore a $z_q$. Qui emerge una differenza fondamentale fra “feature locale” e “input reale della head”: la head `_lc` attende $h \in \mathbb{R}^{3840}$, mentre un concetto patch ha 768 dimensioni.
+To assign labels to concepts, DFF applies a classifier to $z_q$. This reveals a fundamental difference between a “local feature” and the “actual head input”: the `_lc` head expects $h \in \mathbb{R}^{3840}$, whereas a patch concept has 768 dimensions.
 
-La porzione della head associata alla media delle patch è:
+The portion of the head associated with the patch mean is:
 
 $$W_{\mathrm{patch}} = W[:, -768:] \in \mathbb{R}^{C \times 768}.$$
 
-La proiezione $W_{\mathrm{patch}}z_q+b$ non riproduce l'inferenza completa: misura soltanto come il concetto patch si allinea con il segmento della decisione finale che dipende dalla sintesi delle patch. È quindi una semantica adatta a etichettare concetti DFF, ma non una sostituzione della head originale.
+The projection $W_{\mathrm{patch}}z_q+b$ does not reproduce full inference: it measures only how the patch concept aligns with the segment of the final decision that depends on the patch summary. This is therefore an appropriate interpretation for labeling DFF concepts, but it is not a replacement for the original head.
 
-## Implicazioni interpretative
+## Interpretation considerations
 
-- Grad-CAM mostra sensibilità locale del logit, non una prova causale che la regione contenga davvero l'ingrediente.
-- Una classe può ricevere rilevanza alta su contesto, stoviglie o composizione visiva se tali elementi sono correlati alla classe nei dati di training.
-- Per ingredienti non visibili, mescolati o coperti, la saliency non può fornire evidenza visiva diretta; il modello può usare correlazioni apprese.
-- La saliency dipende dal target selezionato: due ingredienti predetti dalla stessa immagine possono produrre mappe diverse.
-- La spiegazione DFF basata su $W_{\mathrm{patch}}$ descrive il contributo dei concetti patch, non quello completo dei quattro class token.
+- Grad-CAM shows the logit's local sensitivity, not causal proof that the region actually contains the ingredient.
+- A class may receive high relevance for context, tableware, or visual composition if those elements correlate with the class in the training data.
+- For ingredients that are not visible, are mixed in, or are covered, saliency cannot provide direct visual evidence; the model may rely on learned correlations.
+- Saliency depends on the selected target: two ingredients predicted from the same image can produce different maps.
+- The DFF explanation based on $W_{\mathrm{patch}}$ describes the contribution of patch concepts, not the complete contribution of the four class tokens.
 
-## Sunto
+## Summary
 
-Grad-CAM richiede gradienti delle attivazioni, mentre una normale inferenza con backbone congelato può eseguire soltanto il forward e non costruire un percorso differenziabile. Un ViT richiede inoltre la riconversione esplicita dei patch token in griglia spaziale, escludendo token globali come CLS e registers.
+Grad-CAM requires activation gradients, whereas normal inference with a frozen backbone may perform only the forward pass without constructing a differentiable path. A ViT also requires patch tokens to be converted explicitly back into a spatial grid, excluding global tokens such as CLS and registers.
 
-Nel classificatore DINOv2 `_lc`, la decisione finale usa una feature multi-livello da 3840 dimensioni. Le tecniche basate sui concetti patch operano invece nello spazio da 768 dimensioni delle patch; interpretarle correttamente richiede distinguere il contributo locale delle patch dalla classificazione globale completa.
+In the DINOv2 `_lc` classifier, the final decision uses a 3,840-dimensional multi-level feature. Techniques based on patch concepts instead operate in the 768-dimensional patch space; interpreting them correctly requires distinguishing the local contribution of patches from the complete global classification.

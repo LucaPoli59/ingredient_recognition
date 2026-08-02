@@ -1,41 +1,41 @@
-# Deep dive sui modelli
+# Model deep dives
 
-**Data di creazione:** 29 luglio 2026
+**Creation date:** 2026-07-29
 
-Questa cartella contiene approfondimenti tecnici sulle architetture di machine learning disponibili nel progetto. Ogni documento descrive il modello in sé: rappresentazioni interne, layer e flusso del forward, obiettivi di pretraining quando rilevanti, scelte architetturali, funzione della head downstream e implicazioni per il task di riconoscimento degli ingredienti.
+This folder contains technical deep dives into the machine-learning architectures available in the project. Each document describes the model itself: internal representations, layers and forward flow, pretraining objectives when relevant, architectural choices, the role of the downstream head, and implications for the ingredient-recognition task.
 
-L'obiettivo è andare oltre la panoramica in [`../models.md`](../models.md) senza ripetere le nozioni introduttive di reti neurali. I deep dive devono basarsi sulle implementazioni effettivamente usate dal repository e, quando trattano architetture pretrained o metodi di ricerca, fare riferimento alle fonti primarie.
+The goal is to go beyond the overview in [`../implementation_details/models.md`](../implementation_details/models.md) without repeating introductory neural-network concepts. Deep dives must be based on the implementations actually used by the repository and, when discussing pretrained architectures or research methods, refer to primary sources.
 
-## Struttura
+## Structure
 
-Ogni approfondimento è un file Markdown nominato come il modello:
+Each deep dive is a Markdown file named after the model:
 
 ```text
-docs/models_deepdive/<nome_modello>.md
+docs/models_deepdive/<model_name>.md
 ```
 
-Il nome deve essere in minuscolo e descrittivo, ad esempio `dinov2.md`, `resnet.md` o `densenet.md`.
+The name must be lowercase and descriptive, such as `dinov2.md`, `resnet.md`, or `densenet.md`.
 
-Ogni nuovo approfondimento deve riportare subito sotto il titolo la data in cui è stato creato, nel formato:
+Each new deep dive must report its creation date immediately below the title, in the format:
 
 ```markdown
-**Data di creazione:** GG mese AAAA
+**Creation date:** YYYY-MM-DD
 ```
 
-## Contenuto atteso
+## Expected content
 
-Un deep dive dovrebbe includere, quando pertinente:
+A deep dive should include, when relevant:
 
-- variante precisa del modello e ruolo nella pipeline;
-- flusso dei tensori, shape e rappresentazioni interne;
-- struttura dei blocchi e dei layer principali;
-- obiettivo di pretraining o addestramento originario;
-- adattamento al classificatore multi-label di ingredienti;
-- trade-off, limiti e conseguenze per training, inferenza e interpretabilità;
-- fonti primarie e riferimenti al codice locale.
+- precise model variant and role in the pipeline;
+- flow of tensors, shapes and internal representations;
+- structure of the main blocks and layers;
+- pretraining or original training objective;
+- adaptation to the multi-label ingredient classifier;
+- trade-offs, limits and consequences for training, inference and interpretability;
+- primary sources and references to local code.
 
-I problemi tecnici trasversali — ad esempio un errore di gradienti, una limitazione di una libreria o una scelta di integrazione — non appartengono a questa cartella: vanno documentati in [`../technical_details/`](../technical_details/).
+Cross-cutting technical issues — such as a gradient error, a library limitation, or an integration choice — do not belong in this folder: they should be documented in [`../technical_details/`](../technical_details/).
 
-## Documenti disponibili
+## Documents available
 
-- [`dinov2.md`](dinov2.md): ViT-B/14 con register token, pretraining DINO+iBOT, head `_lc` e integrazione nella pipeline multi-label.
+- [`dinov2.md`](dinov2.md): ViT-B/14 with register token, DINO+iBOT pretraining, `_lc` head and multi-label pipeline integration.

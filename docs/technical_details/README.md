@@ -1,39 +1,39 @@
-# Dettagli tecnici
+# Technical details
 
-**Data di creazione:** 29 luglio 2026
+**Creation date:** 2026-07-29
 
-Questa cartella raccoglie note tecniche approfondite su concetti, limiti e problemi emersi nel progetto. Lo scopo è preservare il ragionamento di machine learning, reti neurali, elaborazione dei dati o sistemi che sta dietro a una decisione tecnica, così da renderlo riutilizzabile e verificabile in futuro.
+This folder collects in-depth technical notes on concepts, limitations and problems that emerged in the project. The goal is to preserve the machine learning, neural network, data processing, or systems reasoning behind a technical decision so that it is reusable and verifiable in the future.
 
-Questi documenti non sono guide operative per applicare una patch né changelog delle modifiche al codice. Possono citare un caso del repository come motivazione, ma devono spiegare prima il fenomeno in termini generali: assunzioni, rappresentazioni, formule o shape rilevanti, conseguenze e limiti interpretativi.
+These documents are not how-to guides for applying a patch or changelogs of code changes. They can cite a case from the repository as a reason, but they must first explain the phenomenon in general terms: relevant assumptions, representations, formulas or shapes, consequences and interpretative limits.
 
-## Struttura
+## Structure
 
-Ogni nota segue il percorso:
+Each note follows the path:
 
 ```text
-docs/technical_details/<area>/<titolo_problema>/explaination.md
+docs/technical_details/<area>/<problem_title>/explaination.md
 ```
 
-`<area>` identifica il dominio tecnico, per esempio `dino`, `data`, `lightning` o `dashboard`. `<titolo_problema>` deve essere breve, descrittivo e usare `snake_case`.
+`<area>` identifies the technical domain, for example `dino`, `data`, `lightning` or `dashboard`. `<issue_title>` must be short, descriptive, and use `snake_case`.
 
-Ogni nuovo documento deve riportare subito sotto il titolo la data in cui è stato creato, nel formato:
+Each new document must report its creation date immediately below the title, in the format:
 
 ```markdown
-**Data di creazione:** GG mese AAAA
+**Creation date:** YYYY-MM-DD
 ```
 
-## Contenuto atteso
+## Expected content
 
-Una nota dovrebbe includere, quando pertinente:
+A note should include, when relevant:
 
-- contesto e domanda tecnica;
-- modello concettuale, matematico o architetturale;
-- causa del fenomeno e condizioni necessarie perché si manifesti;
-- implicazioni per il progetto e limiti della spiegazione;
-- un sunto finale.
+- context and technical question;
+- conceptual, mathematical or architectural model;
+- cause of the phenomenon and conditions necessary for it to occur;
+- implications for the project and limits of the explanation;
+- a final summary.
 
-Il codice interessato può essere citato come riferimento, ma le istruzioni di implementazione dettagliate appartengono ai commenti, alle pull request o alla documentazione funzionale dei moduli.
+The affected code can be cited as a reference, but detailed implementation instructions belong in the comments, pull requests, or functional documentation of the modules.
 
-## Documenti disponibili
+## Documents available
 
-- [`dino/gradcam_frozen_vit_tokens/explaination.md`](dino/gradcam_frozen_vit_tokens/explaination.md): interpretabilità differenziabile, Grad-CAM e rappresentazioni token-based in DINOv2.
+- [`dino/gradcam_frozen_vit_tokens/explaination.md`](dino/gradcam_frozen_vit_tokens/explaination.md): Differentiable interpretability, Grad-CAM and token-based representations in DINOv2.
