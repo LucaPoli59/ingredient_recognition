@@ -17,3 +17,7 @@ discovery/
 Name each `<discovery_date>` directory with an ISO date (`YYYY-MM-DD`). Its `README.md` must explain the discovery's context, scope, and the purpose and structure of the files it contains.
 
 Before creating a new discovery, review at least the two most recent existing discovery directories. Reuse or link to relevant prior findings, and do not duplicate research unless the new record documents a material update or a distinct perspective.
+
+## Discovery index
+
+- [`2026-08-02/`](2026-08-02/README.md) — broad state-of-the-art discovery covering food ingredient inference, multi-label models, representation learning, data and ontology processing, augmentation, leakage control, calibration, interpretability, and a compute-aware research program.

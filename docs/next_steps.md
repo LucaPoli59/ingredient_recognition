@@ -34,7 +34,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Implement the deterministic benchmark schemas and builder. |
 | 3 | Ingredient selection | **In progress** | Formalize relevance and visual-distinguishability criteria. |
-| 4 | Model research | **In progress** | Complete systematic discovery after the benchmark definition is stable. |
+| 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Resume after comparable benchmark runs are complete. |
@@ -320,9 +320,9 @@ This macro-section surveys candidate methods and turns them into testable archit
 | --- | --- | --- |
 | 4.1 Existing-model inventory | **Done** | Maintain when implementation changes. |
 | 4.2 DINOv2 deep dive | **Done** | Revisit only if its integration changes. |
-| 4.3 State-of-the-art discovery | **Pending** | Start a dated discovery after reviewing prior discovery folders. |
-| 4.4 Focused model topics | **Pending** | Create one topic folder per selected research question. |
-| 4.5 Candidate shortlist | **Pending** | Compare hypotheses, expected value, compute, and implementation cost. |
+| 4.3 State-of-the-art discovery | **Done** | Refresh only when a material research update justifies a new dated snapshot. |
+| 4.4 Focused model topics | **Pending** | Open the prioritized ontology, family-split, augmentation, representation/head, and calibration topics. |
+| 4.5 Candidate shortlist | **Pending** | Convert focused evidence into the final approved implementation shortlist. |
 
 ### Completed
 
@@ -330,12 +330,12 @@ This macro-section surveys candidate methods and turns them into testable archit
 - [x] Produced a technical deep dive for DINOv2 ViT-B/14.
 - [x] Defined the repository structure for dated discovery and topic-focused research.
 - [x] Formalized model-relevant challenges: partial observability, correlated labels, long-tail support, contextual shortcuts, calibration, and interpretability.
+- [x] Completed a dated broad state-of-the-art discovery grounded in the repaired-benchmark objective and 8 GB compute constraint.
 
 ### Pending
 
-- [ ] Perform a broad, dated state-of-the-art discovery.
 - [ ] Review at least the two preceding discoveries before every new discovery when they exist.
-- [ ] Investigate focused topics such as visual-language pretraining, multilabel dependency modeling, open-vocabulary recognition, and partial-label learning when supported by discovery evidence.
+- [ ] Investigate the discovery's prioritized topics: ontology/parser acceptance, family graph/group allocation, food-safe preprocessing and augmentation, representation/class-query implementation, and multi-label calibration.
 - [ ] Compare candidates on scientific fit, data requirements, compute, calibration, interpretability, and integration cost.
 - [ ] Produce a bounded shortlist with an explicit hypothesis for each proposed model.
 
@@ -345,7 +345,7 @@ The research record supports a prioritized shortlist of models, and every candid
 
 ### Next action
 
-Begin the first dated discovery once the benchmark task definition and ingredient-selection protocol are stable enough to evaluate model relevance.
+Create focused topic records from the [2026-08-02 discovery](research/discovery/2026-08-02/README.md), starting with benchmark-blocking ontology and family-split methods; approve the final model shortlist only after those protocols are stable.
 
 ## 5. Additional model implementation
 
@@ -548,6 +548,7 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-02 | Data | Full legacy Yummly audit and deeper reproducibility, collision, duplicate, and shortcut analyses were completed. | Data **In progress** | [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md) |
 | 2026-08-02 | Planning | The roadmap was converted into a permanent whole-project tracker organized by thesis macro-section. | Overall project **In progress** | This document |
 | 2026-08-02 | Project governance | Reading and updating this tracker was made mandatory in the repository knowledge document. | Tracking policy **Done** | [`../README_PROJECT_KNOWLEDGE.md`](../README_PROJECT_KNOWLEDGE.md) |
+| 2026-08-02 | Model research | A broad primary-source discovery synthesized models, data processing, augmentation, leakage control, evaluation, and a compute-aware experimental program. | Work package 4.3 **Done**; Model research **In progress** | [`research/discovery/2026-08-02/README.md`](research/discovery/2026-08-02/README.md) |
 
 ## Tracker maintenance rules
 
