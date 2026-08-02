@@ -547,6 +547,7 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-02 | Project objective | Problem definition, success criteria, and benchmark decisions were formalized. | Project foundation **Done** | [`project_objective/README.md`](project_objective/README.md) |
 | 2026-08-02 | Data | Full legacy Yummly audit and deeper reproducibility, collision, duplicate, and shortcut analyses were completed. | Data **In progress** | [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md) |
 | 2026-08-02 | Planning | The roadmap was converted into a permanent whole-project tracker organized by thesis macro-section. | Overall project **In progress** | This document |
+| 2026-08-02 | Project governance | Reading and updating this tracker was made mandatory in the repository knowledge document. | Tracking policy **Done** | [`../README_PROJECT_KNOWLEDGE.md`](../README_PROJECT_KNOWLEDGE.md) |
 
 ## Tracker maintenance rules
 
