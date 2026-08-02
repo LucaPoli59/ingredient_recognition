@@ -1,4 +1,4 @@
-# Project progress and next steps
+# General project plan
 
 **Created:** 2026-08-02  
 **Last updated:** 2026-08-02  
@@ -548,6 +548,7 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-02 | Data | Full legacy Yummly audit and deeper reproducibility, collision, duplicate, and shortcut analyses were completed. | Data **In progress** | [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md) |
 | 2026-08-02 | Planning | The roadmap was converted into a permanent whole-project tracker organized by thesis macro-section. | Overall project **In progress** | This document |
 | 2026-08-02 | Project governance | Reading and updating this tracker was made mandatory in the repository knowledge document. | Tracking policy **Done** | [`../README_PROJECT_KNOWLEDGE.md`](../README_PROJECT_KNOWLEDGE.md) |
+| 2026-08-02 | Planning | The whole-project tracker was renamed to `general_plan.md`, and `docs/plans/` was introduced for implementation-level execution plans. | Planning structure **Done** | This document, [`plans/README.md`](plans/README.md) |
 | 2026-08-02 | Model research | A broad primary-source discovery synthesized models, data processing, augmentation, leakage control, evaluation, and a compute-aware experimental program. | Work package 4.3 **Done**; Model research **In progress** | [`research/discovery/2026-08-02/README.md`](research/discovery/2026-08-02/README.md) |
 
 ## Tracker maintenance rules

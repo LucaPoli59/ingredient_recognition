@@ -16,7 +16,10 @@ When an existing document is translated, preserve its technical meaning, Markdow
 ```text
 docs/
 ├── README.md
-├── next_steps.md
+├── general_plan.md
+├── plans/
+│   ├── README.md
+│   └── <implementation_name>.md
 ├── implementation_details/
 │   └── <component>.md
 ├── models_deepdive/
@@ -52,6 +55,10 @@ Use this directory for research-oriented explanations of model architectures. A 
 
 Use this directory to formalize the research project's problem, objectives, scope, constraints, assumptions, and success criteria before conducting discovery research. Follow the local conventions in [`project_objective/README.md`](project_objective/README.md).
 
+### `plans/`
+
+Use this directory for execution plans tied to concrete implementations. Each plan translates a work package from the general project plan into technical tasks, dependencies, validation steps, and completion criteria. Follow the local conventions in [`plans/README.md`](plans/README.md).
+
 ### `technical_details/`
 
 Use this directory for durable analyses of cross-cutting technical problems or concepts, such as gradient behavior, data-processing constraints, library limitations, or interpretability assumptions. These notes explain the phenomenon, its causes, and its implications; they are not patch instructions or changelogs. Follow the additional conventions in [`technical_details/README.md`](technical_details/README.md).
@@ -62,7 +69,7 @@ Use this directory for research records that support future project decisions. T
 
 ## Project roadmap
 
-[`next_steps.md`](next_steps.md) is the permanent progress tracker for the whole thesis project. It is organized into macro-sections for project foundation, data, ingredient selection, model research, additional model implementation, training and hyperparameter tuning, result comparison, and thesis writing. It preserves completed and superseded work in an append-only history log and must be updated whenever tracked work changes state.
+[`general_plan.md`](general_plan.md) is the permanent progress tracker for the whole thesis project. It is organized into macro-sections for project foundation, data, ingredient selection, model research, additional model implementation, training and hyperparameter tuning, result comparison, and thesis writing. It preserves completed and superseded work in an append-only history log and must be updated whenever tracked work changes state. Detailed plans for concrete implementations belong in [`plans/`](plans/README.md).
 
 ## Writing methodology
 

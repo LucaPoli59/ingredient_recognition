@@ -5,7 +5,7 @@ Updated: 2026-08-02
 
 ## Context
 
-This discovery supports the thesis benchmark defined in the [project objective](../../../project_objective/README.md) and the current [execution tracker](../../../next_steps.md). The target is **closed-vocabulary, recipe-level multi-label ingredient inference from one RGB image of a finished dish**. It is not ingredient-instance detection, segmentation, open-ended captioning, or full recipe generation.
+This discovery supports the thesis benchmark defined in the [project objective](../../../project_objective/README.md) and the current [general project plan](../../../general_plan.md). The target is **closed-vocabulary, recipe-level multi-label ingredient inference from one RGB image of a finished dish**. It is not ingredient-instance detection, segmentation, open-ended captioning, or full recipe generation.
 
 The local evidence changes how external research should be interpreted:
 

@@ -33,4 +33,4 @@ Keep each file focused on a clearly identified aspect of the objective. Update t
 
 Read the data audit first, then the problem definition and benchmark decisions. Discovery and model research must use all three as the current statement of project scope. Existing results on the 182-label split are legacy diagnostics until the benchmark-readiness checklist passes.
 
-Project progress and the ordered implementation and research plan are maintained in [`../next_steps.md`](../next_steps.md).
+Project progress and the ordered research plan are maintained in [`../general_plan.md`](../general_plan.md). Detailed execution plans for concrete implementations belong in [`../plans/`](../plans/README.md).

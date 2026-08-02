@@ -67,11 +67,11 @@ La struttura, la lingua e la metodologia di scrittura della documentazione sono 
 
 L'obiettivo di ricerca e il relativo audit dei dati sono formalizzati in `docs/project_objective/`. Il dataset attivo è esclusivamente Yummly: l'audit ha ricostruito la derivazione locale da Yummly-66K, dimostrato che le etichette `ingredients_ok` correnti non sono esattamente riproducibili, quantificato collisioni lessicali, duplicati tra split, immagini non valide e limiti di osservabilità. Le decisioni vincolanti per il nuovo benchmark sono in `docs/project_objective/benchmark_decisions.md`: rigenerare i target dalle righe originali, rivedere l'ontologia, escludere immagini non valide, creare famiglie di ricette e uno split grouped 80/10/10, rimuovere `<UNK>`, usare mAP macro sulle etichette e micro F1 come metriche primarie abbinate e calibrare/sogliare soltanto sulla validation.
 
-Lo stato di avanzamento dell'intero progetto di tesi è mantenuto in `docs/next_steps.md`. Il tracker conserva lo storico ed è organizzato nelle macro-sezioni fondazione, dati, selezione degli ingredienti, ricerca e implementazione di modelli aggiuntivi, training e hyperparameter tuning, confronto dei risultati e scrittura della tesi. La priorità corrente è costruire e congelare il benchmark Yummly riproducibile.
+Lo stato di avanzamento dell'intero progetto di tesi è mantenuto in `docs/general_plan.md`. Il tracker conserva lo storico ed è organizzato nelle macro-sezioni fondazione, dati, selezione degli ingredienti, ricerca e implementazione di modelli aggiuntivi, training e hyperparameter tuning, confronto dei risultati e scrittura della tesi. I piani esecutivi delle implementazioni concrete sono mantenuti separatamente in `docs/plans/`. La priorità corrente è costruire e congelare il benchmark Yummly riproducibile.
 
 ## Tracker obbligatorio dello stato di avanzamento
 
-`docs/next_steps.md` è la fonte autorevole per lo stato, le priorità, le dipendenze e lo storico operativo del progetto. Deve essere letto integralmente prima di iniziare un'attività progettuale, così da identificare la macro-sezione e il work package pertinenti, rispettarne i gate e non ripetere lavoro già completato o superato.
+`docs/general_plan.md` è la fonte autorevole per lo stato, le priorità, le dipendenze e lo storico operativo del progetto. Deve essere letto integralmente prima di iniziare un'attività progettuale, così da identificare la macro-sezione e il work package pertinenti, rispettarne i gate e non ripetere lavoro già completato o superato. Quando un work package entra nella fase di implementazione concreta, il relativo piano dettagliato deve essere creato o aggiornato in `docs/plans/` e collegato al piano generale.
 
 Il tracker deve essere aggiornato nella stessa modifica che determina uno dei seguenti eventi:
 
@@ -82,7 +82,7 @@ Il tracker deve essere aggiornato nella stessa modifica che determina uno dei se
 
 Quando si aggiorna il tracker, occorre mantenere sincronizzati il riepilogo generale, lo stato della macro-sezione, la tabella dei work package, le checklist, la prossima azione e la data di ultima modifica. Ogni transizione significativa deve essere aggiunta al registro storico append-only. Le attività completate o superate non devono essere eliminate: rimangono come storico e vengono marcate rispettivamente `Done` o `Superseded` con il collegamento alla relativa evidenza.
 
-Questo README descrive la conoscenza stabile del repository, ma non sostituisce `docs/next_steps.md` per stabilire cosa sia attualmente in corso o quale attività debba essere eseguita successivamente.
+Questo README descrive la conoscenza stabile del repository, ma non sostituisce `docs/general_plan.md` per stabilire cosa sia attualmente in corso o quale attività debba essere eseguita successivamente. Analogamente, `docs/plans/` dettaglia l'esecuzione delle singole implementazioni ma non sostituisce il piano generale come fonte dello stato complessivo.
 
 Il dataset corrente da 65.146 record e 182 etichette resta un artefatto legacy per diagnostica. Non deve sostenere claim finali sui modelli.
 
@@ -171,4 +171,4 @@ Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi
 
 ## Regola di aggiornamento
 
-Aggiornare questo file quando cambia uno dei seguenti elementi: obiettivo del modello, struttura/semantica dei dati, pipeline di preprocessing, architetture, funzione di loss/metriche, entry point di training, persistenza degli esperimenti, dashboard, dipendenze operative o decisioni tecniche confermate. Per una modifica minore, integrare soltanto la sezione pertinente e aggiornare la data; per una modifica maggiore, aggiornare anche il diagramma del flusso e l'elenco dei punti da verificare. Se la modifica cambia anche lo stato o la pianificazione del progetto, aggiornare contestualmente `docs/next_steps.md` secondo le regole della sezione precedente.
+Aggiornare questo file quando cambia uno dei seguenti elementi: obiettivo del modello, struttura/semantica dei dati, pipeline di preprocessing, architetture, funzione di loss/metriche, entry point di training, persistenza degli esperimenti, dashboard, dipendenze operative o decisioni tecniche confermate. Per una modifica minore, integrare soltanto la sezione pertinente e aggiornare la data; per una modifica maggiore, aggiornare anche il diagramma del flusso e l'elenco dei punti da verificare. Se la modifica cambia anche lo stato o la pianificazione del progetto, aggiornare contestualmente `docs/general_plan.md` e, quando pertinente, il piano esecutivo in `docs/plans/` secondo le regole delle sezioni precedenti.
