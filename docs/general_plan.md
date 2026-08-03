@@ -1,7 +1,7 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-02  
+**Last updated:** 2026-08-03
 **Overall status:** In progress  
 **Current macro-phase:** Data
 **Current focus:** Implement the shared image store while preserving legacy metadata, configurations, and checkpoints through in-memory compatibility.
@@ -530,12 +530,14 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-02 | Planning | The whole-project tracker was renamed to `general_plan.md`, and `docs/plans/` was introduced for implementation-level execution plans. | Planning structure **Done** | This document, [`plans/README.md`](plans/README.md) |
 | 2026-08-02 | Planning | A task-level progress tracker was made mandatory in every implementation plan. | Implementation tracking policy **Done** | [`plans/README.md`](plans/README.md) |
 | 2026-08-02 | Model research | A broad primary-source discovery synthesized models, data processing, augmentation, leakage control, evaluation, and a compute-aware experimental program. | Work package 4.3 **Done**; Model research **In progress** | [`research/discovery/2026-08-02/README.md`](research/discovery/2026-08-02/README.md) |
+| 2026-08-03 | Planning | Feature plans became the operational trackers during implementation; general-plan synchronization was moved to feature completion except for material project-level changes. Necessary-only code comments were established as a common implementation directive. | Implementation planning policy **Done** | [`plans/README.md`](plans/README.md) |
+| 2026-08-03 | Planning | Feature-plan tracking was changed from continuous updates to step-completion checkpoints. | Implementation tracking policy **Done** | [`plans/README.md`](plans/README.md) |
 | 2026-08-02 | Data planning | The shared image store was introduced as prerequisite 2.1b, and a codebase-grounded implementation plan was created for Data Work packages 2.1b–2.7. | Work package 2.1b **In progress** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
 | 2026-08-02 | Data planning | The initial manifest-heavy benchmark design was superseded by a smaller pipeline: immutable legacy artifacts, in-memory experiment compatibility, deterministic `ingredients_target` generation, exact-SHA grouping only, and split metadata as the source of truth. | Work packages 2.1b–2.4 **In progress/Pending** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
 
 ## Tracker maintenance rules
 
-1. Update this file in the same change that starts, completes, defers, blocks, supersedes, or reopens tracked work.
+1. Update this file when a feature plan is completed, or earlier when work changes a project-level status, priority, dependency, scope, completion gate, or material blocker. Track ordinary implementation progress in the target feature plan.
 2. Keep the project overview, macro-section status, work-package tables, checklists, and history log synchronized.
 3. Never delete completed or superseded work solely because the project moved to a later phase.
 4. Check a task only when its durable artifact or verification evidence exists.

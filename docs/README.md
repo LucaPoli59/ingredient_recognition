@@ -1,7 +1,7 @@
 # Project documentation
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-02
+**Last updated:** 2026-08-03
 
 This directory contains the durable technical documentation for the Ingredient Recognition project. It complements the repository-level [`README_PROJECT_KNOWLEDGE.md`](../README_PROJECT_KNOWLEDGE.md), which provides a concise map of the project and its current state.
 
@@ -57,7 +57,7 @@ Use this directory to formalize the research project's problem, objectives, scop
 
 ### `plans/`
 
-Use this directory for execution plans tied to concrete implementations. Each plan translates a work package from the general project plan into technical tasks, dependencies, validation steps, completion criteria, and a mandatory task-level progress tracker. Follow the local conventions in [`plans/README.md`](plans/README.md).
+Use this directory for execution plans tied to concrete implementations. Each plan translates a work package from the general project plan into technical tasks, dependencies, validation steps, completion criteria, and a mandatory task-level progress tracker. The feature plan is updated whenever an implementation step is completed; the general plan is synchronized at feature completion or earlier only for material project-level changes. Follow the local conventions in [`plans/README.md`](plans/README.md).
 
 ### `technical_details/`
 

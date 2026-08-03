@@ -2,7 +2,7 @@
 
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
-**Ultimo aggiornamento:** 2 agosto 2026
+**Ultimo aggiornamento:** 3 agosto 2026
 **Stato della ricognizione:** architettura e flusso principale verificati nel codice; il dataset Yummly è stato analizzato integralmente su metadata e 65.146 immagini, con audit riproducibili di target, duplicati, qualità visiva e contaminazione degli split.
 
 ## Scopo
@@ -73,16 +73,16 @@ Il piano esecutivo attivo della fase Data è `docs/plans/yummly_data_phase.md`. 
 
 ## Tracker obbligatorio dello stato di avanzamento
 
-`docs/general_plan.md` è la fonte autorevole per lo stato, le priorità, le dipendenze e lo storico operativo del progetto. Deve essere letto integralmente prima di iniziare un'attività progettuale, così da identificare la macro-sezione e il work package pertinenti, rispettarne i gate e non ripetere lavoro già completato o superato. Quando un work package entra nella fase di implementazione concreta, il relativo piano dettagliato deve essere creato o aggiornato in `docs/plans/` e collegato al piano generale. Ogni piano d'implementazione deve contenere il proprio progress tracker, aggiornato contestualmente all'inizio, al completamento o al cambio di stato delle singole attività tecniche.
+`docs/general_plan.md` è la fonte autorevole per lo stato, le priorità, le dipendenze e lo storico operativo del progetto. Deve essere letto integralmente prima di iniziare un'attività progettuale, così da identificare la macro-sezione e il work package pertinenti, rispettarne i gate e non ripetere lavoro già completato o superato. Quando un work package entra nella fase di implementazione concreta, il relativo piano dettagliato deve essere creato o aggiornato in `docs/plans/` e collegato al piano generale. Ogni piano d'implementazione deve contenere il proprio progress tracker e diventa la fonte operativa durante lo sviluppo della feature: viene aggiornato al completamento di ciascuno step, registrandone risultato ed evidenze insieme alle decisioni emerse, al nuovo stato e alla prossima azione. Non è richiesto aggiornarlo durante l'avanzamento intermedio dello step. Il piano generale viene sincronizzato quando il piano della feature è completato, oppure prima soltanto se cambia uno stato, una priorità, una dipendenza, lo scope, un completion gate o un blocco materiale a livello di progetto.
 
-Il tracker deve essere aggiornato nella stessa modifica che determina uno dei seguenti eventi:
+Il tracker generale deve essere aggiornato nella stessa modifica che determina uno dei seguenti eventi a livello di progetto:
 
-- inizio, completamento, rinvio, blocco, riapertura o superamento di uno step;
+- completamento di un piano di feature oppure inizio, rinvio, blocco, riapertura o superamento di un work package del piano generale;
 - modifica della priorità, della dipendenza, del completion gate o della prossima azione;
 - produzione di un nuovo artefatto permanente, risultato sperimentale o evidenza che cambia lo stato del progetto;
 - introduzione di un nuovo work package o di una nuova fase necessaria alla tesi.
 
-Quando si aggiorna il tracker, occorre mantenere sincronizzati il riepilogo generale, lo stato della macro-sezione, la tabella dei work package, le checklist, la prossima azione e la data di ultima modifica. Ogni transizione significativa deve essere aggiunta al registro storico append-only. Le attività completate o superate non devono essere eliminate: rimangono come storico e vengono marcate rispettivamente `Done` o `Superseded` con il collegamento alla relativa evidenza.
+Durante l'implementazione ordinaria si aggiorna invece il progress tracker del piano di feature interessato. Quando si aggiorna il tracker generale, occorre mantenere sincronizzati il riepilogo generale, lo stato della macro-sezione, la tabella dei work package, le checklist, la prossima azione e la data di ultima modifica. Ogni transizione significativa deve essere aggiunta al registro storico append-only. Le attività completate o superate non devono essere eliminate: rimangono come storico e vengono marcate rispettivamente `Done` o `Superseded` con il collegamento alla relativa evidenza.
 
 Questo README descrive la conoscenza stabile del repository, ma non sostituisce `docs/general_plan.md` per stabilire cosa sia attualmente in corso o quale attività debba essere eseguita successivamente. Analogamente, `docs/plans/` dettaglia l'esecuzione delle singole implementazioni ma non sostituisce il piano generale come fonte dello stato complessivo.
 
