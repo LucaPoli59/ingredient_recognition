@@ -57,7 +57,7 @@ Use this directory to formalize the research project's problem, objectives, scop
 
 ### `plans/`
 
-Use this directory for execution plans tied to concrete implementations. Each plan translates a work package from the general project plan into technical tasks, dependencies, validation steps, and completion criteria. Follow the local conventions in [`plans/README.md`](plans/README.md).
+Use this directory for execution plans tied to concrete implementations. Each plan translates a work package from the general project plan into technical tasks, dependencies, validation steps, completion criteria, and a mandatory task-level progress tracker. Follow the local conventions in [`plans/README.md`](plans/README.md).
 
 ### `technical_details/`
 

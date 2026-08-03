@@ -28,9 +28,9 @@ Keep each file focused on a clearly identified aspect of the objective. Update t
 ## Current documents
 
 - [`problem_definition.md`](problem_definition.md) defines the research problem, scope, research questions, evaluation principles, and completion gates.
-- [`yummly_data_audit.md`](yummly_data_audit.md) documents the provenance, processing lineage, schema, distributions, quality defects, leakage, and implications of the Yummly data used by the project.
-- [`benchmark_decisions.md`](benchmark_decisions.md) resolves the target, ontology, observability, image-quality, grouping, split, vocabulary, threshold, metric, reproducibility, and `<UNK>` decisions that must govern benchmark construction.
+- [`yummly_data_audit.md`](yummly_data_audit.md) documents the processing lineage, schema, distributions, quality defects, leakage, and implications of the Yummly data used by the project.
+- [`benchmark_decisions.md`](benchmark_decisions.md) defines the target-field contract, deterministic target generation, minimal outputs, automatic image checks, exact-duplicate split policy, legacy compatibility, evaluation rules, and pending `<UNK>` investigation.
 
-Read the data audit first, then the problem definition and benchmark decisions. Discovery and model research must use all three as the current statement of project scope. Existing results on the 182-label split are legacy diagnostics until the benchmark-readiness checklist passes.
+Read the data audit first, then the problem definition and benchmark decisions. Discovery and model research must use all three as the current statement of project scope. Existing results on the 182-label `ingredients_ok` split remain valid historical experiments, while new comparative claims use a deterministic `ingredients_target` generation after the readiness checklist passes.
 
 Project progress and the ordered research plan are maintained in [`../general_plan.md`](../general_plan.md). Detailed execution plans for concrete implementations belong in [`../plans/`](../plans/README.md).

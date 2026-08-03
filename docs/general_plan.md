@@ -4,7 +4,7 @@
 **Last updated:** 2026-08-02  
 **Overall status:** In progress  
 **Current macro-phase:** Data
-**Current focus:** Build and freeze a reproducible Yummly benchmark.
+**Current focus:** Implement the shared image store while preserving legacy metadata, configurations, and checkpoints through in-memory compatibility.
 
 ## Purpose
 
@@ -32,7 +32,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | Implement the deterministic benchmark schemas and builder. |
+| 2 | Data | **In progress** | Complete the shared image store and legacy compatibility layer, then generate deterministic `ingredients_target` metadata. |
 | 3 | Ingredient selection | **In progress** | Formalize relevance and visual-distinguishability criteria. |
 | 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
@@ -61,7 +61,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 - [x] Defined English documentation conventions, dating rules, and directory responsibilities.
 - [x] Created structures for dated discovery and focused topic research.
 - [x] Formalized the primary research problem, scope, non-goals, research questions, and success criteria.
-- [x] Fixed the policies that govern target generation, ontology, observability, grouping, splitting, vocabulary, evaluation, calibration, and thresholds.
+- [x] Fixed the policies that govern target generation, exact-duplicate handling, splitting, runtime compatibility, evaluation, calibration, and thresholds.
 
 ### Completion gate
 
@@ -75,19 +75,18 @@ Reopen this section only when the thesis objective, scope, or binding methodolog
 
 **Status:** In progress
 
-The Data macro-section covers source understanding, target reconstruction, image quality, duplicate families, benchmark construction, splitting, and integration with the training pipeline.
+The Data macro-section covers source understanding, shared image storage, historical compatibility, deterministic target standardization, split generation, and runtime integration. Persistent outputs are intentionally limited to the common image collection and one selected metadata file in each split.
 
 ### Work-package status
 
 | Work package | Status | Next action |
 | --- | --- | --- |
-| 2.1 Yummly exploratory audit | **Done** | Re-run against each benchmark candidate. |
-| 2.2 Benchmark artifact schemas | **Pending** | Specify manifests, tables, identifiers, and versioning. |
-| 2.3 Deterministic benchmark builder | **Pending** | Implement the build from all 66,615 source records. |
-| 2.4 Target normalization and ontology | **Pending** | Convert audited errors and aliases into tested rules. |
-| 2.5 Image and recipe-family adjudication | **In progress** | Create manifests and review remaining candidates. |
-| 2.6 Grouped split and benchmark freeze | **Pending** | Wait for targets, exclusions, and families to be frozen. |
-| 2.7 Data-loader integration | **Pending** | Define the loader contract after schemas are fixed. |
+| 2.1 Yummly exploratory audit | **Done** | Re-run only when a new metadata generation needs comparison. |
+| 2.1b Shared image store and metadata decoupling | **In progress** | Implement loader path separation and a verified image-layout migration. |
+| 2.1c Historical experiment compatibility | **Pending** | Add in-memory adapters and validate representative saved experiments without rewriting them. |
+| 2.2 Improved `ingredients_target` standardization | **Pending** | Define the exact preprocessing rules and implement the new deterministic script. |
+| 2.3 Deterministic metadata generation and split | **Pending** | Generate an exact-SHA-aware 80/10/10 split after target rules are approved. |
+| 2.4 Runtime target integration and `<UNK>` decision | **Pending** | Change the new default and investigate `<UNK>` before modifying encoder behavior. |
 
 ### 2.1 Yummly exploratory audit
 
@@ -98,173 +97,153 @@ The Data macro-section covers source understanding, target reconstruction, image
 - [x] Audited all 65,146 processed metadata records and images.
 - [x] Reconstructed the historical target-generation behavior and tested exact reproducibility.
 - [x] Quantified substring collisions, alias fragmentation, support, cuisine shortcuts, duplicate images, and split contamination.
-- [x] Computed SHA-256, dHash, and pHash evidence for all processed images.
-- [x] Confirmed eight invalid-image groups covering 84 records.
-- [x] Saved reproducible scripts, structured outputs, review tables, and visual artifacts.
+- [x] Computed exact and perceptual duplicate evidence for analysis.
+- [x] Determined that attempt 1 is the probable lineage of the flat `ingredients_ok` targets and that attempt 2 is a different nested-category experiment.
+- [x] Inventoried historical configurations and checkpoints under `experiments/basic`.
 - [x] Consolidated permanent findings and removed temporary research notes.
 
 #### Evidence
 
 - [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md)
+- [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md)
 - [`../src_scratches/data_anlysis/README.md`](../src_scratches/data_anlysis/README.md)
 
 #### Completion gate
 
-The legacy dataset's known defects are quantified sufficiently to design a replacement benchmark. This gate is satisfied; it does not imply complete manual adjudication of every source record.
+The legacy dataset and its consumers are understood sufficiently to implement the approved replacement pipeline. This gate is satisfied.
 
-### 2.2 Benchmark artifact schemas
-
-**Status:** Pending
-
-#### Required work
-
-- [ ] Define stable identifiers and versioned schemas for source records and images.
-- [ ] Define the normalized-ingredient and mapping-review table.
-- [ ] Define the ontology and alias-rule format.
-- [ ] Define image-review and recipe-family edge manifests.
-- [ ] Define split, vocabulary, benchmark-record, and validation-report schemas.
-- [ ] Specify the output directory layout and artifact lifecycle.
-
-#### Completion gate
-
-Every planned benchmark artifact has a documented schema, owner, version, relationships, and validation rules.
-
-#### Next action
-
-Write the schema specification before implementing transformation logic.
-
-### 2.3 Deterministic benchmark builder
-
-**Status:** Pending
-
-#### Required work
-
-- [ ] Implement one deterministic build starting from all 66,615 source records.
-- [ ] Generate a byte-level checksum manifest for input metadata and images.
-- [ ] Record the code version, configuration, rule versions, environment, and input/output checksums.
-- [ ] Remove unordered execution and manually edited intermediates from benchmark semantics.
-- [ ] Add schema, count, referential-integrity, uniqueness, and deterministic-rerun checks.
-- [ ] Generate a machine-readable validation report for each version.
-
-#### Required outputs
-
-1. source manifest;
-2. normalized ingredient table;
-3. versioned ontology;
-4. image-review manifest;
-5. recipe-family manifest;
-6. grouped split manifest;
-7. final benchmark metadata;
-8. validation report.
-
-#### Completion gate
-
-Two clean builds from identical inputs and configuration produce byte-identical semantic artifacts and matching checksums.
-
-#### Next action
-
-Begin after Work package 2.2 fixes the artifact contracts.
-
-### 2.4 Target normalization and ontology
-
-**Status:** Pending
-
-#### Required work
-
-- [ ] Implement a boundary-aware normalizer over original ingredient lines.
-- [ ] Encode transformations as ordered, versioned, testable rules.
-- [ ] Add regression tests for every confirmed legacy substring collision.
-- [ ] Apply only semantically justified aliases and preserve documented non-merges.
-- [ ] Keep unresolved mappings in review data without creating an output `<UNK>` class.
-- [ ] Audit mapping precision on frequent, rare, ambiguous, and cuisine-specific samples.
-- [ ] Calculate recipe-level support after normalization.
-
-#### Completion gate
-
-The normalizer, mapping rules, ontology, manual audit, and change log are versioned; reruns produce identical candidate targets.
-
-#### Next action
-
-Convert confirmed collision and alias evidence into initial rules and regression fixtures.
-
-### 2.5 Image and recipe-family adjudication
+### 2.1b Shared image store and metadata decoupling
 
 **Status:** In progress
 
-#### Completed
+#### Purpose
 
-- [x] Identified exact-image, perceptual-image, exact-ingredient-list, and high-similarity recipe candidates.
-- [x] Confirmed eight invalid-image groups covering 84 records.
-- [x] Demonstrated that candidate grouping connects 438 validation and 413 test records to training records under the legacy split.
-
-#### Pending
-
-- [ ] Convert confirmed exclusions into a machine-readable manifest.
-- [ ] Define reviewer states, decision reasons, evidence, and adjudication rules.
-- [ ] Review remaining duplicate candidates and suspicious singleton images.
-- [ ] Build family components from accepted evidence edges.
-- [ ] Review large, heterogeneous, or ambiguous connected components.
-- [ ] Freeze record-to-family assignments.
-
-#### Completion gate
-
-Every exclusion and accepted family edge is traceable to evidence, and final components pass size and heterogeneity review.
-
-#### Next action
-
-Create the review and family-edge schemas, then import the eight confirmed exclusions as the first reviewed entries.
-
-### 2.6 Grouped split and benchmark freeze
-
-**Status:** Pending
-
-#### Dependencies
-
-- Work packages 2.3 and 2.4 provide reproducible targets.
-- Work package 2.5 provides frozen exclusions and family components.
-- Macro-section 3 provides the final ingredient-selection policy.
+Move image storage out of the split directories. Train, validation, and test retain same-named metadata generations, while every generation resolves its relative `image` references against `data/input/yummly/imgs/standard/`.
 
 #### Required work
 
-- [ ] Assign whole recipe families to train, validation, or test with a deterministic 80/10/10 procedure.
-- [ ] Balance record count, cuisine distribution, and label support without splitting a family.
-- [ ] Fit vocabulary-dependent processing on training data only after assignment.
-- [ ] Verify that no accepted family, exact image, or normalized recipe duplicate crosses a split boundary.
-- [ ] Confirm the required per-label support in every split.
-- [ ] Freeze the benchmark version and keep test unavailable to selection decisions.
+- [x] Inspect the current layout, metadata generations, loader path construction, dashboard consumer, and experiment storage.
+- [x] Define the separate metadata-root and image-root contract.
+- [x] Write the detailed implementation plan for Data Work packages 2.1b–2.4.
+- [ ] Add loader contract tests using multiple metadata generations and one image directory.
+- [ ] Add a relative `images_subdir` configuration with `imgs/standard` as its default.
+- [ ] Refactor the DataModule and other image consumers to resolve images independently of split metadata.
+- [ ] Implement a dry-run-first image migration that verifies filenames, counts, and SHA-256 values.
+- [ ] Validate all current metadata generations before retiring split-local image copies.
+
+#### Evidence
+
+- [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md)
 
 #### Completion gate
 
-All leakage, support, and reproducibility assertions pass; every retained record has one stable split; and the benchmark-readiness checklist is complete.
+All Yummly consumers resolve images from the shared collection, both existing metadata generations load successfully, migration checks pass, and obsolete split-local copies can be retired safely. No legacy metadata, configuration, or checkpoint is rewritten.
 
 #### Next action
 
-Prototype the allocator with synthetic components without freezing a real split before upstream decisions are complete.
+Add path-contract tests before changing the on-disk layout.
 
-### 2.7 Data-loader integration
+### 2.1c Historical experiment compatibility
+
+**Status:** Pending
+
+#### Purpose
+
+Keep prior experiments loadable after the image-layout and future target-default changes without changing their saved semantics.
+
+#### Required work
+
+- [ ] Preserve `metadata.json` and `sel_ing_2410_metadata.json` unchanged, including `ingredients_ok`.
+- [ ] Supply the new shared image root in memory when a legacy configuration does not contain it.
+- [ ] Preserve every explicitly saved `feature_label="ingredients_ok"` value.
+- [ ] Translate the known older DenseNet configuration keys into current DataModule arguments in memory.
+- [ ] Add a read-only validation script for the known historical schemas.
+- [ ] Smoke-test representative JSON-driven, light-checkpoint, and full-checkpoint experiments.
+- [ ] Confirm that metadata, configurations, checkpoints, label encoders, output dimensions, and `<UNK>` behavior remain byte- and semantically unchanged.
+
+#### Completion gate
+
+Every recognized experiment under `experiments/basic` can load its unchanged legacy metadata through the shared image layout. Unknown schemas fail explicitly instead of being guessed or rewritten.
+
+#### Next action
+
+Implement the compatibility adapter together with the 2.1b loader refactor, then run the read-only inventory and smoke tests.
+
+### 2.2 Improved `ingredients_target` standardization
+
+**Status:** Pending
+
+#### Purpose
+
+Create a new deterministic script that derives `ingredients_target` from the original `ingredients` lines for new metadata generations.
+
+#### Required work
+
+- [ ] Use `prev_attempts/attempt1/preprocessing_v2.py` as forensic input, not as an executable dependency.
+- [ ] Define the normalization, support, alias, generalization, and record-retention rules before implementation.
+- [ ] Replace unbounded substring edits with token- or phrase-bounded rules.
+- [ ] Count support by distinct recipes rather than distinct raw strings.
+- [ ] Replace similarity-based and unordered merges with explicit deterministic rules.
+- [ ] Preserve `ingredients` and write an ordered, duplicate-free `ingredients_target` list.
+- [ ] Add regression tests for confirmed legacy collisions and every retained historical rule.
+- [ ] Emit concise aggregate generation statistics without creating per-line mapping or review artifacts.
+
+#### Completion gate
+
+Identical inputs and rules produce identical targets and ordering; known collision cases pass regression tests; and the preprocessing effect is understood before split generation.
+
+#### Next action
+
+Discuss and freeze the exact standardization rules, support threshold, minimum target count, and desired level of ingredient generalization.
+
+### 2.3 Deterministic metadata generation and split
 
 **Status:** Pending
 
 #### Required work
 
-- [ ] Update the data-loading path to consume benchmark manifests and the frozen vocabulary.
-- [ ] Remove `<UNK>` from the output space.
-- [ ] Preserve target, split, exclusion, family, and source identifiers through evaluation.
-- [ ] Use aspect-ratio-preserving and comparable transforms across model families.
-- [ ] Validate class weights and sampling logic using training data only.
-- [ ] Add a deterministic end-to-end data-loading test.
+- [ ] Generate `ingredients_target` from the approved Work package 2.2 rules.
+- [ ] Apply automatic image existence and decoding checks only.
+- [ ] Compute SHA-256 during generation and keep byte-identical images in the same allocation group.
+- [ ] Do not create groups from perceptual similarity, recipe names, ingredient similarity, or manual review.
+- [ ] Assign exact-image groups to a deterministic 80/10/10 train/validation/test split.
+- [ ] Balance cuisine and target distributions within documented tolerances.
+- [ ] Write the same selected metadata filename under all three split directories.
+- [ ] Enforce uniqueness, referential integrity, split ratio, distribution, exact-leakage, and deterministic-rerun assertions.
 
 #### Completion gate
 
-A clean environment can load every split, reproduce tensors and transforms, and trace each sample to its benchmark artifacts.
+The three metadata files are reproducible, pass every assertion, contain valid `ingredients_target` lists, and have no byte-identical image crossing split boundaries. No auxiliary split, family, vocabulary, review, or validation manifest is required.
 
 #### Next action
 
-Design the loader contract after Work package 2.2 fixes the artifact schemas.
+Implement only after the target standardization rules in Work package 2.2 are approved.
+
+### 2.4 Runtime target integration and `<UNK>` decision
+
+**Status:** Pending
+
+#### Required work
+
+- [ ] Keep `feature_label` configurable and change only its default to `ingredients_target` for new configurations.
+- [ ] Derive the vocabulary deterministically from training metadata and preserve it with each experiment rather than in a standalone data artifact.
+- [ ] Investigate how filtered vocabularies, validation/test-only labels, cuisine filters, multi-label encoders, and sequence encoders use `<UNK>`.
+- [ ] Distinguish ingestion or sequence-token behavior from a trainable multi-label output class.
+- [ ] Decide and test the new behavior before changing an encoder.
+- [ ] Preserve all historical `<UNK>` behavior for legacy experiments.
+- [ ] Update statistics and dashboard consumers, then run minimal training, reload, and visualization smoke tests.
+
+#### Completion gate
+
+New experiments default to `ingredients_target`, alternative feature fields remain supported, historical experiments preserve their semantics, and the `<UNK>` policy is explicit and covered by tests.
+
+#### Next action
+
+Begin after the new metadata generation exists; the investigation may start earlier but must not alter legacy artifacts.
 
 ### Data macro-section completion gate
 
-The Data macro-section is **Done** only when the benchmark is frozen, all readiness checks pass, and the training pipeline consumes it reproducibly.
+The Data macro-section is **Done** only when shared image loading, legacy compatibility, deterministic target generation, exact-duplicate-safe splitting, runtime integration, and the `<UNK>` decision all pass their completion gates.
 
 ## 3. Ingredient selection
 
@@ -321,7 +300,7 @@ This macro-section surveys candidate methods and turns them into testable archit
 | 4.1 Existing-model inventory | **Done** | Maintain when implementation changes. |
 | 4.2 DINOv2 deep dive | **Done** | Revisit only if its integration changes. |
 | 4.3 State-of-the-art discovery | **Done** | Refresh only when a material research update justifies a new dated snapshot. |
-| 4.4 Focused model topics | **Pending** | Open the prioritized ontology, family-split, augmentation, representation/head, and calibration topics. |
+| 4.4 Focused model topics | **Pending** | Open the prioritized target-processing, augmentation, representation/head, and calibration topics. |
 | 4.5 Candidate shortlist | **Pending** | Convert focused evidence into the final approved implementation shortlist. |
 
 ### Completed
@@ -335,7 +314,7 @@ This macro-section surveys candidate methods and turns them into testable archit
 ### Pending
 
 - [ ] Review at least the two preceding discoveries before every new discovery when they exist.
-- [ ] Investigate the discovery's prioritized topics: ontology/parser acceptance, family graph/group allocation, food-safe preprocessing and augmentation, representation/class-query implementation, and multi-label calibration.
+- [ ] Investigate the discovery's prioritized topics: ingredient parsing and standardization, food-safe preprocessing and augmentation, representation/class-query implementation, and multi-label calibration.
 - [ ] Compare candidates on scientific fit, data requirements, compute, calibration, interpretability, and integration cost.
 - [ ] Produce a bounded shortlist with an explicit hypothesis for each proposed model.
 
@@ -345,7 +324,7 @@ The research record supports a prioritized shortlist of models, and every candid
 
 ### Next action
 
-Create focused topic records from the [2026-08-02 discovery](research/discovery/2026-08-02/README.md), starting with benchmark-blocking ontology and family-split methods; approve the final model shortlist only after those protocols are stable.
+Create focused topic records from the [2026-08-02 discovery](research/discovery/2026-08-02/README.md), starting with target standardization and data preprocessing; approve the final model shortlist only after the data contract is stable.
 
 ## 5. Additional model implementation
 
@@ -406,7 +385,7 @@ Historical runs remain useful engineering evidence but are **Superseded** for fi
 - [ ] Run a simple supervised convolutional baseline.
 - [ ] Run a frozen pretrained visual encoder with a linear multilabel head.
 - [ ] Define model-specific hyperparameter spaces before opening each study.
-- [ ] Verify Optuna study isolation, resumption behavior, and trial provenance.
+- [ ] Verify Optuna study isolation, resumption behavior, and trial traceability.
 - [ ] Run tuning using validation only and fixed comparable budgets.
 - [ ] Retrain selected configurations across the required seeds.
 - [ ] Calibrate and select thresholds using validation only after model selection.
@@ -435,7 +414,7 @@ This macro-section covers the frozen evaluation protocol, statistical comparison
 - [x] Selected label-macro mean average precision and micro F1 as paired primary metrics.
 - [x] Defined secondary ranking, set-prediction, calibration, cardinality, and observability-slice metrics.
 - [x] Required validation-only calibration and threshold selection.
-- [x] Required multiple seeds and recipe-family bootstrap confidence intervals.
+- [x] Required multiple seeds and confidence intervals that do not treat byte-identical image groups as independent samples.
 
 ### Pending implementation and analysis
 
@@ -549,7 +528,10 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-02 | Planning | The roadmap was converted into a permanent whole-project tracker organized by thesis macro-section. | Overall project **In progress** | This document |
 | 2026-08-02 | Project governance | Reading and updating this tracker was made mandatory in the repository knowledge document. | Tracking policy **Done** | [`../README_PROJECT_KNOWLEDGE.md`](../README_PROJECT_KNOWLEDGE.md) |
 | 2026-08-02 | Planning | The whole-project tracker was renamed to `general_plan.md`, and `docs/plans/` was introduced for implementation-level execution plans. | Planning structure **Done** | This document, [`plans/README.md`](plans/README.md) |
+| 2026-08-02 | Planning | A task-level progress tracker was made mandatory in every implementation plan. | Implementation tracking policy **Done** | [`plans/README.md`](plans/README.md) |
 | 2026-08-02 | Model research | A broad primary-source discovery synthesized models, data processing, augmentation, leakage control, evaluation, and a compute-aware experimental program. | Work package 4.3 **Done**; Model research **In progress** | [`research/discovery/2026-08-02/README.md`](research/discovery/2026-08-02/README.md) |
+| 2026-08-02 | Data planning | The shared image store was introduced as prerequisite 2.1b, and a codebase-grounded implementation plan was created for Data Work packages 2.1b–2.7. | Work package 2.1b **In progress** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
+| 2026-08-02 | Data planning | The initial manifest-heavy benchmark design was superseded by a smaller pipeline: immutable legacy artifacts, in-memory experiment compatibility, deterministic `ingredients_target` generation, exact-SHA grouping only, and split metadata as the source of truth. | Work packages 2.1b–2.4 **In progress/Pending** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
 
 ## Tracker maintenance rules
 
@@ -568,5 +550,6 @@ This table is append-only. Add one row when a macro-section or significant work 
 - [`project_objective/problem_definition.md`](project_objective/problem_definition.md) defines the research question and success criteria.
 - [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md) contains the evidence behind the current data priorities.
 - [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) contains the binding benchmark policies and readiness checklist.
+- [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) is the active implementation plan for Data Work packages 2.1b–2.4.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.
 - [`implementation_details/models.md`](implementation_details/models.md) describes the model implementations currently available.

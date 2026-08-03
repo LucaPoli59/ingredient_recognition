@@ -3,7 +3,7 @@
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
 **Ultimo aggiornamento:** 2 agosto 2026
-**Stato della ricognizione:** architettura e flusso principale verificati nel codice; il dataset Yummly è stato analizzato integralmente su metadata e 65.146 immagini, con audit riproducibili di target, provenienza, duplicati, qualità visiva e contaminazione degli split.
+**Stato della ricognizione:** architettura e flusso principale verificati nel codice; il dataset Yummly è stato analizzato integralmente su metadata e 65.146 immagini, con audit riproducibili di target, duplicati, qualità visiva e contaminazione degli split.
 
 ## Scopo
 
@@ -36,9 +36,9 @@ Dataset raw (Yummly / Recipes1M / recipes)
 
 `settings/config.py` centralizza le configurazioni e le costanti del progetto, inclusi percorsi assoluti calcolati a partire dalla root del repository, parametri predefiniti e impostazioni operative come W&B. I dati elaborati vivono in `data/input`; quelli sorgente in `data/raw_input`.
 
-Il `DataModule` di default usa `data/input/yummly`. Ogni split deve contenere un `metadata.json` e le immagini indicate dal campo `image`. Quando non esiste uno split `predict`, viene riutilizzato lo split `test`.
+Il `DataModule` di default usa `data/input/yummly`. Nel codice corrente ogni split contiene il metadata selezionato e le immagini indicate dal campo `image`; quando non esiste uno split `predict`, viene riutilizzato `test`. Il refactor pianificato separa i due root: i metadata restano in `train/`, `val/` e `test/`, mentre tutte le immagini vengono risolte da `imgs/standard/`.
 
-Per ogni ricetta il codice si aspetta, almeno, ingredienti nel campo `ingredients_ok`, un'immagine nel campo `image` e, se si filtra, la cucina nel campo `cuisine`. Il filtro ammette: american, chinese, french, greek, indian, italian, japanese, mexican, spanish, thai e all.
+Per ogni ricetta il codice si aspetta almeno il campo selezionato da `feature_label`, un'immagine nel campo `image` e, se si filtra, la cucina nel campo `cuisine`. Il default corrente è `ingredients_ok`; per le nuove configurazioni diventerà `ingredients_target`, derivato da `ingredients`, mentre gli esperimenti storici manterranno esplicitamente `ingredients_ok`. Il filtro ammette: american, chinese, french, greek, indian, italian, japanese, mexican, spanish, thai e all.
 
 ### Preparazione
 
@@ -65,13 +65,15 @@ Tutti i modelli di visione discendono da `BaseModel`, che centralizza configuraz
 
 La struttura, la lingua e la metodologia di scrittura della documentazione sono definite in `docs/README.md`. Tutti i documenti sotto `docs/` devono essere scritti in inglese. Per approfondimenti tecnici sulle architetture e sulla ricerca di riferimento, consultare `docs/models_deepdive/`. Al momento è disponibile `docs/models_deepdive/dinov2.md`, dedicato a DINOv2 ViT-B/14; la panoramica dei modelli è in `docs/implementation_details/models.md`.
 
-L'obiettivo di ricerca e il relativo audit dei dati sono formalizzati in `docs/project_objective/`. Il dataset attivo è esclusivamente Yummly: l'audit ha ricostruito la derivazione locale da Yummly-66K, dimostrato che le etichette `ingredients_ok` correnti non sono esattamente riproducibili, quantificato collisioni lessicali, duplicati tra split, immagini non valide e limiti di osservabilità. Le decisioni vincolanti per il nuovo benchmark sono in `docs/project_objective/benchmark_decisions.md`: rigenerare i target dalle righe originali, rivedere l'ontologia, escludere immagini non valide, creare famiglie di ricette e uno split grouped 80/10/10, rimuovere `<UNK>`, usare mAP macro sulle etichette e micro F1 come metriche primarie abbinate e calibrare/sogliare soltanto sulla validation.
+L'obiettivo di ricerca e il relativo audit dei dati sono formalizzati in `docs/project_objective/`. Il dataset attivo è esclusivamente Yummly: l'audit ha dimostrato che le etichette `ingredients_ok` correnti non sono esattamente riproducibili e ha quantificato collisioni lessicali, duplicati tra split, rumore visivo e limiti di osservabilità. Le decisioni vincolanti sono in `docs/project_objective/benchmark_decisions.md`: mantenere `feature_label` configurabile con nuovo default `ingredients_target`, rigenerare quel campo da `ingredients` con regole deterministiche, usare solo controlli automatici sulle immagini, raggruppare soltanto immagini byte-identiche tramite SHA-256, creare uno split 80/10/10 bilanciato, evitare manifest duplicati, preservare gli esperimenti legacy senza riscriverli, investigare `<UNK>` prima di modificarlo, usare mAP macro e micro F1 come metriche primarie abbinate e calibrare/sogliare soltanto sulla validation.
 
-Lo stato di avanzamento dell'intero progetto di tesi è mantenuto in `docs/general_plan.md`. Il tracker conserva lo storico ed è organizzato nelle macro-sezioni fondazione, dati, selezione degli ingredienti, ricerca e implementazione di modelli aggiuntivi, training e hyperparameter tuning, confronto dei risultati e scrittura della tesi. I piani esecutivi delle implementazioni concrete sono mantenuti separatamente in `docs/plans/`. La priorità corrente è costruire e congelare il benchmark Yummly riproducibile.
+Lo stato di avanzamento dell'intero progetto di tesi è mantenuto in `docs/general_plan.md`. Il tracker conserva lo storico ed è organizzato nelle macro-sezioni fondazione, dati, selezione degli ingredienti, ricerca e implementazione di modelli aggiuntivi, training e hyperparameter tuning, confronto dei risultati e scrittura della tesi. I piani esecutivi delle implementazioni concrete sono mantenuti separatamente in `docs/plans/`. La priorità corrente è introdurre lo store immagini condiviso e la compatibilità legacy senza modificare gli artefatti salvati.
+
+Il piano esecutivo attivo della fase Data è `docs/plans/yummly_data_phase.md`. Copre i Work package 2.1b–2.4: store immagini condiviso, compatibilità degli esperimenti storici, nuovo standardizzatore `ingredients_target`, split deterministico con gruppi SHA-256 esatti, integrazione runtime e decisione su `<UNK>`. Prima di modificare loader, layout Yummly, metadata o builder occorre leggere sia il piano generale sia questo piano esecutivo e mantenerne sincronizzati i tracker.
 
 ## Tracker obbligatorio dello stato di avanzamento
 
-`docs/general_plan.md` è la fonte autorevole per lo stato, le priorità, le dipendenze e lo storico operativo del progetto. Deve essere letto integralmente prima di iniziare un'attività progettuale, così da identificare la macro-sezione e il work package pertinenti, rispettarne i gate e non ripetere lavoro già completato o superato. Quando un work package entra nella fase di implementazione concreta, il relativo piano dettagliato deve essere creato o aggiornato in `docs/plans/` e collegato al piano generale.
+`docs/general_plan.md` è la fonte autorevole per lo stato, le priorità, le dipendenze e lo storico operativo del progetto. Deve essere letto integralmente prima di iniziare un'attività progettuale, così da identificare la macro-sezione e il work package pertinenti, rispettarne i gate e non ripetere lavoro già completato o superato. Quando un work package entra nella fase di implementazione concreta, il relativo piano dettagliato deve essere creato o aggiornato in `docs/plans/` e collegato al piano generale. Ogni piano d'implementazione deve contenere il proprio progress tracker, aggiornato contestualmente all'inizio, al completamento o al cambio di stato delle singole attività tecniche.
 
 Il tracker deve essere aggiornato nella stessa modifica che determina uno dei seguenti eventi:
 
@@ -84,7 +86,7 @@ Quando si aggiorna il tracker, occorre mantenere sincronizzati il riepilogo gene
 
 Questo README descrive la conoscenza stabile del repository, ma non sostituisce `docs/general_plan.md` per stabilire cosa sia attualmente in corso o quale attività debba essere eseguita successivamente. Analogamente, `docs/plans/` dettaglia l'esecuzione delle singole implementazioni ma non sostituisce il piano generale come fonte dello stato complessivo.
 
-Il dataset corrente da 65.146 record e 182 etichette resta un artefatto legacy per diagnostica. Non deve sostenere claim finali sui modelli.
+Il dataset corrente da 65.146 record e 182 etichette resta il riferimento immutabile degli esperimenti storici. I suoi `metadata.json` e `sel_ing_2410_metadata.json`, le configurazioni e i checkpoint non devono essere riscritti. Per nuovi claim comparativi si useranno nuove generazioni `ingredients_target` dopo il superamento dei relativi gate.
 
 Le immagini sono normalmente ridimensionate a 224×224. Per i modelli generici il DataModule applica resize, `TrivialAugmentWide` in training e normalizzazione con statistiche del dataset. I wrapper torchvision usano le trasformazioni/normalizzazioni dei pesi ImageNet. DINOv2 usa normalizzazione ImageNet e crop dedicati.
 
@@ -163,7 +165,7 @@ Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi
 ## Punti da approfondire o verificare
 
 - Eseguire una prova end-to-end su un piccolo subset per confermare i comandi di lancio e le versioni correnti delle dipendenze.
-- Implementare il nuovo benchmark Yummly definito in `docs/project_objective/benchmark_decisions.md`, includendo manifest di provenienza, target, esclusioni, gruppi e split.
+- Implementare la fase Data definita in `docs/plans/yummly_data_phase.md`: store immagini condiviso, adattatore legacy in memoria, standardizzazione `ingredients_target`, split deterministico con soli gruppi SHA-256 esatti e integrazione runtime.
 - Verificare e, se necessario, uniformare alcuni import che dipendono dalla directory di avvio (`config`, `models`, `data_processing` vs `settings.config`, `src.*`).
 - Verificare la gestione di ripresa dello studio Optuna, che condivide un journal globale configurato in `experiments/journal.log`.
 - Correggere o documentare la differenza fra porta Optuna dichiarata (8051) e quella usata dallo script (8055).

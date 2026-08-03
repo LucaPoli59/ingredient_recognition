@@ -28,7 +28,7 @@ $$
 P(y_i \mid x_i)
 $$
 
-and produces a score or calibrated probability for each ingredient. The final value of $L$ will be determined by the reviewed ontology and support gates. The legacy local metadata has 182 observed labels. The existing robust encoder adds an extra `<UNK>` output, yielding 183 model outputs, although no validation or test label is outside the training vocabulary. That always-negative output is an implementation artifact and is explicitly excluded from the intended problem.
+and produces a score or calibrated probability for each ingredient. The final value of $L$ will be determined by the approved deterministic standardization and support rules. The legacy local metadata has 182 observed labels. The existing robust encoder adds an extra `<UNK>` output, yielding 183 model outputs, although no validation or test label is outside the training vocabulary. Its role in multi-label outputs, ingestion, filtered vocabularies, and sequence encoders must be investigated before the new encoder contract is fixed.
 
 This formulation does **not** imply that $y_i$ is uniquely recoverable from $x_i$. Multiple recipes can produce visually indistinguishable dishes, and the same dish can be prepared with different ingredients. The project measures useful probabilistic inference, not deterministic reconstruction of the recipe.
 
@@ -95,12 +95,12 @@ How accurately and reliably can the ingredient set associated with a Yummly reci
 
 - Yummly data under `data/input/yummly/` and its traceable raw sources under `data/raw_input/yummly/`;
 - one recipe-associated RGB image as the required model input;
-- multi-label prediction of a reviewed, fixed ingredient vocabulary;
-- train/validation/test evaluation with group-aware leakage control;
+- multi-label prediction of a deterministic, fixed training vocabulary;
+- train/validation/test evaluation with exact-image leakage control;
 - pretrained and task-specific visual encoders;
 - class imbalance, label dependence, thresholding, ranking, and calibration;
-- overall, per-label, and observability-aware error analysis;
-- reproducible data and experiment manifests.
+- overall, per-label, and relevant metadata-slice error analysis;
+- reproducible data transformations and experiment configurations.
 
 ### Excluded from the current objective
 
@@ -132,31 +132,30 @@ No result should be treated as a final project result until all of the following
 
 ### Gate 1: reproducibility
 
-- Identify the exact Yummly source artifacts used by the project.
-- Preserve a reproducible raw-to-benchmark transformation.
-- Version the recipe manifest, vocabulary, normalization rules, and split assignment.
-- Record exclusions with machine-readable reasons.
+- Preserve a deterministic raw-ingredient-to-`ingredients_target` transformation.
+- Keep the standardization rules, configuration, and random seed under version control.
+- Represent split membership through the same selected metadata filename under train, validation, and test.
+- Verify that identical input and configuration produce identical metadata content.
 
 ### Gate 2: target validity
 
-- Remove known substring collisions and audit similar rules systematically.
-- Regenerate targets from original ingredient lines using token-aware, deterministic, versioned rules; do not patch the 182-label lists in place.
+- Remove known substring collisions and cover the adopted rules with regression tests.
+- Regenerate targets from original ingredient lines using token-aware, deterministic rules; do not patch legacy `ingredients_ok` lists in place.
 - Merge accidental singular/plural and phrase variants where semantically appropriate.
-- Document broad categories, fine-grained categories, aliases, and intentionally excluded ingredients.
-- Predict the reviewed recipe-ingredient target and report instance-level observability slices; do not silently remove low-observability positives.
+- Define broad categories, fine-grained categories, aliases, retention criteria, and intentionally excluded ingredients in code and documentation.
+- Preserve the source `ingredients` lines and write deterministic, duplicate-free `ingredients_target` lists.
 
 ### Gate 3: image validity
 
-- Remove or explicitly flag blank, branded placeholder, non-food, and mismatched images.
-- Group exact duplicates, confirm perceptual duplicate candidates, and record every review decision in a manifest.
-- Decide how low-resolution images are handled.
-- Use a preprocessing policy that is consistent across compared models or document model-specific differences.
+- Verify automatically that every referenced image exists and decodes.
+- Accept residual quality and semantic noise instead of introducing manual image review.
+- Keep image preprocessing consistent across compared models or document model-specific differences.
 
 ### Gate 4: split integrity
 
-- Ensure no accepted recipe-family component crosses split boundaries.
-- Group recipe families using exact images, confirmed perceptual matches, exact normalized raw ingredient lists, and strong name-plus-ingredient evidence.
-- Preserve meaningful cuisine and label distributions without breaking groups.
+- Ensure no byte-identical SHA-256 image group crosses split boundaries.
+- Do not group by perceptual similarity, recipe name, ingredient similarity, or manual family assignment.
+- Preserve meaningful cuisine and target distributions without breaking exact-image groups.
 - Freeze the final test set before model selection.
 
 ### Gate 5: evaluation validity
@@ -165,7 +164,7 @@ No result should be treated as a final project result until all of the following
 - Report common and rare labels separately.
 - Select calibration and thresholds using validation data only after threshold-free model selection.
 - Report uncertainty across seeds or bootstrap samples.
-- Exclude the artificial `<UNK>` output from the intended label space.
+- Investigate and test `<UNK>` separately for multi-label outputs, ingestion fallback, filtered vocabularies, and sequence inputs before changing it.
 
 ## Evaluation principles
 
@@ -210,30 +209,30 @@ Results should be broken down by:
 - cuisine and course where metadata is valid;
 - direct versus contextual versus low-observability ingredients;
 - image resolution and source-quality flags;
-- recipes with and without duplicate-family membership;
+- records belonging to singleton or repeated exact-image groups;
 - common dish types and high-cardinality recipes;
 - labels affected by normalization changes.
 
-Observability slices must use per-recipe/per-label review on a stratified test subset. Label-level assumptions alone are insufficient because the same ingredient can be visible in one preparation and latent in another.
+Observability remains an important interpretation issue, but it is not a benchmark-construction review requirement. If a later ingredient-selection study introduces observability annotations, it must be reported as a separate analysis and must not silently redefine the recipe-level target.
 
 ## Success criteria
 
 The project is successful when it delivers all of the following:
 
 1. a documented, reproducible, leakage-controlled Yummly benchmark;
-2. a semantically reviewed target vocabulary with known noise quantified;
+2. a deterministic target vocabulary with known residual noise documented;
 3. prior and visual baselines evaluated with appropriate multi-label metrics;
 4. a justified model choice supported by controlled comparisons;
 5. per-label and observability-aware analysis rather than only aggregate scores;
 6. calibrated limitations about what can and cannot be inferred from a food image;
-7. enough artifacts to reproduce the data, training configuration, thresholds, and reported results.
+7. enough code, metadata, and experiment configuration to reproduce the data, thresholds, and reported results.
 
 Numeric model-performance thresholds should be set after discovery research identifies comparable work and after the corrected benchmark is frozen. Setting them on the current contaminated split would create a target tied to leakage and label noise.
 
 ## Assumptions and constraints
 
 - Each retained record is intended to pair one recipe with one image, but current data includes duplicates and mismatches.
-- Ingredient absence in `ingredients_ok` is treated as negative supervision even though normalization may omit valid raw ingredients.
+- Ingredient absence from the selected feature field is treated as negative supervision even though normalization may omit valid raw ingredients.
 - Images are web-sourced and biased toward attractive, finished dishes rather than controlled observations.
 - The local dataset covers ten cuisine labels and is not representative of global food in general.
 - Compute, thesis schedule, and available annotations constrain manual relabeling.
@@ -244,14 +243,15 @@ Numeric model-performance thresholds should be set after discovery research iden
 
 The benchmark decisions are now fixed in [`benchmark_decisions.md`](benchmark_decisions.md):
 
-1. regenerate the target from all original Yummly ingredient lines and a reviewed ontology;
-2. retain recipe-ingredient prediction as the primary task and evaluate instance-level observability slices;
-3. exclude reviewed invalid images and build high-precision recipe-family components;
-4. construct a deterministic, group-aware 80/10/10 split;
-5. derive vocabulary size from semantic review and support gates rather than 182, 2,416, or top-K;
-6. remove the `<UNK>` model output;
-7. use label-macro mAP and micro F1 as the paired primary metrics;
-8. fit calibration and thresholds on validation only;
+1. keep `feature_label` configurable and default new configurations to `ingredients_target`;
+2. regenerate `ingredients_target` deterministically from all original Yummly ingredient lines while leaving legacy `ingredients_ok` metadata unchanged;
+3. perform automatic image existence and decoding checks without manual review;
+4. construct a deterministic 80/10/10 split that groups only byte-identical SHA-256 images and balances cuisine and targets;
+5. derive the ordered vocabulary from training metadata and preserve it with each experiment;
+6. preserve historical experiments through in-memory compatibility instead of rewriting saved files;
+7. investigate `<UNK>` before deciding its new role and preserve its historical behavior;
+8. use label-macro mAP and micro F1 as the paired primary metrics;
+9. fit calibration and thresholds on validation only;
 
 These decisions close the design questions but do not satisfy the data-readiness gates. Model discovery can survey candidate methods now; final comparative experiments must wait for the regenerated benchmark.
 

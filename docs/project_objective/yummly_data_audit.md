@@ -52,7 +52,7 @@ The second pass produces:
 
 All quantitative values below are derived from these outputs unless an external source is explicitly cited.
 
-## Dataset identity and provenance
+## Dataset identity
 
 The local raw tree contains exactly 66,615 image files and 66,615 cuisine-specific metadata records with these counts:
 
@@ -72,7 +72,7 @@ The local raw tree contains exactly 66,615 image files and 66,615 cuisine-specif
 
 The exact agreement identifies the source as Yummly-66K with high confidence. The source paper describes 66,615 recipes, ten cuisines, fourteen course attributes, food images, and a preprocessed vocabulary of 2,416 ingredients. It also describes the dataset as the combination of an earlier 27,638-item collection and a second crawled component.
 
-The local repository does not contain a source checksum manifest or complete generation record. These must be added to make future benchmark builds independently identifiable and reproducible.
+The local repository does not contain the exact historical generation state. New generations therefore prioritize deterministic code and output metadata rather than claiming exact reproduction of the legacy pipeline.
 
 ## Local processing lineage
 
@@ -308,7 +308,7 @@ The historical process removes recipes with fewer than three recognized normaliz
 
 ### Closed-vocabulary encoder artifact
 
-`MultiLabelBinarizerRobust` learns all 182 train labels, appends `<UNK>`, and then transforms validation and test with the same mapping. Because both evaluation splits contain no OOV label, `<UNK>` is always negative. The model nevertheless exposes 183 outputs, which changes loss and metric aggregation and has no semantic value in this benchmark. Its positive weight becomes zero because the class has no positives. The decision is to remove `<UNK>` from model outputs before new experiments.
+`MultiLabelBinarizerRobust` learns all 182 train labels, appends `<UNK>`, and then transforms validation and test with the same mapping. Because both evaluation splits contain no OOV label, `<UNK>` is always negative in the current full-data setting. The model nevertheless exposes 183 outputs, and its positive weight becomes zero because the class has no positives. This questions its usefulness as a multi-label output but does not resolve its possible roles for filtered vocabularies, ingestion, or sequence encoders. The decision is deferred until those uses are investigated.
 
 ## Image audit
 
@@ -355,9 +355,9 @@ The stratified contact sheet confirms:
 - repeated branded, blank, or generic placeholder images;
 - source-specific presentation styles that a model may exploit.
 
-The contact sheet is an inspection aid, not a statistically random quality estimate. Formal removal decisions require a flagged-sample review protocol.
+The contact sheet is an inspection aid, not a statistically random quality estimate. It supports understanding of residual noise but does not define benchmark exclusions.
 
-Conservative review of the largest exact-image groups has already confirmed eight exclusion groups covering 84 processed records. They contain a Cooking Light advertisement, publisher marks, a BBC logo, a featureless silhouette, and generic place-setting images shared by unrelated recipes. This is a verified minimum, not an exhaustive estimate; the remaining groups and singleton images still require a review manifest.
+Inspection of the largest exact-image groups identified eight suspicious groups covering 84 processed records. They contain a Cooking Light advertisement, publisher marks, a BBC logo, a featureless silhouette, and generic place-setting images shared by unrelated recipes. This is descriptive evidence of dataset noise. Under the accepted policy, these records are not controlled through a manual review manifest; only automatic existence and decoding failures exclude an image.
 
 ## Duplicate and leakage audit
 
@@ -400,7 +400,7 @@ Some large duplicate groups represent advertisements or source placeholders rath
 
 Simple difference hashing finds 1,890 repeated-hash candidate groups covering 4,056 records, with 592 groups crossing splits. Requiring exact agreement of an independently computed pHash and dHash yields 1,809 higher-precision groups; 775 have membership that is not identical to one exact-byte group and therefore add resized, recompressed, or otherwise non-byte-identical candidates.
 
-These remain candidates. Hashes can agree for visually simple placeholders or compositionally similar images, so ambiguous groups require manual confirmation before becoming a split constraint or exclusion.
+These remain candidates. Hashes can agree for visually simple placeholders or compositionally similar images. The accepted split policy therefore does not use perceptual candidates as constraints or exclusions.
 
 ### Recipe-family grouping candidate
 
@@ -413,7 +413,7 @@ The selected high-precision graph unions:
 
 It intentionally excludes label-set equality and name equality alone. On the current 65,146 records it creates 61,851 components, places 6,088 records in multi-record components, and has a maximum component size of 27.
 
-The current split cuts 842 of these components. In consequence, 438 validation records (8.41%) and 413 test records (7.92%) are grouped with at least one training record. These figures are broader candidate family contamination, not confirmed image duplication alone. Their small component sizes show that a grouped split is feasible without discarding large portions of the dataset.
+The current split cuts 842 of these components. In consequence, 438 validation records (8.41%) and 413 test records (7.92%) are grouped with at least one training record. These figures are broader candidate family contamination, not confirmed image duplication alone. This exploratory graph is retained as audit evidence but was rejected as a split constraint because its similarity thresholds and semantic edges could introduce unwanted bias.
 
 ## Course and flavor metadata
 
@@ -487,15 +487,14 @@ Therefore, final comparative model experiments must follow rather than precede b
 
 The design choices are resolved in [`benchmark_decisions.md`](benchmark_decisions.md). Implementation must proceed in this order:
 
-1. Freeze and checksum all 66,615 raw metadata/image pairs.
-2. Regenerate targets with token-aware rules and a reviewed ontology, preserving a mapping trace.
-3. Audit mapping precision and apply the semantic/support gates.
-4. Produce the image exclusion and adjudication manifest.
-5. Freeze recipe-family components using the accepted high-precision evidence.
-6. Create a deterministic grouped 80/10/10 split and verify zero accepted cross-split components.
-7. Remove the artificial `<UNK>` output.
-8. Standardize aspect-ratio-preserving transforms for controlled model comparison.
-9. Freeze metrics, calibration, thresholds, seeds, bootstrap procedure, and prior baselines in a benchmark data card.
+1. Decouple split metadata from the common `imgs/standard` image collection.
+2. Preserve legacy metadata, configurations, and checkpoints, adapting known schemas in memory when loading.
+3. Regenerate `ingredients_target` from original ingredient lines with deterministic, token-aware, tested rules.
+4. Create a deterministic 80/10/10 split that groups only byte-identical SHA-256 images and balances cuisine and target distributions.
+5. Enforce image, metadata, leakage, distribution, and deterministic-rerun checks as assertions.
+6. Change the default `feature_label` for new configurations while retaining support for alternative and legacy fields.
+7. Investigate `<UNK>` across multi-label, filtering, ingestion, and sequence uses before changing its behavior.
+8. Standardize controlled image transforms and freeze metrics, calibration, thresholds, seeds, confidence intervals, and prior baselines.
 
 ## Limitations of this audit
 
