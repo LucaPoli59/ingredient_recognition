@@ -6,6 +6,7 @@ DATA_PATH = os.path.join(PROJECT_PATH, 'data')
 INPUT_PATH = os.path.join(DATA_PATH, 'input')
 RAW_INPUT_PATH = os.path.join(DATA_PATH, 'raw_input')
 METADATA_FILENAME = 'metadata.json'
+YUMMLY_TARGET_METADATA_FILENAME = 'ingredients_target_v1_metadata.json'
 
 YUMMLY_PATH = os.path.join(INPUT_PATH, 'yummly')
 YUMMLY_RECIPES_PATH = os.path.join(YUMMLY_PATH, 'recipes_general')

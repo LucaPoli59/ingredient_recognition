@@ -11,7 +11,7 @@ import optuna
 
 from src.commons.config_enc_dec import encode_config, decode_config
 from settings.config import YUMMLY_PATH, YUMMLY_RECIPES_PATH, DEF_BATCH_SIZE, DEF_LR, DEF_UNKNOWN_TOKEN, DEF_N_TRIALS, \
-    METADATA_FILENAME, WANDB_PROJECT_NAME
+    METADATA_FILENAME, YUMMLY_TARGET_METADATA_FILENAME, WANDB_PROJECT_NAME
 from src.models.dummy import DummyModel
 from src.lightning.lgn_models import BaseLGNM
 from src.lightning.lgn_trainers import BaseTrainer
@@ -80,9 +80,10 @@ DEF_EXP_CONFIG = {
         "type": ImagesRecipesBaseDataModule,
         "image_shape": (224, 224),
         "data_dir": YUMMLY_PATH,
-        "metadata_filename": METADATA_FILENAME,
+        "metadata_filename": YUMMLY_TARGET_METADATA_FILENAME,
+        "images_subdir": os.path.join("imgs", "standard"),
         "category": None,
-        "feature_label": "ingredients_ok",
+        "feature_label": "ingredients_target",
         "num_workers": os.cpu_count(),
         "label_encoder": {
             "type": MultiLabelBinarizerRobust,

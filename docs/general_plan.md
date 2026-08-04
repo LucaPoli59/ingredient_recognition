@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-03
+**Last updated:** 2026-08-04
 **Overall status:** In progress  
 **Current macro-phase:** Data
-**Current focus:** Implement the shared image store while preserving legacy metadata, configurations, and checkpoints through in-memory compatibility.
+**Current focus:** Analyze the candidate ingredient vocabulary and discuss findings before changing the extractor or freezing the regenerated benchmark.
 
 ## Purpose
 
@@ -82,11 +82,13 @@ The Data macro-section covers source understanding, shared image storage, histor
 | Work package | Status | Next action |
 | --- | --- | --- |
 | 2.1 Yummly exploratory audit | **Done** | Re-run only when a new metadata generation needs comparison. |
-| 2.1b Shared image store and metadata decoupling | **In progress** | Implement loader path separation and a verified image-layout migration. |
-| 2.1c Historical experiment compatibility | **Pending** | Add in-memory adapters and validate representative saved experiments without rewriting them. |
-| 2.2 Improved `ingredients_target` standardization | **Pending** | Define the exact preprocessing rules and implement the new deterministic script. |
-| 2.3 Deterministic metadata generation and split | **Pending** | Generate an exact-SHA-aware 80/10/10 split after target rules are approved. |
-| 2.4 Runtime target integration and `<UNK>` decision | **Pending** | Change the new default and investigate `<UNK>` before modifying encoder behavior. |
+| 2.1b Shared image store and metadata decoupling | **Done** | Shared store was staged with SHA-256 verification; DataModule resolves images independently of split metadata. |
+| 2.1c Historical experiment compatibility | **Deferred** | Select the historical experiments to retain before building schema-specific compatibility and running smoke tests. |
+| 2.2 Improved `ingredients_target` standardization | **Done** | Deterministic token-bounded standardizer uses recipe support >= 500 and has produced the first target generation. |
+| 2.2a Ingredient vocabulary audit | **Pending** | Audit unique targets, support, co-occurrence, lexical variants, and collision signals; present results for discussion without changing the extractor. |
+| 2.2b Ingredient extractor strengthening | **Pending** | Apply only rules explicitly approved after the 2.2a discussion, then test and compare the result. |
+| 2.3 Deterministic metadata generation and split | **Deferred** | The 209-label `v1` candidate passes construction checks but must be regenerated after Work package 2.2b if target rules change. |
+| 2.4 Runtime target integration and `<UNK>` removal | **In progress** | New multi-label vocabularies and outputs omit `<UNK>`; preserve saved behavior for retained legacy experiments. |
 
 ### 2.1 Yummly exploratory audit
 
@@ -145,7 +147,7 @@ Add path-contract tests before changing the on-disk layout.
 
 ### 2.1c Historical experiment compatibility
 
-**Status:** Pending
+**Status:** Deferred
 
 #### Purpose
 
@@ -163,11 +165,11 @@ Keep prior experiments loadable after the image-layout and future target-default
 
 #### Completion gate
 
-Every recognized experiment under `experiments/basic` can load its unchanged legacy metadata through the shared image layout. Unknown schemas fail explicitly instead of being guessed or rewritten.
+Every selected retained experiment can load its unchanged legacy metadata through the shared image layout. Unknown schemas fail explicitly instead of being guessed or rewritten.
 
 #### Next action
 
-Implement the compatibility adapter together with the 2.1b loader refactor, then run the read-only inventory and smoke tests.
+Select the historical experiments to retain. Then scope the read-only inventory, compatibility adapter, and smoke tests to those artifacts.
 
 ### 2.2 Improved `ingredients_target` standardization
 
@@ -219,27 +221,27 @@ The three metadata files are reproducible, pass every assertion, contain valid `
 
 Implement only after the target standardization rules in Work package 2.2 are approved.
 
-### 2.4 Runtime target integration and `<UNK>` decision
+### 2.4 Runtime target integration and `<UNK>` removal
 
-**Status:** Pending
+**Status:** In progress
 
 #### Required work
 
 - [ ] Keep `feature_label` configurable and change only its default to `ingredients_target` for new configurations.
 - [ ] Derive the vocabulary deterministically from training metadata and preserve it with each experiment rather than in a standalone data artifact.
-- [ ] Investigate how filtered vocabularies, validation/test-only labels, cuisine filters, multi-label encoders, and sequence encoders use `<UNK>`.
-- [ ] Distinguish ingestion or sequence-token behavior from a trainable multi-label output class.
-- [ ] Decide and test the new behavior before changing an encoder.
-- [ ] Preserve all historical `<UNK>` behavior for legacy experiments.
+- [x] Decide that new multi-label vocabularies and outputs omit `<UNK>` because it has no positive training target.
+- [ ] Remove `<UNK>` from the new multi-label encoder and add regression tests.
+- [ ] Preserve all saved `<UNK>` behavior for any legacy experiment selected for retention.
+- [ ] Treat a future ingestion or sequence-token use, if needed, as a separate explicitly documented decision.
 - [ ] Update statistics and dashboard consumers, then run minimal training, reload, and visualization smoke tests.
 
 #### Completion gate
 
-New experiments default to `ingredients_target`, alternative feature fields remain supported, historical experiments preserve their semantics, and the `<UNK>` policy is explicit and covered by tests.
+New experiments default to `ingredients_target` and omit `<UNK>` from their multi-label outputs, alternative feature fields remain supported, retained historical experiments preserve their semantics, and the policy is covered by tests.
 
 #### Next action
 
-Begin after the new metadata generation exists; the investigation may start earlier but must not alter legacy artifacts.
+Remove `<UNK>` from the new multi-label encoder and test it, without changing selected legacy artifacts.
 
 ### Data macro-section completion gate
 
@@ -534,6 +536,9 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-03 | Planning | Feature-plan tracking was changed from continuous updates to step-completion checkpoints. | Implementation tracking policy **Done** | [`plans/README.md`](plans/README.md) |
 | 2026-08-02 | Data planning | The shared image store was introduced as prerequisite 2.1b, and a codebase-grounded implementation plan was created for Data Work packages 2.1b–2.7. | Work package 2.1b **In progress** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
 | 2026-08-02 | Data planning | The initial manifest-heavy benchmark design was superseded by a smaller pipeline: immutable legacy artifacts, in-memory experiment compatibility, deterministic `ingredients_target` generation, exact-SHA grouping only, and split metadata as the source of truth. | Work packages 2.1b–2.4 **In progress/Pending** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
+| 2026-08-03 | Data implementation | A verified common image store and first deterministic target metadata generation were created. The legacy store and artifacts were not changed. | Work packages 2.1b, 2.2, and 2.3 **Done**; 2.1c and 2.4 **In progress/Pending** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
+| 2026-08-03 | Data planning | Split vocabulary work into an analysis-and-discussion gate (2.2a) and a later approved extractor change (2.2b); the initial 209-label generation remains a validated candidate. | Work packages 2.2a–2.2b **Pending**; 2.3 **Deferred** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
+| 2026-08-04 | Data planning | Deferred legacy-experiment compatibility until the retained historical experiments are selected; accepted removal of `<UNK>` from new multi-label outputs while preserving selected legacy artifacts. | Work package 2.1c **Deferred**; 2.4 **In progress** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
 
 ## Tracker maintenance rules
 

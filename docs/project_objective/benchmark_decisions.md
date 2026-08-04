@@ -1,7 +1,7 @@
 # Yummly data and benchmark decisions
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-02
+**Last updated:** 2026-08-04
 **Status:** Active and binding
 
 ## Purpose
@@ -20,8 +20,8 @@ The existing 65,146-record metadata remains valid for historical experiments. It
 | D4 | How is image quality handled? | Apply automatic existence and decoding checks. Do not add a manual image-review or adjudication workflow; models must tolerate remaining noise. |
 | D5 | How are leakage groups and splits built? | Group byte-identical images by SHA-256 only, then create a deterministic 80/10/10 split balanced for cuisine and ingredient targets. Do not use fuzzy recipe families. |
 | D6 | How is the vocabulary represented? | Derive it deterministically from training metadata and save its class order with each experiment or checkpoint. Do not maintain a separate dataset-level vocabulary file. |
-| D7 | How are historical experiments kept compatible? | Do not rewrite their metadata, configurations, or checkpoints. Adapt legacy image paths and known configuration schemas in memory when loading. |
-| D8 | What happens to `<UNK>`? | Preserve historical behavior and investigate its intended roles before changing it. Its status as a multi-label output, ingestion fallback, or sequence token remains open. |
+| D7 | How are historical experiments kept compatible? | Do not rewrite their metadata, configurations, or checkpoints. Compatibility work is deferred until the historical experiments to retain are selected; then adapt their paths and known schemas in memory when loading. |
+| D8 | What happens to `<UNK>`? | Remove it from new multi-label vocabularies and outputs because it has no positive training target. Preserve saved behavior for any legacy experiment selected for retention. |
 | D9 | Which primary metrics are used? | Report macro mean average precision and micro F1 together; neither is sufficient alone. |
 | D10 | Where are thresholds and calibration selected? | Fit thresholds, calibration, and other selection-time parameters on validation data only. Keep the test split unavailable to selection decisions. |
 
@@ -105,7 +105,7 @@ Validation and test must never expand or reorder that vocabulary. A separate `vo
 
 The repository contains multiple historical storage generations: JSON-driven experiments, light checkpoints that depend on nearby JSON configuration, current-style full checkpoints, and older DenseNet checkpoints with different DataModule key names.
 
-Compatibility is implemented during loading:
+Compatibility, when resumed for selected retained experiments, is implemented during loading:
 
 - supply `images_subdir="imgs/standard"` when an older configuration lacks it;
 - preserve explicit `feature_label="ingredients_ok"`;
@@ -113,21 +113,15 @@ Compatibility is implemented during loading:
 - retain saved label encoders, class order, output dimensions, model state, and `<UNK>` behavior;
 - fail clearly on unknown schemas.
 
-The legacy `metadata.json` and `sel_ing_2410_metadata.json` files, saved JSON configurations, YAML files, and checkpoints are not rewritten. A read-only validation script must prove that representative experiments still load after the image move.
+The legacy `metadata.json` and `sel_ing_2410_metadata.json` files, saved JSON configurations, YAML files, and checkpoints are not rewritten. A read-only validation script must prove that the selected representative experiments still load after the image move. This work is deferred until those experiments are chosen.
 
-## D8: `<UNK>` remains an open implementation decision
+## D8: `<UNK>` is removed from new multi-label outputs
 
-The current multi-label encoder appends `<UNK>`. Across the current full Yummly data, every observed target label already appears in train, validation, and test, so this extra output has no positive examples in that setting. That finding questions its value as a trainable output but does not prove that the token is universally useless.
+The current multi-label encoder appends `<UNK>`. Across the current full Yummly data, every observed target label already appears in train, validation, and test, so this extra output has no positive examples in that setting. New multi-label vocabularies and output layers must therefore omit it.
 
-Before changing it, inspect separately:
+This decision does not reinterpret existing artifacts. For every legacy experiment selected for retention, preserve its serialized label encoder, class order, output dimension, and `<UNK>` behavior. If a future sequence or ingestion workflow needs an unknown-token mechanism, specify and test it separately rather than carrying `<UNK>` into the multi-label output by default.
 
-- out-of-vocabulary labels after cuisine or target filtering;
-- ingestion-time behavior for unexpected metadata;
-- input-token use in sequence encoders;
-- multi-label output dimensions, loss weights, and metrics;
-- checkpoint and label-encoder compatibility.
-
-The eventual rule may differ between multi-label outputs and sequence inputs. Until that investigation and its tests are complete, new code must not remove `<UNK>` globally, and historical behavior must remain untouched.
+The implementation must add regression tests for the new multi-label encoder behavior and must not remove `<UNK>` globally from legacy configurations or checkpoints.
 
 ## D9–D10: evaluation and selection
 
@@ -148,8 +142,8 @@ A new metadata generation is ready only when:
 - [ ] the same metadata filename exists in train, validation, and test;
 - [ ] a clean rerun produces identical assignments and metadata content;
 - [ ] the DataModule loads every split with `feature_label="ingredients_target"`;
-- [ ] representative legacy experiments load without any saved-file modification;
-- [ ] the `<UNK>` decision is documented and tested before new encoder semantics are frozen.
+- [ ] selected retained legacy experiments load without any saved-file modification;
+- [ ] `<UNK>` removal from new multi-label outputs is implemented and regression-tested before new encoder semantics are frozen.
 
 ## Superseded proposals
 

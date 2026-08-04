@@ -13,7 +13,7 @@ from typing import Tuple, List, Dict, Optional, Any
 from typing_extensions import Self
 
 from settings.config import DATA_PATH, FOOD_CATEGORIES, YUMMLY_PATH, DEF_BATCH_SIZE, IMG_STATS_FILENAME, \
-    METADATA_FILENAME, DEF_PAD_TOKEN
+    METADATA_FILENAME, YUMMLY_TARGET_METADATA_FILENAME, DEF_PAD_TOKEN
 from src.commons.utils import register_hparams
 from src.data_processing.common import BaseDataModule
 from src.data_processing.transformations import t_transform
@@ -95,7 +95,7 @@ class ImagesRecipesDataset(_ImagesRecipesDataset):
     encodes the recipes to pass everything to the base class."""
 
     def __init__(self, data_dir, transform=None, category=None, label_encoder=None,
-                 metadata_filename="metadata.json", feature_label="ingredients_ok"):
+                 metadata_filename="metadata.json", feature_label="ingredients_target", images_dir=None):
 
         # Check validity of parameters
         if transform is None:
@@ -108,8 +108,9 @@ class ImagesRecipesDataset(_ImagesRecipesDataset):
                 raise ValueError(f'Invalid category: {category}')
 
         # Compute images_path, Load recipes filter them by category and encode them to get the label data
-        images_paths, label_data, label_encoder = images_recipes_processing(data_dir, metadata_filename, category,
-                                                                            label_encoder, feature_label)
+        images_paths, label_data, label_encoder = images_recipes_processing(
+            data_dir, metadata_filename, category, label_encoder, feature_label, images_dir=images_dir
+        )
 
         super().__init__(images_paths, label_data, transform)
 
@@ -241,11 +242,12 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
     def __init__(
             self,
             data_dir: os.path = YUMMLY_PATH,
-            metadata_filename: str = METADATA_FILENAME,
+            metadata_filename: str = YUMMLY_TARGET_METADATA_FILENAME,
             images_stats_path: str | os.PathLike = os.path.join(YUMMLY_PATH, IMG_STATS_FILENAME),
             food_categories: List[str] = FOOD_CATEGORIES,
             category: str = None,
-            feature_label: str = "ingredients_ok",
+            feature_label: str = "ingredients_target",
+            images_subdir: str | os.PathLike = os.path.join("imgs", "standard"),
             label_encoder: None | LabelEncoderInterface = None,
             batch_size: int = DEF_BATCH_SIZE,
             num_workers: int | None = None,
@@ -254,18 +256,20 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
     ):
         super().__init__(images_stats_path, batch_size=batch_size, transform_aug=transform_aug,
                          transform_plain=transform_plain)  # Setting parameters
-        self.data_dir, self.metadata_filename, = data_dir, metadata_filename,
+        self.data_dir, self.metadata_filename = data_dir, metadata_filename
+        self.images_subdir = os.fspath(images_subdir)
         self.recipe_feature_label, self.food_categories = feature_label, food_categories
         self.batch_size, self.num_workers = batch_size, num_workers
         self.label_encoder, self.category = label_encoder, category
         self._set_def_params()
 
-        register_hparams(self, ["data_dir", "metadata_filename", "category", "feature_label",
+        register_hparams(self, ["data_dir", "metadata_filename", "images_subdir", "category", "feature_label",
                                 {"label_encoder": self.label_encoder.to_config()}, {"type": self.__class__},
                                 {"num_workers": self.num_workers}, {}],
                          log=False)
 
-        self._stage_data_dir = {}  # Local paths for each stage
+        self._stage_data_dir = {}  # Local metadata paths for each stage
+        self.images_dir = None
         self._check_paths_and_set_locals()
 
         # Images paths and the label data for each stage (final data used by the datasets)
@@ -292,7 +296,11 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
         if not os.path.exists(self.data_dir):
             raise FileNotFoundError(f'Dataset directory not found: {self.data_dir}')
 
-        # Checks if the images and recipes directories for each stage exist and sets the local paths
+        self.images_dir = self._resolve_images_dir()
+        if not os.path.isdir(self.images_dir):
+            raise FileNotFoundError(f'Common image directory not found: {self.images_dir}')
+
+        # Check metadata directories for each stage and set the local paths.
         for stage in ["train", "val", "test"]:
             stage_data_dir = os.path.join(self.data_dir, stage)
             recipes_file = os.path.join(stage_data_dir, self.metadata_filename)
@@ -302,6 +310,11 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
             self._stage_data_dir[stage] = stage_data_dir
 
         self._set_local_path_predict()
+
+    def _resolve_images_dir(self) -> str:
+        """Resolve the common image directory without making saved paths platform-specific."""
+        images_path = os.path.join(self.data_dir, self.images_subdir)
+        return os.path.normpath(images_path)
 
     def _set_local_path_predict(self):
         """Sets the local paths for the predict stage"""
@@ -339,8 +352,10 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
             self):  # todo: fare il sistema che salva i risultati in un file, in modo che non vengano ricalcolati ogni volta (e che si possano rimuovere volendo dal checkpointing)
         """Prepares the data for the datasets by processing the images and recipes data."""
         for stage in ['train', 'val', 'test', 'predict']:
-            res = images_recipes_processing(self._stage_data_dir[stage], self.metadata_filename, self.category,
-                                            self.label_encoder, self.recipe_feature_label)
+            res = images_recipes_processing(
+                self._stage_data_dir[stage], self.metadata_filename, self.category, self.label_encoder,
+                self.recipe_feature_label, images_dir=self.images_dir,
+            )
             self._images_paths[stage], self._label_data[stage], self.label_encoder = res
 
         self.hparams['label_encoder'] = self.label_encoder.to_config()
@@ -387,7 +402,10 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
                          ) -> Self:
         data_dir_path = _resolve_data_dir_path(config['data_dir'])
         metadata_filename = config['metadata_filename']
-        category, feature_label, num_workers = config['category'], config['feature_label'], config['num_workers']
+        category = config.get('category')
+        feature_label = config.get('feature_label', 'ingredients_ok')
+        num_workers = config.get('num_workers')
+        images_subdir = config.get('images_subdir', os.path.join('imgs', 'standard'))
 
         if "label_encoder" not in config or config['label_encoder'] is None or config['label_encoder'] == {}:
             label_encoder = None
@@ -396,7 +414,7 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
 
         return cls(data_dir=data_dir_path, metadata_filename=metadata_filename, category=category,
                    batch_size=batch_size, feature_label=feature_label,
-                   num_workers=num_workers, label_encoder=label_encoder,
+                   images_subdir=images_subdir, num_workers=num_workers, label_encoder=label_encoder,
                    transform_plain=transform_plain, transform_aug=transform_aug, **kwargs)
 
 
@@ -427,14 +445,14 @@ def _resolve_data_dir_path(data_dir: str | os.PathLike) -> str:
 def images_recipes_processing(
         data_dir: os.path, metadata_filename: str = METADATA_FILENAME, category: str | None = None,
         label_encoder: LabelEncoderInterface = None, recipe_feature_label: str = "ingredients_ok",
-        image_field: str = "image", encoding: bool=True,
+        image_field: str = "image", encoding: bool=True, images_dir: str | os.PathLike | None = None,
 ) -> Tuple[List[pathlib.Path], ndarray, LabelEncoderInterface]:
     """Function that processes the images and recipes data, filtering them by category, encoding the recipes and
     returning the images paths, the label data and the label encoder."""
 
     recipes, label_data_raw = _load_recipes_data(data_dir, recipe_feature_label, metadata_filename, category)
 
-    images_paths = _compute_images_paths(recipes, data_dir, image_field)
+    images_paths = _compute_images_paths(recipes, images_dir or data_dir, image_field)
     label_data, label_encoder = _encode_recipes(label_data_raw, label_encoder, recipe_feature_label, transform=encoding)
 
     return images_paths, label_data, label_encoder
@@ -447,7 +465,8 @@ def _recipes_filter_by_category(recipes: List[Dict], category: str | None = None
 
 def _load_recipes_data(data_dir: os.PathLike, feature_label: str, metadata_filename: str = METADATA_FILENAME,
                        category: str | None = None) -> Tuple[List[Dict], ndarray]:
-    recipes = json.load(open(os.path.join(data_dir, metadata_filename)))
+    with open(os.path.join(data_dir, metadata_filename), encoding="utf-8") as recipes_file:
+        recipes = json.load(recipes_file)
     recipes = _recipes_filter_by_category(recipes, category)
     label_data = pd.DataFrame(recipes)[feature_label].values
     return recipes, label_data
@@ -466,11 +485,39 @@ def _encode_recipes(
     return label_data, label_encoder
 
 
-def _compute_images_paths(metadata: List[Dict], data_dir: str | os.PathLike, image_field: str = "image"
+def _compute_images_paths(metadata: List[Dict], images_dir: str | os.PathLike, image_field: str = "image"
                           ) -> List[pathlib.Path]:
-    metadata_df = pd.DataFrame(metadata)
-    metadata_df[image_field] = metadata_df[image_field].apply(lambda img_path: os.path.join(data_dir, img_path))
-    return metadata_df[image_field].values.tolist()
+    images_root = pathlib.Path(images_dir).resolve()
+    if not images_root.is_dir():
+        raise FileNotFoundError(f'Image directory not found: {images_root}')
+
+    image_paths = []
+    errors = []
+    for index, recipe in enumerate(metadata):
+        image_ref = recipe.get(image_field)
+        if not isinstance(image_ref, str) or not image_ref:
+            errors.append(f'record {index} has no valid {image_field!r} value')
+            continue
+
+        relative_path = pathlib.PurePath(image_ref)
+        if relative_path.is_absolute() or '..' in relative_path.parts:
+            errors.append(f'record {index} has an unsafe image reference: {image_ref!r}')
+            continue
+
+        image_path = (images_root / relative_path).resolve()
+        if images_root not in image_path.parents and image_path != images_root:
+            errors.append(f'record {index} resolves outside the image directory: {image_ref!r}')
+            continue
+        if not image_path.is_file():
+            errors.append(f'record {index} references a missing image: {image_ref!r}')
+            continue
+        image_paths.append(image_path)
+
+    if errors:
+        preview = '; '.join(errors[:5])
+        remainder = '' if len(errors) <= 5 else f' (and {len(errors) - 5} more)'
+        raise FileNotFoundError(f'Invalid image references below {images_root}: {preview}{remainder}')
+    return image_paths
 
 
 def _preprocess_flavor(flavor_data: List[Dict[str, float]] | ndarray) -> Tuple[ndarray, List[str], ndarray]:

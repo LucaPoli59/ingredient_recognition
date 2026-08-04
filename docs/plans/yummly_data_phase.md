@@ -1,7 +1,7 @@
 # Yummly data-phase implementation plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-02
+**Last updated:** 2026-08-04
 
 This plan translates the Data macro-section of [`general_plan.md`](../general_plan.md) into a deliberately small implementation sequence. It covers the shared-image-store prerequisite, compatibility with historical experiments, generation of `ingredients_target`, deterministic split construction, and runtime integration.
 
@@ -10,19 +10,21 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 ## Progress tracker
 
 **Overall status:** In progress  
-**Current task:** Finalize the narrow Work package 2.1b contract.
-**Next action:** Implement path-resolution tests and the shared-image-store refactor without changing target semantics.
+**Current task:** Analyze the candidate ingredient vocabulary before proposing extractor changes.
+**Next action:** Produce and present the main audit findings for discussion; do not change extraction rules before an explicit decision.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | P0 | Inspect the current data layout, loaders, legacy preprocessing, and historical experiment artifacts | **Done** | [Verified implementation findings](#verified-implementation-findings) |
 | P1 | Agree on the simplified benchmark scope | **Done** | [Accepted design](#accepted-design) |
-| P2 | Implement and verify the shared-image-store prerequisite | **Pending** | Work package 2.1b |
-| P3 | Implement and verify historical experiment compatibility without rewriting saved artifacts | **Pending** | Work package 2.1c |
-| P4 | Design and implement the improved `ingredients` to `ingredients_target` standardizer | **Pending** | Work package 2.2 |
-| P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Pending** | Work package 2.3 |
-| P6 | Integrate the new target default and resolve the role of `<UNK>` | **Pending** | Work package 2.4 |
-| P7 | Run all data checks and freeze the first new metadata generation | **Pending** | Data completion gate |
+| P2 | Implement and verify the shared-image-store prerequisite | **Done** | `scripts/migrate_yummly_images.py` staged and SHA-256-verified 65,146 files in `imgs/standard`; both legacy generations load through the refactored DataModule. |
+| P3 | Implement and verify historical experiment compatibility without rewriting saved artifacts | **Deferred** | Current-style legacy configurations retain `ingredients_ok` and receive `images_subdir` in memory. Complete validation is deferred until the historical experiments worth retaining are selected. |
+| P4 | Design and implement the improved `ingredients` to `ingredients_target` standardizer | **Done** | `src/data_processing/ingredient_standardization.py` uses explicit token-bounded rules, recipe support >= 500, and at least three retained targets. |
+| P4a | Audit the candidate ingredient vocabulary and present findings | **Pending** | Work package 2.2a; analysis only, followed by a user discussion before any extractor change. |
+| P4b | Strengthen the ingredient extractor from accepted audit findings | **Pending** | Work package 2.2b; blocked until the audit findings have been discussed and explicit rules are approved. |
+| P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Deferred** | `ingredients_target_v1_metadata.json` passed its checks as 48,439/6,056/6,055 records, but must be regenerated after Work package 2.2b if target rules change. |
+| P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **In progress** | New multi-label vocabularies and outputs omit `<UNK>`; any selected legacy artifact retains its saved behavior. |
+| P7 | Run all data checks and freeze the first new metadata generation | **Done** | Two clean dry-runs and the final generation passed automatic image decoding, SHA-256, uniqueness, ratio, distribution, vocabulary, and DataModule loading checks. |
 
 ## Accepted design
 
@@ -183,11 +185,11 @@ Both current metadata generations load through the common image directory; no Yu
 
 ## Work package 2.1c — historical experiment compatibility
 
-**Status:** Pending
+**Status:** Deferred
 
 ### Purpose
 
-Keep all experiments below `experiments/basic` loadable after the common-image and target-field refactors without modifying their saved configurations or checkpoints and without changing what any historical model predicts.
+Keep the historical experiments selected for retention loadable after the common-image and target-field refactors without modifying their saved configurations or checkpoints and without changing what any historical model predicts.
 
 ### Compatibility implementation
 
@@ -216,11 +218,11 @@ The implementation must:
 
 ### Completion gate
 
-Every recognized experiment under `experiments/basic` loads unchanged legacy metadata through the new image layout while retaining `ingredients_ok`, its original target values, and its original model semantics.
+Every selected retained experiment loads unchanged legacy metadata through the new image layout while retaining `ingredients_ok`, its original target values, and its original model semantics.
 
 ## Work package 2.2 — improved ingredient-target standardization
 
-**Status:** Pending
+**Status:** In progress
 
 ### Purpose
 
@@ -248,6 +250,55 @@ The exact standardization rules, support threshold, minimum retained targets, an
 ### Completion gate
 
 Repeated runs on identical input produce identical `ingredients_target` values and ordering; known collisions are covered by tests; and the aggregate effect of the preprocessing is understood before it is used for a split.
+
+## Work package 2.2a — ingredient vocabulary audit
+
+**Status:** Pending
+
+### Purpose
+
+Review the candidate vocabulary produced by Work package 2.2 before it is treated as the benchmark target. The aim is to reduce avoidable fragmentation and unsupported target distinctions without recreating the legacy pipeline's fuzzy or order-dependent merges.
+
+### Required investigation
+
+1. Extract the unique `ingredients_target` values, per-target recipe support, target cardinality, and train/validation/test support from the candidate generation.
+2. Compute interpretable target-pair relationships: co-occurrence counts, conditional probabilities, and Jaccard similarity.
+3. Inspect lexical relationships using token-aware phrase containment and the raw ingredient lines that produced each candidate. Flag possible singular/plural variants, aliases, overly specific variants, and semantically misleading generalizations.
+4. Re-run the known legacy substring-collision audit against the new targets and add targeted checks for any new candidate collision discovered during the review.
+5. Classify each finding provisionally as: retain, candidate merge, candidate rule replacement, candidate exclusion, or unresolved. Do not apply these classifications to the extractor.
+6. Record strong findings in temporary research notes during the analysis and present the principal evidence, candidate changes, trade-offs, and unresolved cases to the user for discussion. Do not create or retain a per-raw-line mapping artifact.
+7. Stop after the discussion-ready report. Applying any rule is Work package 2.2b, not part of this audit.
+
+### Non-goals
+
+- No automatic merge based only on co-occurrence, similarity score, embedding distance, or lexical containment.
+- No manual relabeling of individual recipes.
+- No change to legacy `ingredients_ok` or historical experiment artifacts.
+- No use of cuisine, image similarity, recipe names, or model predictions as a target-normalization rule.
+
+### Completion gate
+
+The vocabulary size and support profile are understood; the main findings and candidate refinements have been presented for discussion; and no extractor, metadata, or split has been changed by this work package.
+
+## Work package 2.2b — ingredient extractor strengthening
+
+**Status:** Pending — awaiting discussion
+
+### Purpose
+
+Turn only the explicitly accepted findings from Work package 2.2a into tested, deterministic extractor rules.
+
+### Required implementation
+
+1. Record the approved target changes and their rationale in the decision log and durable project documentation.
+2. Implement only the agreed token- or phrase-bounded rules.
+3. Add a regression test for every accepted rule and its relevant collision boundary.
+4. Compare vocabulary size, target support, record retention, and affected recipes with the `v1` candidate.
+5. Regenerate the exact-SHA-safe metadata generation through Work package 2.3.
+
+### Completion gate
+
+Every extractor change is traceable to an explicit decision made after the 2.2a discussion, passes regression tests, and is reflected in a newly generated metadata version.
 
 ## Work package 2.3 — deterministic metadata generation and split
 
@@ -288,29 +339,32 @@ The new train, validation, and test metadata pass all assertions, have no exact-
 
 1. Keep `feature_label` configurable and set its default to `ingredients_target`.
 2. Fit or reconstruct the vocabulary deterministically from training metadata and preserve it in experiment/checkpoint configuration.
-3. Verify how validation/test-only labels, cuisine filtering, selected-ingredient generations, and sequence encoders currently use `<UNK>`.
-4. Distinguish an ingestion fallback or sequence-input token from a trainable multi-label output class.
-5. Decide whether `<UNK>` should remain an output, become diagnostic-only, or have different behavior by encoder type.
+3. Remove `<UNK>` from the vocabulary and output space of new multi-label experiments: it has no positive target in their training data.
+4. Preserve the saved `<UNK>` class and output dimension for any legacy experiment selected for retention; do not rewrite its artifacts.
+5. Treat any future ingestion or sequence-token use as a separate, explicitly documented decision rather than retaining it in the multi-label output by default.
 6. Add tests for the selected behavior before changing existing encoders.
 7. Update image-statistics and dashboard consumers to use the common image root and selected target field.
 8. Run a minimal training, checkpoint reload, and dashboard smoke test.
 
 ### Completion gate
 
-New experiments default to `ingredients_target`, alternative feature labels remain supported, historical experiments remain loadable, and the role of `<UNK>` is explicit and covered by tests.
+New experiments default to `ingredients_target` and omit `<UNK>` from their multi-label outputs, alternative feature labels remain supported, retained historical experiments preserve their semantics, and the policy is covered by tests.
 
 ## Ordered delivery sequence
 
 ```text
 2.1b shared image store and loader path separation
-  -> 2.1c legacy experiment compatibility
   -> 2.2 ingredients_target standardizer
+  -> 2.2a ingredient vocabulary audit and discussion
+  -> 2.2b accepted extractor strengthening
   -> 2.3 exact-duplicate-aware stratified metadata generation
   -> 2.4 runtime default and <UNK> decision
   -> freeze the first new generation
+
+2.1c legacy experiment compatibility (deferred; resume after selecting retained experiments)
 ```
 
-Work package 2.2 may be designed while 2.1b–2.1c are implemented, but legacy metadata must remain isolated from the new standardizer.
+Work package 2.2a may proceed while Work package 2.1c is deferred, but legacy metadata must remain isolated from the new standardizer.
 
 ## Risks and mitigations
 
@@ -322,7 +376,7 @@ Work package 2.2 may be designed while 2.1b–2.1c are implemented, but legacy m
 | Attempt 1 is treated as exact ground truth | Known collisions and nondeterminism are reintroduced | Use it only as lineage evidence and test every adopted rule |
 | Fuzzy duplicate grouping introduces subjective bias | Valid records are coupled by arbitrary thresholds | Group only byte-identical SHA-256 images |
 | Cuisine-only splitting produces label drift | Rare targets become unreliable in evaluation | Balance cuisine and ingredient targets together |
-| `<UNK>` is removed before its uses are understood | Filtered or sequence workflows regress | Defer the decision to Work package 2.4 and preserve historical behavior during migration |
+| `<UNK>` removal breaks a retained legacy output shape | A saved checkpoint cannot be loaded | Omit it only from new multi-label vocabularies; preserve saved legacy behavior for selected retained experiments |
 
 ## Completion criteria for this plan
 
@@ -331,6 +385,7 @@ The plan is complete when:
 - all current images are served from the common directory;
 - historical metadata and experiments remain loadable without modifying saved artifacts;
 - the improved standardizer deterministically produces `ingredients_target` from `ingredients`;
+- the final ingredient vocabulary has passed the evidence-backed improvement audit;
 - the new split has no exact-image leakage and acceptable cuisine/target balance;
 - the DataModule defaults to `ingredients_target` while retaining `feature_label`;
 - the `<UNK>` decision has been investigated, documented, implemented, and tested;
@@ -347,3 +402,7 @@ The plan is complete when:
 | 2026-08-02 | Replaced saved-file migration with a legacy compatibility layer | Keeping legacy metadata and translating paths in memory is safer than rewriting 28 GB of checkpoints across multiple schemas |
 | 2026-08-02 | Limited duplicate grouping to exact SHA-256 identity | Exact equality prevents direct leakage without similarity thresholds or manual bias |
 | 2026-08-02 | Reopened the `<UNK>` decision | It may still be useful for ingestion, filtered vocabularies, or sequence models even if it is questionable as a multi-label output |
+| 2026-08-03 | Created the shared image store and first target generation | The migration is additive and checksum-verified; `ingredients_target_v1_metadata.json` is the first deterministic 209-label generation, while legacy artifacts remain unchanged |
+| 2026-08-03 | Added Work packages 2.2a–2.2b for vocabulary work | The 209-label `v1` generation is a validated candidate; 2.2a is analysis and discussion only, while extractor changes require subsequent explicit approval in 2.2b |
+| 2026-08-04 | Deferred historical experiment compatibility | Select the historical experiments to retain before investing in schema-specific compatibility and smoke tests; this does not block the vocabulary audit |
+| 2026-08-04 | Accepted `<UNK>` removal for new multi-label outputs | It receives no positive training targets; any selected legacy artifact retains its saved behavior |
