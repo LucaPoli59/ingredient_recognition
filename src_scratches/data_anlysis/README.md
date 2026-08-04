@@ -1,7 +1,7 @@
 # Yummly data analysis workspace
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-02
+**Last updated:** 2026-08-04
 
 This scratch directory contains reproducible and legacy data-analysis artifacts for the Yummly dataset.
 
@@ -23,6 +23,14 @@ python src_scratches/data_anlysis/yummly_deep_audit.py
 
 Its `--skip-images` mode refreshes target, taxonomy, support, and shortcut findings while preserving the prior image/grouping section.
 
+Run the candidate `ingredients_target` vocabulary audit with:
+
+```powershell
+python src_scratches/data_anlysis/ingredient_vocabulary_audit.py
+```
+
+This audit reads the selected metadata generation without changing it and writes only aggregate target-support, co-occurrence, lexical-relationship, and source-example evidence. It deliberately does not persist a raw-line-to-target mapping.
+
 Generated outputs are stored in `outputs/`:
 
 - `yummly_audit.json` contains the complete structured report;
@@ -31,6 +39,7 @@ Generated outputs are stored in `outputs/`:
 - `yummly_deep_audit.json` contains target reproduction, collision, taxonomy, shortcut, and grouping evidence;
 - `target_review.csv` supports per-label review;
 - `duplicate_group_review.csv` and `duplicate_group_review.jpg` support duplicate and image-quality adjudication.
+- `ingredient_vocabulary_audit/` contains the structured Work package 2.2a evidence and aggregate CSV views for the candidate target generation.
 
 The temporary findings and open-question notes used during investigation were removed after their evidence and decisions were consolidated under `docs/project_objective/`.
 

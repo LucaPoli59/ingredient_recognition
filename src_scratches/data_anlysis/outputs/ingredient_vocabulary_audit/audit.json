@@ -1,0 +1,6113 @@
+{
+  "metadata": {
+    "records_by_split": {
+      "train": 48439,
+      "val": 6056,
+      "test": 6055
+    },
+    "records_total": 60550,
+    "source_records_total": 65146,
+    "records_removed_by_target_retention": 4596,
+    "raw_ingredient_lines_scanned": 707771,
+    "vocabulary_size": 209,
+    "vocabulary_missing_from_train": [],
+    "vocabulary_missing_from_val": [],
+    "vocabulary_missing_from_test": []
+  },
+  "target_cardinality": {
+    "minimum": 3,
+    "maximum": 34,
+    "mean": 7.860875,
+    "median": 7.0,
+    "p10": 4.0,
+    "p90": 13.0,
+    "histogram": {
+      "3": 4558,
+      "4": 5821,
+      "5": 6764,
+      "6": 7252,
+      "7": 6977,
+      "8": 6326,
+      "9": 5453,
+      "10": 4504,
+      "11": 3722,
+      "12": 2897,
+      "13": 2162,
+      "14": 1465,
+      "15": 994,
+      "16": 614,
+      "17": 457,
+      "18": 270,
+      "19": 136,
+      "20": 66,
+      "21": 35,
+      "22": 38,
+      "23": 15,
+      "24": 11,
+      "25": 6,
+      "26": 1,
+      "27": 2,
+      "28": 1,
+      "30": 1,
+      "31": 1,
+      "34": 1
+    }
+  },
+  "support_profile": {
+    "minimum_post_retention_support": 469,
+    "maximum_support": 34455,
+    "median_support": 1109,
+    "targets_below_500_after_record_retention": [
+      {
+        "target": "blueberry",
+        "support": 469
+      },
+      {
+        "target": "orange",
+        "support": 476
+      },
+      {
+        "target": "walnuts",
+        "support": 495
+      },
+      {
+        "target": "black peppercorns",
+        "support": 496
+      },
+      {
+        "target": "peanut butter",
+        "support": 499
+      }
+    ],
+    "targets_below_1000": 91,
+    "targets_at_least_5000": 18
+  },
+  "source_traceability": {
+    "target_assignments": 475976,
+    "assignments_with_matching_normalized_raw_line": 475976,
+    "assignments_without_matching_normalized_raw_line": 0,
+    "top_raw_examples_by_target": {
+      "almonds": [
+        {
+          "raw": "almonds",
+          "record_support": 227
+        },
+        {
+          "raw": "sliced almonds",
+          "record_support": 211
+        },
+        {
+          "raw": "chopped almonds",
+          "record_support": 32
+        },
+        {
+          "raw": "1/2 cup sliced almonds",
+          "record_support": 18
+        },
+        {
+          "raw": "1/4 cup sliced almonds",
+          "record_support": 15
+        }
+      ],
+      "apple cider vinegar": [
+        {
+          "raw": "apple cider vinegar",
+          "record_support": 388
+        },
+        {
+          "raw": "2 tablespoons apple cider vinegar",
+          "record_support": 33
+        },
+        {
+          "raw": "1/4 cup apple cider vinegar",
+          "record_support": 22
+        },
+        {
+          "raw": "1/2 cup apple cider vinegar",
+          "record_support": 17
+        },
+        {
+          "raw": "3 tablespoons apple cider vinegar",
+          "record_support": 13
+        }
+      ],
+      "avocado": [
+        {
+          "raw": "avocado",
+          "record_support": 1969
+        },
+        {
+          "raw": "1 avocado",
+          "record_support": 39
+        },
+        {
+          "raw": "1 avocado, diced",
+          "record_support": 26
+        },
+        {
+          "raw": "1 avocado, sliced",
+          "record_support": 25
+        },
+        {
+          "raw": "Avocado",
+          "record_support": 14
+        }
+      ],
+      "baby spinach": [
+        {
+          "raw": "baby spinach",
+          "record_support": 416
+        },
+        {
+          "raw": "1 (6-ounce) package fresh baby spinach",
+          "record_support": 9
+        },
+        {
+          "raw": "2 cups baby spinach",
+          "record_support": 7
+        },
+        {
+          "raw": "10 ounces baby spinach",
+          "record_support": 5
+        },
+        {
+          "raw": "5 ounces baby spinach",
+          "record_support": 5
+        }
+      ],
+      "bacon": [
+        {
+          "raw": "bacon",
+          "record_support": 379
+        },
+        {
+          "raw": "cooked bacon",
+          "record_support": 43
+        },
+        {
+          "raw": "6 slices bacon",
+          "record_support": 20
+        },
+        {
+          "raw": "4 slices bacon",
+          "record_support": 18
+        },
+        {
+          "raw": "8 slices bacon",
+          "record_support": 12
+        }
+      ],
+      "baking powder": [
+        {
+          "raw": "baking powder",
+          "record_support": 1052
+        },
+        {
+          "raw": "1 teaspoon baking powder",
+          "record_support": 146
+        },
+        {
+          "raw": "2 teaspoons baking powder",
+          "record_support": 107
+        },
+        {
+          "raw": "1/2 teaspoon baking powder",
+          "record_support": 83
+        },
+        {
+          "raw": "1 1/2 teaspoons baking powder",
+          "record_support": 60
+        }
+      ],
+      "baking soda": [
+        {
+          "raw": "baking soda",
+          "record_support": 632
+        },
+        {
+          "raw": "1/2 teaspoon baking soda",
+          "record_support": 136
+        },
+        {
+          "raw": "1 teaspoon baking soda",
+          "record_support": 121
+        },
+        {
+          "raw": "1/4 teaspoon baking soda",
+          "record_support": 48
+        },
+        {
+          "raw": "3/4 teaspoon baking soda",
+          "record_support": 26
+        }
+      ],
+      "balsamic vinegar": [
+        {
+          "raw": "balsamic vinegar",
+          "record_support": 497
+        },
+        {
+          "raw": "2 tablespoons balsamic vinegar",
+          "record_support": 110
+        },
+        {
+          "raw": "1 tablespoon balsamic vinegar",
+          "record_support": 85
+        },
+        {
+          "raw": "1/4 cup balsamic vinegar",
+          "record_support": 64
+        },
+        {
+          "raw": "3 tablespoons balsamic vinegar",
+          "record_support": 41
+        }
+      ],
+      "bananas": [
+        {
+          "raw": "bananas",
+          "record_support": 506
+        },
+        {
+          "raw": "2 bananas, sliced",
+          "record_support": 3
+        },
+        {
+          "raw": "2 bananas",
+          "record_support": 3
+        },
+        {
+          "raw": "2 Bananas (Frozen)",
+          "record_support": 1
+        },
+        {
+          "raw": "sliced bananas",
+          "record_support": 1
+        }
+      ],
+      "basil": [
+        {
+          "raw": "fresh basil",
+          "record_support": 734
+        },
+        {
+          "raw": "basil",
+          "record_support": 479
+        },
+        {
+          "raw": "dried basil",
+          "record_support": 463
+        },
+        {
+          "raw": "1 teaspoon dried basil",
+          "record_support": 108
+        },
+        {
+          "raw": "1/4 cup chopped fresh basil",
+          "record_support": 75
+        }
+      ],
+      "basil leaves": [
+        {
+          "raw": "fresh basil leaves",
+          "record_support": 414
+        },
+        {
+          "raw": "basil leaves",
+          "record_support": 323
+        },
+        {
+          "raw": "dried basil leaves",
+          "record_support": 27
+        },
+        {
+          "raw": "1/2 cup fresh basil leaves",
+          "record_support": 13
+        },
+        {
+          "raw": "1 cup fresh basil leaves",
+          "record_support": 11
+        }
+      ],
+      "bay leaf": [
+        {
+          "raw": "bay leaf",
+          "record_support": 676
+        },
+        {
+          "raw": "1 bay leaf",
+          "record_support": 435
+        },
+        {
+          "raw": "1 dried bay leaf",
+          "record_support": 32
+        },
+        {
+          "raw": "1 small bay leaf",
+          "record_support": 10
+        },
+        {
+          "raw": "1 fresh bay leaf",
+          "record_support": 8
+        }
+      ],
+      "bay leaves": [
+        {
+          "raw": "bay leaves",
+          "record_support": 613
+        },
+        {
+          "raw": "2 bay leaves",
+          "record_support": 323
+        },
+        {
+          "raw": "3 bay leaves",
+          "record_support": 65
+        },
+        {
+          "raw": "2 dried bay leaves",
+          "record_support": 33
+        },
+        {
+          "raw": "4 bay leaves",
+          "record_support": 23
+        }
+      ],
+      "beansprouts": [
+        {
+          "raw": "beansprouts",
+          "record_support": 635
+        },
+        {
+          "raw": "¼ cup beansprouts",
+          "record_support": 1
+        },
+        {
+          "raw": "300g beansprouts",
+          "record_support": 1
+        }
+      ],
+      "beef": [
+        {
+          "raw": "ground beef",
+          "record_support": 894
+        },
+        {
+          "raw": "lean ground beef",
+          "record_support": 349
+        },
+        {
+          "raw": "beef",
+          "record_support": 286
+        },
+        {
+          "raw": "1 pound ground beef",
+          "record_support": 138
+        },
+        {
+          "raw": "extra lean ground beef",
+          "record_support": 65
+        }
+      ],
+      "bell pepper": [
+        {
+          "raw": "bell pepper",
+          "record_support": 604
+        },
+        {
+          "raw": "chopped bell pepper",
+          "record_support": 26
+        },
+        {
+          "raw": "diced bell pepper",
+          "record_support": 11
+        },
+        {
+          "raw": "1 bell pepper, chopped",
+          "record_support": 5
+        },
+        {
+          "raw": "1 large bell pepper (any color that floats your boat), finely chopped",
+          "record_support": 3
+        }
+      ],
+      "black beans": [
+        {
+          "raw": "black beans",
+          "record_support": 1126
+        },
+        {
+          "raw": "1 (15 ounce) can black beans, rinsed and drained",
+          "record_support": 24
+        },
+        {
+          "raw": "dried black beans",
+          "record_support": 20
+        },
+        {
+          "raw": "1 (15-ounce) can black beans, rinsed and drained",
+          "record_support": 15
+        },
+        {
+          "raw": "1 can (15 ounces) black beans, rinsed and drained",
+          "record_support": 7
+        }
+      ],
+      "black olives": [
+        {
+          "raw": "black olives",
+          "record_support": 321
+        },
+        {
+          "raw": "sliced black olives",
+          "record_support": 152
+        },
+        {
+          "raw": "1/2 cup sliced black olives",
+          "record_support": 6
+        },
+        {
+          "raw": "1 (2 ounce) can black olives, sliced",
+          "record_support": 4
+        },
+        {
+          "raw": "1 (6 ounce) can sliced black olives",
+          "record_support": 3
+        }
+      ],
+      "black peppercorns": [
+        {
+          "raw": "black peppercorns",
+          "record_support": 353
+        },
+        {
+          "raw": "1 tablespoon black peppercorns",
+          "record_support": 15
+        },
+        {
+          "raw": "1 teaspoon black peppercorns",
+          "record_support": 14
+        },
+        {
+          "raw": "6 black peppercorns",
+          "record_support": 8
+        },
+        {
+          "raw": "10 black peppercorns",
+          "record_support": 7
+        }
+      ],
+      "blueberry": [
+        {
+          "raw": "blueberries",
+          "record_support": 172
+        },
+        {
+          "raw": "fresh blueberries",
+          "record_support": 110
+        },
+        {
+          "raw": "frozen blueberries",
+          "record_support": 78
+        },
+        {
+          "raw": "1 cup blueberries",
+          "record_support": 12
+        },
+        {
+          "raw": "1 cup fresh blueberries",
+          "record_support": 8
+        }
+      ],
+      "bread": [
+        {
+          "raw": "bread",
+          "record_support": 508
+        },
+        {
+          "raw": "sliced bread",
+          "record_support": 51
+        },
+        {
+          "raw": "cubed bread",
+          "record_support": 26
+        },
+        {
+          "raw": "1 slice bread",
+          "record_support": 4
+        },
+        {
+          "raw": "bread, cut into italian loaf",
+          "record_support": 4
+        }
+      ],
+      "broccoli": [
+        {
+          "raw": "broccoli",
+          "record_support": 424
+        },
+        {
+          "raw": "frozen broccoli",
+          "record_support": 24
+        },
+        {
+          "raw": "frozen chopped broccoli",
+          "record_support": 5
+        },
+        {
+          "raw": "1 cup chopped broccoli",
+          "record_support": 3
+        },
+        {
+          "raw": "2 heads broccoli",
+          "record_support": 2
+        }
+      ],
+      "brown sugar": [
+        {
+          "raw": "brown sugar",
+          "record_support": 2114
+        },
+        {
+          "raw": "2 tablespoons brown sugar",
+          "record_support": 82
+        },
+        {
+          "raw": "1 tablespoon brown sugar",
+          "record_support": 80
+        },
+        {
+          "raw": "1/2 cup packed brown sugar",
+          "record_support": 78
+        },
+        {
+          "raw": "1/4 cup packed brown sugar",
+          "record_support": 52
+        }
+      ],
+      "butter": [
+        {
+          "raw": "butter",
+          "record_support": 3684
+        },
+        {
+          "raw": "unsalted butter",
+          "record_support": 1833
+        },
+        {
+          "raw": "melted butter",
+          "record_support": 285
+        },
+        {
+          "raw": "2 tablespoons butter",
+          "record_support": 276
+        },
+        {
+          "raw": "1 tablespoon butter",
+          "record_support": 237
+        }
+      ],
+      "buttermilk": [
+        {
+          "raw": "buttermilk",
+          "record_support": 252
+        },
+        {
+          "raw": "1 cup buttermilk",
+          "record_support": 43
+        },
+        {
+          "raw": "1/2 cup buttermilk",
+          "record_support": 34
+        },
+        {
+          "raw": "3/4 cup buttermilk",
+          "record_support": 27
+        },
+        {
+          "raw": "2 cups buttermilk",
+          "record_support": 22
+        }
+      ],
+      "cabbage": [
+        {
+          "raw": "cabbage",
+          "record_support": 359
+        },
+        {
+          "raw": "shredded cabbage",
+          "record_support": 141
+        },
+        {
+          "raw": "4 cups shredded cabbage",
+          "record_support": 6
+        },
+        {
+          "raw": "3 cups shredded cabbage",
+          "record_support": 5
+        },
+        {
+          "raw": "2 cups shredded cabbage",
+          "record_support": 4
+        }
+      ],
+      "canola oil": [
+        {
+          "raw": "canola oil",
+          "record_support": 1442
+        },
+        {
+          "raw": "1 tablespoon canola oil",
+          "record_support": 84
+        },
+        {
+          "raw": "2 tablespoons canola oil",
+          "record_support": 78
+        },
+        {
+          "raw": "1/4 cup canola oil",
+          "record_support": 33
+        },
+        {
+          "raw": "2 teaspoons canola oil",
+          "record_support": 32
+        }
+      ],
+      "capers": [
+        {
+          "raw": "capers",
+          "record_support": 276
+        },
+        {
+          "raw": "2 tablespoons capers",
+          "record_support": 32
+        },
+        {
+          "raw": "1 tablespoon capers",
+          "record_support": 25
+        },
+        {
+          "raw": "2 tablespoons drained capers",
+          "record_support": 14
+        },
+        {
+          "raw": "1 tablespoon capers, drained",
+          "record_support": 11
+        }
+      ],
+      "carrot": [
+        {
+          "raw": "carrots",
+          "record_support": 2590
+        },
+        {
+          "raw": "shredded carrots",
+          "record_support": 293
+        },
+        {
+          "raw": "medium carrot",
+          "record_support": 128
+        },
+        {
+          "raw": "large carrots",
+          "record_support": 127
+        },
+        {
+          "raw": "sliced carrots",
+          "record_support": 75
+        }
+      ],
+      "cauliflower": [
+        {
+          "raw": "cauliflower",
+          "record_support": 485
+        },
+        {
+          "raw": "head cauliflower",
+          "record_support": 18
+        },
+        {
+          "raw": "grated cauliflower",
+          "record_support": 4
+        },
+        {
+          "raw": "frozen cauliflower",
+          "record_support": 4
+        },
+        {
+          "raw": "1 head cauliflower, cut into florets",
+          "record_support": 3
+        }
+      ],
+      "cayenne": [
+        {
+          "raw": "cayenne",
+          "record_support": 440
+        },
+        {
+          "raw": "1/4 teaspoon cayenne",
+          "record_support": 39
+        },
+        {
+          "raw": "1/2 teaspoon cayenne",
+          "record_support": 16
+        },
+        {
+          "raw": "1/8 teaspoon cayenne",
+          "record_support": 11
+        },
+        {
+          "raw": "Pinch of cayenne",
+          "record_support": 9
+        }
+      ],
+      "cayenne pepper": [
+        {
+          "raw": "cayenne pepper",
+          "record_support": 1281
+        },
+        {
+          "raw": "1/4 teaspoon cayenne pepper",
+          "record_support": 111
+        },
+        {
+          "raw": "1/8 teaspoon cayenne pepper",
+          "record_support": 67
+        },
+        {
+          "raw": "1/2 teaspoon cayenne pepper",
+          "record_support": 64
+        },
+        {
+          "raw": "1 teaspoon cayenne pepper",
+          "record_support": 42
+        }
+      ],
+      "celery": [
+        {
+          "raw": "celery",
+          "record_support": 571
+        },
+        {
+          "raw": "chopped celery",
+          "record_support": 103
+        },
+        {
+          "raw": "1/2 cup chopped celery",
+          "record_support": 60
+        },
+        {
+          "raw": "1 cup chopped celery",
+          "record_support": 55
+        },
+        {
+          "raw": "diced celery",
+          "record_support": 38
+        }
+      ],
+      "cheese": [
+        {
+          "raw": "grated parmesan cheese",
+          "record_support": 1264
+        },
+        {
+          "raw": "feta cheese",
+          "record_support": 769
+        },
+        {
+          "raw": "parmesan cheese",
+          "record_support": 756
+        },
+        {
+          "raw": "cream cheese",
+          "record_support": 690
+        },
+        {
+          "raw": "feta cheese crumbles",
+          "record_support": 637
+        }
+      ],
+      "cherry tomatoes": [
+        {
+          "raw": "cherry tomatoes",
+          "record_support": 843
+        },
+        {
+          "raw": "1 cup cherry tomatoes, halved",
+          "record_support": 25
+        },
+        {
+          "raw": "12 cherry tomatoes, halved",
+          "record_support": 6
+        },
+        {
+          "raw": "2 cups cherry tomatoes, halved",
+          "record_support": 6
+        },
+        {
+          "raw": "16 cherry tomatoes",
+          "record_support": 5
+        }
+      ],
+      "chicken": [
+        {
+          "raw": "boneless skinless chicken breasts",
+          "record_support": 1662
+        },
+        {
+          "raw": "chicken breasts",
+          "record_support": 1243
+        },
+        {
+          "raw": "chicken",
+          "record_support": 1111
+        },
+        {
+          "raw": "boneless skinless chicken thighs",
+          "record_support": 557
+        },
+        {
+          "raw": "chicken thighs",
+          "record_support": 461
+        }
+      ],
+      "chicken broth": [
+        {
+          "raw": "chicken broth",
+          "record_support": 1328
+        },
+        {
+          "raw": "1 cup chicken broth",
+          "record_support": 71
+        },
+        {
+          "raw": "2 cups chicken broth",
+          "record_support": 70
+        },
+        {
+          "raw": "1/2 cup chicken broth",
+          "record_support": 40
+        },
+        {
+          "raw": "4 cups chicken broth",
+          "record_support": 39
+        }
+      ],
+      "chicken stock": [
+        {
+          "raw": "chicken stock",
+          "record_support": 1335
+        },
+        {
+          "raw": "homemade chicken stock",
+          "record_support": 35
+        },
+        {
+          "raw": "2 cups chicken stock",
+          "record_support": 34
+        },
+        {
+          "raw": "4 cups chicken stock",
+          "record_support": 24
+        },
+        {
+          "raw": "1 cup chicken stock",
+          "record_support": 22
+        }
+      ],
+      "chickpeas": [
+        {
+          "raw": "chickpeas",
+          "record_support": 632
+        },
+        {
+          "raw": "dried chickpeas",
+          "record_support": 37
+        },
+        {
+          "raw": "1 (15 1/2-ounce) can chickpeas (garbanzo beans), drained",
+          "record_support": 8
+        },
+        {
+          "raw": "1 (15-ounce) can chickpeas (garbanzo beans), rinsed and drained",
+          "record_support": 5
+        },
+        {
+          "raw": "1 (15 1/2-ounce) can chickpeas (garbanzo beans), rinsed and drained",
+          "record_support": 3
+        }
+      ],
+      "chili powder": [
+        {
+          "raw": "chili powder",
+          "record_support": 2590
+        },
+        {
+          "raw": "red chili powder",
+          "record_support": 434
+        },
+        {
+          "raw": "1 teaspoon chili powder",
+          "record_support": 182
+        },
+        {
+          "raw": "1 tablespoon chili powder",
+          "record_support": 138
+        },
+        {
+          "raw": "chile powder",
+          "record_support": 103
+        }
+      ],
+      "chinese five spice powder": [
+        {
+          "raw": "chinese five-spice powder",
+          "record_support": 638
+        },
+        {
+          "raw": "1/4 teaspoon Chinese five-spice powder",
+          "record_support": 4
+        },
+        {
+          "raw": "1 teaspoon Chinese five-spice powder",
+          "record_support": 3
+        },
+        {
+          "raw": "¼ tsp Chinese five spice powder",
+          "record_support": 2
+        },
+        {
+          "raw": "½ tsp Chinese five spice powder",
+          "record_support": 2
+        }
+      ],
+      "chives": [
+        {
+          "raw": "chives",
+          "record_support": 383
+        },
+        {
+          "raw": "chopped fresh chives",
+          "record_support": 82
+        },
+        {
+          "raw": "fresh chives",
+          "record_support": 73
+        },
+        {
+          "raw": "2 tablespoons chopped fresh chives",
+          "record_support": 64
+        },
+        {
+          "raw": "1 tablespoon chopped fresh chives",
+          "record_support": 33
+        }
+      ],
+      "cider vinegar": [
+        {
+          "raw": "cider vinegar",
+          "record_support": 141
+        },
+        {
+          "raw": "2 tablespoons cider vinegar",
+          "record_support": 78
+        },
+        {
+          "raw": "1 tablespoon cider vinegar",
+          "record_support": 65
+        },
+        {
+          "raw": "1/4 cup cider vinegar",
+          "record_support": 44
+        },
+        {
+          "raw": "1/2 cup cider vinegar",
+          "record_support": 27
+        }
+      ],
+      "cilantro": [
+        {
+          "raw": "cilantro",
+          "record_support": 2270
+        },
+        {
+          "raw": "cilantro leaves",
+          "record_support": 1883
+        },
+        {
+          "raw": "chopped cilantro",
+          "record_support": 1338
+        },
+        {
+          "raw": "fresh cilantro",
+          "record_support": 1255
+        },
+        {
+          "raw": "chopped fresh cilantro",
+          "record_support": 1142
+        }
+      ],
+      "cinnamon": [
+        {
+          "raw": "cinnamon",
+          "record_support": 1438
+        },
+        {
+          "raw": "1/2 teaspoon cinnamon",
+          "record_support": 42
+        },
+        {
+          "raw": "1/4 teaspoon cinnamon",
+          "record_support": 33
+        },
+        {
+          "raw": "1 teaspoon cinnamon",
+          "record_support": 24
+        },
+        {
+          "raw": "1/8 teaspoon cinnamon",
+          "record_support": 10
+        }
+      ],
+      "cinnamon sticks": [
+        {
+          "raw": "cinnamon sticks",
+          "record_support": 530
+        },
+        {
+          "raw": "2 cinnamon sticks",
+          "record_support": 12
+        },
+        {
+          "raw": "2 (3-inch) cinnamon sticks",
+          "record_support": 10
+        },
+        {
+          "raw": "4 cinnamon sticks",
+          "record_support": 3
+        },
+        {
+          "raw": "2 Cinnamon Sticks",
+          "record_support": 2
+        }
+      ],
+      "coarse salt": [
+        {
+          "raw": "coarse salt",
+          "record_support": 441
+        },
+        {
+          "raw": "Coarse salt",
+          "record_support": 186
+        },
+        {
+          "raw": "1/2 teaspoon coarse salt",
+          "record_support": 111
+        },
+        {
+          "raw": "1 teaspoon coarse salt",
+          "record_support": 100
+        },
+        {
+          "raw": "1/4 teaspoon coarse salt",
+          "record_support": 42
+        }
+      ],
+      "coconut milk": [
+        {
+          "raw": "coconut milk",
+          "record_support": 1597
+        },
+        {
+          "raw": "1 cup coconut milk",
+          "record_support": 12
+        },
+        {
+          "raw": "reduced fat coconut milk",
+          "record_support": 9
+        },
+        {
+          "raw": "1/2 cup coconut milk",
+          "record_support": 7
+        },
+        {
+          "raw": "400ml coconut milk",
+          "record_support": 6
+        }
+      ],
+      "coconut oil": [
+        {
+          "raw": "coconut oil",
+          "record_support": 816
+        },
+        {
+          "raw": "1 tablespoon coconut oil",
+          "record_support": 10
+        },
+        {
+          "raw": "2 tbsp coconut oil",
+          "record_support": 7
+        },
+        {
+          "raw": "2 tablespoons coconut oil",
+          "record_support": 3
+        },
+        {
+          "raw": "1 tbsp coconut oil",
+          "record_support": 3
+        }
+      ],
+      "cold water": [
+        {
+          "raw": "cold water",
+          "record_support": 386
+        },
+        {
+          "raw": "2 tablespoons cold water",
+          "record_support": 13
+        },
+        {
+          "raw": "3 tablespoons cold water",
+          "record_support": 10
+        },
+        {
+          "raw": "1/2 cup cold water",
+          "record_support": 10
+        },
+        {
+          "raw": "1 cup cold water",
+          "record_support": 9
+        }
+      ],
+      "cooking oil": [
+        {
+          "raw": "cooking oil",
+          "record_support": 483
+        },
+        {
+          "raw": "2 tablespoons cooking oil",
+          "record_support": 5
+        },
+        {
+          "raw": "1/4 cup cooking oil",
+          "record_support": 3
+        },
+        {
+          "raw": "2 teaspoons cooking oil",
+          "record_support": 3
+        },
+        {
+          "raw": "1 teaspoon cooking oil",
+          "record_support": 3
+        }
+      ],
+      "cooking spray": [
+        {
+          "raw": "Cooking spray",
+          "record_support": 1554
+        },
+        {
+          "raw": "cooking spray",
+          "record_support": 461
+        },
+        {
+          "raw": "Cooking spray (optional)",
+          "record_support": 3
+        },
+        {
+          "raw": "cooking spray (I used my Misto)",
+          "record_support": 2
+        },
+        {
+          "raw": "Cooking Spray",
+          "record_support": 2
+        }
+      ],
+      "coriander": [
+        {
+          "raw": "coriander",
+          "record_support": 668
+        },
+        {
+          "raw": "fresh coriander",
+          "record_support": 375
+        },
+        {
+          "raw": "1 teaspoon coriander",
+          "record_support": 6
+        },
+        {
+          "raw": "1/2 teaspoon coriander",
+          "record_support": 5
+        },
+        {
+          "raw": "1 tsp coriander",
+          "record_support": 5
+        }
+      ],
+      "coriander powder": [
+        {
+          "raw": "coriander powder",
+          "record_support": 591
+        },
+        {
+          "raw": "1 tsp coriander powder",
+          "record_support": 14
+        },
+        {
+          "raw": "1 teaspoon coriander powder",
+          "record_support": 4
+        },
+        {
+          "raw": "2 tsp coriander powder",
+          "record_support": 4
+        },
+        {
+          "raw": "1 tablespoon coriander powder",
+          "record_support": 3
+        }
+      ],
+      "coriander seeds": [
+        {
+          "raw": "coriander seeds",
+          "record_support": 461
+        },
+        {
+          "raw": "1 teaspoon coriander seeds",
+          "record_support": 27
+        },
+        {
+          "raw": "1 tablespoon coriander seeds",
+          "record_support": 16
+        },
+        {
+          "raw": "2 teaspoons coriander seeds",
+          "record_support": 15
+        },
+        {
+          "raw": "2 tablespoons coriander seeds",
+          "record_support": 11
+        }
+      ],
+      "corn": [
+        {
+          "raw": "corn",
+          "record_support": 481
+        },
+        {
+          "raw": "frozen corn",
+          "record_support": 223
+        },
+        {
+          "raw": "fresh corn",
+          "record_support": 39
+        },
+        {
+          "raw": "1 cup frozen corn",
+          "record_support": 17
+        },
+        {
+          "raw": "1 cup corn",
+          "record_support": 14
+        }
+      ],
+      "corn kernels": [
+        {
+          "raw": "corn kernels",
+          "record_support": 239
+        },
+        {
+          "raw": "frozen corn kernels",
+          "record_support": 87
+        },
+        {
+          "raw": "1 cup frozen corn kernels",
+          "record_support": 18
+        },
+        {
+          "raw": "1 cup corn kernels",
+          "record_support": 10
+        },
+        {
+          "raw": "1 cup fresh corn kernels",
+          "record_support": 9
+        }
+      ],
+      "corn starch": [
+        {
+          "raw": "corn starch",
+          "record_support": 2550
+        },
+        {
+          "raw": "1 teaspoon corn starch",
+          "record_support": 3
+        },
+        {
+          "raw": "1/2 teaspoon corn starch",
+          "record_support": 2
+        },
+        {
+          "raw": "1 tablespoon corn starch",
+          "record_support": 2
+        },
+        {
+          "raw": "3 tablespoons corn starch",
+          "record_support": 2
+        }
+      ],
+      "corn tortillas": [
+        {
+          "raw": "corn tortillas",
+          "record_support": 576
+        },
+        {
+          "raw": "12 corn tortillas",
+          "record_support": 78
+        },
+        {
+          "raw": "8 corn tortillas",
+          "record_support": 54
+        },
+        {
+          "raw": "8 (6-inch) corn tortillas",
+          "record_support": 16
+        },
+        {
+          "raw": "12 (6-inch) corn tortillas",
+          "record_support": 15
+        }
+      ],
+      "cucumber": [
+        {
+          "raw": "cucumber",
+          "record_support": 1664
+        },
+        {
+          "raw": "sliced cucumber",
+          "record_support": 73
+        },
+        {
+          "raw": "1 cup chopped cucumber",
+          "record_support": 4
+        },
+        {
+          "raw": "1 cup chopped seeded cucumber",
+          "record_support": 3
+        },
+        {
+          "raw": "1 cucumber, peeled and sliced",
+          "record_support": 3
+        }
+      ],
+      "cumin": [
+        {
+          "raw": "cumin",
+          "record_support": 1405
+        },
+        {
+          "raw": "1 teaspoon cumin",
+          "record_support": 103
+        },
+        {
+          "raw": "1/2 teaspoon cumin",
+          "record_support": 49
+        },
+        {
+          "raw": "1 tsp cumin",
+          "record_support": 41
+        },
+        {
+          "raw": "1 tablespoon cumin",
+          "record_support": 33
+        }
+      ],
+      "cumin seed": [
+        {
+          "raw": "cumin seed",
+          "record_support": 1331
+        },
+        {
+          "raw": "1 teaspoon cumin seed",
+          "record_support": 6
+        },
+        {
+          "raw": "½ teaspoon cumin seed",
+          "record_support": 3
+        },
+        {
+          "raw": "2 teaspoons cumin seed",
+          "record_support": 3
+        },
+        {
+          "raw": "1 teaspoon cumin seed (toasted)",
+          "record_support": 2
+        }
+      ],
+      "curry leaves": [
+        {
+          "raw": "curry leaves",
+          "record_support": 458
+        },
+        {
+          "raw": "fresh curry leaves",
+          "record_support": 53
+        },
+        {
+          "raw": "10 curry leaves",
+          "record_support": 6
+        },
+        {
+          "raw": "1 sprig curry leaves",
+          "record_support": 6
+        },
+        {
+          "raw": "10 fresh curry leaves",
+          "record_support": 4
+        }
+      ],
+      "curry powder": [
+        {
+          "raw": "curry powder",
+          "record_support": 774
+        },
+        {
+          "raw": "1 teaspoon curry powder",
+          "record_support": 35
+        },
+        {
+          "raw": "1 tablespoon curry powder",
+          "record_support": 32
+        },
+        {
+          "raw": "2 teaspoons curry powder",
+          "record_support": 20
+        },
+        {
+          "raw": "1/2 teaspoon curry powder",
+          "record_support": 17
+        }
+      ],
+      "dark soy sauce": [
+        {
+          "raw": "dark soy sauce",
+          "record_support": 576
+        },
+        {
+          "raw": "2 tablespoons dark soy sauce",
+          "record_support": 7
+        },
+        {
+          "raw": "1 tablespoon dark soy sauce",
+          "record_support": 7
+        },
+        {
+          "raw": "1 teaspoon dark soy sauce",
+          "record_support": 4
+        },
+        {
+          "raw": "1 tsp dark soy sauce",
+          "record_support": 4
+        }
+      ],
+      "dijon mustard": [
+        {
+          "raw": "dijon mustard",
+          "record_support": 704
+        },
+        {
+          "raw": "1 teaspoon Dijon mustard",
+          "record_support": 208
+        },
+        {
+          "raw": "1 tablespoon Dijon mustard",
+          "record_support": 189
+        },
+        {
+          "raw": "2 teaspoons Dijon mustard",
+          "record_support": 133
+        },
+        {
+          "raw": "2 tablespoons Dijon mustard",
+          "record_support": 121
+        }
+      ],
+      "dill": [
+        {
+          "raw": "fresh dill",
+          "record_support": 394
+        },
+        {
+          "raw": "dill",
+          "record_support": 180
+        },
+        {
+          "raw": "dried dill",
+          "record_support": 91
+        },
+        {
+          "raw": "2 tablespoons chopped fresh dill",
+          "record_support": 35
+        },
+        {
+          "raw": "1 tablespoon chopped fresh dill",
+          "record_support": 28
+        }
+      ],
+      "dry white wine": [
+        {
+          "raw": "dry white wine",
+          "record_support": 506
+        },
+        {
+          "raw": "1/2 cup dry white wine",
+          "record_support": 184
+        },
+        {
+          "raw": "1 cup dry white wine",
+          "record_support": 126
+        },
+        {
+          "raw": "1/4 cup dry white wine",
+          "record_support": 78
+        },
+        {
+          "raw": "1/3 cup dry white wine",
+          "record_support": 35
+        }
+      ],
+      "egg": [
+        {
+          "raw": "eggs",
+          "record_support": 5243
+        },
+        {
+          "raw": "large eggs",
+          "record_support": 2304
+        },
+        {
+          "raw": "1 large egg",
+          "record_support": 413
+        },
+        {
+          "raw": "2 large eggs",
+          "record_support": 409
+        },
+        {
+          "raw": "1 egg",
+          "record_support": 280
+        }
+      ],
+      "egg whites": [
+        {
+          "raw": "egg whites",
+          "record_support": 670
+        },
+        {
+          "raw": "large egg whites",
+          "record_support": 276
+        },
+        {
+          "raw": "2 large egg whites",
+          "record_support": 89
+        },
+        {
+          "raw": "3 large egg whites",
+          "record_support": 55
+        },
+        {
+          "raw": "4 large egg whites",
+          "record_support": 38
+        }
+      ],
+      "egg yolks": [
+        {
+          "raw": "egg yolks",
+          "record_support": 460
+        },
+        {
+          "raw": "large egg yolks",
+          "record_support": 224
+        },
+        {
+          "raw": "2 large egg yolks",
+          "record_support": 62
+        },
+        {
+          "raw": "4 large egg yolks",
+          "record_support": 42
+        },
+        {
+          "raw": "3 large egg yolks",
+          "record_support": 32
+        }
+      ],
+      "eggplant": [
+        {
+          "raw": "eggplant",
+          "record_support": 386
+        },
+        {
+          "raw": "1 large eggplant",
+          "record_support": 7
+        },
+        {
+          "raw": "1 large eggplant (1 to 1 1/2 pounds)",
+          "record_support": 4
+        },
+        {
+          "raw": "1 medium eggplant, diced",
+          "record_support": 2
+        },
+        {
+          "raw": "1 (1-pound) eggplant",
+          "record_support": 2
+        }
+      ],
+      "fennel seeds": [
+        {
+          "raw": "fennel seeds",
+          "record_support": 379
+        },
+        {
+          "raw": "1 teaspoon fennel seeds",
+          "record_support": 32
+        },
+        {
+          "raw": "1/2 teaspoon fennel seeds",
+          "record_support": 20
+        },
+        {
+          "raw": "1 tsp fennel seeds",
+          "record_support": 12
+        },
+        {
+          "raw": "2 teaspoons fennel seeds",
+          "record_support": 10
+        }
+      ],
+      "fish sauce": [
+        {
+          "raw": "fish sauce",
+          "record_support": 2077
+        },
+        {
+          "raw": "1 tablespoon fish sauce",
+          "record_support": 18
+        },
+        {
+          "raw": "2 tablespoons fish sauce",
+          "record_support": 8
+        },
+        {
+          "raw": "1 teaspoon fish sauce",
+          "record_support": 6
+        },
+        {
+          "raw": "3 tablespoons fish sauce",
+          "record_support": 6
+        }
+      ],
+      "flat leaf parsley": [
+        {
+          "raw": "flat leaf parsley",
+          "record_support": 977
+        },
+        {
+          "raw": "2 tablespoons chopped fresh flat-leaf parsley",
+          "record_support": 52
+        },
+        {
+          "raw": "1/4 cup chopped fresh flat-leaf parsley",
+          "record_support": 51
+        },
+        {
+          "raw": "1 tablespoon chopped fresh flat-leaf parsley",
+          "record_support": 38
+        },
+        {
+          "raw": "1/2 cup chopped fresh flat-leaf parsley",
+          "record_support": 25
+        }
+      ],
+      "flour": [
+        {
+          "raw": "all-purpose flour",
+          "record_support": 2341
+        },
+        {
+          "raw": "flour",
+          "record_support": 1732
+        },
+        {
+          "raw": "1 cup all-purpose flour",
+          "record_support": 265
+        },
+        {
+          "raw": "1/4 cup all-purpose flour",
+          "record_support": 225
+        },
+        {
+          "raw": "2 tablespoons all-purpose flour",
+          "record_support": 215
+        }
+      ],
+      "flour tortillas": [
+        {
+          "raw": "flour tortillas",
+          "record_support": 637
+        },
+        {
+          "raw": "large flour tortillas",
+          "record_support": 26
+        },
+        {
+          "raw": "8 flour tortillas",
+          "record_support": 16
+        },
+        {
+          "raw": "8 (8-inch) flour tortillas",
+          "record_support": 12
+        },
+        {
+          "raw": "10 (8 inch) flour tortillas",
+          "record_support": 10
+        }
+      ],
+      "french bread": [
+        {
+          "raw": "french bread",
+          "record_support": 551
+        },
+        {
+          "raw": "6 slices French bread",
+          "record_support": 3
+        },
+        {
+          "raw": "4 (1/2-ounce) slices French bread, toasted",
+          "record_support": 2
+        },
+        {
+          "raw": "6 slices French bread, toasted",
+          "record_support": 2
+        },
+        {
+          "raw": "8 (1/2-ounce) slices French bread",
+          "record_support": 2
+        }
+      ],
+      "garam masala": [
+        {
+          "raw": "garam masala",
+          "record_support": 1877
+        },
+        {
+          "raw": "1 teaspoon garam masala",
+          "record_support": 44
+        },
+        {
+          "raw": "1 tsp garam masala",
+          "record_support": 35
+        },
+        {
+          "raw": "2 teaspoons garam masala",
+          "record_support": 21
+        },
+        {
+          "raw": "1 tablespoon garam masala",
+          "record_support": 19
+        }
+      ],
+      "garlic": [
+        {
+          "raw": "garlic",
+          "record_support": 9983
+        },
+        {
+          "raw": "garlic cloves",
+          "record_support": 4840
+        },
+        {
+          "raw": "minced garlic",
+          "record_support": 1490
+        },
+        {
+          "raw": "2 garlic cloves, minced",
+          "record_support": 582
+        },
+        {
+          "raw": "large garlic cloves",
+          "record_support": 397
+        }
+      ],
+      "garlic paste": [
+        {
+          "raw": "garlic paste",
+          "record_support": 503
+        },
+        {
+          "raw": "1 tablespoon garlic paste",
+          "record_support": 8
+        },
+        {
+          "raw": "1 teaspoon garlic paste",
+          "record_support": 5
+        },
+        {
+          "raw": "1 tsp garlic paste",
+          "record_support": 2
+        },
+        {
+          "raw": "1 tbsp garlic paste",
+          "record_support": 2
+        }
+      ],
+      "garlic powder": [
+        {
+          "raw": "garlic powder",
+          "record_support": 1996
+        },
+        {
+          "raw": "1 teaspoon garlic powder",
+          "record_support": 136
+        },
+        {
+          "raw": "1/2 teaspoon garlic powder",
+          "record_support": 117
+        },
+        {
+          "raw": "1/4 teaspoon garlic powder",
+          "record_support": 76
+        },
+        {
+          "raw": "1 tablespoon garlic powder",
+          "record_support": 39
+        }
+      ],
+      "ghee": [
+        {
+          "raw": "ghee",
+          "record_support": 474
+        },
+        {
+          "raw": "1 TBSP ghee",
+          "record_support": 6
+        },
+        {
+          "raw": "2 tablespoons ghee (clarified butter)",
+          "record_support": 4
+        },
+        {
+          "raw": "1 tbsp ghee",
+          "record_support": 4
+        },
+        {
+          "raw": "1 tbsp ghee, unsalted butter or dairy-free butter substitute (use butter substitute to keep vegan)",
+          "record_support": 4
+        }
+      ],
+      "ginger": [
+        {
+          "raw": "ginger",
+          "record_support": 3302
+        },
+        {
+          "raw": "fresh ginger",
+          "record_support": 2333
+        },
+        {
+          "raw": "minced ginger",
+          "record_support": 453
+        },
+        {
+          "raw": "peeled fresh ginger",
+          "record_support": 299
+        },
+        {
+          "raw": "1 tablespoon minced peeled fresh ginger",
+          "record_support": 37
+        }
+      ],
+      "ginger root": [
+        {
+          "raw": "fresh ginger root",
+          "record_support": 318
+        },
+        {
+          "raw": "ginger root",
+          "record_support": 256
+        },
+        {
+          "raw": "1 tablespoon minced fresh ginger root",
+          "record_support": 5
+        },
+        {
+          "raw": "2 tablespoons minced fresh ginger root",
+          "record_support": 3
+        },
+        {
+          "raw": "1 teaspoon minced fresh ginger root",
+          "record_support": 3
+        }
+      ],
+      "granulated sugar": [
+        {
+          "raw": "granulated sugar",
+          "record_support": 1078
+        },
+        {
+          "raw": "1/2 cup granulated sugar",
+          "record_support": 94
+        },
+        {
+          "raw": "1 cup granulated sugar",
+          "record_support": 85
+        },
+        {
+          "raw": "1/4 cup granulated sugar",
+          "record_support": 68
+        },
+        {
+          "raw": "3/4 cup granulated sugar",
+          "record_support": 51
+        }
+      ],
+      "greek yogurt": [
+        {
+          "raw": "greek yogurt",
+          "record_support": 1481
+        },
+        {
+          "raw": "nonfat greek yogurt",
+          "record_support": 163
+        },
+        {
+          "raw": "1/2 cup Greek yogurt",
+          "record_support": 7
+        },
+        {
+          "raw": "¼ cup Greek yogurt",
+          "record_support": 3
+        },
+        {
+          "raw": "Greek Yogurt",
+          "record_support": 3
+        }
+      ],
+      "green beans": [
+        {
+          "raw": "green beans",
+          "record_support": 408
+        },
+        {
+          "raw": "fresh green beans",
+          "record_support": 84
+        },
+        {
+          "raw": "1 pound green beans, trimmed",
+          "record_support": 23
+        },
+        {
+          "raw": "frozen green beans",
+          "record_support": 18
+        },
+        {
+          "raw": "2 pounds green beans, trimmed",
+          "record_support": 13
+        }
+      ],
+      "green bell pepper": [
+        {
+          "raw": "green bell pepper",
+          "record_support": 699
+        },
+        {
+          "raw": "green bell pepper, sliced",
+          "record_support": 64
+        },
+        {
+          "raw": "chopped green bell pepper",
+          "record_support": 55
+        },
+        {
+          "raw": "1 green bell pepper, chopped",
+          "record_support": 47
+        },
+        {
+          "raw": "1/2 cup chopped green bell pepper",
+          "record_support": 44
+        }
+      ],
+      "green chilies": [
+        {
+          "raw": "green chilies",
+          "record_support": 1194
+        },
+        {
+          "raw": "diced green chilies",
+          "record_support": 138
+        },
+        {
+          "raw": "chopped green chilies",
+          "record_support": 47
+        },
+        {
+          "raw": "1 (4 ounce) can chopped green chilies",
+          "record_support": 10
+        },
+        {
+          "raw": "1 (4.5 ounce) can chopped green chilies",
+          "record_support": 3
+        }
+      ],
+      "green onion": [
+        {
+          "raw": "green onions",
+          "record_support": 3508
+        },
+        {
+          "raw": "scallions",
+          "record_support": 2542
+        },
+        {
+          "raw": "sliced green onions",
+          "record_support": 339
+        },
+        {
+          "raw": "1/2 cup chopped green onions",
+          "record_support": 52
+        },
+        {
+          "raw": "1/4 cup chopped green onions",
+          "record_support": 42
+        }
+      ],
+      "green pepper": [
+        {
+          "raw": "green pepper",
+          "record_support": 455
+        },
+        {
+          "raw": "1 medium green pepper, chopped",
+          "record_support": 6
+        },
+        {
+          "raw": "1 cup chopped green pepper",
+          "record_support": 5
+        },
+        {
+          "raw": "1 green pepper",
+          "record_support": 5
+        },
+        {
+          "raw": "1 green pepper, sliced",
+          "record_support": 5
+        }
+      ],
+      "ground cinnamon": [
+        {
+          "raw": "ground cinnamon",
+          "record_support": 855
+        },
+        {
+          "raw": "1/2 teaspoon ground cinnamon",
+          "record_support": 185
+        },
+        {
+          "raw": "1 teaspoon ground cinnamon",
+          "record_support": 168
+        },
+        {
+          "raw": "1/4 teaspoon ground cinnamon",
+          "record_support": 120
+        },
+        {
+          "raw": "2 teaspoons ground cinnamon",
+          "record_support": 40
+        }
+      ],
+      "ground coriander": [
+        {
+          "raw": "ground coriander",
+          "record_support": 1042
+        },
+        {
+          "raw": "1 teaspoon ground coriander",
+          "record_support": 66
+        },
+        {
+          "raw": "1/2 teaspoon ground coriander",
+          "record_support": 40
+        },
+        {
+          "raw": "1 tsp ground coriander",
+          "record_support": 21
+        },
+        {
+          "raw": "1/4 teaspoon ground coriander",
+          "record_support": 19
+        }
+      ],
+      "ground cumin": [
+        {
+          "raw": "ground cumin",
+          "record_support": 2800
+        },
+        {
+          "raw": "1 teaspoon ground cumin",
+          "record_support": 321
+        },
+        {
+          "raw": "1/2 teaspoon ground cumin",
+          "record_support": 214
+        },
+        {
+          "raw": "2 teaspoons ground cumin",
+          "record_support": 126
+        },
+        {
+          "raw": "1/4 teaspoon ground cumin",
+          "record_support": 109
+        }
+      ],
+      "ground ginger": [
+        {
+          "raw": "ground ginger",
+          "record_support": 663
+        },
+        {
+          "raw": "1/2 teaspoon ground ginger",
+          "record_support": 54
+        },
+        {
+          "raw": "1 teaspoon ground ginger",
+          "record_support": 47
+        },
+        {
+          "raw": "1/4 teaspoon ground ginger",
+          "record_support": 45
+        },
+        {
+          "raw": "2 teaspoons ground ginger",
+          "record_support": 13
+        }
+      ],
+      "ground nutmeg": [
+        {
+          "raw": "ground nutmeg",
+          "record_support": 255
+        },
+        {
+          "raw": "1/4 teaspoon ground nutmeg",
+          "record_support": 132
+        },
+        {
+          "raw": "1/8 teaspoon ground nutmeg",
+          "record_support": 82
+        },
+        {
+          "raw": "1/2 teaspoon ground nutmeg",
+          "record_support": 54
+        },
+        {
+          "raw": "1 teaspoon ground nutmeg",
+          "record_support": 23
+        }
+      ],
+      "ground red pepper": [
+        {
+          "raw": "1/4 teaspoon ground red pepper",
+          "record_support": 135
+        },
+        {
+          "raw": "1/8 teaspoon ground red pepper",
+          "record_support": 126
+        },
+        {
+          "raw": "ground red pepper",
+          "record_support": 123
+        },
+        {
+          "raw": "1/2 teaspoon ground red pepper",
+          "record_support": 53
+        },
+        {
+          "raw": "Dash of ground red pepper",
+          "record_support": 26
+        }
+      ],
+      "ground turmeric": [
+        {
+          "raw": "ground turmeric",
+          "record_support": 1678
+        },
+        {
+          "raw": "1 teaspoon ground turmeric",
+          "record_support": 36
+        },
+        {
+          "raw": "1/2 teaspoon ground turmeric",
+          "record_support": 34
+        },
+        {
+          "raw": "1/4 teaspoon ground turmeric",
+          "record_support": 22
+        },
+        {
+          "raw": "1 tsp ground turmeric",
+          "record_support": 19
+        }
+      ],
+      "heavy cream": [
+        {
+          "raw": "heavy cream",
+          "record_support": 1121
+        },
+        {
+          "raw": "1 cup heavy cream",
+          "record_support": 106
+        },
+        {
+          "raw": "1/2 cup heavy cream",
+          "record_support": 87
+        },
+        {
+          "raw": "1/4 cup heavy cream",
+          "record_support": 55
+        },
+        {
+          "raw": "2 cups heavy cream",
+          "record_support": 48
+        }
+      ],
+      "hoisin sauce": [
+        {
+          "raw": "hoisin sauce",
+          "record_support": 650
+        },
+        {
+          "raw": "2 tablespoons hoisin sauce",
+          "record_support": 13
+        },
+        {
+          "raw": "1 tablespoon hoisin sauce",
+          "record_support": 10
+        },
+        {
+          "raw": "1/4 cup hoisin sauce",
+          "record_support": 6
+        },
+        {
+          "raw": "1/3 cup hoisin sauce",
+          "record_support": 4
+        }
+      ],
+      "honey": [
+        {
+          "raw": "honey",
+          "record_support": 2235
+        },
+        {
+          "raw": "1 tablespoon honey",
+          "record_support": 166
+        },
+        {
+          "raw": "2 tablespoons honey",
+          "record_support": 102
+        },
+        {
+          "raw": "1/4 cup honey",
+          "record_support": 78
+        },
+        {
+          "raw": "1 teaspoon honey",
+          "record_support": 75
+        }
+      ],
+      "hot sauce": [
+        {
+          "raw": "hot sauce",
+          "record_support": 446
+        },
+        {
+          "raw": "1 teaspoon hot sauce",
+          "record_support": 36
+        },
+        {
+          "raw": "1/2 teaspoon hot sauce",
+          "record_support": 26
+        },
+        {
+          "raw": "1/4 teaspoon hot sauce",
+          "record_support": 21
+        },
+        {
+          "raw": "Hot sauce",
+          "record_support": 19
+        }
+      ],
+      "italian seasoning": [
+        {
+          "raw": "italian seasoning",
+          "record_support": 887
+        },
+        {
+          "raw": "1 teaspoon Italian seasoning",
+          "record_support": 41
+        },
+        {
+          "raw": "1 tablespoon Italian seasoning",
+          "record_support": 23
+        },
+        {
+          "raw": "1 teaspoon dried Italian seasoning",
+          "record_support": 16
+        },
+        {
+          "raw": "2 tablespoons Italian seasoning",
+          "record_support": 12
+        }
+      ],
+      "jalapeno chilies": [
+        {
+          "raw": "jalapeno chilies",
+          "record_support": 1851
+        },
+        {
+          "raw": "2 tablespoons minced fresh jalapeño chilies",
+          "record_support": 2
+        },
+        {
+          "raw": "2 tablespoons minced jalapeño chilies",
+          "record_support": 1
+        },
+        {
+          "raw": "2 jalapeño chilies, quartered lengthwise and seeded",
+          "record_support": 1
+        },
+        {
+          "raw": "2 jalapeño chilies, halved and seeded",
+          "record_support": 1
+        }
+      ],
+      "ketchup": [
+        {
+          "raw": "ketchup",
+          "record_support": 536
+        },
+        {
+          "raw": "1/2 cup ketchup",
+          "record_support": 63
+        },
+        {
+          "raw": "1 cup ketchup",
+          "record_support": 59
+        },
+        {
+          "raw": "1/4 cup ketchup",
+          "record_support": 43
+        },
+        {
+          "raw": "2 tablespoons ketchup",
+          "record_support": 22
+        }
+      ],
+      "lemon": [
+        {
+          "raw": "lemon",
+          "record_support": 1890
+        },
+        {
+          "raw": "fresh lemon",
+          "record_support": 41
+        },
+        {
+          "raw": "1 lemon",
+          "record_support": 38
+        },
+        {
+          "raw": "1 lemon, halved",
+          "record_support": 23
+        },
+        {
+          "raw": "2 lemons",
+          "record_support": 18
+        }
+      ],
+      "lemon juice": [
+        {
+          "raw": "lemon juice",
+          "record_support": 1973
+        },
+        {
+          "raw": "fresh lemon juice",
+          "record_support": 847
+        },
+        {
+          "raw": "1 tablespoon fresh lemon juice",
+          "record_support": 344
+        },
+        {
+          "raw": "2 tablespoons fresh lemon juice",
+          "record_support": 311
+        },
+        {
+          "raw": "1 tablespoon lemon juice",
+          "record_support": 158
+        }
+      ],
+      "lemon zest": [
+        {
+          "raw": "lemon zest",
+          "record_support": 385
+        },
+        {
+          "raw": "grated lemon zest",
+          "record_support": 141
+        },
+        {
+          "raw": "1 teaspoon lemon zest",
+          "record_support": 38
+        },
+        {
+          "raw": "1 teaspoon grated lemon zest",
+          "record_support": 20
+        },
+        {
+          "raw": "1 tablespoon lemon zest",
+          "record_support": 17
+        }
+      ],
+      "lemongrass": [
+        {
+          "raw": "lemongrass",
+          "record_support": 619
+        },
+        {
+          "raw": "2 tablespoons lemongrass, chopped into chunks (if you can't find lemongrass, sub a long strip each of lemon peel and lime peel)",
+          "record_support": 2
+        },
+        {
+          "raw": "2 pieces of lemongrass",
+          "record_support": 1
+        },
+        {
+          "raw": "2 stalks fresh lemongrass, white parts only, minced",
+          "record_support": 1
+        },
+        {
+          "raw": "2 teaspoons finely chopped peeled fresh lemongrass",
+          "record_support": 1
+        }
+      ],
+      "lettuce": [
+        {
+          "raw": "lettuce",
+          "record_support": 322
+        },
+        {
+          "raw": "shredded lettuce",
+          "record_support": 176
+        },
+        {
+          "raw": "1 cup shredded lettuce",
+          "record_support": 10
+        },
+        {
+          "raw": "Lettuce",
+          "record_support": 10
+        },
+        {
+          "raw": "2 cups shredded lettuce",
+          "record_support": 9
+        }
+      ],
+      "light brown sugar": [
+        {
+          "raw": "light brown sugar",
+          "record_support": 404
+        },
+        {
+          "raw": "1/2 cup packed light brown sugar",
+          "record_support": 29
+        },
+        {
+          "raw": "1/4 cup packed light brown sugar",
+          "record_support": 20
+        },
+        {
+          "raw": "2 tablespoons light brown sugar",
+          "record_support": 19
+        },
+        {
+          "raw": "2 tablespoons light-brown sugar",
+          "record_support": 18
+        }
+      ],
+      "light soy sauce": [
+        {
+          "raw": "light soy sauce",
+          "record_support": 720
+        },
+        {
+          "raw": "1 tablespoon light soy sauce",
+          "record_support": 10
+        },
+        {
+          "raw": "2 tablespoons light soy sauce",
+          "record_support": 7
+        },
+        {
+          "raw": "1 teaspoon light soy sauce",
+          "record_support": 4
+        },
+        {
+          "raw": "1 tsp light soy sauce",
+          "record_support": 3
+        }
+      ],
+      "lime": [
+        {
+          "raw": "lime",
+          "record_support": 2622
+        },
+        {
+          "raw": "1 lime, juiced",
+          "record_support": 62
+        },
+        {
+          "raw": "fresh lime",
+          "record_support": 54
+        },
+        {
+          "raw": "1 lime",
+          "record_support": 48
+        },
+        {
+          "raw": "2 limes, cut into wedges",
+          "record_support": 26
+        }
+      ],
+      "lime juice": [
+        {
+          "raw": "lime juice",
+          "record_support": 1750
+        },
+        {
+          "raw": "fresh lime juice",
+          "record_support": 1030
+        },
+        {
+          "raw": "1 tablespoon fresh lime juice",
+          "record_support": 173
+        },
+        {
+          "raw": "2 tablespoons fresh lime juice",
+          "record_support": 152
+        },
+        {
+          "raw": "1/4 cup fresh lime juice",
+          "record_support": 78
+        }
+      ],
+      "lime wedges": [
+        {
+          "raw": "lime wedges",
+          "record_support": 713
+        },
+        {
+          "raw": "Lime wedges",
+          "record_support": 61
+        },
+        {
+          "raw": "Lime wedges, for serving",
+          "record_support": 16
+        },
+        {
+          "raw": "4 lime wedges",
+          "record_support": 11
+        },
+        {
+          "raw": "Lime wedges (optional)",
+          "record_support": 10
+        }
+      ],
+      "low sodium chicken broth": [
+        {
+          "raw": "low sodium chicken broth",
+          "record_support": 434
+        },
+        {
+          "raw": "4 cups low-sodium chicken broth",
+          "record_support": 22
+        },
+        {
+          "raw": "1 cup low-sodium chicken broth",
+          "record_support": 17
+        },
+        {
+          "raw": "1/2 cup low-sodium chicken broth",
+          "record_support": 14
+        },
+        {
+          "raw": "store bought low sodium chicken broth",
+          "record_support": 13
+        }
+      ],
+      "low sodium soy sauce": [
+        {
+          "raw": "low sodium soy sauce",
+          "record_support": 587
+        },
+        {
+          "raw": "1 tablespoon low-sodium soy sauce",
+          "record_support": 36
+        },
+        {
+          "raw": "2 tablespoons low-sodium soy sauce",
+          "record_support": 30
+        },
+        {
+          "raw": "1/4 cup low-sodium soy sauce",
+          "record_support": 20
+        },
+        {
+          "raw": "3 tablespoons low-sodium soy sauce",
+          "record_support": 11
+        }
+      ],
+      "mango": [
+        {
+          "raw": "mango",
+          "record_support": 396
+        },
+        {
+          "raw": "frozen mango",
+          "record_support": 32
+        },
+        {
+          "raw": "1 mango, diced",
+          "record_support": 4
+        },
+        {
+          "raw": "1 cup diced mango",
+          "record_support": 4
+        },
+        {
+          "raw": "cubed mango",
+          "record_support": 4
+        }
+      ],
+      "maple syrup": [
+        {
+          "raw": "maple syrup",
+          "record_support": 598
+        },
+        {
+          "raw": "2 tablespoons maple syrup",
+          "record_support": 37
+        },
+        {
+          "raw": "1/4 cup maple syrup",
+          "record_support": 32
+        },
+        {
+          "raw": "1/2 cup maple syrup",
+          "record_support": 29
+        },
+        {
+          "raw": "1/3 cup maple syrup",
+          "record_support": 12
+        }
+      ],
+      "mayonnaise": [
+        {
+          "raw": "mayonnaise",
+          "record_support": 1015
+        },
+        {
+          "raw": "1/2 cup mayonnaise",
+          "record_support": 134
+        },
+        {
+          "raw": "1 cup mayonnaise",
+          "record_support": 125
+        },
+        {
+          "raw": "1/4 cup mayonnaise",
+          "record_support": 84
+        },
+        {
+          "raw": "2 tablespoons mayonnaise",
+          "record_support": 53
+        }
+      ],
+      "milk": [
+        {
+          "raw": "milk",
+          "record_support": 2475
+        },
+        {
+          "raw": "1 cup milk",
+          "record_support": 136
+        },
+        {
+          "raw": "1/2 cup milk",
+          "record_support": 103
+        },
+        {
+          "raw": "2 cups milk",
+          "record_support": 69
+        },
+        {
+          "raw": "1/4 cup milk",
+          "record_support": 64
+        }
+      ],
+      "mint": [
+        {
+          "raw": "fresh mint",
+          "record_support": 461
+        },
+        {
+          "raw": "mint",
+          "record_support": 261
+        },
+        {
+          "raw": "chopped fresh mint",
+          "record_support": 198
+        },
+        {
+          "raw": "dried mint",
+          "record_support": 36
+        },
+        {
+          "raw": "2 tablespoons chopped fresh mint",
+          "record_support": 31
+        }
+      ],
+      "mint leaves": [
+        {
+          "raw": "mint leaves",
+          "record_support": 365
+        },
+        {
+          "raw": "1/4 cup fresh mint leaves",
+          "record_support": 10
+        },
+        {
+          "raw": "Fresh mint leaves",
+          "record_support": 5
+        },
+        {
+          "raw": "1 tablespoon chopped fresh mint leaves",
+          "record_support": 3
+        },
+        {
+          "raw": "1 cup packed fresh mint leaves",
+          "record_support": 3
+        }
+      ],
+      "mirin": [
+        {
+          "raw": "mirin",
+          "record_support": 999
+        },
+        {
+          "raw": "2 tablespoons mirin",
+          "record_support": 2
+        },
+        {
+          "raw": "1 tablespoon mirin",
+          "record_support": 1
+        },
+        {
+          "raw": "2 teaspoons mirin",
+          "record_support": 1
+        },
+        {
+          "raw": "3 tbsp mirin",
+          "record_support": 1
+        }
+      ],
+      "mushroom": [
+        {
+          "raw": "mushrooms",
+          "record_support": 566
+        },
+        {
+          "raw": "sliced mushrooms",
+          "record_support": 166
+        },
+        {
+          "raw": "fresh mushrooms",
+          "record_support": 115
+        },
+        {
+          "raw": "dried mushrooms",
+          "record_support": 20
+        },
+        {
+          "raw": "1 cup sliced mushrooms",
+          "record_support": 14
+        }
+      ],
+      "mustard seeds": [
+        {
+          "raw": "mustard seeds",
+          "record_support": 454
+        },
+        {
+          "raw": "1 teaspoon mustard seeds",
+          "record_support": 28
+        },
+        {
+          "raw": "1 tsp mustard seeds",
+          "record_support": 14
+        },
+        {
+          "raw": "1/2 teaspoon mustard seeds",
+          "record_support": 10
+        },
+        {
+          "raw": "1 tablespoon mustard seeds",
+          "record_support": 9
+        }
+      ],
+      "nutmeg": [
+        {
+          "raw": "nutmeg",
+          "record_support": 412
+        },
+        {
+          "raw": "grated nutmeg",
+          "record_support": 119
+        },
+        {
+          "raw": "1/4 teaspoon nutmeg",
+          "record_support": 10
+        },
+        {
+          "raw": "1/2 teaspoon nutmeg",
+          "record_support": 8
+        },
+        {
+          "raw": "Pinch of nutmeg",
+          "record_support": 8
+        }
+      ],
+      "oil": [
+        {
+          "raw": "oil",
+          "record_support": 3036
+        },
+        {
+          "raw": "1 tablespoon oil",
+          "record_support": 26
+        },
+        {
+          "raw": "2 tbsp oil",
+          "record_support": 20
+        },
+        {
+          "raw": "1 tbsp oil",
+          "record_support": 18
+        },
+        {
+          "raw": "2 tablespoons oil",
+          "record_support": 18
+        }
+      ],
+      "olive oil": [
+        {
+          "raw": "olive oil",
+          "record_support": 7704
+        },
+        {
+          "raw": "extra-virgin olive oil",
+          "record_support": 2936
+        },
+        {
+          "raw": "1 tablespoon olive oil",
+          "record_support": 955
+        },
+        {
+          "raw": "2 tablespoons olive oil",
+          "record_support": 891
+        },
+        {
+          "raw": "3 tablespoons olive oil",
+          "record_support": 319
+        }
+      ],
+      "onion": [
+        {
+          "raw": "onions",
+          "record_support": 6717
+        },
+        {
+          "raw": "chopped onion",
+          "record_support": 469
+        },
+        {
+          "raw": "1 onion, chopped",
+          "record_support": 225
+        },
+        {
+          "raw": "1 medium onion, chopped",
+          "record_support": 212
+        },
+        {
+          "raw": "diced onions",
+          "record_support": 210
+        }
+      ],
+      "onion powder": [
+        {
+          "raw": "onion powder",
+          "record_support": 778
+        },
+        {
+          "raw": "1 teaspoon onion powder",
+          "record_support": 52
+        },
+        {
+          "raw": "1/2 teaspoon onion powder",
+          "record_support": 45
+        },
+        {
+          "raw": "1/4 teaspoon onion powder",
+          "record_support": 23
+        },
+        {
+          "raw": "1 tablespoon onion powder",
+          "record_support": 22
+        }
+      ],
+      "orange": [
+        {
+          "raw": "orange",
+          "record_support": 348
+        },
+        {
+          "raw": "grated orange",
+          "record_support": 77
+        },
+        {
+          "raw": "1 orange, juiced",
+          "record_support": 6
+        },
+        {
+          "raw": "1 orange",
+          "record_support": 5
+        },
+        {
+          "raw": "1 medium orange, quartered",
+          "record_support": 3
+        }
+      ],
+      "orange juice": [
+        {
+          "raw": "orange juice",
+          "record_support": 346
+        },
+        {
+          "raw": "fresh orange juice",
+          "record_support": 71
+        },
+        {
+          "raw": "1/4 cup fresh orange juice",
+          "record_support": 33
+        },
+        {
+          "raw": "1/4 cup orange juice",
+          "record_support": 32
+        },
+        {
+          "raw": "1/2 cup orange juice",
+          "record_support": 31
+        }
+      ],
+      "oregano": [
+        {
+          "raw": "dried oregano",
+          "record_support": 1519
+        },
+        {
+          "raw": "oregano",
+          "record_support": 799
+        },
+        {
+          "raw": "fresh oregano",
+          "record_support": 320
+        },
+        {
+          "raw": "1 teaspoon dried oregano",
+          "record_support": 292
+        },
+        {
+          "raw": "1/2 teaspoon dried oregano",
+          "record_support": 169
+        }
+      ],
+      "oyster sauce": [
+        {
+          "raw": "oyster sauce",
+          "record_support": 813
+        },
+        {
+          "raw": "1 tablespoon oyster sauce",
+          "record_support": 22
+        },
+        {
+          "raw": "2 tablespoons oyster sauce",
+          "record_support": 12
+        },
+        {
+          "raw": "1 tbsp oyster sauce",
+          "record_support": 5
+        },
+        {
+          "raw": "1/4 cup oyster sauce",
+          "record_support": 5
+        }
+      ],
+      "panko breadcrumbs": [
+        {
+          "raw": "panko breadcrumbs",
+          "record_support": 2251
+        },
+        {
+          "raw": "1/2 cup panko breadcrumbs",
+          "record_support": 2
+        },
+        {
+          "raw": "¼ cup panko breadcrumbs",
+          "record_support": 2
+        },
+        {
+          "raw": "1 1/2 cups panko breadcrumbs",
+          "record_support": 2
+        },
+        {
+          "raw": "2 cups panko breadcrumbs",
+          "record_support": 2
+        }
+      ],
+      "paprika": [
+        {
+          "raw": "paprika",
+          "record_support": 1280
+        },
+        {
+          "raw": "1 teaspoon paprika",
+          "record_support": 83
+        },
+        {
+          "raw": "1/2 teaspoon paprika",
+          "record_support": 74
+        },
+        {
+          "raw": "2 teaspoons paprika",
+          "record_support": 44
+        },
+        {
+          "raw": "1 tablespoon paprika",
+          "record_support": 39
+        }
+      ],
+      "parsley": [
+        {
+          "raw": "fresh parsley",
+          "record_support": 900
+        },
+        {
+          "raw": "parsley",
+          "record_support": 568
+        },
+        {
+          "raw": "chopped parsley",
+          "record_support": 480
+        },
+        {
+          "raw": "dried parsley",
+          "record_support": 246
+        },
+        {
+          "raw": "2 tablespoons chopped fresh parsley",
+          "record_support": 123
+        }
+      ],
+      "pasta": [
+        {
+          "raw": "pasta",
+          "record_support": 334
+        },
+        {
+          "raw": "spaghetti",
+          "record_support": 193
+        },
+        {
+          "raw": "elbow macaroni",
+          "record_support": 113
+        },
+        {
+          "raw": "linguine",
+          "record_support": 102
+        },
+        {
+          "raw": "penne pasta",
+          "record_support": 102
+        }
+      ],
+      "peanut butter": [
+        {
+          "raw": "peanut butter",
+          "record_support": 469
+        },
+        {
+          "raw": "unsalted peanut butter",
+          "record_support": 8
+        },
+        {
+          "raw": "1/4 cup peanut butter",
+          "record_support": 3
+        },
+        {
+          "raw": "3/4 cup peanut butter",
+          "record_support": 2
+        },
+        {
+          "raw": "1 1/2 cups peanut butter",
+          "record_support": 2
+        }
+      ],
+      "peanut oil": [
+        {
+          "raw": "peanut oil",
+          "record_support": 830
+        },
+        {
+          "raw": "2 tablespoons peanut oil",
+          "record_support": 15
+        },
+        {
+          "raw": "Peanut oil",
+          "record_support": 9
+        },
+        {
+          "raw": "1 tablespoon peanut oil",
+          "record_support": 9
+        },
+        {
+          "raw": "1/4 cup peanut oil",
+          "record_support": 6
+        }
+      ],
+      "peanuts": [
+        {
+          "raw": "peanuts",
+          "record_support": 912
+        },
+        {
+          "raw": "salted peanuts",
+          "record_support": 76
+        },
+        {
+          "raw": "1/2 cup chopped peanuts",
+          "record_support": 2
+        },
+        {
+          "raw": "1 cup chopped peanuts",
+          "record_support": 1
+        },
+        {
+          "raw": "1/2 cup coarsely chopped salted peanuts",
+          "record_support": 1
+        }
+      ],
+      "peas": [
+        {
+          "raw": "frozen peas",
+          "record_support": 569
+        },
+        {
+          "raw": "peas",
+          "record_support": 215
+        },
+        {
+          "raw": "fresh peas",
+          "record_support": 28
+        },
+        {
+          "raw": "1 cup frozen peas",
+          "record_support": 20
+        },
+        {
+          "raw": "1 cup frozen peas, thawed",
+          "record_support": 10
+        }
+      ],
+      "pecans": [
+        {
+          "raw": "chopped pecans",
+          "record_support": 100
+        },
+        {
+          "raw": "pecans",
+          "record_support": 82
+        },
+        {
+          "raw": "1/2 cup chopped pecans",
+          "record_support": 37
+        },
+        {
+          "raw": "1 cup chopped pecans",
+          "record_support": 26
+        },
+        {
+          "raw": "1/4 cup chopped pecans",
+          "record_support": 24
+        }
+      ],
+      "pepper": [
+        {
+          "raw": "pepper",
+          "record_support": 5407
+        },
+        {
+          "raw": "ground black pepper",
+          "record_support": 2777
+        },
+        {
+          "raw": "black pepper",
+          "record_support": 2442
+        },
+        {
+          "raw": "freshly ground black pepper",
+          "record_support": 1027
+        },
+        {
+          "raw": "freshly ground pepper",
+          "record_support": 818
+        }
+      ],
+      "plain greek yogurt": [
+        {
+          "raw": "plain greek yogurt",
+          "record_support": 912
+        },
+        {
+          "raw": "nonfat plain greek yogurt",
+          "record_support": 191
+        },
+        {
+          "raw": "plain low fat greek yogurt",
+          "record_support": 32
+        },
+        {
+          "raw": "1/2 cup plain Greek yogurt",
+          "record_support": 2
+        },
+        {
+          "raw": "200ml plain Greek yogurt",
+          "record_support": 2
+        }
+      ],
+      "plain yogurt": [
+        {
+          "raw": "plain yogurt",
+          "record_support": 431
+        },
+        {
+          "raw": "1 cup plain yogurt",
+          "record_support": 17
+        },
+        {
+          "raw": "1/4 cup plain yogurt",
+          "record_support": 7
+        },
+        {
+          "raw": "1/2 cup plain yogurt",
+          "record_support": 7
+        },
+        {
+          "raw": "2 cups plain yogurt",
+          "record_support": 6
+        }
+      ],
+      "plum tomatoes": [
+        {
+          "raw": "plum tomatoes",
+          "record_support": 421
+        },
+        {
+          "raw": "2 plum tomatoes, seeded and chopped",
+          "record_support": 8
+        },
+        {
+          "raw": "3 plum tomatoes, sliced",
+          "record_support": 6
+        },
+        {
+          "raw": "2 plum tomatoes, chopped",
+          "record_support": 6
+        },
+        {
+          "raw": "3 plum tomatoes, chopped",
+          "record_support": 5
+        }
+      ],
+      "pork": [
+        {
+          "raw": "ground pork",
+          "record_support": 543
+        },
+        {
+          "raw": "pork",
+          "record_support": 222
+        },
+        {
+          "raw": "minced pork",
+          "record_support": 65
+        },
+        {
+          "raw": "lean ground pork",
+          "record_support": 39
+        },
+        {
+          "raw": "1 pound ground pork",
+          "record_support": 33
+        }
+      ],
+      "potato": [
+        {
+          "raw": "potatoes",
+          "record_support": 841
+        },
+        {
+          "raw": "medium potatoes",
+          "record_support": 85
+        },
+        {
+          "raw": "large potatoes",
+          "record_support": 79
+        },
+        {
+          "raw": "small potatoes",
+          "record_support": 22
+        },
+        {
+          "raw": "diced potatoes",
+          "record_support": 10
+        }
+      ],
+      "purple onion": [
+        {
+          "raw": "purple onion",
+          "record_support": 2626
+        },
+        {
+          "raw": "1/4 cup chopped purple onion",
+          "record_support": 1
+        },
+        {
+          "raw": "1/4 cup diced purple onion",
+          "record_support": 1
+        },
+        {
+          "raw": "1 purple onion, thinly sliced",
+          "record_support": 1
+        },
+        {
+          "raw": "1 small purple onion",
+          "record_support": 1
+        }
+      ],
+      "quinoa": [
+        {
+          "raw": "quinoa",
+          "record_support": 424
+        },
+        {
+          "raw": "cooked quinoa",
+          "record_support": 119
+        },
+        {
+          "raw": "1 cup quinoa",
+          "record_support": 10
+        },
+        {
+          "raw": "1 cup uncooked quinoa",
+          "record_support": 5
+        },
+        {
+          "raw": "1/2 cup quinoa",
+          "record_support": 4
+        }
+      ],
+      "red bell pepper": [
+        {
+          "raw": "red bell pepper",
+          "record_support": 2227
+        },
+        {
+          "raw": "1 red bell pepper, diced",
+          "record_support": 31
+        },
+        {
+          "raw": "1 red bell pepper, chopped",
+          "record_support": 29
+        },
+        {
+          "raw": "1 cup chopped red bell pepper",
+          "record_support": 27
+        },
+        {
+          "raw": "1/2 cup chopped red bell pepper",
+          "record_support": 27
+        }
+      ],
+      "red chili peppers": [
+        {
+          "raw": "red chili peppers",
+          "record_support": 1208
+        },
+        {
+          "raw": "4 red chili peppers",
+          "record_support": 1
+        },
+        {
+          "raw": "2 small red chili peppers, finely chopped",
+          "record_support": 1
+        },
+        {
+          "raw": "5 red chili peppers, dried and large",
+          "record_support": 1
+        },
+        {
+          "raw": "1 - 2 fresh red chili peppers, thinly sliced",
+          "record_support": 1
+        }
+      ],
+      "red onion": [
+        {
+          "raw": "1/4 cup finely chopped red onion",
+          "record_support": 34
+        },
+        {
+          "raw": "1/2 cup chopped red onion",
+          "record_support": 31
+        },
+        {
+          "raw": "1/2 cup finely chopped red onion",
+          "record_support": 29
+        },
+        {
+          "raw": "1 small red onion, thinly sliced",
+          "record_support": 25
+        },
+        {
+          "raw": "1/2 small red onion, thinly sliced",
+          "record_support": 24
+        }
+      ],
+      "red pepper": [
+        {
+          "raw": "red pepper",
+          "record_support": 836
+        },
+        {
+          "raw": "crushed red pepper",
+          "record_support": 415
+        },
+        {
+          "raw": "1/4 teaspoon crushed red pepper",
+          "record_support": 114
+        },
+        {
+          "raw": "1/2 teaspoon crushed red pepper",
+          "record_support": 64
+        },
+        {
+          "raw": "1/2 teaspoon dried crushed red pepper",
+          "record_support": 35
+        }
+      ],
+      "red pepper flakes": [
+        {
+          "raw": "red pepper flakes",
+          "record_support": 1089
+        },
+        {
+          "raw": "crushed red pepper flakes",
+          "record_support": 592
+        },
+        {
+          "raw": "1/4 teaspoon red pepper flakes",
+          "record_support": 43
+        },
+        {
+          "raw": "1/2 teaspoon red pepper flakes",
+          "record_support": 36
+        },
+        {
+          "raw": "1 teaspoon red pepper flakes",
+          "record_support": 19
+        }
+      ],
+      "red wine vinegar": [
+        {
+          "raw": "red wine vinegar",
+          "record_support": 879
+        },
+        {
+          "raw": "2 tablespoons red wine vinegar",
+          "record_support": 95
+        },
+        {
+          "raw": "1/4 cup red wine vinegar",
+          "record_support": 63
+        },
+        {
+          "raw": "1 tablespoon red wine vinegar",
+          "record_support": 56
+        },
+        {
+          "raw": "3 tablespoons red wine vinegar",
+          "record_support": 34
+        }
+      ],
+      "rice": [
+        {
+          "raw": "rice",
+          "record_support": 702
+        },
+        {
+          "raw": "cooked rice",
+          "record_support": 389
+        },
+        {
+          "raw": "1 cup uncooked rice",
+          "record_support": 5
+        },
+        {
+          "raw": "Cooked rice",
+          "record_support": 4
+        },
+        {
+          "raw": "3 cups cooked rice",
+          "record_support": 4
+        }
+      ],
+      "rice vinegar": [
+        {
+          "raw": "rice vinegar",
+          "record_support": 2014
+        },
+        {
+          "raw": "2 tablespoons rice vinegar",
+          "record_support": 28
+        },
+        {
+          "raw": "1 tablespoon rice vinegar",
+          "record_support": 27
+        },
+        {
+          "raw": "1/4 cup rice vinegar",
+          "record_support": 16
+        },
+        {
+          "raw": "3 tablespoons rice vinegar",
+          "record_support": 9
+        }
+      ],
+      "roma tomatoes": [
+        {
+          "raw": "roma tomatoes",
+          "record_support": 437
+        },
+        {
+          "raw": "2 roma tomatoes, seeded and diced",
+          "record_support": 5
+        },
+        {
+          "raw": "2 roma (plum) tomatoes, diced",
+          "record_support": 4
+        },
+        {
+          "raw": "2 roma tomatoes, chopped",
+          "record_support": 4
+        },
+        {
+          "raw": "2 roma tomatoes, diced",
+          "record_support": 3
+        }
+      ],
+      "romaine lettuce": [
+        {
+          "raw": "romaine lettuce",
+          "record_support": 441
+        },
+        {
+          "raw": "2 cups shredded romaine lettuce",
+          "record_support": 7
+        },
+        {
+          "raw": "1 cup shredded romaine lettuce",
+          "record_support": 6
+        },
+        {
+          "raw": "Romaine lettuce",
+          "record_support": 5
+        },
+        {
+          "raw": "2 cups chopped romaine lettuce",
+          "record_support": 3
+        }
+      ],
+      "rosemary": [
+        {
+          "raw": "fresh rosemary",
+          "record_support": 223
+        },
+        {
+          "raw": "rosemary",
+          "record_support": 190
+        },
+        {
+          "raw": "dried rosemary",
+          "record_support": 107
+        },
+        {
+          "raw": "1 tablespoon chopped fresh rosemary",
+          "record_support": 43
+        },
+        {
+          "raw": "1 teaspoon chopped fresh rosemary",
+          "record_support": 30
+        }
+      ],
+      "sake": [
+        {
+          "raw": "sake",
+          "record_support": 658
+        },
+        {
+          "raw": "1/4 cup sake",
+          "record_support": 3
+        },
+        {
+          "raw": "2 tablespoons sake (rice wine)",
+          "record_support": 2
+        },
+        {
+          "raw": "1 tablespoon sake",
+          "record_support": 1
+        },
+        {
+          "raw": "1 tbsp sake",
+          "record_support": 1
+        }
+      ],
+      "salsa": [
+        {
+          "raw": "salsa",
+          "record_support": 1024
+        },
+        {
+          "raw": "1 cup salsa",
+          "record_support": 40
+        },
+        {
+          "raw": "Salsa",
+          "record_support": 39
+        },
+        {
+          "raw": "1/2 cup salsa",
+          "record_support": 31
+        },
+        {
+          "raw": "prepared salsa",
+          "record_support": 22
+        }
+      ],
+      "salt": [
+        {
+          "raw": "salt",
+          "record_support": 17102
+        },
+        {
+          "raw": "kosher salt",
+          "record_support": 3919
+        },
+        {
+          "raw": "sea salt",
+          "record_support": 1867
+        },
+        {
+          "raw": "1/2 teaspoon salt",
+          "record_support": 1622
+        },
+        {
+          "raw": "1/4 teaspoon salt",
+          "record_support": 1503
+        }
+      ],
+      "salt and pepper": [
+        {
+          "raw": "Salt and pepper",
+          "record_support": 506
+        },
+        {
+          "raw": "salt and pepper to taste",
+          "record_support": 435
+        },
+        {
+          "raw": "salt and pepper",
+          "record_support": 146
+        },
+        {
+          "raw": "Salt and pepper to taste",
+          "record_support": 117
+        },
+        {
+          "raw": "salt and pepper, to taste",
+          "record_support": 83
+        }
+      ],
+      "sauce": [
+        {
+          "raw": "sauce",
+          "record_support": 533
+        },
+        {
+          "raw": "Sauce:",
+          "record_support": 11
+        },
+        {
+          "raw": "Sauce",
+          "record_support": 7
+        },
+        {
+          "raw": "SAUCE:",
+          "record_support": 2
+        },
+        {
+          "raw": "sauce:",
+          "record_support": 1
+        }
+      ],
+      "sesame oil": [
+        {
+          "raw": "sesame oil",
+          "record_support": 2842
+        },
+        {
+          "raw": "1 teaspoon sesame oil",
+          "record_support": 23
+        },
+        {
+          "raw": "1 tablespoon sesame oil",
+          "record_support": 22
+        },
+        {
+          "raw": "2 teaspoons sesame oil",
+          "record_support": 14
+        },
+        {
+          "raw": "1 tsp sesame oil",
+          "record_support": 13
+        }
+      ],
+      "sesame seeds": [
+        {
+          "raw": "sesame seeds",
+          "record_support": 896
+        },
+        {
+          "raw": "2 tablespoons sesame seeds",
+          "record_support": 11
+        },
+        {
+          "raw": "1 tablespoon sesame seeds",
+          "record_support": 10
+        },
+        {
+          "raw": "1/4 cup sesame seeds",
+          "record_support": 6
+        },
+        {
+          "raw": "2 tablespoons sesame seeds, toasted",
+          "record_support": 4
+        }
+      ],
+      "shallots": [
+        {
+          "raw": "shallots",
+          "record_support": 1823
+        },
+        {
+          "raw": "2 tablespoons minced shallots",
+          "record_support": 29
+        },
+        {
+          "raw": "sliced shallots",
+          "record_support": 26
+        },
+        {
+          "raw": "1/4 cup finely chopped shallots",
+          "record_support": 21
+        },
+        {
+          "raw": "1/4 cup chopped shallots",
+          "record_support": 19
+        }
+      ],
+      "shaoxing wine": [
+        {
+          "raw": "Shaoxing wine",
+          "record_support": 591
+        },
+        {
+          "raw": "1 tablespoon Shaoxing wine",
+          "record_support": 7
+        },
+        {
+          "raw": "1 tbsp Shaoxing wine",
+          "record_support": 5
+        },
+        {
+          "raw": "1 teaspoon Shaoxing wine",
+          "record_support": 5
+        },
+        {
+          "raw": "1 tablespoon shaoxing wine",
+          "record_support": 4
+        }
+      ],
+      "shrimp": [
+        {
+          "raw": "shrimp",
+          "record_support": 757
+        },
+        {
+          "raw": "large shrimp",
+          "record_support": 282
+        },
+        {
+          "raw": "medium shrimp",
+          "record_support": 251
+        },
+        {
+          "raw": "dried shrimp",
+          "record_support": 79
+        },
+        {
+          "raw": "cooked shrimp",
+          "record_support": 65
+        }
+      ],
+      "smoked paprika": [
+        {
+          "raw": "smoked paprika",
+          "record_support": 822
+        },
+        {
+          "raw": "1 teaspoon smoked paprika",
+          "record_support": 36
+        },
+        {
+          "raw": "1 tablespoon smoked paprika",
+          "record_support": 15
+        },
+        {
+          "raw": "1/2 teaspoon smoked paprika",
+          "record_support": 13
+        },
+        {
+          "raw": "1 tsp smoked paprika",
+          "record_support": 10
+        }
+      ],
+      "sour cream": [
+        {
+          "raw": "sour cream",
+          "record_support": 1432
+        },
+        {
+          "raw": "1/2 cup sour cream",
+          "record_support": 117
+        },
+        {
+          "raw": "1 cup sour cream",
+          "record_support": 112
+        },
+        {
+          "raw": "1/4 cup sour cream",
+          "record_support": 62
+        },
+        {
+          "raw": "Sour cream",
+          "record_support": 45
+        }
+      ],
+      "soy sauce": [
+        {
+          "raw": "soy sauce",
+          "record_support": 5036
+        },
+        {
+          "raw": "2 tablespoons soy sauce",
+          "record_support": 60
+        },
+        {
+          "raw": "1 tablespoon soy sauce",
+          "record_support": 59
+        },
+        {
+          "raw": "1/4 cup soy sauce",
+          "record_support": 32
+        },
+        {
+          "raw": "3 tablespoons soy sauce",
+          "record_support": 24
+        }
+      ],
+      "spanish onion": [
+        {
+          "raw": "spanish onion",
+          "record_support": 602
+        },
+        {
+          "raw": "1 medium Spanish onion, diced",
+          "record_support": 1
+        }
+      ],
+      "spinach": [
+        {
+          "raw": "spinach",
+          "record_support": 429
+        },
+        {
+          "raw": "fresh spinach",
+          "record_support": 223
+        },
+        {
+          "raw": "frozen chopped spinach",
+          "record_support": 102
+        },
+        {
+          "raw": "frozen spinach",
+          "record_support": 68
+        },
+        {
+          "raw": "1 (10-ounce) package frozen chopped spinach, thawed, drained, and squeezed dry",
+          "record_support": 10
+        }
+      ],
+      "spring onions": [
+        {
+          "raw": "spring onions",
+          "record_support": 705
+        },
+        {
+          "raw": "4 spring onions, sliced diagonally",
+          "record_support": 2
+        },
+        {
+          "raw": "4 spring onions",
+          "record_support": 2
+        },
+        {
+          "raw": "2 spring onions, sliced",
+          "record_support": 2
+        },
+        {
+          "raw": "3 spring onions, sliced",
+          "record_support": 2
+        }
+      ],
+      "sriracha": [
+        {
+          "raw": "Sriracha",
+          "record_support": 913
+        },
+        {
+          "raw": "1 teaspoon Sriracha (hot chile sauce, such as Huy Fong)",
+          "record_support": 2
+        },
+        {
+          "raw": "1 tablespoon Sriracha (hot chile sauce, such as Huy Fong)",
+          "record_support": 2
+        },
+        {
+          "raw": "2 teaspoons Sriracha (Asian chili sauce)",
+          "record_support": 1
+        },
+        {
+          "raw": "Sriracha, for serving",
+          "record_support": 1
+        }
+      ],
+      "strawberry": [
+        {
+          "raw": "strawberries",
+          "record_support": 440
+        },
+        {
+          "raw": "frozen strawberries",
+          "record_support": 58
+        },
+        {
+          "raw": "1 cup sliced strawberries",
+          "record_support": 5
+        },
+        {
+          "raw": "3 cups sliced strawberries",
+          "record_support": 4
+        },
+        {
+          "raw": "2 cups sliced strawberries",
+          "record_support": 3
+        }
+      ],
+      "sugar": [
+        {
+          "raw": "sugar",
+          "record_support": 5695
+        },
+        {
+          "raw": "powdered sugar",
+          "record_support": 772
+        },
+        {
+          "raw": "confectioners sugar",
+          "record_support": 317
+        },
+        {
+          "raw": "1/2 cup sugar",
+          "record_support": 269
+        },
+        {
+          "raw": "1 teaspoon sugar",
+          "record_support": 247
+        }
+      ],
+      "sweet onion": [
+        {
+          "raw": "sweet onion",
+          "record_support": 396
+        },
+        {
+          "raw": "1 large sweet onion, chopped",
+          "record_support": 10
+        },
+        {
+          "raw": "1 cup chopped sweet onion",
+          "record_support": 5
+        },
+        {
+          "raw": "1 sweet onion, chopped",
+          "record_support": 5
+        },
+        {
+          "raw": "1/2 cup finely chopped sweet onion",
+          "record_support": 5
+        }
+      ],
+      "sweet potatoes": [
+        {
+          "raw": "sweet potatoes",
+          "record_support": 473
+        },
+        {
+          "raw": "1 1/2 pounds sweet potatoes",
+          "record_support": 3
+        },
+        {
+          "raw": "4 large sweet potatoes",
+          "record_support": 3
+        },
+        {
+          "raw": "3 pounds sweet potatoes",
+          "record_support": 3
+        },
+        {
+          "raw": "4 medium sweet potatoes",
+          "record_support": 3
+        }
+      ],
+      "thyme": [
+        {
+          "raw": "dried thyme",
+          "record_support": 404
+        },
+        {
+          "raw": "fresh thyme",
+          "record_support": 322
+        },
+        {
+          "raw": "thyme",
+          "record_support": 306
+        },
+        {
+          "raw": "1/2 teaspoon dried thyme",
+          "record_support": 125
+        },
+        {
+          "raw": "chopped fresh thyme",
+          "record_support": 116
+        }
+      ],
+      "thyme leaves": [
+        {
+          "raw": "fresh thyme leaves",
+          "record_support": 170
+        },
+        {
+          "raw": "1 tablespoon fresh thyme leaves",
+          "record_support": 48
+        },
+        {
+          "raw": "thyme leaves",
+          "record_support": 45
+        },
+        {
+          "raw": "2 teaspoons fresh thyme leaves",
+          "record_support": 21
+        },
+        {
+          "raw": "dried thyme leaves",
+          "record_support": 19
+        }
+      ],
+      "toasted sesame oil": [
+        {
+          "raw": "toasted sesame oil",
+          "record_support": 574
+        },
+        {
+          "raw": "1 tablespoon toasted sesame oil",
+          "record_support": 7
+        },
+        {
+          "raw": "1 teaspoon toasted sesame oil",
+          "record_support": 6
+        },
+        {
+          "raw": "2 teaspoons toasted sesame oil",
+          "record_support": 5
+        },
+        {
+          "raw": "1/2 teaspoon toasted sesame oil",
+          "record_support": 5
+        }
+      ],
+      "tomato": [
+        {
+          "raw": "tomatoes",
+          "record_support": 2857
+        },
+        {
+          "raw": "diced tomatoes",
+          "record_support": 1291
+        },
+        {
+          "raw": "crushed tomatoes",
+          "record_support": 368
+        },
+        {
+          "raw": "chopped tomatoes",
+          "record_support": 332
+        },
+        {
+          "raw": "medium tomatoes",
+          "record_support": 215
+        }
+      ],
+      "tomato paste": [
+        {
+          "raw": "tomato paste",
+          "record_support": 1005
+        },
+        {
+          "raw": "2 tablespoons tomato paste",
+          "record_support": 129
+        },
+        {
+          "raw": "1 tablespoon tomato paste",
+          "record_support": 127
+        },
+        {
+          "raw": "1 (6 ounce) can tomato paste",
+          "record_support": 43
+        },
+        {
+          "raw": "3 tablespoons tomato paste",
+          "record_support": 41
+        }
+      ],
+      "tomato sauce": [
+        {
+          "raw": "tomato sauce",
+          "record_support": 725
+        },
+        {
+          "raw": "1 (15 ounce) can tomato sauce",
+          "record_support": 30
+        },
+        {
+          "raw": "1 (8 ounce) can tomato sauce",
+          "record_support": 27
+        },
+        {
+          "raw": "1 cup tomato sauce",
+          "record_support": 23
+        },
+        {
+          "raw": "1/2 cup tomato sauce",
+          "record_support": 17
+        }
+      ],
+      "turmeric": [
+        {
+          "raw": "turmeric",
+          "record_support": 1015
+        },
+        {
+          "raw": "1 teaspoon turmeric",
+          "record_support": 26
+        },
+        {
+          "raw": "fresh turmeric",
+          "record_support": 23
+        },
+        {
+          "raw": "1/2 teaspoon turmeric",
+          "record_support": 20
+        },
+        {
+          "raw": "1 tsp turmeric",
+          "record_support": 19
+        }
+      ],
+      "vanilla": [
+        {
+          "raw": "vanilla",
+          "record_support": 869
+        },
+        {
+          "raw": "1 teaspoon vanilla",
+          "record_support": 66
+        },
+        {
+          "raw": "1/2 teaspoon vanilla",
+          "record_support": 27
+        },
+        {
+          "raw": "2 teaspoons vanilla",
+          "record_support": 20
+        },
+        {
+          "raw": "1 tablespoon vanilla",
+          "record_support": 11
+        }
+      ],
+      "vanilla extract": [
+        {
+          "raw": "vanilla extract",
+          "record_support": 1409
+        },
+        {
+          "raw": "1 teaspoon vanilla extract",
+          "record_support": 429
+        },
+        {
+          "raw": "1/2 teaspoon vanilla extract",
+          "record_support": 143
+        },
+        {
+          "raw": "2 teaspoons vanilla extract",
+          "record_support": 135
+        },
+        {
+          "raw": "1 tablespoon vanilla extract",
+          "record_support": 72
+        }
+      ],
+      "vegetable broth": [
+        {
+          "raw": "vegetable broth",
+          "record_support": 495
+        },
+        {
+          "raw": "2 cups vegetable broth",
+          "record_support": 16
+        },
+        {
+          "raw": "4 cups vegetable broth",
+          "record_support": 12
+        },
+        {
+          "raw": "1 cup vegetable broth",
+          "record_support": 11
+        },
+        {
+          "raw": "1 1/2 cups vegetable broth",
+          "record_support": 8
+        }
+      ],
+      "vegetable oil": [
+        {
+          "raw": "vegetable oil",
+          "record_support": 3656
+        },
+        {
+          "raw": "1 tablespoon vegetable oil",
+          "record_support": 265
+        },
+        {
+          "raw": "2 tablespoons vegetable oil",
+          "record_support": 242
+        },
+        {
+          "raw": "3 tablespoons vegetable oil",
+          "record_support": 96
+        },
+        {
+          "raw": "1/4 cup vegetable oil",
+          "record_support": 95
+        }
+      ],
+      "walnuts": [
+        {
+          "raw": "walnuts",
+          "record_support": 126
+        },
+        {
+          "raw": "chopped walnuts",
+          "record_support": 102
+        },
+        {
+          "raw": "1/2 cup chopped walnuts",
+          "record_support": 24
+        },
+        {
+          "raw": "1/4 cup chopped walnuts",
+          "record_support": 11
+        },
+        {
+          "raw": "3 tablespoons chopped walnuts, toasted",
+          "record_support": 9
+        }
+      ],
+      "warm water": [
+        {
+          "raw": "warm water",
+          "record_support": 480
+        },
+        {
+          "raw": "1 cup warm water (100° to 110°)",
+          "record_support": 12
+        },
+        {
+          "raw": "1 cup warm water",
+          "record_support": 11
+        },
+        {
+          "raw": "1/2 cup warm water",
+          "record_support": 10
+        },
+        {
+          "raw": "2 cups warm water",
+          "record_support": 9
+        }
+      ],
+      "water": [
+        {
+          "raw": "water",
+          "record_support": 6221
+        },
+        {
+          "raw": "1 cup water",
+          "record_support": 302
+        },
+        {
+          "raw": "1/2 cup water",
+          "record_support": 260
+        },
+        {
+          "raw": "2 cups water",
+          "record_support": 229
+        },
+        {
+          "raw": "1/4 cup water",
+          "record_support": 183
+        }
+      ],
+      "white onion": [
+        {
+          "raw": "white onion",
+          "record_support": 670
+        },
+        {
+          "raw": "1 small white onion, chopped",
+          "record_support": 11
+        },
+        {
+          "raw": "1 medium white onion, chopped",
+          "record_support": 11
+        },
+        {
+          "raw": "1 medium white onion, diced",
+          "record_support": 10
+        },
+        {
+          "raw": "1/2 white onion, chopped",
+          "record_support": 9
+        }
+      ],
+      "white sugar": [
+        {
+          "raw": "white sugar",
+          "record_support": 634
+        },
+        {
+          "raw": "1 cup white sugar",
+          "record_support": 37
+        },
+        {
+          "raw": "1 tablespoon white sugar",
+          "record_support": 31
+        },
+        {
+          "raw": "1 teaspoon white sugar",
+          "record_support": 23
+        },
+        {
+          "raw": "1/2 cup white sugar",
+          "record_support": 22
+        }
+      ],
+      "white vinegar": [
+        {
+          "raw": "white vinegar",
+          "record_support": 418
+        },
+        {
+          "raw": "2 tablespoons white vinegar",
+          "record_support": 22
+        },
+        {
+          "raw": "1 tablespoon white vinegar",
+          "record_support": 18
+        },
+        {
+          "raw": "3 tablespoons white vinegar",
+          "record_support": 11
+        },
+        {
+          "raw": "1/4 cup white vinegar",
+          "record_support": 9
+        }
+      ],
+      "white wine": [
+        {
+          "raw": "white wine",
+          "record_support": 393
+        },
+        {
+          "raw": "1/2 cup white wine",
+          "record_support": 51
+        },
+        {
+          "raw": "1 cup white wine",
+          "record_support": 28
+        },
+        {
+          "raw": "1/4 cup white wine",
+          "record_support": 18
+        },
+        {
+          "raw": "½ cup white wine",
+          "record_support": 11
+        }
+      ],
+      "white wine vinegar": [
+        {
+          "raw": "white wine vinegar",
+          "record_support": 335
+        },
+        {
+          "raw": "2 tablespoons white wine vinegar",
+          "record_support": 47
+        },
+        {
+          "raw": "1 tablespoon white wine vinegar",
+          "record_support": 42
+        },
+        {
+          "raw": "1 tablespoon white-wine vinegar",
+          "record_support": 23
+        },
+        {
+          "raw": "1/4 cup white wine vinegar",
+          "record_support": 23
+        }
+      ],
+      "whole milk": [
+        {
+          "raw": "whole milk",
+          "record_support": 594
+        },
+        {
+          "raw": "1 cup whole milk",
+          "record_support": 81
+        },
+        {
+          "raw": "2 cups whole milk",
+          "record_support": 54
+        },
+        {
+          "raw": "1/2 cup whole milk",
+          "record_support": 36
+        },
+        {
+          "raw": "1 1/2 cups whole milk",
+          "record_support": 22
+        }
+      ],
+      "worcestershire sauce": [
+        {
+          "raw": "worcestershire sauce",
+          "record_support": 549
+        },
+        {
+          "raw": "1 tablespoon Worcestershire sauce",
+          "record_support": 105
+        },
+        {
+          "raw": "1 teaspoon Worcestershire sauce",
+          "record_support": 91
+        },
+        {
+          "raw": "2 tablespoons Worcestershire sauce",
+          "record_support": 70
+        },
+        {
+          "raw": "1/2 teaspoon Worcestershire sauce",
+          "record_support": 40
+        }
+      ],
+      "yellow onion": [
+        {
+          "raw": "yellow onion",
+          "record_support": 1460
+        },
+        {
+          "raw": "small yellow onion",
+          "record_support": 91
+        },
+        {
+          "raw": "1 yellow onion, chopped",
+          "record_support": 38
+        },
+        {
+          "raw": "1 yellow onion, diced",
+          "record_support": 32
+        },
+        {
+          "raw": "diced yellow onion",
+          "record_support": 31
+        }
+      ],
+      "yoghurt": [
+        {
+          "raw": "yoghurt",
+          "record_support": 497
+        },
+        {
+          "raw": "1/2 cup yoghurt",
+          "record_support": 1
+        },
+        {
+          "raw": "2 tbsp Yoghurt",
+          "record_support": 1
+        },
+        {
+          "raw": "4 tablespoon yoghurt",
+          "record_support": 1
+        },
+        {
+          "raw": "¾ cup yoghurt",
+          "record_support": 1
+        }
+      ],
+      "zucchini": [
+        {
+          "raw": "zucchini",
+          "record_support": 973
+        },
+        {
+          "raw": "medium zucchini",
+          "record_support": 105
+        },
+        {
+          "raw": "shredded zucchini",
+          "record_support": 25
+        },
+        {
+          "raw": "1 medium zucchini, diced",
+          "record_support": 6
+        },
+        {
+          "raw": "2 medium zucchini",
+          "record_support": 6
+        }
+      ]
+    }
+  },
+  "pair_relationship_views": {
+    "jaccard_min_50": [
+      {
+        "left": "pepper",
+        "right": "salt",
+        "support_left": 22147,
+        "support_right": 34455,
+        "cooccurrence": 17251,
+        "p_right_given_left": 0.77893168,
+        "p_left_given_right": 0.50068205,
+        "jaccard": 0.43838784,
+        "lift": 1.36886703
+      },
+      {
+        "left": "garlic",
+        "right": "salt",
+        "support_left": 24801,
+        "support_right": 34455,
+        "cooccurrence": 15377,
+        "p_right_given_left": 0.62001532,
+        "p_left_given_right": 0.44629227,
+        "jaccard": 0.35044099,
+        "lift": 1.08959303
+      },
+      {
+        "left": "olive oil",
+        "right": "pepper",
+        "support_left": 18893,
+        "support_right": 22147,
+        "cooccurrence": 10339,
+        "p_right_given_left": 0.54723972,
+        "p_left_given_right": 0.46683524,
+        "jaccard": 0.33676427,
+        "lift": 1.49615591
+      },
+      {
+        "left": "garlic",
+        "right": "olive oil",
+        "support_left": 24801,
+        "support_right": 18893,
+        "cooccurrence": 10836,
+        "p_right_given_left": 0.43691787,
+        "p_left_given_right": 0.57354576,
+        "jaccard": 0.3297827,
+        "lift": 1.40027401
+      },
+      {
+        "left": "garlic",
+        "right": "pepper",
+        "support_left": 24801,
+        "support_right": 22147,
+        "cooccurrence": 11181,
+        "p_right_given_left": 0.4508286,
+        "p_left_given_right": 0.50485393,
+        "jaccard": 0.31260659,
+        "lift": 1.23256746
+      },
+      {
+        "left": "mirin",
+        "right": "sake",
+        "support_left": 1013,
+        "support_right": 668,
+        "cooccurrence": 398,
+        "p_right_given_left": 0.3928924,
+        "p_left_given_right": 0.59580838,
+        "jaccard": 0.31021044,
+        "lift": 35.61322567
+      },
+      {
+        "left": "olive oil",
+        "right": "salt",
+        "support_left": 18893,
+        "support_right": 34455,
+        "cooccurrence": 12509,
+        "p_right_given_left": 0.66209707,
+        "p_left_given_right": 0.36305326,
+        "jaccard": 0.30630035,
+        "lift": 1.16354601
+      },
+      {
+        "left": "sesame oil",
+        "right": "soy sauce",
+        "support_left": 2978,
+        "support_right": 5367,
+        "cooccurrence": 1734,
+        "p_right_given_left": 0.58226998,
+        "p_left_given_right": 0.32308552,
+        "jaccard": 0.26229012,
+        "lift": 6.56911632
+      },
+      {
+        "left": "butter",
+        "right": "flour",
+        "support_left": 9765,
+        "support_right": 8057,
+        "cooccurrence": 3620,
+        "p_right_given_left": 0.37071173,
+        "p_left_given_right": 0.44929875,
+        "jaccard": 0.25489368,
+        "lift": 2.78597431
+      },
+      {
+        "left": "garlic",
+        "right": "onion",
+        "support_left": 24801,
+        "support_right": 12300,
+        "cooccurrence": 7442,
+        "p_right_given_left": 0.30006855,
+        "p_left_given_right": 0.60504065,
+        "jaccard": 0.25091878,
+        "lift": 1.4771667
+      },
+      {
+        "left": "egg",
+        "right": "flour",
+        "support_left": 11145,
+        "support_right": 8057,
+        "cooccurrence": 3804,
+        "p_right_given_left": 0.34131898,
+        "p_left_given_right": 0.47213603,
+        "jaccard": 0.24704507,
+        "lift": 2.5650818
+      },
+      {
+        "left": "garam masala",
+        "right": "ground turmeric",
+        "support_left": 2179,
+        "support_right": 1864,
+        "cooccurrence": 790,
+        "p_right_given_left": 0.36255163,
+        "p_left_given_right": 0.42381974,
+        "jaccard": 0.24285275,
+        "lift": 11.77709289
+      },
+      {
+        "left": "cheese",
+        "right": "olive oil",
+        "support_left": 15753,
+        "support_right": 18893,
+        "cooccurrence": 6727,
+        "p_right_given_left": 0.42702977,
+        "p_left_given_right": 0.3560578,
+        "jaccard": 0.24094703,
+        "lift": 1.36858375
+      },
+      {
+        "left": "garlic powder",
+        "right": "onion powder",
+        "support_left": 2686,
+        "support_right": 1028,
+        "cooccurrence": 696,
+        "p_right_given_left": 0.25912137,
+        "p_left_given_right": 0.6770428,
+        "jaccard": 0.2306163,
+        "lift": 15.26245035
+      },
+      {
+        "left": "cumin seed",
+        "right": "ground turmeric",
+        "support_left": 1361,
+        "support_right": 1864,
+        "cooccurrence": 595,
+        "p_right_given_left": 0.43717855,
+        "p_left_given_right": 0.31920601,
+        "jaccard": 0.22623574,
+        "lift": 14.20126658
+      },
+      {
+        "left": "curry leaves",
+        "right": "mustard seeds",
+        "support_left": 609,
+        "support_right": 583,
+        "cooccurrence": 218,
+        "p_right_given_left": 0.35796388,
+        "p_left_given_right": 0.37392796,
+        "jaccard": 0.2238193,
+        "lift": 37.17789476
+      },
+      {
+        "left": "cheese",
+        "right": "pepper",
+        "support_left": 15753,
+        "support_right": 22147,
+        "cooccurrence": 6915,
+        "p_right_given_left": 0.43896401,
+        "p_left_given_right": 0.3122319,
+        "jaccard": 0.2231725,
+        "lift": 1.20012962
+      },
+      {
+        "left": "green onion",
+        "right": "soy sauce",
+        "support_left": 8103,
+        "support_right": 5367,
+        "cooccurrence": 2424,
+        "p_right_given_left": 0.29914846,
+        "p_left_given_right": 0.45164897,
+        "jaccard": 0.21944595,
+        "lift": 3.37496543
+      },
+      {
+        "left": "ginger",
+        "right": "soy sauce",
+        "support_left": 7018,
+        "support_right": 5367,
+        "cooccurrence": 2223,
+        "p_right_given_left": 0.31675691,
+        "p_left_given_right": 0.41419788,
+        "jaccard": 0.21875615,
+        "lift": 3.57362231
+      },
+      {
+        "left": "chili powder",
+        "right": "ground cumin",
+        "support_left": 4698,
+        "support_right": 4111,
+        "cooccurrence": 1567,
+        "p_right_given_left": 0.33354619,
+        "p_left_given_right": 0.38117246,
+        "jaccard": 0.21637669,
+        "lift": 4.91272727
+      },
+      {
+        "left": "coriander powder",
+        "right": "garlic paste",
+        "support_left": 666,
+        "support_right": 543,
+        "cooccurrence": 214,
+        "p_right_given_left": 0.32132132,
+        "p_left_given_right": 0.39410681,
+        "jaccard": 0.21507538,
+        "lift": 35.83058196
+      },
+      {
+        "left": "baking powder",
+        "right": "baking soda",
+        "support_left": 1637,
+        "support_right": 1065,
+        "cooccurrence": 476,
+        "p_right_given_left": 0.29077581,
+        "p_left_given_right": 0.44694836,
+        "jaccard": 0.21383648,
+        "lift": 16.53190165
+      },
+      {
+        "left": "butter",
+        "right": "egg",
+        "support_left": 9765,
+        "support_right": 11145,
+        "cooccurrence": 3555,
+        "p_right_given_left": 0.3640553,
+        "p_left_given_right": 0.31897712,
+        "jaccard": 0.2048401,
+        "lift": 1.9778868
+      },
+      {
+        "left": "dark soy sauce",
+        "right": "light soy sauce",
+        "support_left": 622,
+        "support_right": 784,
+        "cooccurrence": 235,
+        "p_right_given_left": 0.3778135,
+        "p_left_given_right": 0.2997449,
+        "jaccard": 0.20068318,
+        "lift": 29.17934658
+      },
+      {
+        "left": "cheese",
+        "right": "salt",
+        "support_left": 15753,
+        "support_right": 34455,
+        "cooccurrence": 8384,
+        "p_right_given_left": 0.53221609,
+        "p_left_given_right": 0.24333188,
+        "jaccard": 0.20045907,
+        "lift": 0.93529775
+      },
+      {
+        "left": "ginger",
+        "right": "green onion",
+        "support_left": 7018,
+        "support_right": 8103,
+        "cooccurrence": 2494,
+        "p_right_given_left": 0.3553719,
+        "p_left_given_right": 0.30778724,
+        "jaccard": 0.19751327,
+        "lift": 2.65553111
+      },
+      {
+        "left": "cilantro",
+        "right": "lime juice",
+        "support_left": 9781,
+        "support_right": 3816,
+        "cooccurrence": 2242,
+        "p_right_given_left": 0.22921992,
+        "p_left_given_right": 0.58752621,
+        "jaccard": 0.19744606,
+        "lift": 3.63712419
+      },
+      {
+        "left": "onion",
+        "right": "tomato",
+        "support_left": 12300,
+        "support_right": 7169,
+        "cooccurrence": 3191,
+        "p_right_given_left": 0.25943089,
+        "p_left_given_right": 0.44511089,
+        "jaccard": 0.19603145,
+        "lift": 2.19117599
+      },
+      {
+        "left": "onion",
+        "right": "salt",
+        "support_left": 12300,
+        "support_right": 34455,
+        "cooccurrence": 7623,
+        "p_right_given_left": 0.6197561,
+        "p_left_given_right": 0.2212451,
+        "jaccard": 0.19480221,
+        "lift": 1.08913748
+      },
+      {
+        "left": "cumin seed",
+        "right": "garam masala",
+        "support_left": 1361,
+        "support_right": 2179,
+        "cooccurrence": 565,
+        "p_right_given_left": 0.41513593,
+        "p_left_given_right": 0.25929325,
+        "jaccard": 0.18991597,
+        "lift": 11.5357873
+      },
+      {
+        "left": "cilantro",
+        "right": "garlic",
+        "support_left": 9781,
+        "support_right": 24801,
+        "cooccurrence": 5455,
+        "p_right_given_left": 0.55771394,
+        "p_left_given_right": 0.21995081,
+        "jaccard": 0.18728328,
+        "lift": 1.36162166
+      },
+      {
+        "left": "ground coriander",
+        "right": "ground cumin",
+        "support_left": 1319,
+        "support_right": 4111,
+        "cooccurrence": 851,
+        "p_right_given_left": 0.64518575,
+        "p_left_given_right": 0.20700559,
+        "jaccard": 0.18584844,
+        "lift": 9.50279664
+      },
+      {
+        "left": "corn starch",
+        "right": "soy sauce",
+        "support_left": 2573,
+        "support_right": 5367,
+        "cooccurrence": 1242,
+        "p_right_given_left": 0.48270501,
+        "p_left_given_right": 0.2314142,
+        "jaccard": 0.18542849,
+        "lift": 5.44583353
+      },
+      {
+        "left": "cilantro",
+        "right": "lime",
+        "support_left": 9781,
+        "support_right": 3146,
+        "cooccurrence": 2003,
+        "p_right_given_left": 0.20478479,
+        "p_left_given_right": 0.6366815,
+        "jaccard": 0.18335774,
+        "lift": 3.94142366
+      },
+      {
+        "left": "garlic",
+        "right": "ginger",
+        "support_left": 24801,
+        "support_right": 7018,
+        "cooccurrence": 4929,
+        "p_right_given_left": 0.19874199,
+        "p_left_given_right": 0.70233685,
+        "jaccard": 0.18330234,
+        "lift": 1.71470893
+      },
+      {
+        "left": "cheese",
+        "right": "garlic",
+        "support_left": 15753,
+        "support_right": 24801,
+        "cooccurrence": 6258,
+        "p_right_given_left": 0.39725767,
+        "p_left_given_right": 0.25232854,
+        "jaccard": 0.18247026,
+        "lift": 0.9698783
+      },
+      {
+        "left": "garam masala",
+        "right": "turmeric",
+        "support_left": 2179,
+        "support_right": 1222,
+        "cooccurrence": 521,
+        "p_right_given_left": 0.2391005,
+        "p_left_given_right": 0.42635025,
+        "jaccard": 0.18090278,
+        "lift": 11.84741045
+      },
+      {
+        "left": "coriander powder",
+        "right": "garam masala",
+        "support_left": 666,
+        "support_right": 2179,
+        "cooccurrence": 433,
+        "p_right_given_left": 0.65015015,
+        "p_left_given_right": 0.19871501,
+        "jaccard": 0.17951907,
+        "lift": 18.06635686
+      },
+      {
+        "left": "egg",
+        "right": "sugar",
+        "support_left": 11145,
+        "support_right": 9681,
+        "cooccurrence": 3163,
+        "p_right_given_left": 0.2838044,
+        "p_left_given_right": 0.32672245,
+        "jaccard": 0.1790749,
+        "lift": 1.77506004
+      },
+      {
+        "left": "flour",
+        "right": "sugar",
+        "support_left": 8057,
+        "support_right": 9681,
+        "cooccurrence": 2672,
+        "p_right_given_left": 0.33163709,
+        "p_left_given_right": 0.27600454,
+        "jaccard": 0.17735298,
+        "lift": 2.07423051
+      }
+    ],
+    "conditional_min_50": [
+      {
+        "left": "coriander powder",
+        "right": "salt",
+        "support_left": 666,
+        "support_right": 34455,
+        "cooccurrence": 601,
+        "p_right_given_left": 0.9024024,
+        "p_left_given_right": 0.01744304,
+        "jaccard": 0.0174102,
+        "lift": 1.58585011
+      },
+      {
+        "left": "garlic paste",
+        "right": "salt",
+        "support_left": 543,
+        "support_right": 34455,
+        "cooccurrence": 471,
+        "p_right_given_left": 0.86740331,
+        "p_left_given_right": 0.01367,
+        "jaccard": 0.0136415,
+        "lift": 1.52434395
+      },
+      {
+        "left": "cumin seed",
+        "right": "salt",
+        "support_left": 1361,
+        "support_right": 34455,
+        "cooccurrence": 1155,
+        "p_right_given_left": 0.84864071,
+        "p_left_given_right": 0.03352199,
+        "jaccard": 0.03332275,
+        "lift": 1.4913712
+      },
+      {
+        "left": "garam masala",
+        "right": "salt",
+        "support_left": 2179,
+        "support_right": 34455,
+        "cooccurrence": 1849,
+        "p_right_given_left": 0.84855438,
+        "p_left_given_right": 0.0536642,
+        "jaccard": 0.0531551,
+        "lift": 1.4912195
+      },
+      {
+        "left": "curry leaves",
+        "right": "salt",
+        "support_left": 609,
+        "support_right": 34455,
+        "cooccurrence": 512,
+        "p_right_given_left": 0.8407225,
+        "p_left_given_right": 0.01485996,
+        "jaccard": 0.01481824,
+        "lift": 1.47745602
+      },
+      {
+        "left": "ground turmeric",
+        "right": "salt",
+        "support_left": 1864,
+        "support_right": 34455,
+        "cooccurrence": 1567,
+        "p_right_given_left": 0.84066524,
+        "p_left_given_right": 0.04547961,
+        "jaccard": 0.04509093,
+        "lift": 1.47735539
+      },
+      {
+        "left": "salt",
+        "right": "warm water",
+        "support_left": 34455,
+        "support_right": 681,
+        "cooccurrence": 568,
+        "p_right_given_left": 0.01648527,
+        "p_left_given_right": 0.83406755,
+        "jaccard": 0.01643138,
+        "lift": 1.46576085
+      },
+      {
+        "left": "ghee",
+        "right": "salt",
+        "support_left": 559,
+        "support_right": 34455,
+        "cooccurrence": 461,
+        "p_right_given_left": 0.82468694,
+        "p_left_given_right": 0.01337977,
+        "jaccard": 0.01334182,
+        "lift": 1.4492757
+      },
+      {
+        "left": "mustard seeds",
+        "right": "salt",
+        "support_left": 583,
+        "support_right": 34455,
+        "cooccurrence": 475,
+        "p_right_given_left": 0.81475129,
+        "p_left_given_right": 0.0137861,
+        "jaccard": 0.01374302,
+        "lift": 1.43181513
+      },
+      {
+        "left": "ground red pepper",
+        "right": "salt",
+        "support_left": 539,
+        "support_right": 34455,
+        "cooccurrence": 436,
+        "p_right_given_left": 0.80890538,
+        "p_left_given_right": 0.01265419,
+        "jaccard": 0.01261647,
+        "lift": 1.42154174
+      },
+      {
+        "left": "salt",
+        "right": "turmeric",
+        "support_left": 34455,
+        "support_right": 1222,
+        "cooccurrence": 986,
+        "p_right_given_left": 0.02861704,
+        "p_left_given_right": 0.80687398,
+        "jaccard": 0.02842236,
+        "lift": 1.41797183
+      },
+      {
+        "left": "baking powder",
+        "right": "salt",
+        "support_left": 1637,
+        "support_right": 34455,
+        "cooccurrence": 1310,
+        "p_right_given_left": 0.80024435,
+        "p_left_given_right": 0.03802061,
+        "jaccard": 0.03766316,
+        "lift": 1.40632115
+      },
+      {
+        "left": "salt",
+        "right": "yoghurt",
+        "support_left": 34455,
+        "support_right": 506,
+        "cooccurrence": 403,
+        "p_right_given_left": 0.01169642,
+        "p_left_given_right": 0.79644269,
+        "jaccard": 0.01166155,
+        "lift": 1.39964025
+      },
+      {
+        "left": "baking soda",
+        "right": "salt",
+        "support_left": 1065,
+        "support_right": 34455,
+        "cooccurrence": 846,
+        "p_right_given_left": 0.7943662,
+        "p_left_given_right": 0.02455377,
+        "jaccard": 0.02439868,
+        "lift": 1.3959911
+      },
+      {
+        "left": "salt",
+        "right": "smoked paprika",
+        "support_left": 34455,
+        "support_right": 961,
+        "cooccurrence": 763,
+        "p_right_given_left": 0.02214483,
+        "p_left_given_right": 0.79396462,
+        "jaccard": 0.0220183,
+        "lift": 1.39528538
+      },
+      {
+        "left": "garlic",
+        "right": "tomato paste",
+        "support_left": 24801,
+        "support_right": 1708,
+        "cooccurrence": 1337,
+        "p_right_given_left": 0.05390912,
+        "p_left_given_right": 0.78278689,
+        "jaccard": 0.05311457,
+        "lift": 1.91112237
+      },
+      {
+        "left": "pepper",
+        "right": "salt",
+        "support_left": 22147,
+        "support_right": 34455,
+        "cooccurrence": 17251,
+        "p_right_given_left": 0.77893168,
+        "p_left_given_right": 0.50068205,
+        "jaccard": 0.43838784,
+        "lift": 1.36886703
+      },
+      {
+        "left": "cayenne",
+        "right": "salt",
+        "support_left": 598,
+        "support_right": 34455,
+        "cooccurrence": 465,
+        "p_right_given_left": 0.77759197,
+        "p_left_given_right": 0.01349586,
+        "jaccard": 0.01344397,
+        "lift": 1.36651267
+      },
+      {
+        "left": "olive oil",
+        "right": "red wine vinegar",
+        "support_left": 18893,
+        "support_right": 1419,
+        "cooccurrence": 1100,
+        "p_right_given_left": 0.05822262,
+        "p_left_given_right": 0.7751938,
+        "jaccard": 0.05725588,
+        "lift": 2.4844114
+      },
+      {
+        "left": "capers",
+        "right": "olive oil",
+        "support_left": 612,
+        "support_right": 18893,
+        "cooccurrence": 471,
+        "p_right_given_left": 0.76960784,
+        "p_left_given_right": 0.02492987,
+        "jaccard": 0.02474519,
+        "lift": 2.46650902
+      },
+      {
+        "left": "ground coriander",
+        "right": "salt",
+        "support_left": 1319,
+        "support_right": 34455,
+        "cooccurrence": 1015,
+        "p_right_given_left": 0.76952237,
+        "p_left_given_right": 0.02945871,
+        "jaccard": 0.02920107,
+        "lift": 1.35233142
+      },
+      {
+        "left": "dill",
+        "right": "salt",
+        "support_left": 879,
+        "support_right": 34455,
+        "cooccurrence": 668,
+        "p_right_given_left": 0.75995449,
+        "p_left_given_right": 0.01938761,
+        "jaccard": 0.0192696,
+        "lift": 1.33551718
+      },
+      {
+        "left": "baking powder",
+        "right": "flour",
+        "support_left": 1637,
+        "support_right": 8057,
+        "cooccurrence": 1244,
+        "p_right_given_left": 0.7599267,
+        "p_left_given_right": 0.1543999,
+        "jaccard": 0.14721893,
+        "lift": 5.71100427
+      },
+      {
+        "left": "chili powder",
+        "right": "coriander powder",
+        "support_left": 4698,
+        "support_right": 666,
+        "cooccurrence": 506,
+        "p_right_given_left": 0.10770541,
+        "p_left_given_right": 0.75975976,
+        "jaccard": 0.10415809,
+        "lift": 9.79213569
+      },
+      {
+        "left": "cooking spray",
+        "right": "salt",
+        "support_left": 2025,
+        "support_right": 34455,
+        "cooccurrence": 1535,
+        "p_right_given_left": 0.75802469,
+        "p_left_given_right": 0.04455086,
+        "jaccard": 0.04392617,
+        "lift": 1.33212582
+      },
+      {
+        "left": "garlic",
+        "right": "vegetable broth",
+        "support_left": 24801,
+        "support_right": 631,
+        "cooccurrence": 478,
+        "p_right_given_left": 0.01927342,
+        "p_left_given_right": 0.75752773,
+        "jaccard": 0.01915525,
+        "lift": 1.84945382
+      },
+      {
+        "left": "ground cumin",
+        "right": "salt",
+        "support_left": 4111,
+        "support_right": 34455,
+        "cooccurrence": 3111,
+        "p_right_given_left": 0.75675018,
+        "p_left_given_right": 0.09029168,
+        "jaccard": 0.08774503,
+        "lift": 1.32988604
+      },
+      {
+        "left": "paprika",
+        "right": "salt",
+        "support_left": 1778,
+        "support_right": 34455,
+        "cooccurrence": 1338,
+        "p_right_given_left": 0.75253093,
+        "p_left_given_right": 0.03883326,
+        "jaccard": 0.0383436,
+        "lift": 1.32247128
+      },
+      {
+        "left": "coriander seeds",
+        "right": "salt",
+        "support_left": 625,
+        "support_right": 34455,
+        "cooccurrence": 469,
+        "p_right_given_left": 0.7504,
+        "p_left_given_right": 0.01361196,
+        "jaccard": 0.01355061,
+        "lift": 1.31872645
+      },
+      {
+        "left": "garlic",
+        "right": "red pepper flakes",
+        "support_left": 24801,
+        "support_right": 2319,
+        "cooccurrence": 1739,
+        "p_right_given_left": 0.07011814,
+        "p_left_given_right": 0.74989219,
+        "jaccard": 0.06851582,
+        "lift": 1.83081216
+      },
+      {
+        "left": "cumin",
+        "right": "salt",
+        "support_left": 1942,
+        "support_right": 34455,
+        "cooccurrence": 1452,
+        "p_right_given_left": 0.7476828,
+        "p_left_given_right": 0.04214192,
+        "jaccard": 0.04155101,
+        "lift": 1.31395135
+      },
+      {
+        "left": "fennel seeds",
+        "right": "salt",
+        "support_left": 571,
+        "support_right": 34455,
+        "cooccurrence": 426,
+        "p_right_given_left": 0.74605954,
+        "p_left_given_right": 0.01236395,
+        "jaccard": 0.01231214,
+        "lift": 1.31109869
+      },
+      {
+        "left": "cheese",
+        "right": "flour tortillas",
+        "support_left": 15753,
+        "support_right": 1044,
+        "cooccurrence": 778,
+        "p_right_given_left": 0.04938742,
+        "p_left_given_right": 0.74521073,
+        "jaccard": 0.04856733,
+        "lift": 2.86437565
+      },
+      {
+        "left": "green chilies",
+        "right": "salt",
+        "support_left": 1520,
+        "support_right": 34455,
+        "cooccurrence": 1129,
+        "p_right_given_left": 0.74276316,
+        "p_left_given_right": 0.03276738,
+        "jaccard": 0.0323997,
+        "lift": 1.30530574
+      },
+      {
+        "left": "chickpeas",
+        "right": "salt",
+        "support_left": 773,
+        "support_right": 34455,
+        "cooccurrence": 573,
+        "p_right_given_left": 0.74126779,
+        "p_left_given_right": 0.01663039,
+        "jaccard": 0.01653441,
+        "lift": 1.30267783
+      },
+      {
+        "left": "onion powder",
+        "right": "salt",
+        "support_left": 1028,
+        "support_right": 34455,
+        "cooccurrence": 761,
+        "p_right_given_left": 0.74027237,
+        "p_left_given_right": 0.02208678,
+        "jaccard": 0.02191694,
+        "lift": 1.30092852
+      },
+      {
+        "left": "bay leaf",
+        "right": "salt",
+        "support_left": 1227,
+        "support_right": 34455,
+        "cooccurrence": 907,
+        "p_right_given_left": 0.7392013,
+        "p_left_given_right": 0.02632419,
+        "jaccard": 0.02608196,
+        "lift": 1.29904626
+      },
+      {
+        "left": "chili powder",
+        "right": "salt",
+        "support_left": 4698,
+        "support_right": 34455,
+        "cooccurrence": 3457,
+        "p_right_given_left": 0.73584504,
+        "p_left_given_right": 0.10033377,
+        "jaccard": 0.09684558,
+        "lift": 1.29314808
+      },
+      {
+        "left": "egg",
+        "right": "vanilla",
+        "support_left": 11145,
+        "support_right": 1041,
+        "cooccurrence": 766,
+        "p_right_given_left": 0.06873037,
+        "p_left_given_right": 0.73583093,
+        "jaccard": 0.06707531,
+        "lift": 3.99771762
+      },
+      {
+        "left": "black olives",
+        "right": "cheese",
+        "support_left": 595,
+        "support_right": 15753,
+        "cooccurrence": 436,
+        "p_right_given_left": 0.73277311,
+        "p_left_given_right": 0.02767727,
+        "jaccard": 0.0274007,
+        "lift": 2.81656902
+      }
+    ],
+    "lift_min_50": [
+      {
+        "left": "curry leaves",
+        "right": "mustard seeds",
+        "support_left": 609,
+        "support_right": 583,
+        "cooccurrence": 218,
+        "p_right_given_left": 0.35796388,
+        "p_left_given_right": 0.37392796,
+        "jaccard": 0.2238193,
+        "lift": 37.17789476
+      },
+      {
+        "left": "coriander powder",
+        "right": "garlic paste",
+        "support_left": 666,
+        "support_right": 543,
+        "cooccurrence": 214,
+        "p_right_given_left": 0.32132132,
+        "p_left_given_right": 0.39410681,
+        "jaccard": 0.21507538,
+        "lift": 35.83058196
+      },
+      {
+        "left": "mirin",
+        "right": "sake",
+        "support_left": 1013,
+        "support_right": 668,
+        "cooccurrence": 398,
+        "p_right_given_left": 0.3928924,
+        "p_left_given_right": 0.59580838,
+        "jaccard": 0.31021044,
+        "lift": 35.61322567
+      },
+      {
+        "left": "dark soy sauce",
+        "right": "light soy sauce",
+        "support_left": 622,
+        "support_right": 784,
+        "cooccurrence": 235,
+        "p_right_given_left": 0.3778135,
+        "p_left_given_right": 0.2997449,
+        "jaccard": 0.20068318,
+        "lift": 29.17934658
+      },
+      {
+        "left": "dark soy sauce",
+        "right": "shaoxing wine",
+        "support_left": 622,
+        "support_right": 632,
+        "cooccurrence": 168,
+        "p_right_given_left": 0.27009646,
+        "p_left_given_right": 0.26582278,
+        "jaccard": 0.15469613,
+        "lift": 25.87712158
+      },
+      {
+        "left": "black peppercorns",
+        "right": "coriander seeds",
+        "support_left": 496,
+        "support_right": 625,
+        "cooccurrence": 121,
+        "p_right_given_left": 0.24395161,
+        "p_left_given_right": 0.1936,
+        "jaccard": 0.121,
+        "lift": 23.63403226
+      },
+      {
+        "left": "garlic paste",
+        "right": "yoghurt",
+        "support_left": 543,
+        "support_right": 506,
+        "cooccurrence": 103,
+        "p_right_given_left": 0.18968692,
+        "p_left_given_right": 0.20355731,
+        "jaccard": 0.10887949,
+        "lift": 22.69870213
+      },
+      {
+        "left": "coriander seeds",
+        "right": "fennel seeds",
+        "support_left": 625,
+        "support_right": 571,
+        "cooccurrence": 132,
+        "p_right_given_left": 0.2112,
+        "p_left_given_right": 0.23117338,
+        "jaccard": 0.12406015,
+        "lift": 22.39607706
+      },
+      {
+        "left": "light soy sauce",
+        "right": "shaoxing wine",
+        "support_left": 784,
+        "support_right": 632,
+        "cooccurrence": 181,
+        "p_right_given_left": 0.23086735,
+        "p_left_given_right": 0.28639241,
+        "jaccard": 0.1465587,
+        "lift": 22.11869914
+      },
+      {
+        "left": "coriander seeds",
+        "right": "cumin seed",
+        "support_left": 625,
+        "support_right": 1361,
+        "cooccurrence": 286,
+        "p_right_given_left": 0.4576,
+        "p_left_given_right": 0.2101396,
+        "jaccard": 0.16823529,
+        "lift": 20.35832476
+      },
+      {
+        "left": "coriander powder",
+        "right": "yoghurt",
+        "support_left": 666,
+        "support_right": 506,
+        "cooccurrence": 112,
+        "p_right_given_left": 0.16816817,
+        "p_left_given_right": 0.22134387,
+        "jaccard": 0.10566038,
+        "lift": 20.12368099
+      },
+      {
+        "left": "bananas",
+        "right": "strawberry",
+        "support_left": 530,
+        "support_right": 603,
+        "cooccurrence": 102,
+        "p_right_given_left": 0.19245283,
+        "p_left_given_right": 0.16915423,
+        "jaccard": 0.09893307,
+        "lift": 19.32507275
+      },
+      {
+        "left": "chinese five spice powder",
+        "right": "hoisin sauce",
+        "support_left": 663,
+        "support_right": 705,
+        "cooccurrence": 147,
+        "p_right_given_left": 0.22171946,
+        "p_left_given_right": 0.20851064,
+        "jaccard": 0.12039312,
+        "lift": 19.04271365
+      },
+      {
+        "left": "blueberry",
+        "right": "strawberry",
+        "support_left": 469,
+        "support_right": 603,
+        "cooccurrence": 87,
+        "p_right_given_left": 0.18550107,
+        "p_left_given_right": 0.14427861,
+        "jaccard": 0.08832487,
+        "lift": 18.62701418
+      },
+      {
+        "left": "peanut butter",
+        "right": "peanuts",
+        "support_left": 499,
+        "support_right": 1024,
+        "cooccurrence": 157,
+        "p_right_given_left": 0.31462926,
+        "p_left_given_right": 0.15332031,
+        "jaccard": 0.11493411,
+        "lift": 18.60429844
+      },
+      {
+        "left": "cumin seed",
+        "right": "mustard seeds",
+        "support_left": 1361,
+        "support_right": 583,
+        "cooccurrence": 243,
+        "p_right_given_left": 0.17854519,
+        "p_left_given_right": 0.41680961,
+        "jaccard": 0.14285714,
+        "lift": 18.54358678
+      },
+      {
+        "left": "coriander powder",
+        "right": "ground turmeric",
+        "support_left": 666,
+        "support_right": 1864,
+        "cooccurrence": 376,
+        "p_right_given_left": 0.56456456,
+        "p_left_given_right": 0.20171674,
+        "jaccard": 0.17455896,
+        "lift": 18.33926201
+      },
+      {
+        "left": "coriander powder",
+        "right": "garam masala",
+        "support_left": 666,
+        "support_right": 2179,
+        "cooccurrence": 433,
+        "p_right_given_left": 0.65015015,
+        "p_left_given_right": 0.19871501,
+        "jaccard": 0.17951907,
+        "lift": 18.06635686
+      },
+      {
+        "left": "dark soy sauce",
+        "right": "oyster sauce",
+        "support_left": 622,
+        "support_right": 891,
+        "cooccurrence": 153,
+        "p_right_given_left": 0.24598071,
+        "p_left_given_right": 0.17171717,
+        "jaccard": 0.1125,
+        "lift": 16.71619734
+      },
+      {
+        "left": "garlic paste",
+        "right": "ghee",
+        "support_left": 543,
+        "support_right": 559,
+        "cooccurrence": 83,
+        "p_right_given_left": 0.15285451,
+        "p_left_given_right": 0.14847943,
+        "jaccard": 0.0814524,
+        "lift": 16.55696011
+      },
+      {
+        "left": "baking powder",
+        "right": "baking soda",
+        "support_left": 1637,
+        "support_right": 1065,
+        "cooccurrence": 476,
+        "p_right_given_left": 0.29077581,
+        "p_left_given_right": 0.44694836,
+        "jaccard": 0.21383648,
+        "lift": 16.53190165
+      },
+      {
+        "left": "black peppercorns",
+        "right": "cinnamon sticks",
+        "support_left": 496,
+        "support_right": 580,
+        "cooccurrence": 78,
+        "p_right_given_left": 0.15725806,
+        "p_left_given_right": 0.13448276,
+        "jaccard": 0.07815631,
+        "lift": 16.41719967
+      },
+      {
+        "left": "curry leaves",
+        "right": "ground turmeric",
+        "support_left": 609,
+        "support_right": 1864,
+        "cooccurrence": 307,
+        "p_right_given_left": 0.50410509,
+        "p_left_given_right": 0.16469957,
+        "jaccard": 0.14173592,
+        "lift": 16.37530216
+      },
+      {
+        "left": "garlic paste",
+        "right": "ground turmeric",
+        "support_left": 543,
+        "support_right": 1864,
+        "cooccurrence": 273,
+        "p_right_given_left": 0.50276243,
+        "p_left_given_right": 0.14645923,
+        "jaccard": 0.12792877,
+        "lift": 16.33168734
+      },
+      {
+        "left": "garam masala",
+        "right": "garlic paste",
+        "support_left": 2179,
+        "support_right": 543,
+        "cooccurrence": 316,
+        "p_right_given_left": 0.14502065,
+        "p_left_given_right": 0.58195212,
+        "jaccard": 0.13133832,
+        "lift": 16.17127156
+      },
+      {
+        "left": "ground cinnamon",
+        "right": "ground nutmeg",
+        "support_left": 1606,
+        "support_right": 631,
+        "cooccurrence": 266,
+        "p_right_given_left": 0.16562889,
+        "p_left_given_right": 0.42155309,
+        "jaccard": 0.13495687,
+        "lift": 15.89354895
+      },
+      {
+        "left": "orange",
+        "right": "orange juice",
+        "support_left": 476,
+        "support_right": 796,
+        "cooccurrence": 99,
+        "p_right_given_left": 0.20798319,
+        "p_left_given_right": 0.12437186,
+        "jaccard": 0.08439898,
+        "lift": 15.8208321
+      },
+      {
+        "left": "coriander powder",
+        "right": "green chilies",
+        "support_left": 666,
+        "support_right": 1520,
+        "cooccurrence": 264,
+        "p_right_given_left": 0.3963964,
+        "p_left_given_right": 0.17368421,
+        "jaccard": 0.13735692,
+        "lift": 15.79065908
+      },
+      {
+        "left": "black beans",
+        "right": "corn",
+        "support_left": 1555,
+        "support_right": 896,
+        "cooccurrence": 357,
+        "p_right_given_left": 0.22958199,
+        "p_left_given_right": 0.3984375,
+        "jaccard": 0.17048711,
+        "lift": 15.51472066
+      },
+      {
+        "left": "ketchup",
+        "right": "worcestershire sauce",
+        "support_left": 858,
+        "support_right": 1109,
+        "cooccurrence": 243,
+        "p_right_given_left": 0.28321678,
+        "p_left_given_right": 0.21911632,
+        "jaccard": 0.14095128,
+        "lift": 15.46327883
+      },
+      {
+        "left": "coriander powder",
+        "right": "cumin seed",
+        "support_left": 666,
+        "support_right": 1361,
+        "cooccurrence": 231,
+        "p_right_given_left": 0.34684685,
+        "p_left_given_right": 0.16972814,
+        "jaccard": 0.12861915,
+        "lift": 15.4309894
+      },
+      {
+        "left": "garlic powder",
+        "right": "onion powder",
+        "support_left": 2686,
+        "support_right": 1028,
+        "cooccurrence": 696,
+        "p_right_given_left": 0.25912137,
+        "p_left_given_right": 0.6770428,
+        "jaccard": 0.2306163,
+        "lift": 15.26245035
+      },
+      {
+        "left": "curry leaves",
+        "right": "garlic paste",
+        "support_left": 609,
+        "support_right": 543,
+        "cooccurrence": 83,
+        "p_right_given_left": 0.136289,
+        "p_left_given_right": 0.15285451,
+        "jaccard": 0.07764266,
+        "lift": 15.19760378
+      },
+      {
+        "left": "garlic paste",
+        "right": "green chilies",
+        "support_left": 543,
+        "support_right": 1520,
+        "cooccurrence": 207,
+        "p_right_given_left": 0.38121547,
+        "p_left_given_right": 0.13618421,
+        "jaccard": 0.11153017,
+        "lift": 15.18591887
+      },
+      {
+        "left": "oyster sauce",
+        "right": "shaoxing wine",
+        "support_left": 891,
+        "support_right": 632,
+        "cooccurrence": 141,
+        "p_right_given_left": 0.15824916,
+        "p_left_given_right": 0.22310127,
+        "jaccard": 0.10202605,
+        "lift": 15.16137109
+      },
+      {
+        "left": "coriander powder",
+        "right": "ghee",
+        "support_left": 666,
+        "support_right": 559,
+        "cooccurrence": 93,
+        "p_right_given_left": 0.13963964,
+        "p_left_given_right": 0.16636852,
+        "jaccard": 0.08215548,
+        "lift": 15.12554594
+      },
+      {
+        "left": "beansprouts",
+        "right": "peanuts",
+        "support_left": 637,
+        "support_right": 1024,
+        "cooccurrence": 160,
+        "p_right_given_left": 0.25117739,
+        "p_left_given_right": 0.15625,
+        "jaccard": 0.1065956,
+        "lift": 14.85233516
+      },
+      {
+        "left": "ground turmeric",
+        "right": "mustard seeds",
+        "support_left": 1864,
+        "support_right": 583,
+        "cooccurrence": 266,
+        "p_right_given_left": 0.14270386,
+        "p_left_given_right": 0.45626072,
+        "jaccard": 0.1219624,
+        "lift": 14.82113016
+      },
+      {
+        "left": "curry leaves",
+        "right": "green chilies",
+        "support_left": 609,
+        "support_right": 1520,
+        "cooccurrence": 224,
+        "p_right_given_left": 0.36781609,
+        "p_left_given_right": 0.14736842,
+        "jaccard": 0.1175853,
+        "lift": 14.65214761
+      },
+      {
+        "left": "cumin seed",
+        "right": "ground turmeric",
+        "support_left": 1361,
+        "support_right": 1864,
+        "cooccurrence": 595,
+        "p_right_given_left": 0.43717855,
+        "p_left_given_right": 0.31920601,
+        "jaccard": 0.22623574,
+        "lift": 14.20126658
+      }
+    ]
+  },
+  "lexical_relationship_counts": {
+    "near_spelling": 2,
+    "singular_plural_variant": 1,
+    "token_phrase_containment": 100
+  },
+  "known_legacy_collision_checks": [
+    {
+      "raw": "1 pineapple",
+      "expected": "pineapple",
+      "forbidden": "apple",
+      "observed": "pineapple",
+      "passed": true,
+      "observed_line_count_in_retained_records": 368
+    },
+    {
+      "raw": "1 butternut squash",
+      "expected": "butternut squash",
+      "forbidden": "butter",
+      "observed": "butternut squash",
+      "passed": true,
+      "observed_line_count_in_retained_records": 373
+    },
+    {
+      "raw": "1 pepperoni",
+      "expected": "pepperoni",
+      "forbidden": "pepper",
+      "observed": "pepperoni",
+      "passed": true,
+      "observed_line_count_in_retained_records": 115
+    },
+    {
+      "raw": "1 cup watercress",
+      "expected": "watercress",
+      "forbidden": "water",
+      "observed": "watercress",
+      "passed": true,
+      "observed_line_count_in_retained_records": 172
+    }
+  ],
+  "mixed_target_diagnostics": {
+    "coriander": {
+      "retained_support": 1151,
+      "category_record_counts": {
+        "fresh_or_leaf": 419,
+        "generic": 741,
+        "ground_or_powder": 2
+      },
+      "records_in_multiple_categories": 11
+    },
+    "red pepper": {
+      "retained_support": 1751,
+      "category_record_counts": {
+        "generic": 929,
+        "ground_crushed_or_flaked": 831
+      },
+      "records_in_multiple_categories": 9
+    }
+  },
+  "provisional_review_scenarios": {
+    "conservative_normalization": {
+      "vocabulary_before": 209,
+      "vocabulary_after": 185,
+      "vocabulary_reduction": 24,
+      "affected_records": 19466,
+      "target_assignments_before": 475976,
+      "target_assignments_after": 475968,
+      "records_below_three_targets": 42,
+      "excluded_targets": []
+    },
+    "conservative_plus_generic_sauce_exclusion": {
+      "vocabulary_before": 209,
+      "vocabulary_after": 184,
+      "vocabulary_reduction": 25,
+      "affected_records": 19836,
+      "target_assignments_before": 475976,
+      "target_assignments_after": 475410,
+      "records_below_three_targets": 54,
+      "excluded_targets": [
+        "sauce"
+      ]
+    },
+    "plus_form_granularity": {
+      "vocabulary_before": 209,
+      "vocabulary_after": 175,
+      "vocabulary_reduction": 34,
+      "affected_records": 27445,
+      "target_assignments_before": 475976,
+      "target_assignments_after": 475571,
+      "records_below_three_targets": 42,
+      "excluded_targets": []
+    },
+    "plus_taxonomy_collapse": {
+      "vocabulary_before": 209,
+      "vocabulary_after": 168,
+      "vocabulary_reduction": 41,
+      "affected_records": 31425,
+      "target_assignments_before": 475976,
+      "target_assignments_after": 475363,
+      "records_below_three_targets": 42,
+      "excluded_targets": []
+    },
+    "plus_generic_sauce_exclusion": {
+      "vocabulary_before": 209,
+      "vocabulary_after": 167,
+      "vocabulary_reduction": 42,
+      "affected_records": 31682,
+      "target_assignments_before": 475976,
+      "target_assignments_after": 474805,
+      "records_below_three_targets": 54,
+      "excluded_targets": [
+        "sauce"
+      ]
+    },
+    "warning": "These are counterfactual discussion aids, not approved rules. Mixed raw-line targets such as coriander and red pepper require line-level rule replacement and are not represented here."
+  }
+}

@@ -1,0 +1,104 @@
+left,right,relation,base,specific,string_similarity,support_left,support_right,cooccurrence,jaccard,p_right_given_left,p_left_given_right
+coconut milk,coconut oil,near_spelling,,,0.869565,1735,870,210,0.08768267,0.12103746,0.24137931
+green bell pepper,red bell pepper,near_spelling,,,0.875,1301,2893,453,0.12109062,0.3481937,0.15658486
+bay leaf,bay leaves,singular_plural_variant,,,0.777778,1227,1181,6,0.00249792,0.00488998,0.00508044
+apple cider vinegar,cider vinegar,token_phrase_containment,cider vinegar,apple cider vinegar,0.8125,578,537,0,0.0,0.0,0.0
+baby spinach,spinach,token_phrase_containment,spinach,baby spinach,0.736842,630,1122,3,0.00171527,0.0047619,0.0026738
+basil,basil leaves,token_phrase_containment,basil,basil leaves,0.588235,2827,1356,65,0.01578436,0.02299257,0.0479351
+bell pepper,green bell pepper,token_phrase_containment,bell pepper,green bell pepper,0.785714,699,1301,8,0.00401606,0.01144492,0.00614912
+bell pepper,pepper,token_phrase_containment,pepper,bell pepper,0.705882,699,22147,295,0.01308146,0.42203147,0.01332009
+bell pepper,red bell pepper,token_phrase_containment,bell pepper,red bell pepper,0.846154,699,2893,7,0.00195258,0.01001431,0.00241963
+bread,french bread,token_phrase_containment,bread,french bread,0.588235,623,600,1,0.00081833,0.00160514,0.00166667
+brown sugar,light brown sugar,token_phrase_containment,brown sugar,light brown sugar,0.785714,2788,751,7,0.00198188,0.00251076,0.00932091
+brown sugar,sugar,token_phrase_containment,sugar,brown sugar,0.625,2788,9681,306,0.02515827,0.1097561,0.0316083
+butter,peanut butter,token_phrase_containment,butter,peanut butter,0.631579,9765,499,32,0.00312744,0.00327701,0.06412826
+canola oil,oil,token_phrase_containment,oil,canola oil,0.461538,1935,3310,13,0.00248471,0.00671835,0.00392749
+cayenne,cayenne pepper,token_phrase_containment,cayenne,cayenne pepper,0.666667,598,1890,10,0.00403551,0.01672241,0.00529101
+cayenne pepper,pepper,token_phrase_containment,pepper,cayenne pepper,0.6,1890,22147,815,0.03509603,0.43121693,0.03679957
+chicken,chicken broth,token_phrase_containment,chicken,chicken broth,0.7,7796,1942,699,0.07733156,0.08966136,0.35993821
+chicken,chicken stock,token_phrase_containment,chicken,chicken stock,0.7,7796,1705,604,0.06788805,0.07747563,0.3542522
+chicken,low sodium chicken broth,token_phrase_containment,chicken,low sodium chicken broth,0.451613,7796,654,203,0.02461501,0.02603899,0.31039755
+chicken broth,low sodium chicken broth,token_phrase_containment,chicken broth,low sodium chicken broth,0.702703,1942,654,1,0.00038536,0.00051493,0.00152905
+cinnamon,cinnamon sticks,token_phrase_containment,cinnamon,cinnamon sticks,0.695652,1634,580,12,0.00544959,0.00734394,0.02068966
+cinnamon,ground cinnamon,token_phrase_containment,cinnamon,ground cinnamon,0.695652,1634,1606,26,0.00808961,0.01591187,0.01618929
+coarse salt,salt,token_phrase_containment,salt,coarse salt,0.533333,1126,34455,44,0.00123815,0.03907638,0.00127703
+coconut milk,milk,token_phrase_containment,milk,coconut milk,0.5,1735,3433,20,0.003885,0.01152738,0.00582581
+coconut oil,oil,token_phrase_containment,oil,coconut oil,0.428571,870,3310,4,0.00095785,0.0045977,0.00120846
+cold water,water,token_phrase_containment,water,cold water,0.666667,513,8805,80,0.00865988,0.15594542,0.00908575
+cooking oil,oil,token_phrase_containment,oil,cooking oil,0.428571,516,3310,35,0.00923239,0.06782946,0.01057402
+coriander,coriander powder,token_phrase_containment,coriander,coriander powder,0.72,1151,666,74,0.04245554,0.06429192,0.11111111
+coriander,coriander seeds,token_phrase_containment,coriander,coriander seeds,0.75,1151,625,61,0.03556851,0.05299739,0.0976
+coriander,ground coriander,token_phrase_containment,coriander,ground coriander,0.72,1151,1319,84,0.03520536,0.07298002,0.06368461
+corn,corn kernels,token_phrase_containment,corn,corn kernels,0.5,896,535,3,0.00210084,0.00334821,0.00560748
+corn,corn starch,token_phrase_containment,corn,corn starch,0.533333,896,2573,24,0.00696662,0.02678571,0.00932763
+corn,corn tortillas,token_phrase_containment,corn,corn tortillas,0.444444,896,1253,76,0.03666184,0.08482143,0.06065443
+cumin,cumin seed,token_phrase_containment,cumin,cumin seed,0.666667,1942,1361,10,0.00303674,0.00514933,0.00734754
+cumin,ground cumin,token_phrase_containment,cumin,ground cumin,0.588235,1942,4111,59,0.00984318,0.03038105,0.01435174
+dark soy sauce,sauce,token_phrase_containment,sauce,dark soy sauce,0.526316,622,558,31,0.02697998,0.04983923,0.05555556
+dark soy sauce,soy sauce,token_phrase_containment,soy sauce,dark soy sauce,0.782609,622,5367,159,0.02727273,0.25562701,0.02962549
+dry white wine,white wine,token_phrase_containment,white wine,dry white wine,0.833333,1165,609,0,0.0,0.0,0.0
+egg,egg whites,token_phrase_containment,egg,egg whites,0.461538,11145,1346,261,0.02134096,0.02341857,0.19390788
+egg,egg yolks,token_phrase_containment,egg,egg yolks,0.5,11145,1025,247,0.02071626,0.0221624,0.24097561
+fish sauce,sauce,token_phrase_containment,sauce,fish sauce,0.666667,2182,558,53,0.0197246,0.02428964,0.09498208
+flat leaf parsley,parsley,token_phrase_containment,parsley,flat leaf parsley,0.583333,1635,3492,21,0.00411281,0.01284404,0.00601375
+flour,flour tortillas,token_phrase_containment,flour,flour tortillas,0.5,8057,1044,66,0.00730493,0.00819163,0.06321839
+garlic,garlic paste,token_phrase_containment,garlic,garlic paste,0.666667,24801,543,37,0.00146205,0.00149188,0.06813996
+garlic,garlic powder,token_phrase_containment,garlic,garlic powder,0.631579,24801,2686,491,0.01818788,0.01979759,0.1827997
+ginger,ginger root,token_phrase_containment,ginger,ginger root,0.705882,7018,608,11,0.00144452,0.0015674,0.01809211
+ginger,ground ginger,token_phrase_containment,ginger,ground ginger,0.631579,7018,890,58,0.00738854,0.00826446,0.06516854
+granulated sugar,sugar,token_phrase_containment,sugar,granulated sugar,0.47619,1732,9681,570,0.05256848,0.32909931,0.05887822
+greek yogurt,plain greek yogurt,token_phrase_containment,greek yogurt,plain greek yogurt,0.8,1697,1166,20,0.00703482,0.0117855,0.01715266
+green bell pepper,pepper,token_phrase_containment,pepper,green bell pepper,0.521739,1301,22147,590,0.02581153,0.45349731,0.02664018
+green onion,onion,token_phrase_containment,onion,green onion,0.625,8103,12300,874,0.04475396,0.10786129,0.07105691
+green pepper,pepper,token_phrase_containment,pepper,green pepper,0.666667,546,22147,212,0.00943019,0.38827839,0.0095724
+ground nutmeg,nutmeg,token_phrase_containment,nutmeg,ground nutmeg,0.631579,631,649,3,0.00234926,0.00475436,0.0046225
+ground red pepper,pepper,token_phrase_containment,pepper,ground red pepper,0.521739,539,22147,214,0.00952296,0.39703154,0.00966271
+ground red pepper,red pepper,token_phrase_containment,red pepper,ground red pepper,0.740741,539,1751,9,0.00394564,0.01669759,0.00513992
+ground turmeric,turmeric,token_phrase_containment,turmeric,ground turmeric,0.695652,1864,1222,25,0.00816727,0.01341202,0.02045827
+hoisin sauce,sauce,token_phrase_containment,sauce,hoisin sauce,0.588235,705,558,21,0.01690821,0.02978723,0.03763441
+hot sauce,sauce,token_phrase_containment,sauce,hot sauce,0.714286,739,558,5,0.00386997,0.0067659,0.00896057
+lemon,lemon juice,token_phrase_containment,lemon,lemon juice,0.625,2264,4935,255,0.03672235,0.11263251,0.05167173
+lemon,lemon zest,token_phrase_containment,lemon,lemon zest,0.666667,2264,808,44,0.01453104,0.01943463,0.05445545
+lettuce,romaine lettuce,token_phrase_containment,lettuce,romaine lettuce,0.636364,611,589,2,0.00166945,0.00327332,0.00339559
+light brown sugar,sugar,token_phrase_containment,sugar,light brown sugar,0.454545,751,9681,96,0.00928793,0.12782956,0.00991633
+light soy sauce,sauce,token_phrase_containment,sauce,light soy sauce,0.5,784,558,18,0.01359517,0.02295918,0.03225806
+light soy sauce,soy sauce,token_phrase_containment,soy sauce,light soy sauce,0.75,784,5367,32,0.00522961,0.04081633,0.00596236
+lime,lime juice,token_phrase_containment,lime,lime juice,0.571429,3146,3816,259,0.03863942,0.08232676,0.06787212
+lime,lime wedges,token_phrase_containment,lime,lime wedges,0.533333,3146,882,100,0.02545825,0.0317864,0.11337868
+low sodium soy sauce,sauce,token_phrase_containment,sauce,low sodium soy sauce,0.4,730,558,21,0.01657459,0.02876712,0.03763441
+low sodium soy sauce,soy sauce,token_phrase_containment,soy sauce,low sodium soy sauce,0.62069,730,5367,23,0.00378663,0.03150685,0.00428545
+milk,whole milk,token_phrase_containment,milk,whole milk,0.571429,3433,1012,23,0.00520127,0.00669968,0.02272727
+mint,mint leaves,token_phrase_containment,mint,mint leaves,0.533333,1236,550,11,0.00619718,0.00889968,0.02
+oil,olive oil,token_phrase_containment,oil,olive oil,0.5,3310,18893,118,0.00534299,0.03564955,0.0062457
+oil,peanut oil,token_phrase_containment,oil,peanut oil,0.461538,3310,930,17,0.00402557,0.00513595,0.01827957
+oil,sesame oil,token_phrase_containment,oil,sesame oil,0.461538,3310,2978,321,0.05379588,0.09697885,0.10779046
+oil,toasted sesame oil,token_phrase_containment,oil,toasted sesame oil,0.285714,3310,610,29,0.0074531,0.00876133,0.04754098
+oil,vegetable oil,token_phrase_containment,oil,vegetable oil,0.375,3310,5198,70,0.0082958,0.02114804,0.01346672
+onion,onion powder,token_phrase_containment,onion,onion powder,0.588235,12300,1028,131,0.0099265,0.01065041,0.12743191
+onion,purple onion,token_phrase_containment,onion,purple onion,0.588235,12300,2637,75,0.00504643,0.00609756,0.02844141
+onion,red onion,token_phrase_containment,onion,red onion,0.714286,12300,1162,41,0.00305491,0.00333333,0.03528399
+onion,spanish onion,token_phrase_containment,onion,spanish onion,0.555556,12300,603,13,0.00100853,0.00105691,0.02155887
+onion,sweet onion,token_phrase_containment,onion,sweet onion,0.625,12300,594,13,0.00100924,0.00105691,0.02188552
+onion,white onion,token_phrase_containment,onion,white onion,0.625,12300,1149,25,0.00186234,0.00203252,0.02175805
+onion,yellow onion,token_phrase_containment,onion,yellow onion,0.588235,12300,2303,40,0.00274669,0.00325203,0.01736865
+orange,orange juice,token_phrase_containment,orange,orange juice,0.666667,476,796,99,0.08439898,0.20798319,0.12437186
+oyster sauce,sauce,token_phrase_containment,sauce,oyster sauce,0.588235,891,558,36,0.02547771,0.04040404,0.06451613
+paprika,smoked paprika,token_phrase_containment,paprika,smoked paprika,0.666667,1778,961,30,0.0110742,0.01687289,0.03121748
+pepper,red bell pepper,token_phrase_containment,pepper,red bell pepper,0.571429,22147,2893,1239,0.05205664,0.05594437,0.42827515
+pepper,red pepper,token_phrase_containment,pepper,red pepper,0.75,22147,1751,644,0.02769416,0.02907843,0.36778983
+pepper,red pepper flakes,token_phrase_containment,pepper,red pepper flakes,0.521739,22147,2319,1072,0.04582372,0.04840385,0.46226822
+pepper,salt and pepper,token_phrase_containment,pepper,salt and pepper,0.571429,22147,1470,84,0.00356946,0.00379284,0.05714286
+red pepper,red pepper flakes,token_phrase_containment,red pepper,red pepper flakes,0.740741,1751,2319,58,0.01445663,0.03312393,0.02501078
+rice,rice vinegar,token_phrase_containment,rice,rice vinegar,0.5,1164,2142,71,0.02194745,0.06099656,0.03314659
+salt,salt and pepper,token_phrase_containment,salt,salt and pepper,0.421053,34455,1470,170,0.00475458,0.00493397,0.11564626
+sauce,soy sauce,token_phrase_containment,sauce,soy sauce,0.714286,558,5367,158,0.02739726,0.28315412,0.02943917
+sauce,tomato sauce,token_phrase_containment,sauce,tomato sauce,0.588235,558,1168,8,0.00465658,0.01433692,0.00684932
+sauce,worcestershire sauce,token_phrase_containment,sauce,worcestershire sauce,0.4,558,1109,10,0.006035,0.01792115,0.00901713
+sesame oil,toasted sesame oil,token_phrase_containment,sesame oil,toasted sesame oil,0.714286,2978,610,20,0.00560538,0.00671592,0.03278689
+sugar,white sugar,token_phrase_containment,sugar,white sugar,0.625,9681,894,92,0.00877611,0.00950315,0.10290828
+thyme,thyme leaves,token_phrase_containment,thyme,thyme leaves,0.588235,2373,527,23,0.00799444,0.00969237,0.04364326
+tomato,tomato paste,token_phrase_containment,tomato,tomato paste,0.666667,7169,1708,493,0.05880248,0.06876831,0.28864169
+tomato,tomato sauce,token_phrase_containment,tomato,tomato sauce,0.666667,7169,1168,257,0.03180693,0.03584879,0.22003425
+vanilla,vanilla extract,token_phrase_containment,vanilla,vanilla extract,0.636364,1041,2397,49,0.01445854,0.04707012,0.02044222
+warm water,water,token_phrase_containment,water,warm water,0.666667,681,8805,93,0.00990099,0.13656388,0.01056218
+white wine,white wine vinegar,token_phrase_containment,white wine,white wine vinegar,0.714286,609,665,11,0.00870942,0.0180624,0.01654135

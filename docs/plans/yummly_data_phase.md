@@ -10,8 +10,8 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 ## Progress tracker
 
 **Overall status:** In progress  
-**Current task:** Analyze the candidate ingredient vocabulary before proposing extractor changes.
-**Next action:** Produce and present the main audit findings for discussion; do not change extraction rules before an explicit decision.
+**Current task:** Begin the fully approved 2.2b extractor strengthening.
+**Next action:** Implement the approved deterministic rules and regression tests, then compare the regenerated candidate with `v1`.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -20,8 +20,8 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 | P2 | Implement and verify the shared-image-store prerequisite | **Done** | `scripts/migrate_yummly_images.py` staged and SHA-256-verified 65,146 files in `imgs/standard`; both legacy generations load through the refactored DataModule. |
 | P3 | Implement and verify historical experiment compatibility without rewriting saved artifacts | **Deferred** | Current-style legacy configurations retain `ingredients_ok` and receive `images_subdir` in memory. Complete validation is deferred until the historical experiments worth retaining are selected. |
 | P4 | Design and implement the improved `ingredients` to `ingredients_target` standardizer | **Done** | `src/data_processing/ingredient_standardization.py` uses explicit token-bounded rules, recipe support >= 500, and at least three retained targets. |
-| P4a | Audit the candidate ingredient vocabulary and present findings | **Pending** | Work package 2.2a; analysis only, followed by a user discussion before any extractor change. |
-| P4b | Strengthen the ingredient extractor from accepted audit findings | **Pending** | Work package 2.2b; blocked until the audit findings have been discussed and explicit rules are approved. |
+| P4a | Audit the candidate ingredient vocabulary and present findings | **Done** | [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md) audits 209 targets, 60,550 recipes, 707,771 raw lines, relationships, collisions, and counterfactual review packages without changing data or code. |
+| P4b | Strengthen the ingredient extractor from accepted audit findings | **Pending — scope approved** | All recognizability-led policies are approved; generic chili powder and crushed/flaked dried red pepper collapse into `chili`, while fresh red and green bell peppers remain separate. |
 | P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Deferred** | `ingredients_target_v1_metadata.json` passed its checks as 48,439/6,056/6,055 records, but must be regenerated after Work package 2.2b if target rules change. |
 | P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **In progress** | New multi-label vocabularies and outputs omit `<UNK>`; any selected legacy artifact retains its saved behavior. |
 | P7 | Run all data checks and freeze the first new metadata generation | **Done** | Two clean dry-runs and the final generation passed automatic image decoding, SHA-256, uniqueness, ratio, distribution, vocabulary, and DataModule loading checks. |
@@ -32,6 +32,7 @@ The implementation follows these decisions:
 
 - keep `feature_label` configurable and change only its default from `ingredients_ok` to `ingredients_target`;
 - derive new `ingredients_target` values from the original `ingredients` field through an improved deterministic preprocessing script;
+- choose fine-grained target distinctions primarily by practical recognizability from the prepared-dish image: collapse intra-family forms and styles that cannot be separated reliably, while retaining robust visual differences;
 - retain `ingredients_ok` only as the legacy target used by historical data and experiments;
 - do not save one mapping row per raw ingredient line;
 - do not introduce manual image-review workflows;
@@ -160,7 +161,7 @@ The compatibility layer resolves the new common image directory at load time wit
 
 ## Work package 2.1b — shared image store and metadata decoupling
 
-**Status:** In progress
+**Status:** Done
 
 ### Required implementation
 
@@ -253,7 +254,7 @@ Repeated runs on identical input produce identical `ingredients_target` values a
 
 ## Work package 2.2a — ingredient vocabulary audit
 
-**Status:** Pending
+**Status:** Done — discussion checkpoint reached
 
 ### Purpose
 
@@ -278,19 +279,47 @@ Review the candidate vocabulary produced by Work package 2.2 before it is treate
 
 ### Completion gate
 
-The vocabulary size and support profile are understood; the main findings and candidate refinements have been presented for discussion; and no extractor, metadata, or split has been changed by this work package.
+The vocabulary size and support profile are understood; the main findings and candidate refinements are recorded in [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md) for discussion; and no extractor, metadata, or split was changed by this work package. This gate is satisfied.
 
 ## Work package 2.2b — ingredient extractor strengthening
 
-**Status:** Pending — awaiting discussion
+**Status:** Pending — scope approved
 
 ### Purpose
 
 Turn only the explicitly accepted findings from Work package 2.2a into tested, deterministic extractor rules.
 
+### Approved recognizability policy and scope
+
+Target granularity is determined primarily by whether the distinction remains realistically recognizable in a prepared-dish image. The rule applies within ingredient families: merge fine preparation, product-style, or naming variants that are not visually separable, but retain variants with a robust visual distinction and retain different source-ingredient families.
+
+The durable, explicit source-to-target contract is maintained in [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md). The summary below defines this work package's approved scope but must not become a separate mapping authority.
+
+The following scope is approved:
+
+1. apply the conservative normalization package documented by Work package 2.2a;
+2. exclude generic `sauce`;
+3. expand `salt and pepper` into `salt` and `pepper`;
+4. map explicit fresh/leaf coriander to `cilantro`;
+5. merge `chicken stock`, `chicken broth`, and low-sodium chicken broth into `chicken broth`;
+6. merge base, light, dark, and low-sodium soy sauce into `soy sauce`;
+7. merge all current plain and Greek yogurt spellings and variants into `yogurt`;
+8. merge `toasted sesame oil` into `sesame oil`;
+9. merge `tomato paste` and `tomato sauce` into `tomato sauce`, while retaining fresh `tomato`;
+10. retain red and green bell-pepper targets separately;
+11. retain the source-support threshold of 500 recipes and the minimum-three-target retention rule for the first comparison build.
+12. merge ground and powder spice forms into the base spice while keeping seeds, leaves, and sticks separate;
+13. retain `red onion` and `green onion`, while collapsing white, yellow, Spanish, and sweet onion into `onion`;
+14. collapse brown, white, granulated, and light-brown sugar into `sugar`;
+15. merge and retain all bare, fresh, and leaf `coriander`/`cilantro` forms under the canonical `cilantro` target, while explicit ground/powder forms follow the base-spice rule;
+16. map bare `red pepper` and `green pepper` to the corresponding red and green bell-pepper targets, keeping the colours separate.
+17. collapse `chili powder`, `ground red pepper`, `crushed red pepper`, `dried crushed red pepper`, `red pepper flakes`, and equivalent generic dried/powdered forms into `chili`.
+
+The family boundary prevents an uncontrolled collapse: for example, sesame oil and olive oil remain distinct source ingredients even though toasted and untoasted sesame oil merge.
+
 ### Required implementation
 
-1. Record the approved target changes and their rationale in the decision log and durable project documentation.
+1. Keep the final approved target changes and boundaries synchronized with [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md).
 2. Implement only the agreed token- or phrase-bounded rules.
 3. Add a regression test for every accepted rule and its relevant collision boundary.
 4. Compare vocabulary size, target support, record retention, and affected recipes with the `v1` candidate.
@@ -302,7 +331,7 @@ Every extractor change is traceable to an explicit decision made after the 2.2a 
 
 ## Work package 2.3 — deterministic metadata generation and split
 
-**Status:** Pending
+**Status:** Deferred
 
 ### Required implementation
 
@@ -333,7 +362,7 @@ The new train, validation, and test metadata pass all assertions, have no exact-
 
 ## Work package 2.4 — runtime target integration and `<UNK>` decision
 
-**Status:** Pending
+**Status:** In progress
 
 ### Required implementation
 
@@ -406,3 +435,8 @@ The plan is complete when:
 | 2026-08-03 | Added Work packages 2.2a–2.2b for vocabulary work | The 209-label `v1` generation is a validated candidate; 2.2a is analysis and discussion only, while extractor changes require subsequent explicit approval in 2.2b |
 | 2026-08-04 | Deferred historical experiment compatibility | Select the historical experiments to retain before investing in schema-specific compatibility and smoke tests; this does not block the vocabulary audit |
 | 2026-08-04 | Accepted `<UNK>` removal for new multi-label outputs | It receives no positive training targets; any selected legacy artifact retains its saved behavior |
+| 2026-08-04 | Completed the 2.2a candidate vocabulary audit without changing the extractor | The 209-target candidate is split-stable but contains mechanical fragmentation, composite and mixed targets, and unresolved granularity choices; 2.2b remains gated on explicit approval |
+| 2026-08-04 | Adopted recognizability-led target granularity for 2.2b and approved the first merge scope | Broth/stock, all soy-sauce styles, yogurt variants, toasted/base sesame oil, and tomato paste/sauce are not reliably separable in prepared images; red and green bell peppers remain distinct |
+| 2026-08-04 | Approved the remaining spice, onion, sugar, coriander, and fresh-pepper rules | Ground/powder spices merge into their base while seeds/leaves/sticks remain separate; red/green onion distinctions are retained as specified; sugars collapse; coriander/cilantro is retained as one target; bare red/green pepper maps by colour to bell pepper |
+| 2026-08-04 | Finalized the chili-family rule and closed the 2.2b decision gate | Generic chili powder and crushed/flaked dried red pepper all collapse into `chili`; fresh red and green bell peppers remain separate |
+| 2026-08-04 | Created a durable ingredient mapping registry | [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md) is the long-term source of truth for active and approved mappings, expansions, exclusions, and collision boundaries; the feature plan retains only scope and execution status |

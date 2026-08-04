@@ -1,7 +1,7 @@
 # Project documentation
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-03
+**Last updated:** 2026-08-04
 
 This directory contains the durable technical documentation for the Ingredient Recognition project. It complements the repository-level [`README_PROJECT_KNOWLEDGE.md`](../README_PROJECT_KNOWLEDGE.md), which provides a concise map of the project and its current state.
 
@@ -21,7 +21,8 @@ docs/
 │   ├── README.md
 │   └── <implementation_name>.md
 ├── implementation_details/
-│   └── <component>.md
+│   ├── ingredient_mapping_rules.md
+│   └── models.md
 ├── models_deepdive/
 │   ├── README.md
 │   └── <model_name>.md
@@ -46,6 +47,8 @@ docs/
 ### `implementation_details/`
 
 Use this directory for documentation tied directly to the repository implementation: component contracts, integration points, supported variants, configuration behavior, and operational constraints. These documents should explain what the current code does and link to the relevant source files.
+
+[`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) is the durable source of truth for custom `ingredients` to `ingredients_target` mappings, exclusions, multi-target expansions, and collision boundaries. It must remain synchronized with the standardizer and its regression tests after the related feature plan is completed.
 
 ### `models_deepdive/`
 

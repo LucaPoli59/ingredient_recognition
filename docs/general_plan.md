@@ -4,7 +4,7 @@
 **Last updated:** 2026-08-04
 **Overall status:** In progress  
 **Current macro-phase:** Data
-**Current focus:** Analyze the candidate ingredient vocabulary and discuss findings before changing the extractor or freezing the regenerated benchmark.
+**Current focus:** Implement the fully approved 2.2b extractor scope, validate it, and regenerate the benchmark.
 
 ## Purpose
 
@@ -32,7 +32,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | Complete the shared image store and legacy compatibility layer, then generate deterministic `ingredients_target` metadata. |
+| 2 | Data | **In progress** | Approve and implement extractor strengthening from the completed vocabulary audit, then regenerate the deterministic benchmark. |
 | 3 | Ingredient selection | **In progress** | Formalize relevance and visual-distinguishability criteria. |
 | 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
@@ -85,8 +85,8 @@ The Data macro-section covers source understanding, shared image storage, histor
 | 2.1b Shared image store and metadata decoupling | **Done** | Shared store was staged with SHA-256 verification; DataModule resolves images independently of split metadata. |
 | 2.1c Historical experiment compatibility | **Deferred** | Select the historical experiments to retain before building schema-specific compatibility and running smoke tests. |
 | 2.2 Improved `ingredients_target` standardization | **Done** | Deterministic token-bounded standardizer uses recipe support >= 500 and has produced the first target generation. |
-| 2.2a Ingredient vocabulary audit | **Pending** | Audit unique targets, support, co-occurrence, lexical variants, and collision signals; present results for discussion without changing the extractor. |
-| 2.2b Ingredient extractor strengthening | **Pending** | Apply only rules explicitly approved after the 2.2a discussion, then test and compare the result. |
+| 2.2a Ingredient vocabulary audit | **Done** | Review [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md); no extractor or metadata was changed. |
+| 2.2b Ingredient extractor strengthening | **Pending — scope approved** | Implement the complete recognizability-led rule set, including the collapse of generic powdered, ground, crushed, dried, and flaked red-pepper seasonings into `chili`. |
 | 2.3 Deterministic metadata generation and split | **Deferred** | The 209-label `v1` candidate passes construction checks but must be regenerated after Work package 2.2b if target rules change. |
 | 2.4 Runtime target integration and `<UNK>` removal | **In progress** | New multi-label vocabularies and outputs omit `<UNK>`; preserve saved behavior for retained legacy experiments. |
 
@@ -116,7 +116,7 @@ The legacy dataset and its consumers are understood sufficiently to implement th
 
 ### 2.1b Shared image store and metadata decoupling
 
-**Status:** In progress
+**Status:** Done
 
 #### Purpose
 
@@ -127,11 +127,11 @@ Move image storage out of the split directories. Train, validation, and test ret
 - [x] Inspect the current layout, metadata generations, loader path construction, dashboard consumer, and experiment storage.
 - [x] Define the separate metadata-root and image-root contract.
 - [x] Write the detailed implementation plan for Data Work packages 2.1b–2.4.
-- [ ] Add loader contract tests using multiple metadata generations and one image directory.
-- [ ] Add a relative `images_subdir` configuration with `imgs/standard` as its default.
-- [ ] Refactor the DataModule and other image consumers to resolve images independently of split metadata.
-- [ ] Implement a dry-run-first image migration that verifies filenames, counts, and SHA-256 values.
-- [ ] Validate all current metadata generations before retiring split-local image copies.
+- [x] Add loader contract tests using multiple metadata generations and one image directory.
+- [x] Add a relative `images_subdir` configuration with `imgs/standard` as its default.
+- [x] Refactor the DataModule and other image consumers to resolve images independently of split metadata.
+- [x] Implement a dry-run-first image migration that verifies filenames, counts, and SHA-256 values.
+- [x] Validate all current metadata generations before retiring split-local image copies.
 
 #### Evidence
 
@@ -139,11 +139,11 @@ Move image storage out of the split directories. Train, validation, and test ret
 
 #### Completion gate
 
-All Yummly consumers resolve images from the shared collection, both existing metadata generations load successfully, migration checks pass, and obsolete split-local copies can be retired safely. No legacy metadata, configuration, or checkpoint is rewritten.
+All Yummly consumers resolve images from the shared collection, both existing metadata generations load successfully, migration checks pass, and split-local image copies have been removed. No legacy metadata, configuration, or checkpoint was rewritten. This gate is satisfied.
 
 #### Next action
 
-Add path-contract tests before changing the on-disk layout.
+Maintain the shared-store contract when adding a new metadata generation or image consumer.
 
 ### 2.1c Historical experiment compatibility
 
@@ -173,7 +173,7 @@ Select the historical experiments to retain. Then scope the read-only inventory,
 
 ### 2.2 Improved `ingredients_target` standardization
 
-**Status:** Pending
+**Status:** Done
 
 #### Purpose
 
@@ -181,26 +181,82 @@ Create a new deterministic script that derives `ingredients_target` from the ori
 
 #### Required work
 
-- [ ] Use `prev_attempts/attempt1/preprocessing_v2.py` as forensic input, not as an executable dependency.
-- [ ] Define the normalization, support, alias, generalization, and record-retention rules before implementation.
-- [ ] Replace unbounded substring edits with token- or phrase-bounded rules.
-- [ ] Count support by distinct recipes rather than distinct raw strings.
-- [ ] Replace similarity-based and unordered merges with explicit deterministic rules.
-- [ ] Preserve `ingredients` and write an ordered, duplicate-free `ingredients_target` list.
-- [ ] Add regression tests for confirmed legacy collisions and every retained historical rule.
-- [ ] Emit concise aggregate generation statistics without creating per-line mapping or review artifacts.
+- [x] Use `prev_attempts/attempt1/preprocessing_v2.py` as forensic input, not as an executable dependency.
+- [x] Define deterministic normalization, support, alias, generalization, and record-retention rules for the first candidate.
+- [x] Replace unbounded substring edits with token- or phrase-bounded rules.
+- [x] Count support by distinct recipes rather than distinct raw strings.
+- [x] Replace similarity-based and unordered merges with explicit deterministic rules.
+- [x] Preserve `ingredients` and write an ordered, duplicate-free `ingredients_target` list.
+- [x] Add regression tests for confirmed legacy collisions and retained historical rules.
+- [x] Emit concise aggregate generation statistics without creating per-line mapping or review artifacts.
 
 #### Completion gate
 
-Identical inputs and rules produce identical targets and ordering; known collision cases pass regression tests; and the preprocessing effect is understood before split generation.
+Identical inputs and rules produce identical targets and ordering; known collision cases pass regression tests; and the first 209-target candidate was generated and validated. This implementation gate is satisfied; its vocabulary quality is governed by Work packages 2.2a and 2.2b.
 
 #### Next action
 
-Discuss and freeze the exact standardization rules, support threshold, minimum target count, and desired level of ingredient generalization.
+Implement only the extractor changes approved through Work package 2.2b.
+
+### 2.2a Ingredient vocabulary audit
+
+**Status:** Done
+
+#### Completed
+
+- [x] Audited 209 candidate targets across 60,550 recipes and 707,771 raw ingredient lines.
+- [x] Computed per-target source and retained support, split support, target cardinality, co-occurrence, conditional probability, Jaccard similarity, and lift.
+- [x] Inspected token-bounded lexical relationships and aggregate raw-line evidence without persisting a per-line mapping.
+- [x] Re-ran all known substring-collision checks.
+- [x] Classified findings as candidate merges, rule replacements, exclusions, retained relationships, or unresolved taxonomy choices.
+- [x] Quantified conservative and broader counterfactual review packages without changing the extractor, metadata, or split.
+
+#### Evidence
+
+- [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md)
+- [`../src_scratches/data_anlysis/ingredient_vocabulary_audit.py`](../src_scratches/data_anlysis/ingredient_vocabulary_audit.py)
+- [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md)
+
+#### Completion gate
+
+The support profile, fragmentation, mixed targets, and unresolved granularity choices are understood and presented for discussion. No production target rule or metadata artifact was changed. This gate is satisfied.
+
+#### Next action
+
+Use the completed audit as the evidence baseline for Work package 2.2b. The complete conservative and recognizability-led scope is approved and ready for implementation.
+
+### 2.2b Ingredient extractor strengthening
+
+**Status:** Pending — scope approved
+
+#### Approved direction
+
+- [x] Use practical recognizability in the prepared-dish image as the primary criterion for fine-grained distinctions within an ingredient family.
+- [x] Approve the conservative normalization package, generic `sauce` exclusion, `salt and pepper` expansion, and explicit fresh-coriander normalization.
+- [x] Merge chicken broth/stock, all current soy-sauce styles, all current yogurt variants, toasted/base sesame oil, and tomato paste/sauce.
+- [x] Retain fresh tomato separately from processed tomato and retain red/green bell-pepper distinctions.
+- [x] Merge ground/powder spices into the base while retaining seeds/leaves/sticks; resolve onion and sugar granularity; merge and retain coriander/cilantro; map bare red/green pepper to colour-specific bell pepper.
+- [x] Collapse `chili powder` and generic powdered, ground, crushed, dried-crushed, and flaked red-pepper seasonings into `chili`.
+
+#### Required work
+
+- [x] Record the explicitly accepted mappings, boundaries, and rationale in the durable [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) registry.
+- [ ] Implement only accepted token- or phrase-bounded rules, including multi-output rules where approved.
+- [ ] Add regression tests for every accepted rule and collision boundary.
+- [ ] Compare vocabulary, support, retention, and affected recipes with the 209-target `v1` candidate.
+- [ ] Regenerate a new exact-SHA-safe metadata version without overwriting `v1`.
+
+#### Completion gate
+
+Every extractor change is traceable to an explicit post-audit decision, passes regression tests, and is represented in a newly generated metadata version.
+
+#### Next action
+
+Begin implementation of the approved scope using [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) as the operational tracker; add regression coverage and compare the regenerated benchmark with `v1`.
 
 ### 2.3 Deterministic metadata generation and split
 
-**Status:** Pending
+**Status:** Deferred
 
 #### Required work
 
@@ -539,6 +595,11 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-03 | Data implementation | A verified common image store and first deterministic target metadata generation were created. The legacy store and artifacts were not changed. | Work packages 2.1b, 2.2, and 2.3 **Done**; 2.1c and 2.4 **In progress/Pending** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
 | 2026-08-03 | Data planning | Split vocabulary work into an analysis-and-discussion gate (2.2a) and a later approved extractor change (2.2b); the initial 209-label generation remains a validated candidate. | Work packages 2.2a–2.2b **Pending**; 2.3 **Deferred** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
 | 2026-08-04 | Data planning | Deferred legacy-experiment compatibility until the retained historical experiments are selected; accepted removal of `<UNK>` from new multi-label outputs while preserving selected legacy artifacts. | Work package 2.1c **Deferred**; 2.4 **In progress** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
+| 2026-08-04 | Data analysis | Completed the 2.2a audit of the 209-target candidate: support and split coverage are stable, while mechanical fragmentation, mixed targets, and unresolved granularity choices require an explicit decision before extractor changes. | Work package 2.2a **Done**; 2.2b **Pending — awaiting decision** | [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md) |
+| 2026-08-04 | Data decision | Adopted practical prepared-image recognizability as the primary 2.2b granularity criterion and approved merges for broth/stock, soy-sauce styles, yogurt variants, toasted sesame oil, and tomato paste/sauce while retaining fresh tomato and red/green bell peppers. | Work package 2.2b **Pending — final scope confirmation** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
+| 2026-08-04 | Data decision | Approved ground/powder spice merging, the onion and sugar taxonomies, one retained coriander/cilantro target, and colour-specific mapping of bare red/green pepper. | Work package 2.2b **Pending — one clarification** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
+| 2026-08-04 | Data decision | Collapsed `chili powder` and generic powdered, ground, crushed, dried-crushed, and flaked red-pepper seasonings into `chili`; fresh red and green bell peppers remain separate. This closes the post-audit decision gate. | Work package 2.2b **Pending — scope approved** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md) |
+| 2026-08-04 | Data documentation | Created the long-term source of truth for custom target mappings, multi-target expansions, exclusions, retained distinctions, and collision boundaries. | Work package 2.2b **Pending — mapping contract recorded** | [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
 
 ## Tracker maintenance rules
 
@@ -556,6 +617,7 @@ This table is append-only. Add one row when a macro-section or significant work 
 
 - [`project_objective/problem_definition.md`](project_objective/problem_definition.md) defines the research question and success criteria.
 - [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md) contains the evidence behind the current data priorities.
+- [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md) contains the evidence and provisional classifications for Work package 2.2a.
 - [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) contains the binding benchmark policies and readiness checklist.
 - [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) is the active implementation plan for Data Work packages 2.1b–2.4.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.

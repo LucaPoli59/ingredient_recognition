@@ -1,0 +1,210 @@
+target,support_total,prevalence,support_train,support_val,support_test,source_recipe_support_before_retention,retained_support_fraction,attributed_records,unattributed_records,distinct_raw_variants,top_raw_examples
+salt,34455,0.56903386,27571,3442,3442,34985,0.98485065,34455,0,1673,salt | kosher salt | sea salt | 1/2 teaspoon salt | 1/4 teaspoon salt
+garlic,24801,0.40959538,19838,2482,2481,24903,0.99590411,24801,0,2171,"garlic | garlic cloves | minced garlic | 2 garlic cloves, minced | large garlic cloves"
+pepper,22147,0.36576383,17720,2214,2213,22394,0.98897026,22147,0,1189,pepper | ground black pepper | black pepper | freshly ground black pepper | freshly ground pepper
+olive oil,18893,0.31202312,15117,1885,1891,19207,0.98365179,18893,0,1922,olive oil | extra-virgin olive oil | 1 tablespoon olive oil | 2 tablespoons olive oil | 3 tablespoons olive oil
+cheese,15753,0.26016515,12600,1577,1576,16429,0.95885325,15753,0,6294,grated parmesan cheese | feta cheese | parmesan cheese | cream cheese | feta cheese crumbles
+onion,12300,0.2031379,9840,1230,1230,12376,0.99385908,12300,0,1536,"onions | chopped onion | 1 onion, chopped | 1 medium onion, chopped | diced onions"
+egg,11145,0.18406276,8916,1115,1114,11320,0.98454064,11145,0,482,eggs | large eggs | 1 large egg | 2 large eggs | 1 egg
+cilantro,9781,0.16153592,7824,978,979,9823,0.99572432,9781,0,1063,cilantro | cilantro leaves | chopped cilantro | fresh cilantro | chopped fresh cilantro
+butter,9765,0.16127168,7811,976,978,10059,0.97077244,9765,0,1285,butter | unsalted butter | melted butter | 2 tablespoons butter | 1 tablespoon butter
+sugar,9681,0.15988439,7745,967,969,10170,0.9519174,9681,0,650,sugar | powdered sugar | confectioners sugar | 1/2 cup sugar | 1 teaspoon sugar
+water,8805,0.14541701,7043,881,881,9023,0.97583952,8805,0,445,water | 1 cup water | 1/2 cup water | 2 cups water | 1/4 cup water
+green onion,8103,0.13382329,6480,812,811,8180,0.9905868,8103,0,994,green onions | scallions | sliced green onions | 1/2 cup chopped green onions | 1/4 cup chopped green onions
+flour,8057,0.13306358,6445,806,806,8125,0.99163077,8057,0,1002,all-purpose flour | flour | 1 cup all-purpose flour | 1/4 cup all-purpose flour | 2 tablespoons all-purpose flour
+chicken,7796,0.1287531,6237,780,779,7876,0.98984256,7796,0,996,boneless skinless chicken breasts | chicken breasts | chicken | boneless skinless chicken thighs | chicken thighs
+tomato,7169,0.11839802,5733,719,717,7224,0.99238649,7169,0,1150,tomatoes | diced tomatoes | crushed tomatoes | chopped tomatoes | medium tomatoes
+ginger,7018,0.11590421,5616,701,701,7042,0.99659188,7018,0,396,ginger | fresh ginger | minced ginger | peeled fresh ginger | 1 tablespoon minced peeled fresh ginger
+soy sauce,5367,0.08863749,4294,536,537,5403,0.99333703,5367,0,70,soy sauce | 2 tablespoons soy sauce | 1 tablespoon soy sauce | 1/4 cup soy sauce | 3 tablespoons soy sauce
+vegetable oil,5198,0.08584641,4159,520,519,5252,0.9897182,5198,0,251,vegetable oil | 1 tablespoon vegetable oil | 2 tablespoons vegetable oil | 3 tablespoons vegetable oil | 1/4 cup vegetable oil
+lemon juice,4935,0.08150289,3946,494,495,5060,0.97529644,4935,0,295,lemon juice | fresh lemon juice | 1 tablespoon fresh lemon juice | 2 tablespoons fresh lemon juice | 1 tablespoon lemon juice
+chili powder,4698,0.07758877,3758,470,470,4752,0.98863636,4698,0,587,chili powder | red chili powder | 1 teaspoon chili powder | 1 tablespoon chili powder | chile powder
+carrot,4669,0.07710983,3735,466,468,4691,0.99531017,4669,0,904,carrots | shredded carrots | medium carrot | large carrots | sliced carrots
+ground cumin,4111,0.0678943,3287,413,411,4117,0.99854263,4111,0,146,ground cumin | 1 teaspoon ground cumin | 1/2 teaspoon ground cumin | 2 teaspoons ground cumin | 1/4 teaspoon ground cumin
+oregano,4074,0.06728324,3260,407,407,4102,0.99317406,4074,0,371,dried oregano | oregano | fresh oregano | 1 teaspoon dried oregano | 1/2 teaspoon dried oregano
+lime juice,3816,0.0630223,3052,382,382,3894,0.97996918,3816,0,253,lime juice | fresh lime juice | 1 tablespoon fresh lime juice | 2 tablespoons fresh lime juice | 1/4 cup fresh lime juice
+parsley,3492,0.05767135,2794,348,350,3514,0.99373933,3492,0,431,fresh parsley | parsley | chopped parsley | dried parsley | 2 tablespoons chopped fresh parsley
+milk,3433,0.05669694,2745,344,344,3538,0.97032222,3433,0,252,milk | 1 cup milk | 1/2 cup milk | 2 cups milk | 1/4 cup milk
+oil,3310,0.05466557,2648,331,331,3337,0.9919089,3310,0,139,oil | 1 tablespoon oil | 2 tbsp oil | 1 tbsp oil | 2 tablespoons oil
+lime,3146,0.05195706,2517,315,314,3187,0.98713524,3146,0,207,"lime | 1 lime, juiced | fresh lime | 1 lime | 2 limes, cut into wedges"
+sesame oil,2978,0.04918249,2380,299,299,2982,0.99865862,2978,0,47,sesame oil | 1 teaspoon sesame oil | 1 tablespoon sesame oil | 2 teaspoons sesame oil | 1 tsp sesame oil
+honey,2977,0.04916598,2382,298,297,3100,0.96032258,2977,0,109,honey | 1 tablespoon honey | 2 tablespoons honey | 1/4 cup honey | 1 teaspoon honey
+red bell pepper,2893,0.0477787,2313,290,290,2903,0.99655529,2893,0,313,"red bell pepper | 1 red bell pepper, diced | 1 red bell pepper, chopped | 1 cup chopped red bell pepper | 1/2 cup chopped red bell pepper"
+basil,2827,0.04668869,2263,282,282,2858,0.98915325,2827,0,487,fresh basil | basil | dried basil | 1 teaspoon dried basil | 1/4 cup chopped fresh basil
+brown sugar,2788,0.04604459,2230,279,279,2818,0.98935415,2788,0,116,brown sugar | 2 tablespoons brown sugar | 1 tablespoon brown sugar | 1/2 cup packed brown sugar | 1/4 cup packed brown sugar
+pasta,2765,0.04566474,2212,277,276,2860,0.96678322,2765,0,1213,pasta | spaghetti | elbow macaroni | linguine | penne pasta
+garlic powder,2686,0.04436003,2149,268,269,2694,0.99703044,2686,0,114,garlic powder | 1 teaspoon garlic powder | 1/2 teaspoon garlic powder | 1/4 teaspoon garlic powder | 1 tablespoon garlic powder
+purple onion,2637,0.04355078,2110,264,263,2649,0.99546999,2637,0,12,"purple onion | 1/4 cup chopped purple onion | 1/4 cup diced purple onion | 1 purple onion, thinly sliced | 1 small purple onion"
+corn starch,2573,0.04249381,2058,257,258,2576,0.9988354,2573,0,21,corn starch | 1 teaspoon corn starch | 1/2 teaspoon corn starch | 1 tablespoon corn starch | 3 tablespoons corn starch
+shallots,2528,0.04175062,2022,253,253,2538,0.99605989,2528,0,364,shallots | 2 tablespoons minced shallots | sliced shallots | 1/4 cup finely chopped shallots | 1/4 cup chopped shallots
+beef,2489,0.04110652,1991,249,249,2525,0.98574257,2489,0,383,ground beef | lean ground beef | beef | 1 pound ground beef | extra lean ground beef
+avocado,2466,0.04072667,1972,246,248,2507,0.98364579,2466,0,272,"avocado | 1 avocado | 1 avocado, diced | 1 avocado, sliced | Avocado"
+vanilla extract,2397,0.03958712,1917,239,241,2465,0.97241379,2397,0,73,vanilla extract | 1 teaspoon vanilla extract | 1/2 teaspoon vanilla extract | 2 teaspoons vanilla extract | 1 tablespoon vanilla extract
+thyme,2373,0.03919075,1898,237,238,2383,0.99580361,2373,0,355,dried thyme | fresh thyme | thyme | 1/2 teaspoon dried thyme | chopped fresh thyme
+red pepper flakes,2319,0.03829893,1855,232,232,2321,0.9991383,2319,0,240,red pepper flakes | crushed red pepper flakes | 1/4 teaspoon red pepper flakes | 1/2 teaspoon red pepper flakes | 1 teaspoon red pepper flakes
+yellow onion,2303,0.03803468,1843,230,230,2310,0.9969697,2303,0,348,"yellow onion | small yellow onion | 1 yellow onion, chopped | 1 yellow onion, diced | diced yellow onion"
+panko breadcrumbs,2274,0.03755574,1818,228,228,2299,0.98912571,2274,0,20,panko breadcrumbs | 1/2 cup panko breadcrumbs | ¼ cup panko breadcrumbs | 1 1/2 cups panko breadcrumbs | 2 cups panko breadcrumbs
+lemon,2264,0.03739059,1811,226,227,2304,0.98263889,2264,0,158,"lemon | fresh lemon | 1 lemon | 1 lemon, halved | 2 lemons"
+sour cream,2201,0.03635012,1761,220,220,2227,0.9883251,2201,0,185,sour cream | 1/2 cup sour cream | 1 cup sour cream | 1/4 cup sour cream | Sour cream
+fish sauce,2182,0.03603633,1746,218,218,2185,0.998627,2182,0,62,fish sauce | 1 tablespoon fish sauce | 2 tablespoons fish sauce | 1 teaspoon fish sauce | 3 tablespoons fish sauce
+garam masala,2179,0.03598679,1741,219,219,2180,0.99954128,2179,0,110,garam masala | 1 teaspoon garam masala | 1 tsp garam masala | 2 teaspoons garam masala | 1 tablespoon garam masala
+rice vinegar,2142,0.03537572,1713,215,214,2158,0.99258573,2142,0,33,rice vinegar | 2 tablespoons rice vinegar | 1 tablespoon rice vinegar | 1/4 cup rice vinegar | 3 tablespoons rice vinegar
+cooking spray,2025,0.03344344,1621,202,202,2057,0.98444336,2025,0,8,Cooking spray | cooking spray | Cooking spray (optional) | cooking spray (I used my Misto) | Cooking Spray
+chicken broth,1942,0.03207267,1554,194,194,1951,0.99538698,1942,0,189,chicken broth | 1 cup chicken broth | 2 cups chicken broth | 1/2 cup chicken broth | 4 cups chicken broth
+cumin,1942,0.03207267,1554,194,194,1943,0.99948533,1942,0,110,cumin | 1 teaspoon cumin | 1/2 teaspoon cumin | 1 tsp cumin | 1 tablespoon cumin
+canola oil,1935,0.03195706,1548,194,193,1946,0.99434738,1935,0,116,canola oil | 1 tablespoon canola oil | 2 tablespoons canola oil | 1/4 cup canola oil | 2 teaspoons canola oil
+cucumber,1907,0.03149463,1525,191,191,1918,0.99426486,1907,0,152,"cucumber | sliced cucumber | 1 cup chopped cucumber | 1 cup chopped seeded cucumber | 1 cucumber, peeled and sliced"
+cayenne pepper,1890,0.03121387,1512,189,189,1896,0.99683544,1890,0,143,cayenne pepper | 1/4 teaspoon cayenne pepper | 1/8 teaspoon cayenne pepper | 1/2 teaspoon cayenne pepper | 1 teaspoon cayenne pepper
+ground turmeric,1864,0.03078448,1492,186,186,1866,0.99892819,1864,0,47,ground turmeric | 1 teaspoon ground turmeric | 1/2 teaspoon ground turmeric | 1/4 teaspoon ground turmeric | 1 tsp ground turmeric
+jalapeno chilies,1861,0.03073493,1488,187,186,1864,0.99839056,1861,0,10,"jalapeno chilies | 2 tablespoons minced fresh jalapeño chilies | 2 tablespoons minced jalapeño chilies | 2 jalapeño chilies, quartered lengthwise and seeded | 2 jalapeño chilies, halved and seeded"
+paprika,1778,0.02936416,1421,178,179,1791,0.99274149,1778,0,95,paprika | 1 teaspoon paprika | 1/2 teaspoon paprika | 2 teaspoons paprika | 1 tablespoon paprika
+mayonnaise,1751,0.02891825,1401,175,175,1792,0.97712054,1751,0,105,mayonnaise | 1/2 cup mayonnaise | 1 cup mayonnaise | 1/4 cup mayonnaise | 2 tablespoons mayonnaise
+red pepper,1751,0.02891825,1401,175,175,1759,0.99545196,1751,0,161,red pepper | crushed red pepper | 1/4 teaspoon crushed red pepper | 1/2 teaspoon crushed red pepper | 1/2 teaspoon dried crushed red pepper
+dijon mustard,1746,0.02883567,1395,176,175,1773,0.98477157,1746,0,96,dijon mustard | 1 teaspoon Dijon mustard | 1 tablespoon Dijon mustard | 2 teaspoons Dijon mustard | 2 tablespoons Dijon mustard
+shrimp,1739,0.02872007,1391,174,174,1752,0.99257991,1739,0,226,shrimp | large shrimp | medium shrimp | dried shrimp | cooked shrimp
+coconut milk,1735,0.028654,1388,174,173,1759,0.98635588,1735,0,92,coconut milk | 1 cup coconut milk | reduced fat coconut milk | 1/2 cup coconut milk | 400ml coconut milk
+granulated sugar,1732,0.02860446,1385,174,173,1762,0.98297389,1732,0,154,granulated sugar | 1/2 cup granulated sugar | 1 cup granulated sugar | 1/4 cup granulated sugar | 3/4 cup granulated sugar
+heavy cream,1729,0.02855491,1382,175,172,1773,0.97518331,1729,0,150,heavy cream | 1 cup heavy cream | 1/2 cup heavy cream | 1/4 cup heavy cream | 2 cups heavy cream
+tomato paste,1708,0.02820809,1367,170,171,1708,1.0,1708,0,164,tomato paste | 2 tablespoons tomato paste | 1 tablespoon tomato paste | 1 (6 ounce) can tomato paste | 3 tablespoons tomato paste
+chicken stock,1705,0.02815855,1365,170,170,1706,0.99941383,1705,0,157,chicken stock | homemade chicken stock | 2 cups chicken stock | 4 cups chicken stock | 1 cup chicken stock
+greek yogurt,1697,0.02802642,1358,170,169,1850,0.9172973,1697,0,47,greek yogurt | nonfat greek yogurt | 1/2 cup Greek yogurt | ¼ cup Greek yogurt | Greek Yogurt
+baking powder,1637,0.02703551,1309,164,164,1638,0.9993895,1637,0,63,baking powder | 1 teaspoon baking powder | 2 teaspoons baking powder | 1/2 teaspoon baking powder | 1 1/2 teaspoons baking powder
+flat leaf parsley,1635,0.02700248,1308,164,163,1644,0.99452555,1635,0,261,flat leaf parsley | 2 tablespoons chopped fresh flat-leaf parsley | 1/4 cup chopped fresh flat-leaf parsley | 1 tablespoon chopped fresh flat-leaf parsley | 1/2 cup chopped fresh flat-leaf parsley
+cinnamon,1634,0.02698596,1306,164,164,1670,0.97844311,1634,0,55,cinnamon | 1/2 teaspoon cinnamon | 1/4 teaspoon cinnamon | 1 teaspoon cinnamon | 1/8 teaspoon cinnamon
+ground cinnamon,1606,0.02652353,1285,160,161,1661,0.96688742,1606,0,89,ground cinnamon | 1/2 teaspoon ground cinnamon | 1 teaspoon ground cinnamon | 1/4 teaspoon ground cinnamon | 2 teaspoons ground cinnamon
+black beans,1555,0.02568126,1243,156,156,1562,0.99551857,1555,0,275,"black beans | 1 (15 ounce) can black beans, rinsed and drained | dried black beans | 1 (15-ounce) can black beans, rinsed and drained | 1 can (15 ounces) black beans, rinsed and drained"
+zucchini,1537,0.02538398,1230,154,153,1610,0.95465839,1537,0,365,"zucchini | medium zucchini | shredded zucchini | 1 medium zucchini, diced | 2 medium zucchini"
+green chilies,1520,0.02510322,1216,152,152,1523,0.9980302,1520,0,120,green chilies | diced green chilies | chopped green chilies | 1 (4 ounce) can chopped green chilies | 1 (4.5 ounce) can chopped green chilies
+celery,1507,0.02488852,1205,151,151,1521,0.99079553,1507,0,337,celery | chopped celery | 1/2 cup chopped celery | 1 cup chopped celery | diced celery
+salt and pepper,1470,0.02427746,1176,147,147,1525,0.96393443,1470,0,67,"Salt and pepper | salt and pepper to taste | salt and pepper | Salt and pepper to taste | salt and pepper, to taste"
+red wine vinegar,1419,0.02343518,1135,142,142,1421,0.99859254,1419,0,91,red wine vinegar | 2 tablespoons red wine vinegar | 1/4 cup red wine vinegar | 1 tablespoon red wine vinegar | 3 tablespoons red wine vinegar
+cumin seed,1361,0.02247729,1089,136,136,1363,0.99853265,1361,0,22,cumin seed | 1 teaspoon cumin seed | ½ teaspoon cumin seed | 2 teaspoons cumin seed | 1 teaspoon cumin seed (toasted)
+basil leaves,1356,0.02239472,1085,135,136,1385,0.97906137,1356,0,412,fresh basil leaves | basil leaves | dried basil leaves | 1/2 cup fresh basil leaves | 1 cup fresh basil leaves
+salsa,1352,0.02232865,1082,135,135,1364,0.99120235,1352,0,136,salsa | 1 cup salsa | Salsa | 1/2 cup salsa | prepared salsa
+egg whites,1346,0.02222956,1076,135,135,1400,0.96142857,1346,0,88,egg whites | large egg whites | 2 large egg whites | 3 large egg whites | 4 large egg whites
+ground coriander,1319,0.02178365,1055,132,132,1320,0.99924242,1319,0,57,ground coriander | 1 teaspoon ground coriander | 1/2 teaspoon ground coriander | 1 tsp ground coriander | 1/4 teaspoon ground coriander
+green bell pepper,1301,0.02148637,1041,131,129,1306,0.99617152,1301,0,183,"green bell pepper | green bell pepper, sliced | chopped green bell pepper | 1 green bell pepper, chopped | 1/2 cup chopped green bell pepper"
+potato,1260,0.02080925,1007,126,127,1268,0.99369085,1260,0,200,potatoes | medium potatoes | large potatoes | small potatoes | diced potatoes
+corn tortillas,1253,0.02069364,1003,125,125,1267,0.98895028,1253,0,339,corn tortillas | 12 corn tortillas | 8 corn tortillas | 8 (6-inch) corn tortillas | 12 (6-inch) corn tortillas
+mushroom,1247,0.02059455,997,125,125,1255,0.9936255,1247,0,275,mushrooms | sliced mushrooms | fresh mushrooms | dried mushrooms | 1 cup sliced mushrooms
+mint,1236,0.02041288,989,124,123,1262,0.97939778,1236,0,158,fresh mint | mint | chopped fresh mint | dried mint | 2 tablespoons chopped fresh mint
+bay leaf,1227,0.02026424,981,123,123,1230,0.99756098,1227,0,39,bay leaf | 1 bay leaf | 1 dried bay leaf | 1 small bay leaf | 1 fresh bay leaf
+turmeric,1222,0.02018167,978,122,122,1223,0.99918234,1222,0,55,turmeric | 1 teaspoon turmeric | fresh turmeric | 1/2 teaspoon turmeric | 1 tsp turmeric
+red chili peppers,1212,0.02001652,970,121,121,1213,0.9991756,1212,0,5,"red chili peppers | 4 red chili peppers | 2 small red chili peppers, finely chopped | 5 red chili peppers, dried and large | 1 - 2 fresh red chili peppers, thinly sliced"
+bay leaves,1181,0.01950454,945,118,118,1184,0.99746622,1181,0,72,bay leaves | 2 bay leaves | 3 bay leaves | 2 dried bay leaves | 4 bay leaves
+tomato sauce,1168,0.01928984,935,116,117,1182,0.98815567,1168,0,207,tomato sauce | 1 (15 ounce) can tomato sauce | 1 (8 ounce) can tomato sauce | 1 cup tomato sauce | 1/2 cup tomato sauce
+plain greek yogurt,1166,0.01925681,932,117,117,1223,0.9533933,1166,0,26,plain greek yogurt | nonfat plain greek yogurt | plain low fat greek yogurt | 1/2 cup plain Greek yogurt | 200ml plain Greek yogurt
+dry white wine,1165,0.0192403,932,117,116,1168,0.99743151,1165,0,114,dry white wine | 1/2 cup dry white wine | 1 cup dry white wine | 1/4 cup dry white wine | 1/3 cup dry white wine
+rice,1164,0.01922378,931,117,116,1184,0.98310811,1164,0,56,rice | cooked rice | 1 cup uncooked rice | Cooked rice | 3 cups cooked rice
+red onion,1162,0.01919075,928,117,117,1184,0.98141892,1162,0,559,"1/4 cup finely chopped red onion | 1/2 cup chopped red onion | 1/2 cup finely chopped red onion | 1 small red onion, thinly sliced | 1/2 small red onion, thinly sliced"
+coriander,1151,0.01900908,920,115,116,1157,0.99481417,1151,0,100,coriander | fresh coriander | 1 teaspoon coriander | 1/2 teaspoon coriander | 1 tsp coriander
+white onion,1149,0.01897605,919,115,115,1158,0.99222798,1149,0,330,"white onion | 1 small white onion, chopped | 1 medium white onion, chopped | 1 medium white onion, diced | 1/2 white onion, chopped"
+italian seasoning,1134,0.01872832,907,114,113,1148,0.98780488,1134,0,110,italian seasoning | 1 teaspoon Italian seasoning | 1 tablespoon Italian seasoning | 1 teaspoon dried Italian seasoning | 2 tablespoons Italian seasoning
+coarse salt,1126,0.0185962,900,113,113,1166,0.96569468,1126,0,85,coarse salt | Coarse salt | 1/2 teaspoon coarse salt | 1 teaspoon coarse salt | 1/4 teaspoon coarse salt
+spinach,1122,0.01853014,897,112,113,1138,0.98594025,1122,0,250,"spinach | fresh spinach | frozen chopped spinach | frozen spinach | 1 (10-ounce) package frozen chopped spinach, thawed, drained, and squeezed dry"
+pork,1109,0.01831544,887,111,111,1112,0.99730216,1109,0,137,ground pork | pork | minced pork | lean ground pork | 1 pound ground pork
+worcestershire sauce,1109,0.01831544,887,111,111,1119,0.99106345,1109,0,91,worcestershire sauce | 1 tablespoon Worcestershire sauce | 1 teaspoon Worcestershire sauce | 2 tablespoons Worcestershire sauce | 1/2 teaspoon Worcestershire sauce
+cherry tomatoes,1076,0.01777044,862,107,107,1085,0.99170507,1076,0,156,"cherry tomatoes | 1 cup cherry tomatoes, halved | 12 cherry tomatoes, halved | 2 cups cherry tomatoes, halved | 16 cherry tomatoes"
+baking soda,1065,0.01758877,851,107,107,1069,0.99625819,1065,0,41,baking soda | 1/2 teaspoon baking soda | 1 teaspoon baking soda | 1/4 teaspoon baking soda | 3/4 teaspoon baking soda
+rosemary,1055,0.01742362,844,106,105,1068,0.98782772,1055,0,258,fresh rosemary | rosemary | dried rosemary | 1 tablespoon chopped fresh rosemary | 1 teaspoon chopped fresh rosemary
+flour tortillas,1044,0.01724195,835,104,105,1056,0.98863636,1044,0,215,flour tortillas | large flour tortillas | 8 flour tortillas | 8 (8-inch) flour tortillas | 10 (8 inch) flour tortillas
+chives,1042,0.01720892,833,104,105,1063,0.98024459,1042,0,225,chives | chopped fresh chives | fresh chives | 2 tablespoons chopped fresh chives | 1 tablespoon chopped fresh chives
+vanilla,1041,0.0171924,833,104,104,1069,0.9738073,1041,0,30,vanilla | 1 teaspoon vanilla | 1/2 teaspoon vanilla | 2 teaspoons vanilla | 1 tablespoon vanilla
+onion powder,1028,0.0169777,822,103,103,1030,0.99805825,1028,0,57,onion powder | 1 teaspoon onion powder | 1/2 teaspoon onion powder | 1/4 teaspoon onion powder | 1 tablespoon onion powder
+egg yolks,1025,0.01692816,819,103,103,1071,0.95704949,1025,0,68,egg yolks | large egg yolks | 2 large egg yolks | 4 large egg yolks | 3 large egg yolks
+peanuts,1024,0.01691164,819,102,103,1036,0.98841699,1024,0,38,peanuts | salted peanuts | 1/2 cup chopped peanuts | 1 cup chopped peanuts | 1/2 cup coarsely chopped salted peanuts
+balsamic vinegar,1017,0.01679604,813,102,102,1025,0.99219512,1017,0,81,balsamic vinegar | 2 tablespoons balsamic vinegar | 1 tablespoon balsamic vinegar | 1/4 cup balsamic vinegar | 3 tablespoons balsamic vinegar
+mirin,1013,0.01672998,809,102,102,1022,0.99119374,1013,0,14,mirin | 2 tablespoons mirin | 1 tablespoon mirin | 2 teaspoons mirin | 3 tbsp mirin
+whole milk,1012,0.01671346,809,102,101,1025,0.98731707,1012,0,108,whole milk | 1 cup whole milk | 2 cups whole milk | 1/2 cup whole milk | 1 1/2 cups whole milk
+curry powder,1003,0.01656482,801,101,101,1005,0.99800995,1003,0,75,curry powder | 1 teaspoon curry powder | 1 tablespoon curry powder | 2 teaspoons curry powder | 1/2 teaspoon curry powder
+sesame seeds,997,0.01646573,796,101,100,1006,0.99105368,997,0,55,"sesame seeds | 2 tablespoons sesame seeds | 1 tablespoon sesame seeds | 1/4 cup sesame seeds | 2 tablespoons sesame seeds, toasted"
+peas,961,0.01587118,768,96,97,963,0.99792316,961,0,102,"frozen peas | peas | fresh peas | 1 cup frozen peas | 1 cup frozen peas, thawed"
+smoked paprika,961,0.01587118,769,96,96,962,0.9989605,961,0,40,smoked paprika | 1 teaspoon smoked paprika | 1 tablespoon smoked paprika | 1/2 teaspoon smoked paprika | 1 tsp smoked paprika
+peanut oil,930,0.01535921,743,94,93,936,0.99358974,930,0,49,peanut oil | 2 tablespoons peanut oil | Peanut oil | 1 tablespoon peanut oil | 1/4 cup peanut oil
+sriracha,929,0.01534269,743,93,93,935,0.99358289,929,0,15,"Sriracha | 1 teaspoon Sriracha (hot chile sauce, such as Huy Fong) | 1 tablespoon Sriracha (hot chile sauce, such as Huy Fong) | 2 teaspoons Sriracha (Asian chili sauce) | Sriracha, for serving"
+corn,896,0.01479769,717,89,90,901,0.99445061,896,0,102,corn | frozen corn | fresh corn | 1 cup frozen corn | 1 cup corn
+white sugar,894,0.01476466,716,89,89,922,0.96963124,894,0,46,white sugar | 1 cup white sugar | 1 tablespoon white sugar | 1 teaspoon white sugar | 1/2 cup white sugar
+oyster sauce,891,0.01471511,712,89,90,892,0.99887892,891,0,30,oyster sauce | 1 tablespoon oyster sauce | 2 tablespoons oyster sauce | 1 tbsp oyster sauce | 1/4 cup oyster sauce
+ground ginger,890,0.0146986,713,88,89,898,0.99109131,890,0,41,ground ginger | 1/2 teaspoon ground ginger | 1 teaspoon ground ginger | 1/4 teaspoon ground ginger | 2 teaspoons ground ginger
+lime wedges,882,0.01456647,706,88,88,884,0.99773756,882,0,42,"lime wedges | Lime wedges | Lime wedges, for serving | 4 lime wedges | Lime wedges (optional)"
+dill,879,0.01451693,703,88,88,885,0.99322034,879,0,106,fresh dill | dill | dried dill | 2 tablespoons chopped fresh dill | 1 tablespoon chopped fresh dill
+coconut oil,870,0.01436829,695,87,88,884,0.9841629,870,0,35,coconut oil | 1 tablespoon coconut oil | 2 tbsp coconut oil | 2 tablespoons coconut oil | 1 tbsp coconut oil
+ketchup,858,0.01417011,686,86,86,866,0.99076212,858,0,53,ketchup | 1/2 cup ketchup | 1 cup ketchup | 1/4 cup ketchup | 2 tablespoons ketchup
+lemon zest,808,0.01334434,646,81,81,816,0.99019608,808,0,119,lemon zest | grated lemon zest | 1 teaspoon lemon zest | 1 teaspoon grated lemon zest | 1 tablespoon lemon zest
+bacon,802,0.01324525,641,81,80,822,0.9756691,802,0,252,bacon | cooked bacon | 6 slices bacon | 4 slices bacon | 8 slices bacon
+orange juice,796,0.01314616,637,79,80,854,0.93208431,796,0,94,orange juice | fresh orange juice | 1/4 cup fresh orange juice | 1/4 cup orange juice | 1/2 cup orange juice
+light soy sauce,784,0.01294798,627,79,78,787,0.99618806,784,0,37,light soy sauce | 1 tablespoon light soy sauce | 2 tablespoons light soy sauce | 1 teaspoon light soy sauce | 1 tsp light soy sauce
+green beans,781,0.01289843,624,78,79,792,0.98611111,781,0,190,"green beans | fresh green beans | 1 pound green beans, trimmed | frozen green beans | 2 pounds green beans, trimmed"
+maple syrup,776,0.01281585,621,77,78,794,0.97732997,776,0,45,maple syrup | 2 tablespoons maple syrup | 1/4 cup maple syrup | 1/2 cup maple syrup | 1/3 cup maple syrup
+chickpeas,773,0.01276631,618,77,78,775,0.99741935,773,0,87,"chickpeas | dried chickpeas | 1 (15 1/2-ounce) can chickpeas (garbanzo beans), drained | 1 (15-ounce) can chickpeas (garbanzo beans), rinsed and drained | 1 (15 1/2-ounce) can chickpeas (garbanzo beans), rinsed and drained"
+spring onions,752,0.01241949,602,75,75,758,0.99208443,752,0,43,"spring onions | 4 spring onions, sliced diagonally | 4 spring onions | 2 spring onions, sliced | 3 spring onions, sliced"
+light brown sugar,751,0.01240297,601,75,75,768,0.97786458,751,0,95,light brown sugar | 1/2 cup packed light brown sugar | 1/4 cup packed light brown sugar | 2 tablespoons light brown sugar | 2 tablespoons light-brown sugar
+hot sauce,739,0.01220479,591,74,74,750,0.98533333,739,0,125,hot sauce | 1 teaspoon hot sauce | 1/2 teaspoon hot sauce | 1/4 teaspoon hot sauce | Hot sauce
+low sodium soy sauce,730,0.01205615,584,73,73,733,0.99590723,730,0,33,low sodium soy sauce | 1 tablespoon low-sodium soy sauce | 2 tablespoons low-sodium soy sauce | 1/4 cup low-sodium soy sauce | 3 tablespoons low-sodium soy sauce
+hoisin sauce,705,0.01164327,564,71,70,705,1.0,705,0,22,hoisin sauce | 2 tablespoons hoisin sauce | 1 tablespoon hoisin sauce | 1/4 cup hoisin sauce | 1/3 cup hoisin sauce
+plum tomatoes,701,0.01157721,561,70,70,704,0.99573864,701,0,238,"plum tomatoes | 2 plum tomatoes, seeded and chopped | 3 plum tomatoes, sliced | 2 plum tomatoes, chopped | 3 plum tomatoes, chopped"
+bell pepper,699,0.01154418,559,70,70,704,0.99289773,699,0,51,"bell pepper | chopped bell pepper | diced bell pepper | 1 bell pepper, chopped | 1 large bell pepper (any color that floats your boat), finely chopped"
+warm water,681,0.0112469,545,68,68,690,0.98695652,681,0,121,warm water | 1 cup warm water (100° to 110°) | 1 cup warm water | 1/2 cup warm water | 2 cups warm water
+sake,668,0.0110322,534,67,67,674,0.99109792,668,0,9,sake | 1/4 cup sake | 2 tablespoons sake (rice wine) | 1 tablespoon sake | 1 tbsp sake
+coriander powder,666,0.01099917,532,67,67,669,0.9955157,666,0,48,coriander powder | 1 tsp coriander powder | 1 teaspoon coriander powder | 2 tsp coriander powder | 1 tablespoon coriander powder
+white wine vinegar,665,0.01098266,532,66,67,669,0.99402093,665,0,67,white wine vinegar | 2 tablespoons white wine vinegar | 1 tablespoon white wine vinegar | 1 tablespoon white-wine vinegar | 1/4 cup white wine vinegar
+chinese five spice powder,663,0.01094963,530,67,66,666,0.9954955,663,0,20,chinese five-spice powder | 1/4 teaspoon Chinese five-spice powder | 1 teaspoon Chinese five-spice powder | ¼ tsp Chinese five spice powder | ½ tsp Chinese five spice powder
+sweet potatoes,659,0.01088357,528,66,65,664,0.99246988,659,0,169,sweet potatoes | 1 1/2 pounds sweet potatoes | 4 large sweet potatoes | 3 pounds sweet potatoes | 4 medium sweet potatoes
+low sodium chicken broth,654,0.01080099,524,65,65,655,0.99847328,654,0,84,low sodium chicken broth | 4 cups low-sodium chicken broth | 1 cup low-sodium chicken broth | 1/2 cup low-sodium chicken broth | store bought low sodium chicken broth
+almonds,650,0.01073493,520,65,65,672,0.9672619,650,0,88,almonds | sliced almonds | chopped almonds | 1/2 cup sliced almonds | 1/4 cup sliced almonds
+nutmeg,649,0.01071841,518,65,66,650,0.99846154,649,0,62,nutmeg | grated nutmeg | 1/4 teaspoon nutmeg | 1/2 teaspoon nutmeg | Pinch of nutmeg
+lemongrass,645,0.01065235,516,65,64,645,1.0,645,0,26,"lemongrass | 2 tablespoons lemongrass, chopped into chunks (if you can't find lemongrass, sub a long strip each of lemon peel and lime peel) | 2 pieces of lemongrass | 2 stalks fresh lemongrass, white parts only, minced | 2 teaspoons finely chopped peeled fresh lemongrass"
+beansprouts,637,0.01052023,509,64,64,639,0.99687011,637,0,3,beansprouts | ¼ cup beansprouts | 300g beansprouts
+shaoxing wine,632,0.01043765,504,64,64,633,0.99842022,632,0,25,Shaoxing wine | 1 tablespoon Shaoxing wine | 1 tbsp Shaoxing wine | 1 teaspoon Shaoxing wine | 1 tablespoon shaoxing wine
+ground nutmeg,631,0.01042114,505,63,63,638,0.98902821,631,0,47,ground nutmeg | 1/4 teaspoon ground nutmeg | 1/8 teaspoon ground nutmeg | 1/2 teaspoon ground nutmeg | 1 teaspoon ground nutmeg
+vegetable broth,631,0.01042114,504,63,64,635,0.99370079,631,0,63,vegetable broth | 2 cups vegetable broth | 4 cups vegetable broth | 1 cup vegetable broth | 1 1/2 cups vegetable broth
+baby spinach,630,0.01040462,504,63,63,640,0.984375,630,0,160,baby spinach | 1 (6-ounce) package fresh baby spinach | 2 cups baby spinach | 10 ounces baby spinach | 5 ounces baby spinach
+cauliflower,629,0.01038811,503,63,63,633,0.99368088,629,0,115,"cauliflower | head cauliflower | grated cauliflower | frozen cauliflower | 1 head cauliflower, cut into florets"
+coriander seeds,625,0.01032205,499,63,63,626,0.99840256,625,0,67,coriander seeds | 1 teaspoon coriander seeds | 1 tablespoon coriander seeds | 2 teaspoons coriander seeds | 2 tablespoons coriander seeds
+bread,623,0.01028902,497,63,63,634,0.98264984,623,0,33,"bread | sliced bread | cubed bread | 1 slice bread | bread, cut into italian loaf"
+dark soy sauce,622,0.0102725,497,63,62,623,0.99839486,622,0,30,dark soy sauce | 2 tablespoons dark soy sauce | 1 tablespoon dark soy sauce | 1 teaspoon dark soy sauce | 1 tsp dark soy sauce
+capers,612,0.01010735,488,62,62,617,0.99189627,612,0,177,"capers | 2 tablespoons capers | 1 tablespoon capers | 2 tablespoons drained capers | 1 tablespoon capers, drained"
+lettuce,611,0.01009083,489,61,61,619,0.98707593,611,0,71,lettuce | shredded lettuce | 1 cup shredded lettuce | Lettuce | 2 cups shredded lettuce
+quinoa,610,0.01007432,487,61,62,610,1.0,610,0,46,quinoa | cooked quinoa | 1 cup quinoa | 1 cup uncooked quinoa | 1/2 cup quinoa
+toasted sesame oil,610,0.01007432,488,61,61,614,0.99348534,610,0,16,toasted sesame oil | 1 tablespoon toasted sesame oil | 1 teaspoon toasted sesame oil | 2 teaspoons toasted sesame oil | 1/2 teaspoon toasted sesame oil
+curry leaves,609,0.0100578,486,62,61,609,1.0,609,0,82,curry leaves | fresh curry leaves | 10 curry leaves | 1 sprig curry leaves | 10 fresh curry leaves
+white wine,609,0.0100578,487,61,61,615,0.9902439,609,0,79,white wine | 1/2 cup white wine | 1 cup white wine | 1/4 cup white wine | ½ cup white wine
+ginger root,608,0.01004129,487,61,60,610,0.99672131,608,0,28,fresh ginger root | ginger root | 1 tablespoon minced fresh ginger root | 2 tablespoons minced fresh ginger root | 1 teaspoon minced fresh ginger root
+spanish onion,603,0.00995871,481,61,61,604,0.99834437,603,0,2,"spanish onion | 1 medium Spanish onion, diced"
+strawberry,603,0.00995871,481,61,61,667,0.90404798,603,0,94,strawberries | frozen strawberries | 1 cup sliced strawberries | 3 cups sliced strawberries | 2 cups sliced strawberries
+french bread,600,0.00990917,480,60,60,609,0.98522167,600,0,43,"french bread | 6 slices French bread | 4 (1/2-ounce) slices French bread, toasted | 6 slices French bread, toasted | 8 (1/2-ounce) slices French bread"
+cayenne,598,0.00987614,478,60,60,603,0.99170813,598,0,58,cayenne | 1/4 teaspoon cayenne | 1/2 teaspoon cayenne | 1/8 teaspoon cayenne | Pinch of cayenne
+black olives,595,0.00982659,476,60,59,603,0.986733,595,0,100,"black olives | sliced black olives | 1/2 cup sliced black olives | 1 (2 ounce) can black olives, sliced | 1 (6 ounce) can sliced black olives"
+roma tomatoes,594,0.00981007,474,60,60,600,0.99,594,0,129,"roma tomatoes | 2 roma tomatoes, seeded and diced | 2 roma (plum) tomatoes, diced | 2 roma tomatoes, chopped | 2 roma tomatoes, diced"
+sweet onion,594,0.00981007,475,60,59,602,0.98671096,594,0,134,"sweet onion | 1 large sweet onion, chopped | 1 cup chopped sweet onion | 1 sweet onion, chopped | 1/2 cup finely chopped sweet onion"
+cabbage,592,0.00977704,473,60,59,600,0.98666667,592,0,74,cabbage | shredded cabbage | 4 cups shredded cabbage | 3 cups shredded cabbage | 2 cups shredded cabbage
+romaine lettuce,589,0.0097275,471,59,59,596,0.98825503,589,0,119,romaine lettuce | 2 cups shredded romaine lettuce | 1 cup shredded romaine lettuce | Romaine lettuce | 2 cups chopped romaine lettuce
+mustard seeds,583,0.00962841,466,59,58,584,0.99828767,583,0,48,mustard seeds | 1 teaspoon mustard seeds | 1 tsp mustard seeds | 1/2 teaspoon mustard seeds | 1 tablespoon mustard seeds
+cinnamon sticks,580,0.00957886,464,58,58,596,0.97315436,580,0,25,cinnamon sticks | 2 cinnamon sticks | 2 (3-inch) cinnamon sticks | 4 cinnamon sticks | 2 Cinnamon Sticks
+apple cider vinegar,578,0.00954583,463,58,57,583,0.99142367,578,0,60,apple cider vinegar | 2 tablespoons apple cider vinegar | 1/4 cup apple cider vinegar | 1/2 cup apple cider vinegar | 3 tablespoons apple cider vinegar
+fennel seeds,571,0.00943022,457,57,57,580,0.98448276,571,0,82,fennel seeds | 1 teaspoon fennel seeds | 1/2 teaspoon fennel seeds | 1 tsp fennel seeds | 2 teaspoons fennel seeds
+plain yogurt,560,0.00924855,447,57,56,563,0.9946714,560,0,76,plain yogurt | 1 cup plain yogurt | 1/4 cup plain yogurt | 1/2 cup plain yogurt | 2 cups plain yogurt
+ghee,559,0.00923204,448,56,55,574,0.9738676,559,0,61,"ghee | 1 TBSP ghee | 2 tablespoons ghee (clarified butter) | 1 tbsp ghee | 1 tbsp ghee, unsalted butter or dairy-free butter substitute (use butter substitute to keep vegan)"
+sauce,558,0.00921552,446,56,56,568,0.98239437,558,0,9,sauce | Sauce: | Sauce | SAUCE: | sauce:
+white vinegar,557,0.00919901,446,56,55,559,0.99642218,557,0,42,white vinegar | 2 tablespoons white vinegar | 1 tablespoon white vinegar | 3 tablespoons white vinegar | 1/4 cup white vinegar
+eggplant,551,0.00909992,441,55,55,553,0.99638336,551,0,146,"eggplant | 1 large eggplant | 1 large eggplant (1 to 1 1/2 pounds) | 1 medium eggplant, diced | 1 (1-pound) eggplant"
+mint leaves,550,0.0090834,440,55,55,567,0.97001764,550,0,153,mint leaves | 1/4 cup fresh mint leaves | Fresh mint leaves | 1 tablespoon chopped fresh mint leaves | 1 cup packed fresh mint leaves
+green pepper,546,0.00901734,438,54,54,548,0.99635036,546,0,57,"green pepper | 1 medium green pepper, chopped | 1 cup chopped green pepper | 1 green pepper | 1 green pepper, sliced"
+garlic paste,543,0.0089678,434,54,55,544,0.99816176,543,0,27,garlic paste | 1 tablespoon garlic paste | 1 teaspoon garlic paste | 1 tsp garlic paste | 1 tbsp garlic paste
+ground red pepper,539,0.00890173,431,54,54,540,0.99814815,539,0,43,1/4 teaspoon ground red pepper | 1/8 teaspoon ground red pepper | ground red pepper | 1/2 teaspoon ground red pepper | Dash of ground red pepper
+cider vinegar,537,0.0088687,430,53,54,542,0.99077491,537,0,59,cider vinegar | 2 tablespoons cider vinegar | 1 tablespoon cider vinegar | 1/4 cup cider vinegar | 1/2 cup cider vinegar
+corn kernels,535,0.00883567,428,53,54,537,0.99627561,535,0,134,corn kernels | frozen corn kernels | 1 cup frozen corn kernels | 1 cup corn kernels | 1 cup fresh corn kernels
+pecans,534,0.00881916,426,54,54,549,0.9726776,534,0,129,chopped pecans | pecans | 1/2 cup chopped pecans | 1 cup chopped pecans | 1/4 cup chopped pecans
+buttermilk,531,0.00876961,424,53,54,539,0.9851577,531,0,74,buttermilk | 1 cup buttermilk | 1/2 cup buttermilk | 3/4 cup buttermilk | 2 cups buttermilk
+mango,531,0.00876961,424,54,53,565,0.93982301,531,0,86,"mango | frozen mango | 1 mango, diced | 1 cup diced mango | cubed mango"
+bananas,530,0.0087531,423,54,53,588,0.90136054,530,0,21,"bananas | 2 bananas, sliced | 2 bananas | 2 Bananas (Frozen) | sliced bananas"
+thyme leaves,527,0.00870355,421,53,53,530,0.99433962,527,0,130,fresh thyme leaves | 1 tablespoon fresh thyme leaves | thyme leaves | 2 teaspoons fresh thyme leaves | dried thyme leaves
+cooking oil,516,0.00852188,411,52,53,518,0.996139,516,0,23,cooking oil | 2 tablespoons cooking oil | 1/4 cup cooking oil | 2 teaspoons cooking oil | 1 teaspoon cooking oil
+broccoli,515,0.00850537,412,52,51,531,0.96986817,515,0,62,broccoli | frozen broccoli | frozen chopped broccoli | 1 cup chopped broccoli | 2 heads broccoli
+cold water,513,0.00847234,410,51,52,530,0.96792453,513,0,60,cold water | 2 tablespoons cold water | 3 tablespoons cold water | 1/2 cup cold water | 1 cup cold water
+yoghurt,506,0.00835673,404,51,51,513,0.98635478,506,0,11,yoghurt | 1/2 cup yoghurt | 2 tbsp Yoghurt | 4 tablespoon yoghurt | ¾ cup yoghurt
+peanut butter,499,0.00824112,398,51,50,513,0.97270955,499,0,19,peanut butter | unsalted peanut butter | 1/4 cup peanut butter | 3/4 cup peanut butter | 1 1/2 cups peanut butter
+black peppercorns,496,0.00819158,396,50,50,502,0.98804781,496,0,65,black peppercorns | 1 tablespoon black peppercorns | 1 teaspoon black peppercorns | 6 black peppercorns | 10 black peppercorns
+walnuts,495,0.00817506,395,50,50,508,0.97440945,495,0,136,"walnuts | chopped walnuts | 1/2 cup chopped walnuts | 1/4 cup chopped walnuts | 3 tablespoons chopped walnuts, toasted"
+orange,476,0.00786127,380,48,48,507,0.93885602,476,0,44,"orange | grated orange | 1 orange, juiced | 1 orange | 1 medium orange, quartered"
+blueberry,469,0.00774566,375,47,47,517,0.90715667,469,0,78,blueberries | fresh blueberries | frozen blueberries | 1 cup blueberries | 1 cup fresh blueberries

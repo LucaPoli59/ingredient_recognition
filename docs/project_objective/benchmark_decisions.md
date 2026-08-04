@@ -15,7 +15,7 @@ The existing 65,146-record metadata remains valid for historical experiments. It
 | ID | Question | Binding decision |
 | --- | --- | --- |
 | D1 | Which target field do models use? | Keep `feature_label` configurable. Its default for new configurations becomes `ingredients_target`; historical configurations retain their explicit `ingredients_ok`. |
-| D2 | How is `ingredients_target` produced? | Derive it deterministically from the original `ingredients` lines with a new tested standardizer. Preserve `ingredients` unchanged. |
+| D2 | How is `ingredients_target` produced? | Derive it deterministically from the original `ingredients` lines with a tested standardizer. Choose fine-grained distinctions primarily by practical recognizability in the prepared-dish image, and preserve `ingredients` unchanged. |
 | D3 | Which persistent artifacts are required? | Store the common images and one selected metadata file per split. Do not create separate mapping, review, family, split, vocabulary, or validation-report artifacts. |
 | D4 | How is image quality handled? | Apply automatic existence and decoding checks. Do not add a manual image-review or adjudication workflow; models must tolerate remaining noise. |
 | D5 | How are leakage groups and splits built? | Group byte-identical images by SHA-256 only, then create a deterministic 80/10/10 split balanced for cuisine and ingredient targets. Do not use fuzzy recipe families. |
@@ -50,7 +50,11 @@ Attempt 1 is evidence, not an executable dependency. The new implementation must
 - target lists have deterministic, duplicate-free ordering;
 - confirmed legacy collisions are regression-tested.
 
-The exact rules, support threshold, minimum target count, and desired generalization level must be approved before implementation. No per-line mapping table or manual mapping review is required.
+Fine-grained target distinctions are governed primarily by practical recognizability from the prepared-dish image. Within one meaningful ingredient family, preparation or product-style variants that are not realistically separable are collapsed; robust visual distinctions may remain separate. This rule does not collapse different source-ingredient families automatically merely because both can become visually subtle after cooking.
+
+The approved 2.2b scope includes the conservative alias cleanup, removal of generic `sauce`, expansion of `salt and pepper`, and recognizability-based merges for chicken broth/stock, soy-sauce styles, yogurt variants, toasted sesame oil, and tomato paste/sauce. Ground/powder spices merge into the base while seeds/leaves/sticks remain separate; white/yellow/Spanish/sweet onion collapse into `onion` while red and green onion remain; sugars collapse into `sugar`; and coriander/cilantro is retained as one canonical target. Bare red/green pepper maps to the corresponding colour-specific bell pepper. Generic chili powder and ground/crushed/dried/flaked red-pepper forms collapse into `chili`. Fresh tomato and red/green bell-pepper distinctions remain separate. The decision gate is complete; [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md) is the durable source of truth for the complete mapping contract.
+
+The source-support threshold remains 500 recipes and the minimum retained target count remains three for the first comparison build. No per-line mapping table or manual mapping review is required.
 
 ## D3: minimal persistent outputs
 
@@ -152,6 +156,8 @@ Earlier planning proposed per-line ingredient mappings, manual image reviews, pe
 ## Evidence and related documents
 
 - [`yummly_data_audit.md`](yummly_data_audit.md)
+- [`ingredient_vocabulary_audit.md`](ingredient_vocabulary_audit.md)
+- [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md)
 - [`problem_definition.md`](problem_definition.md)
 - [`../plans/yummly_data_phase.md`](../plans/yummly_data_phase.md)
 - [`../general_plan.md`](../general_plan.md)
