@@ -35,28 +35,83 @@ _PREPARATION_WORDS = re.compile(
     r"\b(?:fresh|dried|chopped|finely|coarsely|roughly|minced|sliced|diced|cubed|crushed|"
     r"grated|shredded|peeled|seeded|drained|rinsed|thawed|softened|melted|unsalted|salted|"
     r"room temperature|at room temperature|packed|trimmed|halved|beaten|cooked|uncooked|"
-    r"frozen|defrosted|washed|prepared|homemade|store bought|low fat|reduced fat|nonfat)\b"
+    r"frozen|defrosted|washed|prepared|homemade|store bought|low fat|reduced fat|nonfat|boneless|skinless)\b"
 )
 _NON_WORD = re.compile(r"[^a-z0-9]+")
+_SALT_AND_PEPPER_WORDS = frozenset(
+    {"salt", "pepper", "and", "sea", "kosher", "table", "coarse", "black", "white", "ground", "fresh", "freshly", "cracked"}
+)
+_GREEK_YOGURT_VARIANT = re.compile(
+    r"(?:(?:nonfat|low fat|lowfat|fat free|whole milk|full fat) )*(?:plain )?greek(?: style)? yog(?:h)?urt\Z"
+)
+
+
+def _exact_patterns(*phrases: str) -> re.Pattern[str]:
+    """Return a whole-normalized-phrase matcher for explicit source forms."""
+    return re.compile(r"(?:" + "|".join(re.escape(phrase) for phrase in phrases) + r")\Z")
+
+# These rules run before generic preparation-word removal.  They therefore
+# retain the meaningful evidence in forms such as ``fresh coriander``,
+# ``toasted sesame oil``, and ``crushed red pepper``.  Every matcher is a
+# whole normalized phrase; no rule relies on an unbounded substring match.
+_QUALIFIER_SENSITIVE_ALIASES: tuple[tuple[re.Pattern[str], tuple[str, ...]], ...] = (
+    (_exact_patterns("salt and pepper"), ("salt", "pepper")),
+    (_exact_patterns("fresh coriander", "fresh coriander leaf", "fresh coriander leaves", "fresh cilantro", "fresh cilantro leaf", "fresh cilantro leaves", "coriander leaf", "coriander leaves", "cilantro leaf", "cilantro leaves"), ("cilantro",)),
+    (_exact_patterns("toasted sesame oil"), ("sesame oil",)),
+    (_exact_patterns("low sodium chicken broth"), ("chicken broth",)),
+    (_exact_patterns("light soy sauce", "dark soy sauce", "low sodium soy sauce"), ("soy sauce",)),
+    (_exact_patterns("plain yogurt", "plain yoghurt", "greek yogurt", "greek yoghurt", "plain greek yogurt", "plain greek yoghurt"), ("yogurt",)),
+    (_exact_patterns("ground cumin", "freshly ground cumin", "cumin powder"), ("cumin",)),
+    (_exact_patterns("ground coriander", "freshly ground coriander", "coriander powder"), ("cilantro",)),
+    (_exact_patterns("ground turmeric", "freshly ground turmeric", "turmeric powder"), ("turmeric",)),
+    (_exact_patterns("ground cinnamon", "freshly ground cinnamon", "cinnamon powder"), ("cinnamon",)),
+    (_exact_patterns("ground nutmeg", "freshly ground nutmeg", "nutmeg powder"), ("nutmeg",)),
+    (_exact_patterns("ground ginger", "freshly ground ginger", "ginger powder"), ("ginger",)),
+    (_exact_patterns("black pepper", "white pepper", "ground black pepper", "ground white pepper", "ground pepper", "freshly ground black pepper", "freshly ground white pepper", "freshly ground pepper", "cracked black pepper"), ("pepper",)),
+    (_exact_patterns("chili powder", "chile powder", "red chili powder", "red chile powder", "hot chili powder", "hot chile powder", "ground red pepper", "crushed red pepper", "dried crushed red pepper", "red pepper flakes", "crushed red pepper flakes", "dried crushed red pepper flakes", "hot red pepper flakes", "chili flakes", "chile flakes"), ("chili",)),
+)
 
 # Explicit phrase aliases and generalizations adopted from the useful portions
-# of the historical attempt.  Longest phrases win; all matching is bounded.
+# of the historical attempt and strengthened in Work package 2.2b.  Rules are
+# deliberately exact after generic preparation removal, so unrelated words
+# such as ``pineapple`` and ``watercress`` cannot trigger a target.
 _ALIASES: tuple[tuple[re.Pattern[str], str], ...] = (
-    (re.compile(r"\b(?:all[- ]purpose|plain) flour\b"), "flour"),
-    (re.compile(r"\b(?:cloves? of )?garlic cloves?\b"), "garlic"),
-    (re.compile(r"\b(?:sea|kosher|table) salt\b"), "salt"),
-    (re.compile(r"\b(?:extra[- ]virgin )?olive oil\b"), "olive oil"),
-    (re.compile(r"\b(?:scallions?|green onions?)\b"), "green onion"),
-    (re.compile(r"\b(?:cilantro leaves?|fresh coriander)\b"), "cilantro"),
-    (re.compile(r"\b(?:confectioners?|powdered|icing) sugar\b"), "sugar"),
-    (re.compile(r"\b(?:chicken breasts?|chicken thighs?|chicken tenderloins?)\b"), "chicken"),
-    (re.compile(r"\b(?:ground|lean ground) beef\b"), "beef"),
-    (re.compile(r"\b(?:ground|lean ground) pork\b"), "pork"),
-    (re.compile(r"\b(?:large|extra large) eggs?\b"), "egg"),
-    (re.compile(r"\b(?:black|white|ground) pepper\b"), "pepper"),
-    (re.compile(r"\b(?:chile|chili) powder\b"), "chili powder"),
-    (re.compile(r"\b(?:grated |shredded |crumbled )?.*\b(?:cheese|queso)\b"), "cheese"),
-    (re.compile(r"\b(?:spaghetti|penne|fusilli|rigatoni|linguine|tagliatelle|fettuccine|macaroni|farfalle|lasagna)\b"), "pasta"),
+    (_exact_patterns("all purpose flour", "plain flour"), "flour"),
+    (_exact_patterns("garlic clove", "garlic cloves", "clove of garlic", "cloves of garlic", "garlic paste"), "garlic"),
+    (_exact_patterns("sea salt", "kosher salt", "table salt", "coarse salt"), "salt"),
+    (_exact_patterns("extra virgin olive oil", "olive oil"), "olive oil"),
+    (_exact_patterns("scallion", "scallions", "green onion", "green onions", "spring onion", "spring onions"), "green onion"),
+    (_exact_patterns("coriander", "coriander leaf", "coriander leaves", "cilantro", "cilantro leaf", "cilantro leaves"), "cilantro"),
+    (_exact_patterns("confectioner sugar", "confectioners sugar", "powdered sugar", "icing sugar", "white sugar", "granulated sugar", "brown sugar", "light brown sugar"), "sugar"),
+    (_exact_patterns("chicken breast", "chicken breasts", "chicken thigh", "chicken thighs", "chicken tenderloin", "chicken tenderloins"), "chicken"),
+    (_exact_patterns("ground beef", "lean ground beef"), "beef"),
+    (_exact_patterns("ground pork", "lean ground pork"), "pork"),
+    (_exact_patterns("large egg", "large eggs", "extra large egg", "extra large eggs"), "egg"),
+    (_exact_patterns("black pepper", "white pepper", "ground pepper"), "pepper"),
+    (_exact_patterns("bay leaves"), "bay leaf"),
+    (_exact_patterns("warm water", "cold water"), "water"),
+    (_exact_patterns("basil leaves"), "basil"),
+    (_exact_patterns("mint leaves"), "mint"),
+    (_exact_patterns("thyme leaves"), "thyme"),
+    (_exact_patterns("flat leaf parsley"), "parsley"),
+    (_exact_patterns("ginger root"), "ginger"),
+    (_exact_patterns("purple onion", "red onion"), "red onion"),
+    (_exact_patterns("white onion", "yellow onion", "spanish onion", "sweet onion"), "onion"),
+    (_exact_patterns("cayenne"), "cayenne pepper"),
+    (_exact_patterns("cider vinegar"), "apple cider vinegar"),
+    (_exact_patterns("cooking oil"), "oil"),
+    (_exact_patterns("whole milk"), "milk"),
+    (_exact_patterns("chicken stock", "chicken broth"), "chicken broth"),
+    (_exact_patterns("soy sauce"), "soy sauce"),
+    (_exact_patterns("sesame oil"), "sesame oil"),
+    (_exact_patterns("yogurt", "yoghurt", "plain yogurt", "plain yoghurt", "greek yogurt", "greek yoghurt", "plain greek yogurt", "plain greek yoghurt"), "yogurt"),
+    (_exact_patterns("tomato paste", "tomato sauce"), "tomato sauce"),
+    (_exact_patterns("red pepper"), "red bell pepper"),
+    (_exact_patterns("green pepper"), "green bell pepper"),
+)
+
+_PASTA_SHAPES = _exact_patterns(
+    "spaghetti", "penne", "fusilli", "rigatoni", "linguine", "tagliatelle", "fettuccine", "macaroni", "farfalle", "lasagna"
 )
 
 _SINGULARS = {
@@ -74,6 +129,10 @@ _SINGULARS = {
     "peppers": "pepper",
     "limes": "lime",
     "lemons": "lemon",
+    "bananas": "banana",
+    "almonds": "almond",
+    "pecans": "pecan",
+    "walnuts": "walnut",
 }
 
 
@@ -84,14 +143,15 @@ class TargetStandardizationResult:
     retained_records: list[int]
 
 
-def normalize_ingredient_line(raw_line: object) -> str | None:
-    """Normalize one raw ingredient line with only explicit, token-bounded rules."""
+def _normalize_source_text(raw_line: object) -> str | None:
+    """Remove mechanical recipe-line syntax while retaining semantic qualifiers."""
     if not isinstance(raw_line, str):
         return None
     ingredient = unicodedata.normalize("NFKD", raw_line).encode("ascii", "ignore").decode("ascii").lower()
     ingredient = _PARENTHETICAL.sub(" ", ingredient)
     ingredient = ingredient.split(",", maxsplit=1)[0]
     ingredient = _TRAILING_PREPARATION.sub("", ingredient)
+    ingredient = ingredient.replace("&", " and ")
     for _ in range(3):
         updated = _LEADING_QUANTITY.sub("", ingredient)
         updated = _LEADING_UNIT.sub("", updated)
@@ -99,22 +159,59 @@ def normalize_ingredient_line(raw_line: object) -> str | None:
             break
         ingredient = updated
     ingredient = re.sub(r"^of\s+", "", ingredient)
+    ingredient = _NON_WORD.sub(" ", ingredient).strip()
+    return ingredient or None
+
+
+def _is_salt_and_pepper_composite(ingredient: str) -> bool:
+    """Recognize only bounded salt-and-pepper lists with harmless descriptors."""
+    words = ingredient.split()
+    return (
+        "salt" in words
+        and "pepper" in words
+        and set(words).issubset(_SALT_AND_PEPPER_WORDS)
+    )
+
+
+def normalize_ingredient_targets(raw_line: object) -> tuple[str, ...]:
+    """Return zero, one, or multiple explicit targets for one raw ingredient line."""
+    ingredient = _normalize_source_text(raw_line)
+    if not ingredient:
+        return ()
+    if _GREEK_YOGURT_VARIANT.fullmatch(ingredient):
+        return ("yogurt",)
+    for pattern, replacements in _QUALIFIER_SENSITIVE_ALIASES:
+        if pattern.fullmatch(ingredient):
+            return replacements
+
     ingredient = _PREPARATION_WORDS.sub(" ", ingredient)
     ingredient = _NON_WORD.sub(" ", ingredient).strip()
-    if not ingredient:
-        return None
+    if not ingredient or ingredient == "sauce":
+        return ()
+    if _is_salt_and_pepper_composite(ingredient):
+        return ("salt", "pepper")
     for pattern, replacement in _ALIASES:
-        if pattern.search(ingredient):
-            return replacement
+        if pattern.fullmatch(ingredient):
+            return (replacement,)
+    if _PASTA_SHAPES.fullmatch(ingredient):
+        return ("pasta",)
+    if re.search(r"\b(?:cheese|queso)\b", ingredient):
+        return ("cheese",)
     if ingredient in _SINGULARS:
-        return _SINGULARS[ingredient]
-    return ingredient
+        return (_SINGULARS[ingredient],)
+    return (ingredient,)
+
+
+def normalize_ingredient_line(raw_line: object) -> str | None:
+    """Return the sole target for a line, or ``None`` when it emits zero/many."""
+    targets = normalize_ingredient_targets(raw_line)
+    return targets[0] if len(targets) == 1 else None
 
 
 def normalized_recipe_targets(ingredients: object) -> list[str]:
     if not isinstance(ingredients, Sequence) or isinstance(ingredients, str):
         return []
-    return sorted({normalized for line in ingredients if (normalized := normalize_ingredient_line(line)) is not None})
+    return sorted({target for line in ingredients for target in normalize_ingredient_targets(line)})
 
 
 def derive_ingredients_target(

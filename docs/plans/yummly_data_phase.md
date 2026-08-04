@@ -10,8 +10,8 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 ## Progress tracker
 
 **Overall status:** In progress  
-**Current task:** Begin the fully approved 2.2b extractor strengthening.
-**Next action:** Implement the approved deterministic rules and regression tests, then compare the regenerated candidate with `v1`.
+**Current task:** Integrate the selected `v4` target generation into the runtime defaults and complete the `<UNK>` implementation.
+**Next action:** Resume Work package 2.4 without changing legacy metadata or saved experiments.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -21,8 +21,8 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 | P3 | Implement and verify historical experiment compatibility without rewriting saved artifacts | **Deferred** | Current-style legacy configurations retain `ingredients_ok` and receive `images_subdir` in memory. Complete validation is deferred until the historical experiments worth retaining are selected. |
 | P4 | Design and implement the improved `ingredients` to `ingredients_target` standardizer | **Done** | `src/data_processing/ingredient_standardization.py` uses explicit token-bounded rules, recipe support >= 500, and at least three retained targets. |
 | P4a | Audit the candidate ingredient vocabulary and present findings | **Done** | [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md) audits 209 targets, 60,550 recipes, 707,771 raw lines, relationships, collisions, and counterfactual review packages without changing data or code. |
-| P4b | Strengthen the ingredient extractor from accepted audit findings | **Pending — scope approved** | All recognizability-led policies are approved; generic chili powder and crushed/flaked dried red pepper collapse into `chili`, while fresh red and green bell peppers remain separate. |
-| P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Deferred** | `ingredients_target_v1_metadata.json` passed its checks as 48,439/6,056/6,055 records, but must be regenerated after Work package 2.2b if target rules change. |
+| P4b | Strengthen the ingredient extractor from accepted audit findings | **Done** | All approved token-bounded rules and collision boundaries are covered by tests; `ingredients_target_v4_metadata.json` is the selected 161-target candidate. |
+| P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Done** | `v4` passed image, SHA-256 leakage, ratio, distribution, vocabulary, and deterministic-rebuild assertions as 48,282/6,036/6,036 records. |
 | P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **In progress** | New multi-label vocabularies and outputs omit `<UNK>`; any selected legacy artifact retains its saved behavior. |
 | P7 | Run all data checks and freeze the first new metadata generation | **Done** | Two clean dry-runs and the final generation passed automatic image decoding, SHA-256, uniqueness, ratio, distribution, vocabulary, and DataModule loading checks. |
 
@@ -119,6 +119,8 @@ The experiment configuration currently persists `data_dir`, `metadata_filename`,
 The canonical metadata contains 54,724 train, 5,210 validation, and 5,212 test records. A second generation, `sel_ing_2410_metadata.json`, exists in every split and contains 50,866 train, 4,802 validation, and 4,854 test records. Its image references match the canonical records that it retains.
 
 This confirms that keeping multiple same-named generations across the three split folders is already an active behavior.
+
+`ingredients_target_v1_metadata.json` is the first 209-target candidate. The selected post-audit candidate is `ingredients_target_v4_metadata.json`, with 48,282 train, 6,036 validation, and 6,036 test records and a 161-target training vocabulary. It is deterministic: a complete read-only rebuild produced exactly the saved three JSON objects. `_ingredients_target_v2_metadata.json` and `_ingredients_target_v3_metadata.json` are retained but non-selected diagnostic generations; their leading underscore prevents accidental selection by convention, after their comparison output identified out-of-scope mappings that were removed before `v4`.
 
 ### Legacy target preprocessing lineage
 
@@ -283,7 +285,7 @@ The vocabulary size and support profile are understood; the main findings and ca
 
 ## Work package 2.2b — ingredient extractor strengthening
 
-**Status:** Pending — scope approved
+**Status:** Done
 
 ### Purpose
 
@@ -319,19 +321,19 @@ The family boundary prevents an uncontrolled collapse: for example, sesame oil a
 
 ### Required implementation
 
-1. Keep the final approved target changes and boundaries synchronized with [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md).
-2. Implement only the agreed token- or phrase-bounded rules.
-3. Add a regression test for every accepted rule and its relevant collision boundary.
-4. Compare vocabulary size, target support, record retention, and affected recipes with the `v1` candidate.
-5. Regenerate the exact-SHA-safe metadata generation through Work package 2.3.
+1. Keep the final approved target changes and boundaries synchronized with [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md). **Done.**
+2. Implement only the agreed token- or phrase-bounded rules. **Done.**
+3. Add a regression test for every accepted rule and its relevant collision boundary. **Done.**
+4. Compare vocabulary size, target support, record retention, and affected recipes with the `v1` candidate. **Done:** `v4` retains 60,354 records (196 fewer than `v1`) and 161 targets (48 fewer), with 40,525 changed shared records; the six new canonical labels are `almond`, `banana`, `chili`, `pecan`, `walnut`, and `yogurt`.
+5. Regenerate the exact-SHA-safe metadata generation through Work package 2.3. **Done:** `ingredients_target_v4_metadata.json`.
 
 ### Completion gate
 
-Every extractor change is traceable to an explicit decision made after the 2.2a discussion, passes regression tests, and is reflected in a newly generated metadata version.
+Every extractor change is traceable to an explicit decision made after the 2.2a discussion, passes regression tests, and is reflected in the selected `v4` metadata generation. This gate is satisfied.
 
 ## Work package 2.3 — deterministic metadata generation and split
 
-**Status:** Deferred
+**Status:** Done
 
 ### Required implementation
 
@@ -358,7 +360,7 @@ Every extractor change is traceable to an explicit decision made after the 2.2a 
 
 ### Completion gate
 
-The new train, validation, and test metadata pass all assertions, have no exact-image leakage, and can be regenerated deterministically without auxiliary manifests.
+The selected `v4` metadata files pass all automatic assertions, have no exact-image leakage, and rebuild identically from the source metadata and rules. This gate is satisfied.
 
 ## Work package 2.4 — runtime target integration and `<UNK>` decision
 
@@ -439,4 +441,5 @@ The plan is complete when:
 | 2026-08-04 | Adopted recognizability-led target granularity for 2.2b and approved the first merge scope | Broth/stock, all soy-sauce styles, yogurt variants, toasted/base sesame oil, and tomato paste/sauce are not reliably separable in prepared images; red and green bell peppers remain distinct |
 | 2026-08-04 | Approved the remaining spice, onion, sugar, coriander, and fresh-pepper rules | Ground/powder spices merge into their base while seeds/leaves/sticks remain separate; red/green onion distinctions are retained as specified; sugars collapse; coriander/cilantro is retained as one target; bare red/green pepper maps by colour to bell pepper |
 | 2026-08-04 | Finalized the chili-family rule and closed the 2.2b decision gate | Generic chili powder and crushed/flaked dried red pepper all collapse into `chili`; fresh red and green bell peppers remain separate |
+| 2026-08-04 | Implemented and selected the post-audit target generation | `ingredient_standardization.py` and its regression tests implement the approved mappings; `v4` is a deterministic 161-target, 60,354-record candidate. `v2` and `v3` remain non-selected diagnostic generations after their comparison output exposed out-of-scope intermediate mappings. |
 | 2026-08-04 | Created a durable ingredient mapping registry | [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md) is the long-term source of truth for active and approved mappings, expansions, exclusions, and collision boundaries; the feature plan retains only scope and execution status |

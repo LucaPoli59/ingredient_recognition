@@ -3,7 +3,7 @@
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
 **Ultimo aggiornamento:** 4 agosto 2026
-**Stato della ricognizione:** architettura e flusso principale verificati nel codice; il dataset Yummly è stato analizzato integralmente su metadata e 65.146 immagini, e il candidato `ingredients_target` da 209 etichette è stato sottoposto ad audit riproducibile di supporto, relazioni, frammentazione e collisioni semantiche.
+**Stato della ricognizione:** architettura e flusso principale verificati nel codice; il dataset Yummly è stato analizzato integralmente su metadata e 65.146 immagini. L'audit del candidato iniziale da 209 etichette ha portato a regole esplicite e testate; il candidato selezionato è ora `ingredients_target_v4_metadata.json`, con 161 etichette e 60.354 ricette.
 
 ## Scopo
 
@@ -36,7 +36,7 @@ Dataset raw (Yummly / Recipes1M / recipes)
 
 `settings/config.py` centralizza le configurazioni e le costanti del progetto, inclusi percorsi assoluti calcolati a partire dalla root del repository, parametri predefiniti e impostazioni operative come W&B. I dati elaborati vivono in `data/input`; quelli sorgente in `data/raw_input`.
 
-Il `DataModule` di default usa `data/input/yummly`. I metadata restano in `train/`, `val/` e `test/`, mentre tutte le immagini sono risolte da `imgs/standard/`; quando non esiste uno split `predict`, viene riutilizzato `test`. La generazione nuova di default è `ingredients_target_v1_metadata.json` con `feature_label="ingredients_target"`; `metadata.json` e `sel_ing_2410_metadata.json` con `ingredients_ok` restano generazioni legacy immutabili.
+Il `DataModule` di default usa `data/input/yummly`. I metadata restano in `train/`, `val/` e `test/`, mentre tutte le immagini sono risolte da `imgs/standard/`; quando non esiste uno split `predict`, viene riutilizzato `test`. `ingredients_target_v4_metadata.json` è il candidato selezionato con `feature_label="ingredients_target"`; il default runtime resta temporaneamente su `ingredients_target_v1_metadata.json` fino al completamento della fase 2.4. `metadata.json` e `sel_ing_2410_metadata.json` con `ingredients_ok` restano generazioni legacy immutabili.
 
 Per ogni ricetta il codice si aspetta almeno il campo selezionato da `feature_label`, un'immagine nel campo `image` e, se si filtra, la cucina nel campo `cuisine`. Il default corrente è `ingredients_ok`; per le nuove configurazioni diventerà `ingredients_target`, derivato da `ingredients`, mentre gli esperimenti storici manterranno esplicitamente `ingredients_ok`. Il filtro ammette: american, chinese, french, greek, indian, italian, japanese, mexican, spanish, thai e all.
 

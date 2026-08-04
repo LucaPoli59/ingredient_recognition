@@ -4,7 +4,7 @@
 **Last updated:** 2026-08-04
 **Overall status:** In progress  
 **Current macro-phase:** Data
-**Current focus:** Implement the fully approved 2.2b extractor scope, validate it, and regenerate the benchmark.
+**Current focus:** Integrate the selected `v4` target generation into runtime defaults and complete the `<UNK>` implementation.
 
 ## Purpose
 
@@ -32,7 +32,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | Approve and implement extractor strengthening from the completed vocabulary audit, then regenerate the deterministic benchmark. |
+| 2 | Data | **In progress** | Integrate the selected deterministic target generation into runtime defaults while preserving legacy compatibility. |
 | 3 | Ingredient selection | **In progress** | Formalize relevance and visual-distinguishability criteria. |
 | 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
@@ -86,8 +86,8 @@ The Data macro-section covers source understanding, shared image storage, histor
 | 2.1c Historical experiment compatibility | **Deferred** | Select the historical experiments to retain before building schema-specific compatibility and running smoke tests. |
 | 2.2 Improved `ingredients_target` standardization | **Done** | Deterministic token-bounded standardizer uses recipe support >= 500 and has produced the first target generation. |
 | 2.2a Ingredient vocabulary audit | **Done** | Review [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md); no extractor or metadata was changed. |
-| 2.2b Ingredient extractor strengthening | **Pending — scope approved** | Implement the complete recognizability-led rule set, including the collapse of generic powdered, ground, crushed, dried, and flaked red-pepper seasonings into `chili`. |
-| 2.3 Deterministic metadata generation and split | **Deferred** | The 209-label `v1` candidate passes construction checks but must be regenerated after Work package 2.2b if target rules change. |
+| 2.2b Ingredient extractor strengthening | **Done** | The approved recognizability-led rules are token-bounded, regression-tested, and selected in the 161-target `v4` candidate. |
+| 2.3 Deterministic metadata generation and split | **Done** | `v4` passed all automatic checks and a read-only deterministic rebuild equality check. |
 | 2.4 Runtime target integration and `<UNK>` removal | **In progress** | New multi-label vocabularies and outputs omit `<UNK>`; preserve saved behavior for retained legacy experiments. |
 
 ### 2.1 Yummly exploratory audit
@@ -227,7 +227,7 @@ Use the completed audit as the evidence baseline for Work package 2.2b. The comp
 
 ### 2.2b Ingredient extractor strengthening
 
-**Status:** Pending — scope approved
+**Status:** Done
 
 #### Approved direction
 
@@ -241,14 +241,14 @@ Use the completed audit as the evidence baseline for Work package 2.2b. The comp
 #### Required work
 
 - [x] Record the explicitly accepted mappings, boundaries, and rationale in the durable [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) registry.
-- [ ] Implement only accepted token- or phrase-bounded rules, including multi-output rules where approved.
-- [ ] Add regression tests for every accepted rule and collision boundary.
-- [ ] Compare vocabulary, support, retention, and affected recipes with the 209-target `v1` candidate.
-- [ ] Regenerate a new exact-SHA-safe metadata version without overwriting `v1`.
+- [x] Implement only accepted token- or phrase-bounded rules, including multi-output rules where approved.
+- [x] Add regression tests for every accepted rule and collision boundary.
+- [x] Compare vocabulary, support, retention, and affected recipes with the 209-target `v1` candidate: selected `v4` retains 60,354 records (196 fewer) and 161 targets (48 fewer), with 40,525 changed shared records.
+- [x] Regenerate a new exact-SHA-safe metadata version without overwriting `v1`: `ingredients_target_v4_metadata.json`.
 
 #### Completion gate
 
-Every extractor change is traceable to an explicit post-audit decision, passes regression tests, and is represented in a newly generated metadata version.
+Every extractor change is traceable to an explicit post-audit decision, passes regression tests, and is represented in the selected `v4` metadata version. This gate is satisfied.
 
 #### Next action
 
@@ -256,26 +256,26 @@ Begin implementation of the approved scope using [`plans/yummly_data_phase.md`](
 
 ### 2.3 Deterministic metadata generation and split
 
-**Status:** Deferred
+**Status:** Done
 
 #### Required work
 
-- [ ] Generate `ingredients_target` from the approved Work package 2.2 rules.
-- [ ] Apply automatic image existence and decoding checks only.
-- [ ] Compute SHA-256 during generation and keep byte-identical images in the same allocation group.
-- [ ] Do not create groups from perceptual similarity, recipe names, ingredient similarity, or manual review.
-- [ ] Assign exact-image groups to a deterministic 80/10/10 train/validation/test split.
-- [ ] Balance cuisine and target distributions within documented tolerances.
-- [ ] Write the same selected metadata filename under all three split directories.
-- [ ] Enforce uniqueness, referential integrity, split ratio, distribution, exact-leakage, and deterministic-rerun assertions.
+- [x] Generate `ingredients_target` from the approved Work package 2.2 rules.
+- [x] Apply automatic image existence and decoding checks only.
+- [x] Compute SHA-256 during generation and keep byte-identical images in the same allocation group.
+- [x] Do not create groups from perceptual similarity, recipe names, ingredient similarity, or manual review.
+- [x] Assign exact-image groups to a deterministic 80/10/10 train/validation/test split.
+- [x] Balance cuisine and target distributions within documented tolerances.
+- [x] Write the same selected metadata filename under all three split directories.
+- [x] Enforce uniqueness, referential integrity, split ratio, distribution, exact-leakage, and deterministic-rerun assertions.
 
 #### Completion gate
 
-The three metadata files are reproducible, pass every assertion, contain valid `ingredients_target` lists, and have no byte-identical image crossing split boundaries. No auxiliary split, family, vocabulary, review, or validation manifest is required.
+The three `v4` metadata files are reproducible, pass every assertion, contain valid `ingredients_target` lists, and have no byte-identical image crossing split boundaries. A full read-only rebuild matched the saved JSON objects exactly. This gate is satisfied.
 
 #### Next action
 
-Implement only after the target standardization rules in Work package 2.2 are approved.
+Use the selected `v4` generation in Work package 2.4 without changing legacy artifacts.
 
 ### 2.4 Runtime target integration and `<UNK>` removal
 
@@ -600,6 +600,7 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-04 | Data decision | Approved ground/powder spice merging, the onion and sugar taxonomies, one retained coriander/cilantro target, and colour-specific mapping of bare red/green pepper. | Work package 2.2b **Pending — one clarification** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
 | 2026-08-04 | Data decision | Collapsed `chili powder` and generic powdered, ground, crushed, dried-crushed, and flaked red-pepper seasonings into `chili`; fresh red and green bell peppers remain separate. This closes the post-audit decision gate. | Work package 2.2b **Pending — scope approved** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md) |
 | 2026-08-04 | Data documentation | Created the long-term source of truth for custom target mappings, multi-target expansions, exclusions, retained distinctions, and collision boundaries. | Work package 2.2b **Pending — mapping contract recorded** | [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
+| 2026-08-04 | Data implementation | Implemented the approved 2.2b rules and generated the selected 161-target `ingredients_target_v4_metadata.json` candidate. It retains 60,354 records, passes image, split, leakage, distribution, vocabulary, and deterministic-rebuild checks, and leaves legacy artifacts unchanged. | Work packages 2.2b and 2.3 **Done**; 2.4 **In progress** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
 
 ## Tracker maintenance rules
 

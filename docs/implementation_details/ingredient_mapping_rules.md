@@ -5,14 +5,14 @@
 
 ## Purpose and authority
 
-This document is the durable registry of custom semantic mappings used to derive the Yummly `ingredients_target` field from the original `ingredients` lines. It records both the rules already implemented by the first candidate standardizer and the post-audit rules approved for Work package 2.2b.
+This document is the durable registry of custom semantic mappings used to derive the Yummly `ingredients_target` field from the original `ingredients` lines. It records both the rules implemented by the first candidate standardizer and the post-audit rules implemented in `ingredients_target_v4_metadata.json`.
 
 This registry remains part of the implementation documentation after the feature plan is completed. Future changes to ingredient mappings must update this document, the standardizer, and the corresponding regression tests in the same change. Execution status belongs in [`../plans/yummly_data_phase.md`](../plans/yummly_data_phase.md); audit evidence and decision rationale belong in [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md).
 
 The lifecycle labels used below are:
 
 - **Active in `v1`**: implemented by [`ingredient_standardization.py`](../../src/data_processing/ingredient_standardization.py) and used to generate `ingredients_target_v1_metadata.json`.
-- **Approved for 2.2b**: binding behavior for the next metadata generation, but not yet implemented at the time of this update.
+- **Active in `v4`**: implemented by [`ingredient_standardization.py`](../../src/data_processing/ingredient_standardization.py), covered by [`../../tests/test_ingredient_standardization.py`](../../tests/test_ingredient_standardization.py), and used to generate `ingredients_target_v4_metadata.json`.
 - **Preserved boundary**: an explicit non-mapping or collision boundary that implementations must retain.
 
 No rule may be inferred from lexical similarity, edit distance, co-occurrence, or embedding similarity. Matching must be deterministic and token- or phrase-bounded.
@@ -77,7 +77,7 @@ The `v1` standardizer applies the following mappings only when the whole normali
 | `limes` | `lime` | Active in `v1` |
 | `lemons` | `lemon` | Active in `v1` |
 
-## Approved 2.2b mappings
+## Mappings active in `v4` from Work package 2.2b
 
 The following tables define the final approved post-audit behavior. They supersede any conflicting intermediate mapping or label in the `v1` candidate.
 
@@ -109,7 +109,7 @@ The following tables define the final approved post-audit behavior. They superse
 
 | Input | Final output | Rule type | Boundary |
 | --- | --- | --- | --- |
-| `salt and pepper` | `salt` and `pepper` | Multi-target expansion | Emit both targets, then deduplicate at recipe level. |
+| `salt and pepper` and bounded variants containing only salt/pepper descriptors (for example `coarse salt and freshly ground black pepper`) | `salt` and `pepper` | Multi-target expansion | Emit both targets, then deduplicate at recipe level. |
 | bare generic `sauce` | no target | Exclusion | Specific targets such as `soy sauce`, `fish sauce`, `hot sauce`, and `tomato sauce` remain eligible. |
 
 ### Broth, sauce, oil, dairy, and tomato families
@@ -119,7 +119,7 @@ The following tables define the final approved post-audit behavior. They superse
 | `chicken stock`, `chicken broth`, `low sodium chicken broth` | `chicken broth` | Does not merge other stock or broth source families. |
 | `soy sauce`, `light soy sauce`, `dark soy sauce`, `low sodium soy sauce` | `soy sauce` | Other named sauces remain separate. |
 | `sesame oil`, `toasted sesame oil` | `sesame oil` | Olive, vegetable, peanut, coconut, and other source oils remain separate. |
-| `yogurt`, `yoghurt`, `plain yogurt`, `greek yogurt`, `plain greek yogurt` | `yogurt` | Style and spelling distinctions are removed. |
+| `yogurt`, `yoghurt`, plain/Greek forms, and non-visual fat-style qualifiers on those forms | `yogurt` | Style and spelling distinctions are removed. |
 | `tomato paste`, `tomato sauce` | `tomato sauce` | Fresh `tomato` remains a separate target. |
 
 ### Spice physical forms
@@ -158,7 +158,7 @@ This rule does not implicitly merge `garlic powder` with `garlic` or `onion powd
 | --- | --- | --- |
 | bare `red pepper` | `red bell pepper` | Interpreted as a fresh colour-specific bell pepper. |
 | bare `green pepper` | `green bell pepper` | Interpreted as a fresh colour-specific bell pepper. |
-| `chile powder`, `chili powder`, `ground red pepper`, `crushed red pepper`, `dried crushed red pepper`, `red pepper flakes` | `chili` | Powdered, ground, crushed, dried-crushed, and flaked generic red-pepper seasonings are one target. |
+| `chile/chili powder` (including explicit `red` or `hot` variants), `ground red pepper`, `crushed red pepper` (including dried/flaked forms), `red pepper flakes`, `chile/chili flakes` | `chili` | Powdered, ground, crushed, dried-crushed, and flaked generic red-pepper seasonings are one target. |
 
 `Red bell pepper` and `green bell pepper` remain separate from `chili` and from each other. The mapping to `chili` applies to the explicit dried, powdered, ground, crushed, or flaked seasoning forms above; it must not absorb a fresh colour-specific bell pepper.
 
@@ -200,7 +200,7 @@ Every mapping change must include:
 5. regeneration of a new metadata version rather than modification of an existing generation;
 6. comparison of vocabulary size, support, retained recipes, and affected records with the preceding candidate.
 
-When Work package 2.2b is implemented, change its rules from **Approved for 2.2b** to the actual metadata generation in which they became active and link the implementation and tests here.
+Work package 2.2b was implemented in `ingredients_target_v4_metadata.json` on 2026-08-04. The preceding `_ingredients_target_v2_metadata.json` and `_ingredients_target_v3_metadata.json` files are retained as non-selected diagnostic generations: their automatic data checks passed, but review of their comparison output exposed out-of-scope normalizations that were corrected before `v4` was generated. Their leading underscore prevents accidental selection by convention. Future consumers must select `v4` explicitly until runtime integration changes the project default.
 
 ## Related documents and code
 
