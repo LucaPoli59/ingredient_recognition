@@ -7,12 +7,14 @@
 
 This document is the durable registry of custom semantic mappings used to derive the Yummly `ingredients_target` field from the original `ingredients` lines. It records both the rules implemented by the first candidate standardizer and the post-audit rules implemented in `ingredients_target_v4_metadata.json`.
 
+`v4` is a tested, reproducible baseline rather than the selected next benchmark generation. Its frequency filter runs before controlled-concept association and can remove valid ingredients. [Work package 2.2c of the Data plan](../plans/yummly_data_phase.md#work-package-22c--controlled-vocabulary-research) is selecting the replacement vocabulary and Work package 2.2d will implement it. Until then, this registry remains authoritative only for the retained baseline rules; a vocabulary decision must update this document, the standardizer, and its tests together.
+
 This registry remains part of the implementation documentation after the feature plan is completed. Future changes to ingredient mappings must update this document, the standardizer, and the corresponding regression tests in the same change. Execution status belongs in [`../plans/yummly_data_phase.md`](../plans/yummly_data_phase.md); audit evidence and decision rationale belong in [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md).
 
 The lifecycle labels used below are:
 
 - **Active in `v1`**: implemented by [`ingredient_standardization.py`](../../src/data_processing/ingredient_standardization.py) and used to generate `ingredients_target_v1_metadata.json`.
-- **Active in `v4`**: implemented by [`ingredient_standardization.py`](../../src/data_processing/ingredient_standardization.py), covered by [`../../tests/test_ingredient_standardization.py`](../../tests/test_ingredient_standardization.py), and used to generate `ingredients_target_v4_metadata.json`.
+- **Baseline in `v4`**: implemented by [`ingredient_standardization.py`](../../src/data_processing/ingredient_standardization.py), covered by [`../../tests/test_ingredient_standardization.py`](../../tests/test_ingredient_standardization.py), and used to generate `ingredients_target_v4_metadata.json`; it is not selected for runtime integration.
 - **Preserved boundary**: an explicit non-mapping or collision boundary that implementations must retain.
 
 No rule may be inferred from lexical similarity, edit distance, co-occurrence, or embedding similarity. Matching must be deterministic and token- or phrase-bounded.
@@ -200,7 +202,7 @@ Every mapping change must include:
 5. regeneration of a new metadata version rather than modification of an existing generation;
 6. comparison of vocabulary size, support, retained recipes, and affected records with the preceding candidate.
 
-Work package 2.2b was implemented in `ingredients_target_v4_metadata.json` on 2026-08-04. The preceding `_ingredients_target_v2_metadata.json` and `_ingredients_target_v3_metadata.json` files are retained as non-selected diagnostic generations: their automatic data checks passed, but review of their comparison output exposed out-of-scope normalizations that were corrected before `v4` was generated. Their leading underscore prevents accidental selection by convention. Future consumers must select `v4` explicitly until runtime integration changes the project default.
+Work package 2.2b was implemented in `ingredients_target_v4_metadata.json` on 2026-08-04. The preceding `_ingredients_target_v2_metadata.json` and `_ingredients_target_v3_metadata.json` files are retained as non-selected diagnostic generations: their automatic data checks passed, but review of their comparison output exposed out-of-scope normalizations that were corrected before `v4` was generated. Their leading underscore prevents accidental selection by convention. `v4` must not be selected for new consumers; it remains a reproducible baseline until Work packages 2.2c and 2.2d define and validate its replacement.
 
 ## Related documents and code
 

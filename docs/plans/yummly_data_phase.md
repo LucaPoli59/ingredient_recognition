@@ -10,8 +10,8 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 ## Progress tracker
 
 **Overall status:** In progress  
-**Current task:** Integrate the selected `v4` target generation into the runtime defaults and complete the `<UNK>` implementation.
-**Next action:** Resume Work package 2.4 without changing legacy metadata or saved experiments.
+**Current task:** Conduct Work package 2.2c, the controlled-vocabulary research.
+**Next action:** Start the evidence-led vocabulary research; do not integrate `v4` as a runtime default.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -21,9 +21,11 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 | P3 | Implement and verify historical experiment compatibility without rewriting saved artifacts | **Deferred** | Current-style legacy configurations retain `ingredients_ok` and receive `images_subdir` in memory. Complete validation is deferred until the historical experiments worth retaining are selected. |
 | P4 | Design and implement the improved `ingredients` to `ingredients_target` standardizer | **Done** | `src/data_processing/ingredient_standardization.py` uses explicit token-bounded rules, recipe support >= 500, and at least three retained targets. |
 | P4a | Audit the candidate ingredient vocabulary and present findings | **Done** | [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md) audits 209 targets, 60,550 recipes, 707,771 raw lines, relationships, collisions, and counterfactual review packages without changing data or code. |
-| P4b | Strengthen the ingredient extractor from accepted audit findings | **Done** | All approved token-bounded rules and collision boundaries are covered by tests; `ingredients_target_v4_metadata.json` is the selected 161-target candidate. |
-| P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Done** | `v4` passed image, SHA-256 leakage, ratio, distribution, vocabulary, and deterministic-rebuild assertions as 48,282/6,036/6,036 records. |
-| P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **In progress** | New multi-label vocabularies and outputs omit `<UNK>`; any selected legacy artifact retains its saved behavior. |
+| P4b | Strengthen the ingredient extractor from accepted audit findings | **Done** | All approved token-bounded rules and collision boundaries are covered by tests; `ingredients_target_v4_metadata.json` is the reproducible 161-target candidate. |
+| P4c | Research and select a controlled ingredient vocabulary | **In progress** | Compare candidate vocabularies and their compatibility with the corpus, visual-recognition objective, and simple deterministic mapping pipeline. |
+| P4d | Implement the controlled-vocabulary target-generation pipeline | **Pending** | Begin only after Work package 2.2c documents the vocabulary decision and the user approves the implementation contract. |
+| P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Done** | `v4` passed image, SHA-256 leakage, ratio, distribution, vocabulary, and deterministic-rebuild assertions as 48,282/6,036/6,036 records; it is a validated baseline, not a selected runtime generation. |
+| P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **Deferred** | Resume after Work packages 2.2c and 2.2d produce and validate the replacement target generation. |
 | P7 | Run all data checks and freeze the first new metadata generation | **Done** | Two clean dry-runs and the final generation passed automatic image decoding, SHA-256, uniqueness, ratio, distribution, vocabulary, and DataModule loading checks. |
 
 ## Accepted design
@@ -62,7 +64,7 @@ Produce a simple data pipeline in which:
 
 - No manual relabeling or image-quality review pipeline.
 - No persistent raw-line mapping trace.
-- No ontology service or separate vocabulary artifact.
+- No runtime ontology service, separate dataset-level vocabulary file, or per-line mapping artifact. A reference vocabulary may be evaluated and embedded deterministically in the target-generation code.
 - No fuzzy or perceptual duplicate grouping.
 - No standalone split manifest: the three metadata files are the split definition.
 - No persistent machine-readable validation report.
@@ -120,7 +122,7 @@ The canonical metadata contains 54,724 train, 5,210 validation, and 5,212 test r
 
 This confirms that keeping multiple same-named generations across the three split folders is already an active behavior.
 
-`ingredients_target_v1_metadata.json` is the first 209-target candidate. The selected post-audit candidate is `ingredients_target_v4_metadata.json`, with 48,282 train, 6,036 validation, and 6,036 test records and a 161-target training vocabulary. It is deterministic: a complete read-only rebuild produced exactly the saved three JSON objects. `_ingredients_target_v2_metadata.json` and `_ingredients_target_v3_metadata.json` are retained but non-selected diagnostic generations; their leading underscore prevents accidental selection by convention, after their comparison output identified out-of-scope mappings that were removed before `v4`.
+`ingredients_target_v1_metadata.json` is the first 209-target candidate. `ingredients_target_v4_metadata.json` is a deterministic, post-audit 161-target baseline with 48,282 train, 6,036 validation, and 6,036 test records: a complete read-only rebuild produced exactly the saved three JSON objects. It must not become the runtime default, because its frequency-first filter removes valid normalized ingredients before vocabulary association. `_ingredients_target_v2_metadata.json` and `_ingredients_target_v3_metadata.json` are retained but non-selected diagnostic generations; their leading underscore prevents accidental selection by convention, after their comparison output identified out-of-scope mappings that were removed before `v4`.
 
 ### Legacy target preprocessing lineage
 
@@ -331,6 +333,72 @@ The family boundary prevents an uncontrolled collapse: for example, sesame oil a
 
 Every extractor change is traceable to an explicit decision made after the 2.2a discussion, passes regression tests, and is reflected in the selected `v4` metadata generation. This gate is satisfied.
 
+## Work package 2.2c — controlled vocabulary research
+
+**Status:** In progress (parallel research)
+
+### Purpose
+
+Determine whether a controlled external vocabulary can provide the canonical ingredient concepts for new Yummly targets without adding a runtime service, duplicate metadata artifacts, or a manual review workflow. The chosen vocabulary must support the thesis objective: ingredients are targets only when their meaning and visual granularity are appropriate for recognition from a prepared-dish image.
+
+This work package extends the completed 2.2a audit and 2.2b implementation. The existing `v4` generation remains reproducible comparison evidence, but must not become the runtime default while this research is in progress.
+
+### Revised single-pipeline approach
+
+For each original ingredient line, the next implementation must follow this order:
+
+1. Preserve the original line and attempt a deterministic association directly to a concept in the selected vocabulary.
+2. When no association is found, apply the small, explicit standardization round needed for that vocabulary, using only tested phrase- or token-bounded rules.
+3. Attempt the vocabulary association again on the standardized result.
+4. If it still has no vocabulary concept, retain the standardized result as its own canonical concept rather than silently deleting it or assigning `<UNK>`.
+5. Deduplicate and deterministically order the recipe concepts; only then apply the current support threshold and minimum-target retention rule.
+
+The support threshold remains 500 distinct recipes and the minimum retained target count remains three for the first revised comparison. They are now applied to final concepts, not to raw normalized strings. Their value is provisional and will be reconsidered after the vocabulary analysis; they may be relaxed or removed if the evidence shows that they still cause unacceptable information loss.
+
+The mapping is implemented as part of the deterministic standardizer. It does not require a `vocabulary.json`, a raw-line mapping file, or an online lookup at data-loading or inference time.
+
+### Research questions
+
+1. Which candidate vocabulary has sufficient coverage and stable identifiers for recipe ingredients, including processed products and culturally specific items?
+2. Does it offer a hierarchy whose level can match visual distinguishability without collapsing scientifically meaningful ingredients?
+3. Can direct matching plus the small fallback standardization round cover the corpus deterministically and transparently?
+4. After association, do the threshold and minimum-target rules retain useful recipe content and a viable multi-label learning problem?
+
+### Required investigation
+
+1. Identify and document candidate vocabularies, beginning with FoodOn and using alternatives only where they meet a distinct need.
+2. Inspect their licence, release format, identifier stability, hierarchy, food/ingredient coverage, synonym support, and suitability for offline deterministic use.
+3. Run reproducible corpus-level coverage experiments on raw lines, directly matched concepts, fallback-standardized concepts, and remaining standalone concepts. Do not use test data to choose a final support threshold or visual target level.
+4. Analyse representative edge cases, including `fish fillets`, `English muffins`, sauces, stock/broth, tomato products, peppers, and cuisine-specific ingredients.
+5. Compare candidate concept levels for semantic correctness, recognizability in prepared-dish images, support after association, and the effect on recipe retention.
+6. Present the recommendation, quantified trade-offs, unresolved ambiguities, and a proposed minimal implementation contract before modifying the production standardizer or generating another metadata version.
+
+### Completion gate
+
+The research records an evidence-backed vocabulary decision (or an evidence-backed decision not to adopt one), defines the deterministic association and fallback contract, and demonstrates its expected effect on coverage and retention. The user approves the resulting implementation scope before Work package 2.2d begins.
+
+## Work package 2.2d — controlled-vocabulary target-generation implementation
+
+**Status:** Pending
+
+### Purpose
+
+Implement only the vocabulary, concept level, and deterministic contract approved after Work package 2.2c. This is a new implementation phase; it does not rewrite the completed 2.2b rules, metadata, or tests.
+
+### Required implementation
+
+1. Add the selected vocabulary in an offline, deterministic form suitable for the generator.
+2. Associate each raw ingredient line directly to a selected concept before applying fallback normalization.
+3. Apply only the approved small, phrase- or token-bounded fallback standardization to unmatched lines, then attempt association again.
+4. Retain an unmatched standardized term as its own canonical concept; never silently discard it or use `<UNK>` as a multi-label target.
+5. Apply deduplication, deterministic ordering, support, and recipe-retention rules only after final concepts have been obtained.
+6. Extend the durable mapping registry and regression suite with the approved vocabulary associations, fallback rules, and boundary cases.
+7. Produce a new metadata generation without modifying `v1`–`v4`, compare it with `v4`, and run the complete Work package 2.3 validation suite.
+
+### Completion gate
+
+The approved pipeline is deterministic and tested; its replacement metadata generation passes the existing split and integrity checks; and its coverage, support, vocabulary, and record-retention changes versus `v4` are recorded before Work package 2.4 resumes.
+
 ## Work package 2.3 — deterministic metadata generation and split
 
 **Status:** Done
@@ -364,7 +432,7 @@ The selected `v4` metadata files pass all automatic assertions, have no exact-im
 
 ## Work package 2.4 — runtime target integration and `<UNK>` decision
 
-**Status:** In progress
+**Status:** Deferred
 
 ### Required implementation
 
@@ -385,12 +453,14 @@ New experiments default to `ingredients_target` and omit `<UNK>` from their mult
 
 ```text
 2.1b shared image store and loader path separation
-  -> 2.2 ingredients_target standardizer
+  -> 2.2 baseline ingredients_target standardizer
   -> 2.2a ingredient vocabulary audit and discussion
   -> 2.2b accepted extractor strengthening
-  -> 2.3 exact-duplicate-aware stratified metadata generation
+  -> 2.2c controlled vocabulary research (parallel)
+  -> 2.2d controlled-vocabulary target-generation implementation and approval
+  -> replacement exact-duplicate-aware stratified metadata generation
   -> 2.4 runtime default and <UNK> decision
-  -> freeze the first new generation
+  -> freeze the first selected generation
 
 2.1c legacy experiment compatibility (deferred; resume after selecting retained experiments)
 ```
@@ -408,6 +478,7 @@ Work package 2.2a may proceed while Work package 2.1c is deferred, but legacy me
 | Fuzzy duplicate grouping introduces subjective bias | Valid records are coupled by arbitrary thresholds | Group only byte-identical SHA-256 images |
 | Cuisine-only splitting produces label drift | Rare targets become unreliable in evaluation | Balance cuisine and ingredient targets together |
 | `<UNK>` removal breaks a retained legacy output shape | A saved checkpoint cannot be loaded | Omit it only from new multi-label vocabularies; preserve saved legacy behavior for selected retained experiments |
+| Frequency filtering precedes semantic association | Valid ingredients disappear before they can be generalized to an appropriate concept | Associate to the selected controlled vocabulary first; apply support only to final concepts and reassess the provisional threshold from evidence |
 
 ## Completion criteria for this plan
 
@@ -415,8 +486,8 @@ The plan is complete when:
 
 - all current images are served from the common directory;
 - historical metadata and experiments remain loadable without modifying saved artifacts;
-- the improved standardizer deterministically produces `ingredients_target` from `ingredients`;
-- the final ingredient vocabulary has passed the evidence-backed improvement audit;
+- the controlled-vocabulary pipeline deterministically produces `ingredients_target` from `ingredients`;
+- the vocabulary decision and final ingredient vocabulary have passed the evidence-backed Work package 2.2c audit;
 - the new split has no exact-image leakage and acceptable cuisine/target balance;
 - the DataModule defaults to `ingredients_target` while retaining `feature_label`;
 - the `<UNK>` decision has been investigated, documented, implemented, and tested;
@@ -443,3 +514,4 @@ The plan is complete when:
 | 2026-08-04 | Finalized the chili-family rule and closed the 2.2b decision gate | Generic chili powder and crushed/flaked dried red pepper all collapse into `chili`; fresh red and green bell peppers remain separate |
 | 2026-08-04 | Implemented and selected the post-audit target generation | `ingredient_standardization.py` and its regression tests implement the approved mappings; `v4` is a deterministic 161-target, 60,354-record candidate. `v2` and `v3` remain non-selected diagnostic generations after their comparison output exposed out-of-scope intermediate mappings. |
 | 2026-08-04 | Created a durable ingredient mapping registry | [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md) is the long-term source of truth for active and approved mappings, expansions, exclusions, and collision boundaries; the feature plan retains only scope and execution status |
+| 2026-08-04 | Added Work packages 2.2c–2.2d for controlled-vocabulary target generation | The completed 2.2a audit and 2.2b implementation remain historical evidence. Work package 2.2c evaluates the vocabulary and association contract; 2.2d implements it only after approval. |

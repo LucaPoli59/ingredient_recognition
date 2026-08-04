@@ -4,7 +4,7 @@
 **Last updated:** 2026-08-04
 **Overall status:** In progress  
 **Current macro-phase:** Data
-**Current focus:** Integrate the selected `v4` target generation into runtime defaults and complete the `<UNK>` implementation.
+**Current focus:** Complete the Data target-generation design before regenerating targets or integrating a new runtime default.
 
 ## Purpose
 
@@ -32,7 +32,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | Integrate the selected deterministic target generation into runtime defaults while preserving legacy compatibility. |
+| 2 | Data | **In progress** | Complete the active Data target-generation work, then regenerate targets and resume runtime integration. |
 | 3 | Ingredient selection | **In progress** | Formalize relevance and visual-distinguishability criteria. |
 | 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
@@ -84,11 +84,9 @@ The Data macro-section covers source understanding, shared image storage, histor
 | 2.1 Yummly exploratory audit | **Done** | Re-run only when a new metadata generation needs comparison. |
 | 2.1b Shared image store and metadata decoupling | **Done** | Shared store was staged with SHA-256 verification; DataModule resolves images independently of split metadata. |
 | 2.1c Historical experiment compatibility | **Deferred** | Select the historical experiments to retain before building schema-specific compatibility and running smoke tests. |
-| 2.2 Improved `ingredients_target` standardization | **Done** | Deterministic token-bounded standardizer uses recipe support >= 500 and has produced the first target generation. |
-| 2.2a Ingredient vocabulary audit | **Done** | Review [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md); no extractor or metadata was changed. |
-| 2.2b Ingredient extractor strengthening | **Done** | The approved recognizability-led rules are token-bounded, regression-tested, and selected in the 161-target `v4` candidate. |
+| 2.2 Improved `ingredients_target` standardization | **In progress** | Refine the target-generation approach in the active Data plan before a final replacement generation. |
 | 2.3 Deterministic metadata generation and split | **Done** | `v4` passed all automatic checks and a read-only deterministic rebuild equality check. |
-| 2.4 Runtime target integration and `<UNK>` removal | **In progress** | New multi-label vocabularies and outputs omit `<UNK>`; preserve saved behavior for retained legacy experiments. |
+| 2.4 Runtime target integration and `<UNK>` removal | **Deferred** | Resume after the vocabulary decision and regenerated metadata pass their gates. |
 
 ### 2.1 Yummly exploratory audit
 
@@ -173,7 +171,7 @@ Select the historical experiments to retain. Then scope the read-only inventory,
 
 ### 2.2 Improved `ingredients_target` standardization
 
-**Status:** Done
+**Status:** In progress
 
 #### Purpose
 
@@ -196,7 +194,7 @@ Identical inputs and rules produce identical targets and ordering; known collisi
 
 #### Next action
 
-Implement only the extractor changes approved through Work package 2.2b.
+Follow the active Data implementation plan and resume runtime integration only after its target-generation work is complete.
 
 ### 2.2a Ingredient vocabulary audit
 
@@ -252,7 +250,7 @@ Every extractor change is traceable to an explicit post-audit decision, passes r
 
 #### Next action
 
-Begin implementation of the approved scope using [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) as the operational tracker; add regression coverage and compare the regenerated benchmark with `v1`.
+Follow the active Data implementation plan for subsequent target-generation work.
 
 ### 2.3 Deterministic metadata generation and split
 
@@ -275,11 +273,11 @@ The three `v4` metadata files are reproducible, pass every assertion, contain va
 
 #### Next action
 
-Use the selected `v4` generation in Work package 2.4 without changing legacy artifacts.
+Follow the active Data implementation plan before generating a replacement.
 
 ### 2.4 Runtime target integration and `<UNK>` removal
 
-**Status:** In progress
+**Status:** Deferred
 
 #### Required work
 
@@ -297,7 +295,7 @@ New experiments default to `ingredients_target` and omit `<UNK>` from their mult
 
 #### Next action
 
-Remove `<UNK>` from the new multi-label encoder and test it, without changing selected legacy artifacts.
+Resume after the active Data target-generation work produces a validated replacement metadata generation.
 
 ### Data macro-section completion gate
 
@@ -601,6 +599,7 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-04 | Data decision | Collapsed `chili powder` and generic powdered, ground, crushed, dried-crushed, and flaked red-pepper seasonings into `chili`; fresh red and green bell peppers remain separate. This closes the post-audit decision gate. | Work package 2.2b **Pending — scope approved** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md) |
 | 2026-08-04 | Data documentation | Created the long-term source of truth for custom target mappings, multi-target expansions, exclusions, retained distinctions, and collision boundaries. | Work package 2.2b **Pending — mapping contract recorded** | [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
 | 2026-08-04 | Data implementation | Implemented the approved 2.2b rules and generated the selected 161-target `ingredients_target_v4_metadata.json` candidate. It retains 60,354 records, passes image, split, leakage, distribution, vocabulary, and deterministic-rebuild checks, and leaves legacy artifacts unchanged. | Work packages 2.2b and 2.3 **Done**; 2.4 **In progress** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
+| 2026-08-04 | Data design | Reopened the target-generation design after observing information loss in the current candidate; the active Data implementation plan now governs the research and follow-on implementation before runtime integration resumes. | Data **In progress**; runtime integration **Deferred** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
 
 ## Tracker maintenance rules
 
