@@ -1,7 +1,7 @@
 # Yummly data-phase implementation plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-04
+**Last updated:** 2026-08-05
 
 This plan translates the Data macro-section of [`general_plan.md`](../../general_plan.md) into a deliberately small implementation sequence. It covers the shared-image-store prerequisite, compatibility with historical experiments, generation of `ingredients_target`, deterministic split construction, and runtime integration.
 
@@ -10,8 +10,8 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 ## Progress tracker
 
 **Overall status:** In progress  
-**Current task:** Review the completed Work package 2.2c research recommendation.
-**Next action:** Approve or revise the FoodOn-plus-local-concepts contract and define the train-only threshold-sweep comparison required before choosing filtering policy; do not integrate `v4` or begin 2.2d first.
+**Current task:** Close the remaining FoodOn-plus-local-concepts implementation contract for Work package 2.2c.
+**Next action:** Approve or revise the controlled-vocabulary association contract, then begin 2.2d; do not integrate `v4` first.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -22,7 +22,7 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 | P4 | Design and implement the improved `ingredients` to `ingredients_target` standardizer | **Done** | `src/data_processing/ingredient_standardization.py` uses explicit token-bounded rules, recipe support >= 500, and at least three retained targets. |
 | P4a | Audit the candidate ingredient vocabulary and present findings | **Done** | [`../../project_objective/ingredient_vocabulary_audit.md`](../../project_objective/ingredient_vocabulary_audit.md) audits 209 targets, 60,550 recipes, 707,771 raw lines, relationships, collisions, and counterfactual review packages without changing data or code. |
 | P4b | Strengthen the ingredient extractor from accepted audit findings | **Done** | All approved token-bounded rules and collision boundaries are covered by tests; `ingredients_target_v4_metadata.json` is the reproducible 161-target candidate. |
-| P4c | Research and select a controlled ingredient vocabulary | **In progress — discussion checkpoint** | [`controlled_vocabulary_evaluation.md`](controlled_vocabulary_evaluation.md) recommends pinned FoodOn as a reference lexicon, retained local concepts, no automatic hierarchy traversal in the standard pipeline, and recognizability overrides before conflicting matches. `ingredients_target` is the single shared vocabulary; filtering policy remains pending a reproducible train-only threshold sweep. |
+| P4c | Research and select a controlled ingredient vocabulary | **In progress — final contract checkpoint** | [`controlled_vocabulary_evaluation.md`](controlled_vocabulary_evaluation.md) recommends pinned FoodOn as a reference lexicon, retained local concepts, no automatic hierarchy traversal in the standard pipeline, and recognizability overrides before conflicting matches. The selected standard filtering policy is train support >= 500 and at least three retained targets per recipe; only association-contract approval remains. |
 | P4d | Implement the controlled-vocabulary target-generation pipeline | **Pending** | Begin only after Work package 2.2c documents the vocabulary decision and the user approves the implementation contract. |
 | P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Done** | `v4` passed image, SHA-256 leakage, ratio, distribution, vocabulary, and deterministic-rebuild assertions as 48,282/6,036/6,036 records; it is a validated baseline, not a selected runtime generation. |
 | P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **Deferred** | Resume after Work packages 2.2c and 2.2d produce and validate the replacement target generation. |
@@ -536,3 +536,5 @@ The plan is complete when:
 | 2026-08-04 | Deferred the final filtering policy to a threshold-sweep review | Before choosing a support threshold or minimum-target rule, a reproducible train-only script must compare vocabulary size, assignment and recipe retention, and concrete ingredients gained or lost across candidate thresholds. |
 | 2026-08-04 | Kept one shared `ingredients_target` vocabulary | The standard pipeline will not split semantic and learnable vocabularies. Optional subsets must be explicitly named experiments, while all standard models use the same target vocabulary. |
 | 2026-08-04 | Retained explicit parent abstraction as a deferred experiment | Automatic FoodOn parent traversal remains prohibited in the standard pipeline, but reviewed and versioned child-to-parent mappings may later be tested to reduce label-space difficulty without replacing the baseline. |
+| 2026-08-05 | Executed the provisional train-only threshold sweep | The current normalizer yields 143, 260, and 562 targets at support 500, 250, and 100 respectively; the durable output also records recipe-cardinality buckets and named target losses at every threshold transition. The result informs the policy decision but must be revalidated after FoodOn association before freezing a replacement generation. |
+| 2026-08-05 | Selected the standard target-filter policy | Retain only concepts appearing in at least 500 train recipes and retain recipes with at least three resulting `ingredients_target` values. This preserves the established filter contract, gives every standard output class at least 500 positive train examples, and will be revalidated after association. |

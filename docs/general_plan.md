@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-04
+**Last updated:** 2026-08-05
 **Overall status:** In progress  
 **Current macro-phase:** Data
-**Current focus:** Review and approve the Data 2.2c controlled-vocabulary contract before implementing a replacement target generation.
+**Current focus:** Approve the remaining 2.2c controlled-vocabulary association contract, then implement the replacement target-generation pipeline.
 
 ## Purpose
 
@@ -32,7 +32,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | Approve or revise the 2.2c FoodOn-plus-local-concepts contract and the separation of semantic canonicalization from train-only label selection. |
+| 2 | Data | **In progress** | Approve the remaining 2.2c FoodOn-plus-local-concepts association contract, then implement and validate the replacement target generation. |
 | 3 | Ingredient selection | **In progress** | Formalize relevance and visual-distinguishability criteria. |
 | 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
@@ -270,7 +270,7 @@ Follow the active Data implementation plan for subsequent target-generation work
 - [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md)
 - [`../src_scratches/data_anlysis/controlled_vocabulary_research.py`](../src_scratches/data_anlysis/controlled_vocabulary_research.py)
 
-The recommendation is to use pinned FoodOn v2025-07-31 as an external reference lexicon while retaining ambiguous or uncovered terms as local concepts. Project recognizability overrides take precedence over conflicting fine-grained ontology matches, and automatic hierarchy ascent remains prohibited in the standard pipeline. Explicit reviewed parent abstractions are retained only as deferred, separately versioned difficulty-reduction experiments. Support 500 is demonstrably too destructive, but its replacement remains undecided: a reproducible train-only threshold sweep must first compare retained ingredient count, assignment coverage, recipe retention, and concrete gained/lost ingredients. The selected policy will produce one shared `ingredients_target` vocabulary for all standard models rather than separate semantic and learnable vocabularies.
+The recommendation is to use pinned FoodOn v2025-07-31 as an external reference lexicon while retaining ambiguous or uncovered terms as local concepts. Project recognizability overrides take precedence over conflicting fine-grained ontology matches, and automatic hierarchy ascent remains prohibited in the standard pipeline. Explicit reviewed parent abstractions are retained only as deferred, separately versioned difficulty-reduction experiments. The train-only sweep fixed the standard filter at support >= 500 and at least three retained targets per recipe; it must be numerically revalidated after association. The selected policy will produce one shared `ingredients_target` vocabulary for all standard models rather than separate semantic and learnable vocabularies.
 
 #### Completion gate
 
@@ -631,6 +631,8 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-04 | Data research | Completed the controlled-vocabulary research checkpoint. FoodOn is recommended as a pinned semantic reference with retained local concepts; the experiment shows that support 500 retains only 65.32% of train recipe-concept assignments and still removes correctly associated `english muffin` and `fish fillet`. | Work package 2.2c **In progress — awaiting decision** | [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) |
 | 2026-08-04 | Data decision | Deferred the final support and minimum-target filtering policy until a reproducible train-only threshold sweep compares vocabulary size, assignment coverage, recipe retention, and concrete ingredients gained or lost. | Work package 2.2c **In progress — threshold policy pending** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
 | 2026-08-04 | Data decision | Kept `ingredients_target` as the single shared standard vocabulary across splits and models; optional subsets may exist only as named experiments. Automatic FoodOn parent traversal remains disabled, while explicit reviewed parent mappings are preserved as a deferred difficulty-reduction experiment. | Work package 2.2c **In progress — scope partially approved** | [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md), [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
+| 2026-08-05 | Data analysis | Executed the reproducible provisional train-only support-threshold sweep. Its output quantifies vocabulary size, assignment retention, recipe target-cardinality buckets, and named losses between thresholds without changing metadata. | Work package 2.2c **In progress — support/minimum-target decision pending** | [`src_scratches/data_anlysis/ingredient_threshold_sweep.py`](../src_scratches/data_anlysis/ingredient_threshold_sweep.py), [`controlled-vocabulary evaluation`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) |
+| 2026-08-05 | Data decision | Fixed the standard filtering policy at support >= 500 distinct train recipes and at least three retained targets per recipe. | Work package 2.2c **In progress — association-contract approval pending** | [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) |
 
 ## Tracker maintenance rules
 

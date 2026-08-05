@@ -1,7 +1,7 @@
 # Yummly controlled-vocabulary evaluation
 
 **Created:** 2026-08-04  
-**Last updated:** 2026-08-04
+**Last updated:** 2026-08-05
 
 **Work package:** Data 2.2c  
 **Status:** Research complete; implementation recommendation awaiting approval
@@ -82,6 +82,21 @@ This analysis derives support only from the legacy train split. `Assignments ret
 
 The current threshold retains only 65.32% of canonical recipe-concept assignments and removes 4,297 of 54,724 train recipes under the minimum-three-target rule. A threshold of 25 is the highest tested value that retains both motivating concepts, but it still discards 12.05% of assignments and creates a provisional 1,537-class space. This is evidence against using support filtering as part of semantic standardization.
 
+### Executed provisional current-normalizer sweep
+
+The requested decision-oriented sweep was executed on 2026-08-05 by [`ingredient_threshold_sweep.py`](../../../src_scratches/data_anlysis/ingredient_threshold_sweep.py). It reads only the original train `ingredients` values, applies the current deterministic normalizer, and writes [`ingredient_threshold_sweep.json`](../../../src_scratches/data_anlysis/outputs/ingredient_threshold_sweep.json). It does not alter metadata or make an ontology association, so its counts are provisional evidence for selecting a support policy; the selected policy must be revalidated after the FoodOn-plus-local association step before a new generation is frozen.
+
+| Minimum train support | Provisional targets | Retained assignments | Recipes with 0 / 1 / 2 / at least 3 targets |
+| ---: | ---: | ---: | ---: |
+| 100 | 562 | 79.97% | 190 / 565 / 1,150 / 52,819 |
+| 200 | 318 | 74.31% | 410 / 814 / 1,571 / 51,929 |
+| 250 | 260 | 72.18% | 435 / 885 / 1,789 / 51,615 |
+| 300 | 227 | 70.67% | 468 / 942 / 1,890 / 51,424 |
+| 400 | 168 | 67.30% | 532 / 1,119 / 2,251 / 50,822 |
+| 500 | 143 | 65.44% | 582 / 1,263 / 2,455 / 50,424 |
+
+The complete output records every target removed between adjacent thresholds, rather than a raw-line mapping. For example, increasing 400 to 500 removes 25 targets including `romaine lettuce` (499), `quinoa` (497), `black olives` (491), `ghee` (485), `mango` (475), `eggplant` (468), and `broccoli` (441) recipe occurrences. The selected standard policy is support >= 500 train recipes and at least three retained targets per recipe. Rare labels are therefore not retained merely because they are semantically valid; the exact resulting counts will be revalidated after association.
+
 ## Findings
 
 ### FoodOn is useful as a reference, not as the complete target vocabulary
@@ -112,8 +127,8 @@ High-support examples such as `garam masala` and `mirin` remain valuable local c
 4. For other lines, use exact preferred-label matching, then exact synonyms, then the approved bounded fallback and vocabulary-validated final-token singularization.
 5. Accept a vocabulary association only when deterministic precedence produces one concept. Keep an unresolved or ambiguous normalized term as a local concept.
 6. Do not use unspecified broad/narrow synonyms, fuzzy matching, embeddings, substring containment, cuisine, recipe title, images, or automatic parent traversal to force an association.
-7. Before selecting a support threshold or minimum-target recipe rule, run a reproducible train-only threshold sweep. For every candidate threshold, report at least the number of retained canonical ingredients, retained recipe-concept assignments, recipes retaining zero/one/two/at least three targets, and the named ingredients gained or lost relative to neighbouring thresholds.
-8. Use that evidence to select one standard `ingredients_target` vocabulary. No threshold, including 25 or 500, is approved at this checkpoint, and the standard pipeline must not maintain separate semantic and learnable vocabularies.
+7. Before selecting a support threshold or minimum-target recipe rule, run a reproducible train-only threshold sweep. The provisional current-normalizer sweep now reports retained ingredients, assignments, zero/one/two/at-least-three target recipe buckets, and named targets lost at every adjacent threshold transition. Re-run the same measurement after controlled-vocabulary association to validate the selected threshold numerically.
+8. Use that evidence to select one standard `ingredients_target` vocabulary. The selected policy is support >= 500 distinct train recipes and at least three retained targets per recipe. The standard pipeline must not maintain separate semantic and learnable vocabularies.
 9. Validation and test data must not influence threshold selection. After a train-only choice is made, the same `ingredients_target` vocabulary is written and used consistently across train, validation, test, and model implementations.
 10. Optional ingredient subsets may be introduced later only as explicitly named experimental projections. They must preserve the standard `ingredients_target` generation as the comparison baseline and must not silently redefine the project vocabulary.
 11. Preserve `v1`–`v4` unchanged and generate a new version only after this contract is approved and implemented with regression tests.
@@ -125,5 +140,5 @@ Work package 2.2d must not start until the following recommendations are accepte
 - FoodOn is adopted as a pinned reference lexicon, with local concepts retained for incomplete or ambiguous coverage;
 - project recognizability overrides run before a conflicting direct FoodOn match;
 - automatic ontology parent traversal is rejected from the standard pipeline, while explicit reviewed parent mappings are retained as a deferred option for separately versioned difficulty-reduction experiments;
-- the support threshold and minimum-target rule remain undecided until a reproducible threshold-sweep script reports vocabulary size, assignment retention, recipe retention, and concrete gained/lost ingredients;
-- the threshold is selected from train data only, after which one shared `ingredients_target` vocabulary is used across all splits and model implementations; optional subsets remain separately named experiments.
+- the support threshold and minimum-target rule are fixed at >= 500 distinct train recipes and >= 3 retained targets per recipe, selected from train-only evidence and subject to numerical revalidation after association;
+- after that revalidation, one shared `ingredients_target` vocabulary is used across all splits and model implementations; optional subsets remain separately named experiments.
