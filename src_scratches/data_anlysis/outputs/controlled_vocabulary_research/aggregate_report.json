@@ -1,0 +1,2694 @@
+{
+  "corpus": {
+    "test": 5212,
+    "train": 54724,
+    "val": 5210
+  },
+  "method": {
+    "direct": "Exact, unambiguous label or exact-synonym match after mechanical recipe-line parsing only.",
+    "fallback": "Exact match after the existing bounded standardizer plus vocabulary-validated final-token singularization.",
+    "threshold": "Support >= 500 recipes and >= 3 supported concepts, evaluated on the legacy train split only.",
+    "unmatched": "Retained as a local standalone concept; never discarded or mapped to UNK."
+  },
+  "vocabularies": {
+    "FoodData Central Foundation Foods": {
+      "ambiguous_surfaces": 0,
+      "full_corpus_coverage_diagnostic": {
+        "ambiguous_occurrences": 0,
+        "ambiguous_unique_terms": 0,
+        "direct_occurrences": 0,
+        "direct_unique_terms": 0,
+        "fallback_occurrences": 0,
+        "fallback_unique_terms": 0,
+        "line_occurrences": 740847,
+        "unique_source_terms": 49167,
+        "unmatched_occurrences": 740847,
+        "unmatched_unique_terms": 49167,
+        "vocabulary": "FoodData Central Foundation Foods"
+      },
+      "top_train_unmatched_standalone_terms": [
+        [
+          "salt",
+          37339
+        ],
+        [
+          "pepper",
+          24395
+        ],
+        [
+          "garlic",
+          21870
+        ],
+        [
+          "cheese",
+          17824
+        ],
+        [
+          "olive oil",
+          15629
+        ],
+        [
+          "sugar",
+          14685
+        ],
+        [
+          "onion",
+          14565
+        ],
+        [
+          "cilantro",
+          11262
+        ],
+        [
+          "egg",
+          9588
+        ],
+        [
+          "butter",
+          8905
+        ],
+        [
+          "water",
+          8758
+        ],
+        [
+          "chili",
+          7377
+        ],
+        [
+          "green onion",
+          7288
+        ],
+        [
+          "ginger",
+          7264
+        ],
+        [
+          "flour",
+          6722
+        ],
+        [
+          "soy sauce",
+          6377
+        ],
+        [
+          "tomato",
+          6248
+        ],
+        [
+          "chicken",
+          5884
+        ],
+        [
+          "cumin",
+          5240
+        ],
+        [
+          "vegetable oil",
+          4529
+        ],
+        [
+          "parsley",
+          4389
+        ],
+        [
+          "lemon juice",
+          4341
+        ],
+        [
+          "milk",
+          4267
+        ],
+        [
+          "carrot",
+          3980
+        ],
+        [
+          "yogurt",
+          3904
+        ],
+        [
+          "basil",
+          3655
+        ],
+        [
+          "chicken broth",
+          3625
+        ],
+        [
+          "oregano",
+          3486
+        ],
+        [
+          "lime juice",
+          3314
+        ],
+        [
+          "red onion",
+          3261
+        ],
+        [
+          "oil",
+          3249
+        ],
+        [
+          "red bell pepper",
+          3231
+        ],
+        [
+          "sesame oil",
+          3032
+        ],
+        [
+          "cinnamon",
+          2852
+        ],
+        [
+          "turmeric",
+          2695
+        ],
+        [
+          "lime",
+          2684
+        ],
+        [
+          "honey",
+          2628
+        ],
+        [
+          "thyme",
+          2528
+        ],
+        [
+          "tomato sauce",
+          2424
+        ],
+        [
+          "garlic powder",
+          2291
+        ],
+        [
+          "shallots",
+          2162
+        ],
+        [
+          "avocado",
+          2160
+        ],
+        [
+          "vanilla extract",
+          2155
+        ],
+        [
+          "corn starch",
+          2147
+        ],
+        [
+          "cayenne pepper",
+          2135
+        ],
+        [
+          "sour cream",
+          2123
+        ],
+        [
+          "bay leaf",
+          2040
+        ],
+        [
+          "lemon",
+          1954
+        ],
+        [
+          "panko breadcrumbs",
+          1933
+        ],
+        [
+          "beef",
+          1922
+        ],
+        [
+          "fish sauce",
+          1847
+        ],
+        [
+          "garam masala",
+          1826
+        ],
+        [
+          "rice vinegar",
+          1818
+        ],
+        [
+          "cooking spray",
+          1718
+        ],
+        [
+          "canola oil",
+          1641
+        ],
+        [
+          "mayonnaise",
+          1634
+        ],
+        [
+          "cucumber",
+          1607
+        ],
+        [
+          "jalapeno chilies",
+          1570
+        ],
+        [
+          "mint",
+          1540
+        ],
+        [
+          "green bell pepper",
+          1539
+        ],
+        [
+          "paprika",
+          1521
+        ],
+        [
+          "heavy cream",
+          1504
+        ],
+        [
+          "coconut milk",
+          1500
+        ],
+        [
+          "dijon mustard",
+          1491
+        ],
+        [
+          "shrimp",
+          1486
+        ],
+        [
+          "baking powder",
+          1376
+        ],
+        [
+          "zucchini",
+          1370
+        ],
+        [
+          "black beans",
+          1331
+        ],
+        [
+          "celery",
+          1302
+        ],
+        [
+          "green chilies",
+          1286
+        ],
+        [
+          "red wine vinegar",
+          1204
+        ],
+        [
+          "egg whites",
+          1197
+        ],
+        [
+          "salsa",
+          1175
+        ],
+        [
+          "pasta",
+          1151
+        ],
+        [
+          "nutmeg",
+          1117
+        ],
+        [
+          "cumin seed",
+          1110
+        ],
+        [
+          "corn tortillas",
+          1097
+        ],
+        [
+          "potato",
+          1070
+        ],
+        [
+          "mushroom",
+          1031
+        ],
+        [
+          "rice",
+          1017
+        ],
+        [
+          "red chili peppers",
+          1014
+        ],
+        [
+          "dry white wine",
+          980
+        ],
+        [
+          "apple cider vinegar",
+          964
+        ],
+        [
+          "italian seasoning",
+          962
+        ],
+        [
+          "worcestershire sauce",
+          952
+        ],
+        [
+          "spinach",
+          948
+        ],
+        [
+          "egg yolks",
+          930
+        ],
+        [
+          "rosemary",
+          910
+        ],
+        [
+          "cherry tomatoes",
+          909
+        ],
+        [
+          "chives",
+          898
+        ],
+        [
+          "pork",
+          897
+        ],
+        [
+          "baking soda",
+          896
+        ],
+        [
+          "vanilla",
+          893
+        ],
+        [
+          "flour tortillas",
+          891
+        ],
+        [
+          "onion powder",
+          889
+        ],
+        [
+          "peanuts",
+          876
+        ],
+        [
+          "balsamic vinegar",
+          860
+        ],
+        [
+          "mirin",
+          857
+        ],
+        [
+          "sesame seeds",
+          855
+        ],
+        [
+          "peas",
+          846
+        ]
+      ],
+      "train_coverage": {
+        "ambiguous_occurrences": 0,
+        "ambiguous_unique_terms": 0,
+        "direct_occurrences": 0,
+        "direct_unique_terms": 0,
+        "fallback_occurrences": 0,
+        "fallback_unique_terms": 0,
+        "line_occurrences": 622564,
+        "unique_source_terms": 43751,
+        "unmatched_occurrences": 622564,
+        "unmatched_unique_terms": 43751,
+        "vocabulary": "FoodData Central Foundation Foods"
+      },
+      "train_threshold_effect": {
+        "concepts_at_support_500": 143,
+        "concepts_before_threshold": 36121,
+        "external_concepts_at_support_500": 0,
+        "external_concepts_before_threshold": 0,
+        "local_concepts_at_support_500": 143,
+        "local_concepts_before_threshold": 36121,
+        "recipes_total": 54724,
+        "recipes_with_at_least_three_supported_concepts": 50424,
+        "support_sensitivity": [
+          {
+            "concepts": 36121,
+            "external_concepts": 0,
+            "local_concepts": 36121,
+            "minimum_recipe_support": 1,
+            "recipes_with_at_least_three_concepts": 54724,
+            "retained_assignment_fraction": 1.0,
+            "retained_concept_assignments": 601054
+          },
+          {
+            "concepts": 2863,
+            "external_concepts": 0,
+            "local_concepts": 2863,
+            "minimum_recipe_support": 10,
+            "recipes_with_at_least_three_concepts": 54119,
+            "retained_assignment_fraction": 0.9108848788960726,
+            "retained_concept_assignments": 547491
+          },
+          {
+            "concepts": 1525,
+            "external_concepts": 0,
+            "local_concepts": 1525,
+            "minimum_recipe_support": 25,
+            "recipes_with_at_least_three_concepts": 53769,
+            "retained_assignment_fraction": 0.8772639396792967,
+            "retained_concept_assignments": 527283
+          },
+          {
+            "concepts": 945,
+            "external_concepts": 0,
+            "local_concepts": 945,
+            "minimum_recipe_support": 50,
+            "recipes_with_at_least_three_concepts": 53425,
+            "retained_assignment_fraction": 0.8439408106426378,
+            "retained_concept_assignments": 507254
+          },
+          {
+            "concepts": 565,
+            "external_concepts": 0,
+            "local_concepts": 565,
+            "minimum_recipe_support": 100,
+            "recipes_with_at_least_three_concepts": 52842,
+            "retained_assignment_fraction": 0.7996536084944115,
+            "retained_concept_assignments": 480635
+          },
+          {
+            "concepts": 261,
+            "external_concepts": 0,
+            "local_concepts": 261,
+            "minimum_recipe_support": 250,
+            "recipes_with_at_least_three_concepts": 51622,
+            "retained_assignment_fraction": 0.7211648204653824,
+            "retained_concept_assignments": 433459
+          },
+          {
+            "concepts": 143,
+            "external_concepts": 0,
+            "local_concepts": 143,
+            "minimum_recipe_support": 500,
+            "recipes_with_at_least_three_concepts": 50424,
+            "retained_assignment_fraction": 0.6530677776040089,
+            "retained_concept_assignments": 392529
+          }
+        ],
+        "top_ambiguous_source_terms": [],
+        "tracked_concept_support": {
+          "chicken broth": {
+            "concepts": [
+              "local:chicken broth"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:chicken broth": 3605
+            }
+          },
+          "english muffins": {
+            "concepts": [
+              "local:english muffins"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:english muffins": 34
+            }
+          },
+          "fish fillets": {
+            "concepts": [
+              "local:fish fillets"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:fish fillets": 48
+            }
+          },
+          "garam masala": {
+            "concepts": [
+              "local:garam masala"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:garam masala": 1811
+            }
+          },
+          "gochujang": {
+            "concepts": [
+              "local:gochujang"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:gochujang": 2
+            }
+          },
+          "mirin": {
+            "concepts": [
+              "local:mirin"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:mirin": 857
+            }
+          },
+          "tomato sauce": {
+            "concepts": [
+              "local:tomato sauce"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:tomato sauce": 2303
+            }
+          }
+        }
+      },
+      "unambiguous_surfaces": 363,
+      "vocabulary_concepts": 363
+    },
+    "FoodOn food-product branch": {
+      "ambiguous_surfaces": 615,
+      "full_corpus_coverage_diagnostic": {
+        "ambiguous_occurrences": 34578,
+        "ambiguous_unique_terms": 77,
+        "direct_occurrences": 222960,
+        "direct_unique_terms": 1327,
+        "fallback_occurrences": 156167,
+        "fallback_unique_terms": 4753,
+        "line_occurrences": 740847,
+        "unique_source_terms": 49167,
+        "unmatched_occurrences": 327142,
+        "unmatched_unique_terms": 43010,
+        "vocabulary": "FoodOn food-product branch"
+      },
+      "top_train_unmatched_standalone_terms": [
+        [
+          "salt",
+          37217
+        ],
+        [
+          "garlic",
+          20574
+        ],
+        [
+          "cilantro",
+          10667
+        ],
+        [
+          "ginger",
+          6278
+        ],
+        [
+          "cumin",
+          5240
+        ],
+        [
+          "parsley",
+          4389
+        ],
+        [
+          "chili",
+          4255
+        ],
+        [
+          "carrot",
+          3980
+        ],
+        [
+          "basil",
+          3655
+        ],
+        [
+          "oregano",
+          3486
+        ],
+        [
+          "green onion",
+          3277
+        ],
+        [
+          "turmeric",
+          2695
+        ],
+        [
+          "red bell pepper",
+          2452
+        ],
+        [
+          "vanilla extract",
+          2155
+        ],
+        [
+          "corn starch",
+          2147
+        ],
+        [
+          "panko breadcrumbs",
+          1933
+        ],
+        [
+          "garam masala",
+          1826
+        ],
+        [
+          "rice vinegar",
+          1818
+        ],
+        [
+          "cooking spray",
+          1718
+        ],
+        [
+          "jalapeno chilies",
+          1570
+        ],
+        [
+          "mint",
+          1540
+        ],
+        [
+          "paprika",
+          1521
+        ],
+        [
+          "dijon mustard",
+          1491
+        ],
+        [
+          "celery",
+          1300
+        ],
+        [
+          "red wine vinegar",
+          1204
+        ],
+        [
+          "egg whites",
+          1197
+        ],
+        [
+          "nutmeg",
+          1117
+        ],
+        [
+          "corn tortillas",
+          1097
+        ],
+        [
+          "green bell pepper",
+          1093
+        ],
+        [
+          "mushroom",
+          1031
+        ],
+        [
+          "dry white wine",
+          980
+        ],
+        [
+          "italian seasoning",
+          962
+        ],
+        [
+          "spinach",
+          948
+        ],
+        [
+          "egg yolks",
+          930
+        ],
+        [
+          "cherry tomatoes",
+          909
+        ],
+        [
+          "pork",
+          897
+        ],
+        [
+          "baking soda",
+          896
+        ],
+        [
+          "flour tortillas",
+          891
+        ],
+        [
+          "balsamic vinegar",
+          860
+        ],
+        [
+          "mirin",
+          857
+        ],
+        [
+          "smoked paprika",
+          817
+        ],
+        [
+          "sriracha",
+          793
+        ],
+        [
+          "lime wedges",
+          781
+        ],
+        [
+          "corn",
+          767
+        ],
+        [
+          "ketchup",
+          733
+        ],
+        [
+          "beef",
+          720
+        ],
+        [
+          "green beans",
+          678
+        ],
+        [
+          "white wine vinegar",
+          568
+        ],
+        [
+          "lettuce",
+          555
+        ],
+        [
+          "cauliflower",
+          544
+        ],
+        [
+          "beansprouts",
+          538
+        ],
+        [
+          "vegetable broth",
+          534
+        ],
+        [
+          "shaoxing wine",
+          521
+        ],
+        [
+          "curry leaves",
+          519
+        ],
+        [
+          "french bread",
+          517
+        ],
+        [
+          "cabbage",
+          508
+        ],
+        [
+          "romaine lettuce",
+          504
+        ],
+        [
+          "apple cider vinegar",
+          503
+        ],
+        [
+          "quinoa",
+          497
+        ],
+        [
+          "white vinegar",
+          459
+        ],
+        [
+          "broccoli",
+          445
+        ],
+        [
+          "sherry vinegar",
+          418
+        ],
+        [
+          "basmati rice",
+          417
+        ],
+        [
+          "fine sea salt",
+          411
+        ],
+        [
+          "whipping cream",
+          410
+        ],
+        [
+          "sweet chili sauce",
+          406
+        ],
+        [
+          "rice noodles",
+          405
+        ],
+        [
+          "pure vanilla extract",
+          405
+        ],
+        [
+          "english cucumber",
+          401
+        ],
+        [
+          "taco seasoning",
+          401
+        ],
+        [
+          "brown rice",
+          400
+        ],
+        [
+          "cornstarch",
+          391
+        ],
+        [
+          "and half",
+          388
+        ],
+        [
+          "chicken breast halves",
+          380
+        ],
+        [
+          "active dry yeast",
+          372
+        ],
+        [
+          "mozzarella",
+          372
+        ],
+        [
+          "thai basil",
+          364
+        ],
+        [
+          "creamy peanut butter",
+          354
+        ],
+        [
+          "roasted red peppers",
+          350
+        ],
+        [
+          "dark brown sugar",
+          349
+        ],
+        [
+          "baguette",
+          344
+        ],
+        [
+          "kale",
+          341
+        ],
+        [
+          "salmon fillets",
+          337
+        ],
+        [
+          "fat free",
+          337
+        ],
+        [
+          "red curry paste",
+          334
+        ],
+        [
+          "bread crumbs",
+          332
+        ],
+        [
+          "thai chile",
+          331
+        ],
+        [
+          "kalamata",
+          325
+        ],
+        [
+          "ground cardamom",
+          325
+        ],
+        [
+          "jalapeno",
+          323
+        ],
+        [
+          "toasted sesame seeds",
+          323
+        ],
+        [
+          "refried beans",
+          321
+        ],
+        [
+          "sage",
+          321
+        ],
+        [
+          "kaffir lime leaves",
+          319
+        ],
+        [
+          "hot water",
+          309
+        ],
+        [
+          "lemon wedges",
+          306
+        ],
+        [
+          "ground cloves",
+          303
+        ],
+        [
+          "dry sherry",
+          300
+        ],
+        [
+          "celery ribs",
+          299
+        ],
+        [
+          "spanish paprika",
+          293
+        ]
+      ],
+      "train_coverage": {
+        "ambiguous_occurrences": 29027,
+        "ambiguous_unique_terms": 76,
+        "direct_occurrences": 187477,
+        "direct_unique_terms": 1280,
+        "fallback_occurrences": 131058,
+        "fallback_unique_terms": 4283,
+        "line_occurrences": 622564,
+        "unique_source_terms": 43751,
+        "unmatched_occurrences": 275002,
+        "unmatched_unique_terms": 38112,
+        "vocabulary": "FoodOn food-product branch"
+      },
+      "train_threshold_effect": {
+        "concepts_at_support_500": 165,
+        "concepts_before_threshold": 35867,
+        "external_concepts_at_support_500": 109,
+        "external_concepts_before_threshold": 1468,
+        "local_concepts_at_support_500": 56,
+        "local_concepts_before_threshold": 34399,
+        "recipes_total": 54724,
+        "recipes_with_at_least_three_supported_concepts": 50427,
+        "support_sensitivity": [
+          {
+            "concepts": 35867,
+            "external_concepts": 1468,
+            "local_concepts": 34399,
+            "minimum_recipe_support": 1,
+            "recipes_with_at_least_three_concepts": 54724,
+            "retained_assignment_fraction": 1.0,
+            "retained_concept_assignments": 604201
+          },
+          {
+            "concepts": 2850,
+            "external_concepts": 783,
+            "local_concepts": 2067,
+            "minimum_recipe_support": 10,
+            "recipes_with_at_least_three_concepts": 54129,
+            "retained_assignment_fraction": 0.912350360227805,
+            "retained_concept_assignments": 551243
+          },
+          {
+            "concepts": 1537,
+            "external_concepts": 568,
+            "local_concepts": 969,
+            "minimum_recipe_support": 25,
+            "recipes_with_at_least_three_concepts": 53783,
+            "retained_assignment_fraction": 0.879528501276893,
+            "retained_concept_assignments": 531412
+          },
+          {
+            "concepts": 962,
+            "external_concepts": 420,
+            "local_concepts": 542,
+            "minimum_recipe_support": 50,
+            "recipes_with_at_least_three_concepts": 53452,
+            "retained_assignment_fraction": 0.8466404391915935,
+            "retained_concept_assignments": 511541
+          },
+          {
+            "concepts": 590,
+            "external_concepts": 300,
+            "local_concepts": 290,
+            "minimum_recipe_support": 100,
+            "recipes_with_at_least_three_concepts": 52891,
+            "retained_assignment_fraction": 0.8035901959778285,
+            "retained_concept_assignments": 485530
+          },
+          {
+            "concepts": 290,
+            "external_concepts": 180,
+            "local_concepts": 110,
+            "minimum_recipe_support": 250,
+            "recipes_with_at_least_three_concepts": 51712,
+            "retained_assignment_fraction": 0.7260630154534666,
+            "retained_concept_assignments": 438688
+          },
+          {
+            "concepts": 165,
+            "external_concepts": 109,
+            "local_concepts": 56,
+            "minimum_recipe_support": 500,
+            "recipes_with_at_least_three_concepts": 50427,
+            "retained_assignment_fraction": 0.6531948805116178,
+            "retained_concept_assignments": 394661
+          }
+        ],
+        "top_ambiguous_source_terms": [
+          [
+            "garlic",
+            11457
+          ],
+          [
+            "ginger",
+            2848
+          ],
+          [
+            "red bell pepper",
+            2260
+          ],
+          [
+            "cumin",
+            1674
+          ],
+          [
+            "turmeric",
+            1006
+          ],
+          [
+            "green bell pepper",
+            868
+          ],
+          [
+            "oregano",
+            862
+          ],
+          [
+            "celery",
+            799
+          ],
+          [
+            "parsley",
+            575
+          ],
+          [
+            "cauliflower",
+            532
+          ],
+          [
+            "basil",
+            504
+          ],
+          [
+            "spinach",
+            427
+          ],
+          [
+            "nutmeg",
+            425
+          ],
+          [
+            "carrot",
+            420
+          ],
+          [
+            "broccoli",
+            397
+          ],
+          [
+            "quinoa",
+            381
+          ],
+          [
+            "cabbage",
+            343
+          ],
+          [
+            "lettuce",
+            323
+          ],
+          [
+            "kale",
+            306
+          ],
+          [
+            "saffron",
+            263
+          ],
+          [
+            "mint",
+            245
+          ],
+          [
+            "cardamom",
+            210
+          ],
+          [
+            "pork",
+            197
+          ],
+          [
+            "chili",
+            163
+          ],
+          [
+            "yellow squash",
+            136
+          ],
+          [
+            "ham",
+            124
+          ],
+          [
+            "sweet pepper",
+            105
+          ],
+          [
+            "capsicum",
+            101
+          ],
+          [
+            "chinese cabbage",
+            91
+          ],
+          [
+            "parmesan",
+            88
+          ],
+          [
+            "fennel",
+            81
+          ],
+          [
+            "jicama",
+            77
+          ],
+          [
+            "green onion",
+            77
+          ],
+          [
+            "turkey",
+            74
+          ],
+          [
+            "marjoram",
+            69
+          ],
+          [
+            "tamarind",
+            64
+          ],
+          [
+            "okra",
+            59
+          ],
+          [
+            "broccoli rabe",
+            50
+          ],
+          [
+            "sage",
+            48
+          ],
+          [
+            "sesame",
+            42
+          ],
+          [
+            "tarragon",
+            36
+          ],
+          [
+            "cardamon",
+            35
+          ],
+          [
+            "rhubarb",
+            24
+          ],
+          [
+            "hamburger",
+            24
+          ],
+          [
+            "chard",
+            15
+          ],
+          [
+            "millet",
+            12
+          ],
+          [
+            "spring onion",
+            11
+          ],
+          [
+            "chicory",
+            10
+          ],
+          [
+            "barley",
+            10
+          ],
+          [
+            "white corn",
+            9
+          ]
+        ],
+        "tracked_concept_support": {
+          "chicken broth": {
+            "concepts": [
+              "external:FOODON_03303004"
+            ],
+            "status": "direct",
+            "train_recipe_support": {
+              "external:FOODON_03303004": 3605
+            }
+          },
+          "english muffins": {
+            "concepts": [
+              "external:FOODON_03305833"
+            ],
+            "status": "fallback",
+            "train_recipe_support": {
+              "external:FOODON_03305833": 35
+            }
+          },
+          "fish fillets": {
+            "concepts": [
+              "external:FOODON_00002679"
+            ],
+            "status": "fallback",
+            "train_recipe_support": {
+              "external:FOODON_00002679": 50
+            }
+          },
+          "garam masala": {
+            "concepts": [
+              "local:garam masala"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:garam masala": 1811
+            }
+          },
+          "gochujang": {
+            "concepts": [
+              "local:gochujang"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:gochujang": 2
+            }
+          },
+          "mirin": {
+            "concepts": [
+              "local:mirin"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:mirin": 857
+            }
+          },
+          "tomato sauce": {
+            "concepts": [
+              "external:FOODON_03301217"
+            ],
+            "status": "direct",
+            "train_recipe_support": {
+              "external:FOODON_03301217": 1002
+            }
+          }
+        }
+      },
+      "unambiguous_surfaces": 16669,
+      "vocabulary_concepts": 14185
+    },
+    "LanguaL all active facets": {
+      "ambiguous_surfaces": 1877,
+      "full_corpus_coverage_diagnostic": {
+        "ambiguous_occurrences": 6891,
+        "ambiguous_unique_terms": 37,
+        "direct_occurrences": 138055,
+        "direct_unique_terms": 686,
+        "fallback_occurrences": 151983,
+        "fallback_unique_terms": 2456,
+        "line_occurrences": 740847,
+        "unique_source_terms": 49167,
+        "unmatched_occurrences": 443918,
+        "unmatched_unique_terms": 45988,
+        "vocabulary": "LanguaL all active facets"
+      },
+      "top_train_unmatched_standalone_terms": [
+        [
+          "salt",
+          37339
+        ],
+        [
+          "pepper",
+          20431
+        ],
+        [
+          "cheese",
+          17726
+        ],
+        [
+          "olive oil",
+          15629
+        ],
+        [
+          "cilantro",
+          10669
+        ],
+        [
+          "flour",
+          6722
+        ],
+        [
+          "soy sauce",
+          6377
+        ],
+        [
+          "vegetable oil",
+          4529
+        ],
+        [
+          "lemon juice",
+          4341
+        ],
+        [
+          "chili",
+          4255
+        ],
+        [
+          "chicken broth",
+          3625
+        ],
+        [
+          "lime juice",
+          3314
+        ],
+        [
+          "oil",
+          3249
+        ],
+        [
+          "sesame oil",
+          3032
+        ],
+        [
+          "lime",
+          2684
+        ],
+        [
+          "tomato sauce",
+          2424
+        ],
+        [
+          "garlic powder",
+          2291
+        ],
+        [
+          "vanilla extract",
+          2155
+        ],
+        [
+          "corn starch",
+          2147
+        ],
+        [
+          "cayenne pepper",
+          2135
+        ],
+        [
+          "sour cream",
+          2123
+        ],
+        [
+          "panko breadcrumbs",
+          1933
+        ],
+        [
+          "fish sauce",
+          1847
+        ],
+        [
+          "rice vinegar",
+          1818
+        ],
+        [
+          "cooking spray",
+          1718
+        ],
+        [
+          "mayonnaise",
+          1634
+        ],
+        [
+          "jalapeno chilies",
+          1570
+        ],
+        [
+          "paprika",
+          1521
+        ],
+        [
+          "coconut milk",
+          1500
+        ],
+        [
+          "dijon mustard",
+          1491
+        ],
+        [
+          "black beans",
+          1331
+        ],
+        [
+          "green chilies",
+          1286
+        ],
+        [
+          "red wine vinegar",
+          1204
+        ],
+        [
+          "egg whites",
+          1197
+        ],
+        [
+          "salsa",
+          1175
+        ],
+        [
+          "cumin seed",
+          1110
+        ],
+        [
+          "corn tortillas",
+          1097
+        ],
+        [
+          "red chili peppers",
+          1014
+        ],
+        [
+          "dry white wine",
+          980
+        ],
+        [
+          "apple cider vinegar",
+          964
+        ],
+        [
+          "italian seasoning",
+          962
+        ],
+        [
+          "worcestershire sauce",
+          952
+        ],
+        [
+          "baking soda",
+          896
+        ],
+        [
+          "flour tortillas",
+          891
+        ],
+        [
+          "onion powder",
+          889
+        ],
+        [
+          "balsamic vinegar",
+          860
+        ],
+        [
+          "mirin",
+          857
+        ],
+        [
+          "sesame seeds",
+          855
+        ],
+        [
+          "curry powder",
+          845
+        ],
+        [
+          "smoked paprika",
+          817
+        ],
+        [
+          "peanut oil",
+          798
+        ],
+        [
+          "sriracha",
+          793
+        ],
+        [
+          "lime wedges",
+          781
+        ],
+        [
+          "coconut oil",
+          745
+        ],
+        [
+          "oyster sauce",
+          740
+        ],
+        [
+          "ketchup",
+          733
+        ],
+        [
+          "lemon zest",
+          700
+        ],
+        [
+          "bacon",
+          692
+        ],
+        [
+          "maple syrup",
+          679
+        ],
+        [
+          "chickpeas",
+          658
+        ],
+        [
+          "hot sauce",
+          648
+        ],
+        [
+          "hoisin sauce",
+          600
+        ],
+        [
+          "sake",
+          571
+        ],
+        [
+          "white wine vinegar",
+          568
+        ],
+        [
+          "chinese five spice powder",
+          561
+        ],
+        [
+          "lemongrass",
+          544
+        ],
+        [
+          "baby spinach",
+          542
+        ],
+        [
+          "beansprouts",
+          538
+        ],
+        [
+          "vegetable broth",
+          534
+        ],
+        [
+          "coriander seeds",
+          522
+        ],
+        [
+          "shaoxing wine",
+          521
+        ],
+        [
+          "french bread",
+          517
+        ],
+        [
+          "white wine",
+          506
+        ],
+        [
+          "romaine lettuce",
+          504
+        ],
+        [
+          "ghee",
+          492
+        ],
+        [
+          "cinnamon sticks",
+          492
+        ],
+        [
+          "fennel seeds",
+          490
+        ],
+        [
+          "mustard seeds",
+          489
+        ],
+        [
+          "sauce",
+          479
+        ],
+        [
+          "white vinegar",
+          459
+        ],
+        [
+          "corn kernels",
+          444
+        ],
+        [
+          "peanut butter",
+          439
+        ],
+        [
+          "sherry vinegar",
+          418
+        ],
+        [
+          "fine sea salt",
+          411
+        ],
+        [
+          "sweet chili sauce",
+          406
+        ],
+        [
+          "rice noodles",
+          405
+        ],
+        [
+          "pure vanilla extract",
+          405
+        ],
+        [
+          "english cucumber",
+          401
+        ],
+        [
+          "taco seasoning",
+          401
+        ],
+        [
+          "brown rice",
+          400
+        ],
+        [
+          "white rice",
+          398
+        ],
+        [
+          "cashew nuts",
+          391
+        ],
+        [
+          "cornstarch",
+          391
+        ],
+        [
+          "tomatillos",
+          388
+        ],
+        [
+          "and half",
+          388
+        ],
+        [
+          "beef broth",
+          385
+        ],
+        [
+          "chicken breast halves",
+          380
+        ],
+        [
+          "tortilla chips",
+          379
+        ],
+        [
+          "grape tomatoes",
+          375
+        ],
+        [
+          "active dry yeast",
+          372
+        ]
+      ],
+      "train_coverage": {
+        "ambiguous_occurrences": 5834,
+        "ambiguous_unique_terms": 35,
+        "direct_occurrences": 116098,
+        "direct_unique_terms": 660,
+        "fallback_occurrences": 127542,
+        "fallback_unique_terms": 2282,
+        "line_occurrences": 622564,
+        "unique_source_terms": 43751,
+        "unmatched_occurrences": 373090,
+        "unmatched_unique_terms": 40774,
+        "vocabulary": "LanguaL all active facets"
+      },
+      "train_threshold_effect": {
+        "concepts_at_support_500": 155,
+        "concepts_before_threshold": 35926,
+        "external_concepts_at_support_500": 82,
+        "external_concepts_before_threshold": 713,
+        "local_concepts_at_support_500": 73,
+        "local_concepts_before_threshold": 35213,
+        "recipes_total": 54724,
+        "recipes_with_at_least_three_supported_concepts": 50558,
+        "support_sensitivity": [
+          {
+            "concepts": 35926,
+            "external_concepts": 713,
+            "local_concepts": 35213,
+            "minimum_recipe_support": 1,
+            "recipes_with_at_least_three_concepts": 54724,
+            "retained_assignment_fraction": 1.0,
+            "retained_concept_assignments": 602080
+          },
+          {
+            "concepts": 2813,
+            "external_concepts": 383,
+            "local_concepts": 2430,
+            "minimum_recipe_support": 10,
+            "recipes_with_at_least_three_concepts": 54121,
+            "retained_assignment_fraction": 0.9115798564974754,
+            "retained_concept_assignments": 548844
+          },
+          {
+            "concepts": 1504,
+            "external_concepts": 301,
+            "local_concepts": 1203,
+            "minimum_recipe_support": 25,
+            "recipes_with_at_least_three_concepts": 53775,
+            "retained_assignment_fraction": 0.8787802285410576,
+            "retained_concept_assignments": 529096
+          },
+          {
+            "concepts": 936,
+            "external_concepts": 231,
+            "local_concepts": 705,
+            "minimum_recipe_support": 50,
+            "recipes_with_at_least_three_concepts": 53449,
+            "retained_assignment_fraction": 0.8460852378421472,
+            "retained_concept_assignments": 509411
+          },
+          {
+            "concepts": 561,
+            "external_concepts": 171,
+            "local_concepts": 390,
+            "minimum_recipe_support": 100,
+            "recipes_with_at_least_three_concepts": 52883,
+            "retained_assignment_fraction": 0.802519598724422,
+            "retained_concept_assignments": 483181
+          },
+          {
+            "concepts": 273,
+            "external_concepts": 120,
+            "local_concepts": 153,
+            "minimum_recipe_support": 250,
+            "recipes_with_at_least_three_concepts": 51733,
+            "retained_assignment_fraction": 0.7281357959075206,
+            "retained_concept_assignments": 438396
+          },
+          {
+            "concepts": 155,
+            "external_concepts": 82,
+            "local_concepts": 73,
+            "minimum_recipe_support": 500,
+            "recipes_with_at_least_three_concepts": 50558,
+            "retained_assignment_fraction": 0.6596914031357959,
+            "retained_concept_assignments": 397187
+          }
+        ],
+        "top_ambiguous_source_terms": [
+          [
+            "cilantro",
+            2320
+          ],
+          [
+            "cayenne pepper",
+            1621
+          ],
+          [
+            "paprika",
+            1521
+          ],
+          [
+            "nori",
+            147
+          ],
+          [
+            "puff pastry",
+            65
+          ],
+          [
+            "farro",
+            47
+          ],
+          [
+            "asian pear",
+            16
+          ],
+          [
+            "aniseed",
+            10
+          ],
+          [
+            "veal",
+            10
+          ],
+          [
+            "tomatillo",
+            9
+          ],
+          [
+            "chinese parsley",
+            9
+          ],
+          [
+            "agar",
+            7
+          ],
+          [
+            "steamer",
+            6
+          ],
+          [
+            "bitter gourd",
+            4
+          ],
+          [
+            "amaranth",
+            4
+          ],
+          [
+            "rapini",
+            4
+          ],
+          [
+            "broccoli raab",
+            3
+          ],
+          [
+            "coppa",
+            3
+          ],
+          [
+            "capocollo",
+            3
+          ],
+          [
+            "pectin",
+            3
+          ],
+          [
+            "water spinach",
+            2
+          ],
+          [
+            "romanesco broccoli",
+            2
+          ],
+          [
+            "summer savory",
+            2
+          ],
+          [
+            "marrow",
+            2
+          ],
+          [
+            "porcini",
+            2
+          ],
+          [
+            "kamut",
+            2
+          ],
+          [
+            "beetroot",
+            2
+          ],
+          [
+            "gumbo",
+            1
+          ],
+          [
+            "wild garlic",
+            1
+          ],
+          [
+            "seville orange",
+            1
+          ],
+          [
+            "black cumin",
+            1
+          ],
+          [
+            "galanga",
+            1
+          ],
+          [
+            "champignon",
+            1
+          ],
+          [
+            "yellow rocket",
+            1
+          ],
+          [
+            "cassia",
+            1
+          ]
+        ],
+        "tracked_concept_support": {
+          "chicken broth": {
+            "concepts": [
+              "local:chicken broth"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:chicken broth": 3605
+            }
+          },
+          "english muffins": {
+            "concepts": [
+              "local:english muffins"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:english muffins": 34
+            }
+          },
+          "fish fillets": {
+            "concepts": [
+              "local:fish fillets"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:fish fillets": 48
+            }
+          },
+          "garam masala": {
+            "concepts": [
+              "external:A043C"
+            ],
+            "status": "direct",
+            "train_recipe_support": {
+              "external:A043C": 1886
+            }
+          },
+          "gochujang": {
+            "concepts": [
+              "local:gochujang"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:gochujang": 2
+            }
+          },
+          "mirin": {
+            "concepts": [
+              "local:mirin"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:mirin": 857
+            }
+          },
+          "tomato sauce": {
+            "concepts": [
+              "local:tomato sauce"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:tomato sauce": 2303
+            }
+          }
+        }
+      },
+      "unambiguous_surfaces": 21268,
+      "vocabulary_concepts": 12561
+    },
+    "LanguaL product-type facet": {
+      "ambiguous_surfaces": 427,
+      "full_corpus_coverage_diagnostic": {
+        "ambiguous_occurrences": 4550,
+        "ambiguous_unique_terms": 10,
+        "direct_occurrences": 28085,
+        "direct_unique_terms": 199,
+        "fallback_occurrences": 24884,
+        "fallback_unique_terms": 372,
+        "line_occurrences": 740847,
+        "unique_source_terms": 49167,
+        "unmatched_occurrences": 683328,
+        "unmatched_unique_terms": 48586,
+        "vocabulary": "LanguaL product-type facet"
+      },
+      "top_train_unmatched_standalone_terms": [
+        [
+          "salt",
+          37339
+        ],
+        [
+          "pepper",
+          24395
+        ],
+        [
+          "garlic",
+          21870
+        ],
+        [
+          "cheese",
+          17726
+        ],
+        [
+          "olive oil",
+          15629
+        ],
+        [
+          "onion",
+          14565
+        ],
+        [
+          "sugar",
+          12508
+        ],
+        [
+          "egg",
+          9588
+        ],
+        [
+          "butter",
+          8905
+        ],
+        [
+          "water",
+          8758
+        ],
+        [
+          "green onion",
+          7288
+        ],
+        [
+          "ginger",
+          7264
+        ],
+        [
+          "flour",
+          6722
+        ],
+        [
+          "soy sauce",
+          6377
+        ],
+        [
+          "tomato",
+          6248
+        ],
+        [
+          "chicken",
+          5884
+        ],
+        [
+          "cumin",
+          5240
+        ],
+        [
+          "vegetable oil",
+          4529
+        ],
+        [
+          "parsley",
+          4389
+        ],
+        [
+          "lemon juice",
+          4341
+        ],
+        [
+          "milk",
+          4267
+        ],
+        [
+          "chili",
+          4255
+        ],
+        [
+          "carrot",
+          3980
+        ],
+        [
+          "basil",
+          3655
+        ],
+        [
+          "chicken broth",
+          3625
+        ],
+        [
+          "oregano",
+          3486
+        ],
+        [
+          "lime juice",
+          3314
+        ],
+        [
+          "red onion",
+          3261
+        ],
+        [
+          "oil",
+          3249
+        ],
+        [
+          "sesame oil",
+          3032
+        ],
+        [
+          "turmeric",
+          2695
+        ],
+        [
+          "lime",
+          2684
+        ],
+        [
+          "honey",
+          2628
+        ],
+        [
+          "thyme",
+          2528
+        ],
+        [
+          "red bell pepper",
+          2452
+        ],
+        [
+          "tomato sauce",
+          2424
+        ],
+        [
+          "garlic powder",
+          2291
+        ],
+        [
+          "shallots",
+          2162
+        ],
+        [
+          "avocado",
+          2160
+        ],
+        [
+          "vanilla extract",
+          2155
+        ],
+        [
+          "corn starch",
+          2147
+        ],
+        [
+          "sour cream",
+          2123
+        ],
+        [
+          "bay leaf",
+          2040
+        ],
+        [
+          "lemon",
+          1954
+        ],
+        [
+          "panko breadcrumbs",
+          1933
+        ],
+        [
+          "fish sauce",
+          1847
+        ],
+        [
+          "rice vinegar",
+          1818
+        ],
+        [
+          "cooking spray",
+          1718
+        ],
+        [
+          "mayonnaise",
+          1634
+        ],
+        [
+          "cucumber",
+          1607
+        ],
+        [
+          "jalapeno chilies",
+          1570
+        ],
+        [
+          "mint",
+          1540
+        ],
+        [
+          "green bell pepper",
+          1539
+        ],
+        [
+          "paprika",
+          1521
+        ],
+        [
+          "heavy cream",
+          1504
+        ],
+        [
+          "coconut milk",
+          1500
+        ],
+        [
+          "dijon mustard",
+          1491
+        ],
+        [
+          "shrimp",
+          1486
+        ],
+        [
+          "zucchini",
+          1370
+        ],
+        [
+          "black beans",
+          1331
+        ],
+        [
+          "celery",
+          1302
+        ],
+        [
+          "green chilies",
+          1286
+        ],
+        [
+          "red wine vinegar",
+          1204
+        ],
+        [
+          "egg whites",
+          1197
+        ],
+        [
+          "salsa",
+          1175
+        ],
+        [
+          "nutmeg",
+          1117
+        ],
+        [
+          "cumin seed",
+          1110
+        ],
+        [
+          "corn tortillas",
+          1097
+        ],
+        [
+          "potato",
+          1070
+        ],
+        [
+          "mushroom",
+          1031
+        ],
+        [
+          "rice",
+          1017
+        ],
+        [
+          "red chili peppers",
+          1014
+        ],
+        [
+          "dry white wine",
+          980
+        ],
+        [
+          "apple cider vinegar",
+          964
+        ],
+        [
+          "italian seasoning",
+          962
+        ],
+        [
+          "worcestershire sauce",
+          952
+        ],
+        [
+          "spinach",
+          948
+        ],
+        [
+          "egg yolks",
+          930
+        ],
+        [
+          "rosemary",
+          910
+        ],
+        [
+          "cherry tomatoes",
+          909
+        ],
+        [
+          "chives",
+          898
+        ],
+        [
+          "pork",
+          897
+        ],
+        [
+          "baking soda",
+          896
+        ],
+        [
+          "vanilla",
+          893
+        ],
+        [
+          "flour tortillas",
+          891
+        ],
+        [
+          "onion powder",
+          889
+        ],
+        [
+          "peanuts",
+          876
+        ],
+        [
+          "balsamic vinegar",
+          860
+        ],
+        [
+          "mirin",
+          857
+        ],
+        [
+          "sesame seeds",
+          855
+        ],
+        [
+          "peas",
+          846
+        ],
+        [
+          "curry powder",
+          845
+        ],
+        [
+          "smoked paprika",
+          817
+        ],
+        [
+          "peanut oil",
+          798
+        ],
+        [
+          "sriracha",
+          793
+        ],
+        [
+          "lime wedges",
+          781
+        ],
+        [
+          "corn",
+          767
+        ],
+        [
+          "dill",
+          746
+        ],
+        [
+          "coconut oil",
+          745
+        ],
+        [
+          "oyster sauce",
+          740
+        ]
+      ],
+      "train_coverage": {
+        "ambiguous_occurrences": 3840,
+        "ambiguous_unique_terms": 10,
+        "direct_occurrences": 23603,
+        "direct_unique_terms": 193,
+        "fallback_occurrences": 20793,
+        "fallback_unique_terms": 347,
+        "line_occurrences": 622564,
+        "unique_source_terms": 43751,
+        "unmatched_occurrences": 574328,
+        "unmatched_unique_terms": 43201,
+        "vocabulary": "LanguaL product-type facet"
+      },
+      "train_threshold_effect": {
+        "concepts_at_support_500": 146,
+        "concepts_before_threshold": 36080,
+        "external_concepts_at_support_500": 16,
+        "external_concepts_before_threshold": 191,
+        "local_concepts_at_support_500": 130,
+        "local_concepts_before_threshold": 35889,
+        "recipes_total": 54724,
+        "recipes_with_at_least_three_supported_concepts": 50439,
+        "support_sensitivity": [
+          {
+            "concepts": 36080,
+            "external_concepts": 191,
+            "local_concepts": 35889,
+            "minimum_recipe_support": 1,
+            "recipes_with_at_least_three_concepts": 54724,
+            "retained_assignment_fraction": 1.0,
+            "retained_concept_assignments": 601492
+          },
+          {
+            "concepts": 2855,
+            "external_concepts": 103,
+            "local_concepts": 2752,
+            "minimum_recipe_support": 10,
+            "recipes_with_at_least_three_concepts": 54120,
+            "retained_assignment_fraction": 0.9110528485831898,
+            "retained_concept_assignments": 547991
+          },
+          {
+            "concepts": 1522,
+            "external_concepts": 74,
+            "local_concepts": 1448,
+            "minimum_recipe_support": 25,
+            "recipes_with_at_least_three_concepts": 53770,
+            "retained_assignment_fraction": 0.8775827442426499,
+            "retained_concept_assignments": 527859
+          },
+          {
+            "concepts": 945,
+            "external_concepts": 56,
+            "local_concepts": 889,
+            "minimum_recipe_support": 50,
+            "recipes_with_at_least_three_concepts": 53434,
+            "retained_assignment_fraction": 0.8444567841301297,
+            "retained_concept_assignments": 507934
+          },
+          {
+            "concepts": 564,
+            "external_concepts": 34,
+            "local_concepts": 530,
+            "minimum_recipe_support": 100,
+            "recipes_with_at_least_three_concepts": 52855,
+            "retained_assignment_fraction": 0.8000522035205788,
+            "retained_concept_assignments": 481225
+          },
+          {
+            "concepts": 264,
+            "external_concepts": 22,
+            "local_concepts": 242,
+            "minimum_recipe_support": 250,
+            "recipes_with_at_least_three_concepts": 51637,
+            "retained_assignment_fraction": 0.7227660550763767,
+            "retained_concept_assignments": 434738
+          },
+          {
+            "concepts": 146,
+            "external_concepts": 16,
+            "local_concepts": 130,
+            "minimum_recipe_support": 500,
+            "recipes_with_at_least_three_concepts": 50439,
+            "retained_assignment_fraction": 0.6546936617610875,
+            "retained_concept_assignments": 393793
+          }
+        ],
+        "top_ambiguous_source_terms": [
+          [
+            "paprika",
+            1521
+          ],
+          [
+            "zucchini",
+            1288
+          ],
+          [
+            "oregano",
+            862
+          ],
+          [
+            "jicama",
+            77
+          ],
+          [
+            "puff pastry",
+            65
+          ],
+          [
+            "belgian endives",
+            18
+          ],
+          [
+            "coppa",
+            3
+          ],
+          [
+            "capocollo",
+            3
+          ],
+          [
+            "marrow",
+            2
+          ],
+          [
+            "black cumin",
+            1
+          ]
+        ],
+        "tracked_concept_support": {
+          "chicken broth": {
+            "concepts": [
+              "local:chicken broth"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:chicken broth": 3605
+            }
+          },
+          "english muffins": {
+            "concepts": [
+              "local:english muffins"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:english muffins": 34
+            }
+          },
+          "fish fillets": {
+            "concepts": [
+              "local:fish fillets"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:fish fillets": 48
+            }
+          },
+          "garam masala": {
+            "concepts": [
+              "external:A043C"
+            ],
+            "status": "direct",
+            "train_recipe_support": {
+              "external:A043C": 1886
+            }
+          },
+          "gochujang": {
+            "concepts": [
+              "local:gochujang"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:gochujang": 2
+            }
+          },
+          "mirin": {
+            "concepts": [
+              "local:mirin"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:mirin": 857
+            }
+          },
+          "tomato sauce": {
+            "concepts": [
+              "local:tomato sauce"
+            ],
+            "status": "unmatched",
+            "train_recipe_support": {
+              "local:tomato sauce": 2303
+            }
+          }
+        }
+      },
+      "unambiguous_surfaces": 9439,
+      "vocabulary_concepts": 6107
+    }
+  }
+}

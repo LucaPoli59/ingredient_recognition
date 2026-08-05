@@ -3,15 +3,15 @@
 **Created:** 2026-08-02  
 **Last updated:** 2026-08-04
 
-This plan translates the Data macro-section of [`general_plan.md`](../general_plan.md) into a deliberately small implementation sequence. It covers the shared-image-store prerequisite, compatibility with historical experiments, generation of `ingredients_target`, deterministic split construction, and runtime integration.
+This plan translates the Data macro-section of [`general_plan.md`](../../general_plan.md) into a deliberately small implementation sequence. It covers the shared-image-store prerequisite, compatibility with historical experiments, generation of `ingredients_target`, deterministic split construction, and runtime integration.
 
 The plan avoids persistent intermediate artifacts that are not consumed by the project. The benchmark outputs remain the common image directory and one selected metadata file in each split.
 
 ## Progress tracker
 
 **Overall status:** In progress  
-**Current task:** Conduct Work package 2.2c, the controlled-vocabulary research.
-**Next action:** Start the evidence-led vocabulary research; do not integrate `v4` as a runtime default.
+**Current task:** Review the completed Work package 2.2c research recommendation.
+**Next action:** Approve or revise the FoodOn-plus-local-concepts contract and define the train-only threshold-sweep comparison required before choosing filtering policy; do not integrate `v4` or begin 2.2d first.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -20,9 +20,9 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 | P2 | Implement and verify the shared-image-store prerequisite | **Done** | `scripts/migrate_yummly_images.py` staged and SHA-256-verified 65,146 files in `imgs/standard`; both legacy generations load through the refactored DataModule. |
 | P3 | Implement and verify historical experiment compatibility without rewriting saved artifacts | **Deferred** | Current-style legacy configurations retain `ingredients_ok` and receive `images_subdir` in memory. Complete validation is deferred until the historical experiments worth retaining are selected. |
 | P4 | Design and implement the improved `ingredients` to `ingredients_target` standardizer | **Done** | `src/data_processing/ingredient_standardization.py` uses explicit token-bounded rules, recipe support >= 500, and at least three retained targets. |
-| P4a | Audit the candidate ingredient vocabulary and present findings | **Done** | [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md) audits 209 targets, 60,550 recipes, 707,771 raw lines, relationships, collisions, and counterfactual review packages without changing data or code. |
+| P4a | Audit the candidate ingredient vocabulary and present findings | **Done** | [`../../project_objective/ingredient_vocabulary_audit.md`](../../project_objective/ingredient_vocabulary_audit.md) audits 209 targets, 60,550 recipes, 707,771 raw lines, relationships, collisions, and counterfactual review packages without changing data or code. |
 | P4b | Strengthen the ingredient extractor from accepted audit findings | **Done** | All approved token-bounded rules and collision boundaries are covered by tests; `ingredients_target_v4_metadata.json` is the reproducible 161-target candidate. |
-| P4c | Research and select a controlled ingredient vocabulary | **In progress** | Compare candidate vocabularies and their compatibility with the corpus, visual-recognition objective, and simple deterministic mapping pipeline. |
+| P4c | Research and select a controlled ingredient vocabulary | **In progress — discussion checkpoint** | [`controlled_vocabulary_evaluation.md`](controlled_vocabulary_evaluation.md) recommends pinned FoodOn as a reference lexicon, retained local concepts, no automatic hierarchy traversal in the standard pipeline, and recognizability overrides before conflicting matches. `ingredients_target` is the single shared vocabulary; filtering policy remains pending a reproducible train-only threshold sweep. |
 | P4d | Implement the controlled-vocabulary target-generation pipeline | **Pending** | Begin only after Work package 2.2c documents the vocabulary decision and the user approves the implementation contract. |
 | P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Done** | `v4` passed image, SHA-256 leakage, ratio, distribution, vocabulary, and deterministic-rebuild assertions as 48,282/6,036/6,036 records; it is a validated baseline, not a selected runtime generation. |
 | P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **Deferred** | Resume after Work packages 2.2c and 2.2d produce and validate the replacement target generation. |
@@ -112,7 +112,7 @@ Additional source fields may be preserved. Split and image-root paths are not re
 
 ### Current loader coupling
 
-[`../../src/data_processing/images_recipes.py`](../../src/data_processing/images_recipes.py) currently uses the same stage directory both to open `metadata_filename` and to resolve `record["image"]`. `ImagesRecipesBaseDataModule` builds `data_dir/<split>` and `images_recipes_processing()` passes it to both operations. The path contract must therefore be separated before moving any image.
+[`../../../src/data_processing/images_recipes.py`](../../../src/data_processing/images_recipes.py) currently uses the same stage directory both to open `metadata_filename` and to resolve `record["image"]`. `ImagesRecipesBaseDataModule` builds `data_dir/<split>` and `images_recipes_processing()` passes it to both operations. The path contract must therefore be separated before moving any image.
 
 The experiment configuration currently persists `data_dir`, `metadata_filename`, and `feature_label`, but it has no common-image-directory setting. A relative `images_subdir`, defaulting to `imgs/standard`, is preferred over another absolute path because `data_dir` already has Windows/WSL remapping logic.
 
@@ -128,8 +128,8 @@ This confirms that keeping multiple same-named generations across the three spli
 
 Two candidate preprocessing implementations exist:
 
-- [`../../prev_attempts/attempt1/preprocessing_v2.py`](../../prev_attempts/attempt1/preprocessing_v2.py) produces flat string targets in `ingredients_ok`, applies frequency filtering, performs a Levenshtein-based merge, removes recipes below three targets, shuffles with seed 42, and writes `recipes_train.json`, `recipes_val.json`, and `recipes_test.json`;
-- [`../../prev_attempts/attempt2/pre_process.py`](../../prev_attempts/attempt2/pre_process.py), with [`../../prev_attempts/attempt2/utils.py`](../../prev_attempts/attempt2/utils.py), classifies ingredients into `[category, subcategory]` pairs and writes nested list targets.
+- [`../../../prev_attempts/attempt1/preprocessing_v2.py`](../../../prev_attempts/attempt1/preprocessing_v2.py) produces flat string targets in `ingredients_ok`, applies frequency filtering, performs a Levenshtein-based merge, removes recipes below three targets, shuffles with seed 42, and writes `recipes_train.json`, `recipes_val.json`, and `recipes_test.json`;
+- [`../../../prev_attempts/attempt2/pre_process.py`](../../../prev_attempts/attempt2/pre_process.py), with [`../../../prev_attempts/attempt2/utils.py`](../../../prev_attempts/attempt2/utils.py), classifies ingredients into `[category, subcategory]` pairs and writes nested list targets.
 
 The current `ingredients_ok` values are flat strings, not category/subcategory pairs. The split sizes produced by attempt 1 match the checked-in historical recipe files, and the existing audit found close—but not exact—target agreement when executing its normalizer. Attempt 1 is therefore the most probable lineage. Attempt 2 was not the generator of the current target representation.
 
@@ -283,7 +283,7 @@ Review the candidate vocabulary produced by Work package 2.2 before it is treate
 
 ### Completion gate
 
-The vocabulary size and support profile are understood; the main findings and candidate refinements are recorded in [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md) for discussion; and no extractor, metadata, or split was changed by this work package. This gate is satisfied.
+The vocabulary size and support profile are understood; the main findings and candidate refinements are recorded in [`../../project_objective/ingredient_vocabulary_audit.md`](../../project_objective/ingredient_vocabulary_audit.md) for discussion; and no extractor, metadata, or split was changed by this work package. This gate is satisfied.
 
 ## Work package 2.2b — ingredient extractor strengthening
 
@@ -297,7 +297,7 @@ Turn only the explicitly accepted findings from Work package 2.2a into tested, d
 
 Target granularity is determined primarily by whether the distinction remains realistically recognizable in a prepared-dish image. The rule applies within ingredient families: merge fine preparation, product-style, or naming variants that are not visually separable, but retain variants with a robust visual distinction and retain different source-ingredient families.
 
-The durable, explicit source-to-target contract is maintained in [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md). The summary below defines this work package's approved scope but must not become a separate mapping authority.
+The durable, explicit source-to-target contract is maintained in [`../../implementation_details/ingredient_mapping_rules.md`](../../implementation_details/ingredient_mapping_rules.md). The summary below defines this work package's approved scope but must not become a separate mapping authority.
 
 The following scope is approved:
 
@@ -323,7 +323,7 @@ The family boundary prevents an uncontrolled collapse: for example, sesame oil a
 
 ### Required implementation
 
-1. Keep the final approved target changes and boundaries synchronized with [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md). **Done.**
+1. Keep the final approved target changes and boundaries synchronized with [`../../implementation_details/ingredient_mapping_rules.md`](../../implementation_details/ingredient_mapping_rules.md). **Done.**
 2. Implement only the agreed token- or phrase-bounded rules. **Done.**
 3. Add a regression test for every accepted rule and its relevant collision boundary. **Done.**
 4. Compare vocabulary size, target support, record retention, and affected recipes with the `v1` candidate. **Done:** `v4` retains 60,354 records (196 fewer than `v1`) and 161 targets (48 fewer), with 40,525 changed shared records; the six new canonical labels are `almond`, `banana`, `chili`, `pecan`, `walnut`, and `yogurt`.
@@ -335,7 +335,7 @@ Every extractor change is traceable to an explicit decision made after the 2.2a 
 
 ## Work package 2.2c — controlled vocabulary research
 
-**Status:** In progress (parallel research)
+**Status:** In progress — research complete, implementation decision pending
 
 ### Purpose
 
@@ -343,9 +343,11 @@ Determine whether a controlled external vocabulary can provide the canonical ing
 
 This work package extends the completed 2.2a audit and 2.2b implementation. The existing `v4` generation remains reproducible comparison evidence, but must not become the runtime default while this research is in progress.
 
-### Revised single-pipeline approach
+### Pre-research pipeline hypothesis
 
-For each original ingredient line, the next implementation must follow this order:
+Work package 2.2c was initially scoped against the following provisional order. It is retained here as planning history, not as the approved 2.2d contract; subsequent decisions changed recognizability precedence and rejected separate semantic-versus-learnable vocabularies in favour of one shared `ingredients_target` vocabulary.
+
+The provisional order was:
 
 1. Preserve the original line and attempt a deterministic association directly to a concept in the selected vocabulary.
 2. When no association is found, apply the small, explicit standardization round needed for that vocabulary, using only tested phrase- or token-bounded rules.
@@ -353,7 +355,7 @@ For each original ingredient line, the next implementation must follow this orde
 4. If it still has no vocabulary concept, retain the standardized result as its own canonical concept rather than silently deleting it or assigning `<UNK>`.
 5. Deduplicate and deterministically order the recipe concepts; only then apply the current support threshold and minimum-target retention rule.
 
-The support threshold remains 500 distinct recipes and the minimum retained target count remains three for the first revised comparison. They are now applied to final concepts, not to raw normalized strings. Their value is provisional and will be reconsidered after the vocabulary analysis; they may be relaxed or removed if the evidence shows that they still cause unacceptable information loss.
+The provisional comparison retained support 500 and a minimum of three targets, applied to final concepts rather than raw normalized strings. The completed analysis demonstrates unacceptable information loss at those values. A replacement threshold and minimum-target rule now require an explicit train-only sweep before the single shared `ingredients_target` vocabulary is generated.
 
 The mapping is implemented as part of the deterministic standardizer. It does not require a `vocabulary.json`, a raw-line mapping file, or an online lookup at data-loading or inference time.
 
@@ -373,9 +375,21 @@ The mapping is implemented as part of the deterministic standardizer. It does no
 5. Compare candidate concept levels for semantic correctness, recognizability in prepared-dish images, support after association, and the effect on recipe retention.
 6. Present the recommendation, quantified trade-offs, unresolved ambiguities, and a proposed minimal implementation contract before modifying the production standardizer or generating another metadata version.
 
+All six investigation items are complete. The reusable resource catalog is in [`../../research/topics/ingredient_vocabularies/vocabulary_catalog.md`](../../research/topics/ingredient_vocabularies/vocabulary_catalog.md); the corpus experiment, threshold analysis, edge cases, and proposed contract are in [`controlled_vocabulary_evaluation.md`](controlled_vocabulary_evaluation.md).
+
+### Research outcome
+
+- FoodOn v2025-07-31 is the preferred external reference, but it is not a complete or automatically usable target space. On the legacy train split, 30.11% of ingredient-line occurrences associate directly and 21.05% after the bounded fallback; 4.66% remain ambiguous and 44.17% remain transparent local concepts.
+- The exact FoodOn hierarchy must not choose visual granularity automatically. Existing project recognizability overrides must run before a conflicting fine-grained match, because FoodOn legitimately distinguishes targets such as tomato paste/sauce and Greek/generic yogurt that this task has chosen to merge.
+- Explicit reviewed mappings to FoodOn parents are retained only as a deferred, separately versioned experiment for reducing problem difficulty; they are not active in the standard pipeline and must be compared against the unchanged `ingredients_target` baseline.
+- Correct vocabulary association does not solve the observed deletion: `english muffin` and `fish fillet` have train support 35 and 50, so the threshold of 500 still removes them.
+- The existing sensitivity analysis shows why support 500 is too destructive, but no replacement threshold is approved. A reproducible train-only sweep must expose vocabulary size, assignment retention, recipe retention, and concrete gained/lost ingredients at each candidate threshold before filtering policy is selected.
+- The selected threshold will define one shared `ingredients_target` vocabulary used across all splits and model implementations. Optional subsets may exist later only as explicitly named experimental projections, not as a second default vocabulary.
+- No production standardizer, metadata generation, split, runtime default, or legacy artifact was changed by the research.
+
 ### Completion gate
 
-The research records an evidence-backed vocabulary decision (or an evidence-backed decision not to adopt one), defines the deterministic association and fallback contract, and demonstrates its expected effect on coverage and retention. The user approves the resulting implementation scope before Work package 2.2d begins.
+The research records an evidence-backed vocabulary decision, defines the deterministic association and fallback contract, and demonstrates its expected effect on coverage and retention. The evidence and proposed contract are complete; user approval remains the final unsatisfied condition before Work package 2.2d begins.
 
 ## Work package 2.2d — controlled-vocabulary target-generation implementation
 
@@ -385,15 +399,18 @@ The research records an evidence-backed vocabulary decision (or an evidence-back
 
 Implement only the vocabulary, concept level, and deterministic contract approved after Work package 2.2c. This is a new implementation phase; it does not rewrite the completed 2.2b rules, metadata, or tests.
 
-### Required implementation
+### Post-decision implementation draft
+
+This draft becomes binding only after the Work package 2.2c decision gate. Its current wording reflects the research recommendation and must be revised if that recommendation is not accepted.
 
 1. Add the selected vocabulary in an offline, deterministic form suitable for the generator.
 2. Associate each raw ingredient line directly to a selected concept before applying fallback normalization.
 3. Apply only the approved small, phrase- or token-bounded fallback standardization to unmatched lines, then attempt association again.
 4. Retain an unmatched standardized term as its own canonical concept; never silently discard it or use `<UNK>` as a multi-label target.
-5. Apply deduplication, deterministic ordering, support, and recipe-retention rules only after final concepts have been obtained.
-6. Extend the durable mapping registry and regression suite with the approved vocabulary associations, fallback rules, and boundary cases.
-7. Produce a new metadata generation without modifying `v1`–`v4`, compare it with `v4`, and run the complete Work package 2.3 validation suite.
+5. Add or extend a reproducible threshold-analysis script that, for each candidate train-support threshold, reports retained canonical ingredients, retained assignments, recipes by retained-target count, and concrete gained/lost ingredients.
+6. Implement the support and minimum-target policy only after those results are reviewed and the policy is explicitly selected. Threshold selection uses the training partition only; the resulting `ingredients_target` vocabulary is then shared by train, validation, test, and all standard model implementations.
+7. Extend the durable mapping registry and regression suite with the approved vocabulary associations, fallback rules, and boundary cases.
+8. Produce a new metadata generation without modifying `v1`–`v4`, compare it with `v4`, and run the complete Work package 2.3 validation suite.
 
 ### Completion gate
 
@@ -456,7 +473,7 @@ New experiments default to `ingredients_target` and omit `<UNK>` from their mult
   -> 2.2 baseline ingredients_target standardizer
   -> 2.2a ingredient vocabulary audit and discussion
   -> 2.2b accepted extractor strengthening
-  -> 2.2c controlled vocabulary research (parallel)
+  -> 2.2c controlled vocabulary research and decision gate
   -> 2.2d controlled-vocabulary target-generation implementation and approval
   -> replacement exact-duplicate-aware stratified metadata generation
   -> 2.4 runtime default and <UNK> decision
@@ -513,5 +530,9 @@ The plan is complete when:
 | 2026-08-04 | Approved the remaining spice, onion, sugar, coriander, and fresh-pepper rules | Ground/powder spices merge into their base while seeds/leaves/sticks remain separate; red/green onion distinctions are retained as specified; sugars collapse; coriander/cilantro is retained as one target; bare red/green pepper maps by colour to bell pepper |
 | 2026-08-04 | Finalized the chili-family rule and closed the 2.2b decision gate | Generic chili powder and crushed/flaked dried red pepper all collapse into `chili`; fresh red and green bell peppers remain separate |
 | 2026-08-04 | Implemented and selected the post-audit target generation | `ingredient_standardization.py` and its regression tests implement the approved mappings; `v4` is a deterministic 161-target, 60,354-record candidate. `v2` and `v3` remain non-selected diagnostic generations after their comparison output exposed out-of-scope intermediate mappings. |
-| 2026-08-04 | Created a durable ingredient mapping registry | [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md) is the long-term source of truth for active and approved mappings, expansions, exclusions, and collision boundaries; the feature plan retains only scope and execution status |
+| 2026-08-04 | Created a durable ingredient mapping registry | [`../../implementation_details/ingredient_mapping_rules.md`](../../implementation_details/ingredient_mapping_rules.md) is the long-term source of truth for active and approved mappings, expansions, exclusions, and collision boundaries; the feature plan retains only scope and execution status |
 | 2026-08-04 | Added Work packages 2.2c–2.2d for controlled-vocabulary target generation | The completed 2.2a audit and 2.2b implementation remain historical evidence. Work package 2.2c evaluates the vocabulary and association contract; 2.2d implements it only after approval. |
+| 2026-08-04 | Completed the 2.2c controlled-vocabulary research checkpoint | FoodOn was recommended as a pinned reference lexicon with retained local concepts and no automatic parent traversal. The original recommendation separated label selection from semantic metadata; the later decision recorded below supersedes that part with one shared `ingredients_target` vocabulary. |
+| 2026-08-04 | Deferred the final filtering policy to a threshold-sweep review | Before choosing a support threshold or minimum-target rule, a reproducible train-only script must compare vocabulary size, assignment and recipe retention, and concrete ingredients gained or lost across candidate thresholds. |
+| 2026-08-04 | Kept one shared `ingredients_target` vocabulary | The standard pipeline will not split semantic and learnable vocabularies. Optional subsets must be explicitly named experiments, while all standard models use the same target vocabulary. |
+| 2026-08-04 | Retained explicit parent abstraction as a deferred experiment | Automatic FoodOn parent traversal remains prohibited in the standard pipeline, but reviewed and versioned child-to-parent mappings may later be tested to reduce label-space difficulty without replacing the baseline. |

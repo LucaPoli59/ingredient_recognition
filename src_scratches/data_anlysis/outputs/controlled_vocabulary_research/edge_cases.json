@@ -1,0 +1,482 @@
+[
+  {
+    "raw_line": "2 English muffins, split",
+    "direct_surface": "english muffins",
+    "FoodOn food-product branch": {
+      "status": "fallback",
+      "matched": [
+        "english muffin"
+      ],
+      "standalone": []
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "english muffins"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "english muffins"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "english muffins"
+      ]
+    }
+  },
+  {
+    "raw_line": "4 white fish fillets",
+    "direct_surface": "white fish fillets",
+    "FoodOn food-product branch": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "white fish fillets"
+      ]
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "white fish fillets"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "white fish fillets"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "white fish fillets"
+      ]
+    }
+  },
+  {
+    "raw_line": "chicken stock",
+    "direct_surface": "chicken stock",
+    "FoodOn food-product branch": {
+      "status": "fallback",
+      "matched": [
+        "chicken broth"
+      ],
+      "standalone": []
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "chicken broth"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "chicken broth"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "chicken broth"
+      ]
+    }
+  },
+  {
+    "raw_line": "low-sodium chicken broth",
+    "direct_surface": "low sodium chicken broth",
+    "FoodOn food-product branch": {
+      "status": "fallback",
+      "matched": [
+        "chicken broth"
+      ],
+      "standalone": []
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "chicken broth"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "chicken broth"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "chicken broth"
+      ]
+    }
+  },
+  {
+    "raw_line": "dark soy sauce",
+    "direct_surface": "dark soy sauce",
+    "FoodOn food-product branch": {
+      "status": "fallback",
+      "matched": [
+        "soy sauce"
+      ],
+      "standalone": []
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "soy sauce"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "soy sauce"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "soy sauce"
+      ]
+    }
+  },
+  {
+    "raw_line": "tomato paste",
+    "direct_surface": "tomato paste",
+    "FoodOn food-product branch": {
+      "status": "direct",
+      "matched": [
+        "tomato paste"
+      ],
+      "standalone": []
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "tomato sauce"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "tomato sauce"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "tomato sauce"
+      ]
+    }
+  },
+  {
+    "raw_line": "tomato sauce",
+    "direct_surface": "tomato sauce",
+    "FoodOn food-product branch": {
+      "status": "direct",
+      "matched": [
+        "tomato sauce"
+      ],
+      "standalone": []
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "tomato sauce"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "tomato sauce"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "tomato sauce"
+      ]
+    }
+  },
+  {
+    "raw_line": "fresh tomatoes",
+    "direct_surface": "fresh tomatoes",
+    "FoodOn food-product branch": {
+      "status": "fallback",
+      "matched": [
+        "tomato"
+      ],
+      "standalone": []
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "tomato"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "fallback",
+      "matched": [
+        "TOMATO"
+      ],
+      "standalone": []
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "tomato"
+      ]
+    }
+  },
+  {
+    "raw_line": "red pepper flakes",
+    "direct_surface": "red pepper flakes",
+    "FoodOn food-product branch": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "chili"
+      ]
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "chili"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "chili"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "chili"
+      ]
+    }
+  },
+  {
+    "raw_line": "green bell peppers",
+    "direct_surface": "green bell peppers",
+    "FoodOn food-product branch": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "green bell peppers"
+      ]
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "green bell peppers"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "fallback",
+      "matched": [
+        "GREEN BELL PEPPER"
+      ],
+      "standalone": []
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "green bell peppers"
+      ]
+    }
+  },
+  {
+    "raw_line": "Greek yogurt",
+    "direct_surface": "greek yogurt",
+    "FoodOn food-product branch": {
+      "status": "direct",
+      "matched": [
+        "greek yogurt"
+      ],
+      "standalone": []
+    },
+    "LanguaL product-type facet": {
+      "status": "fallback",
+      "matched": [
+        "26930 - YOGHURT (EFSA FOODEX2)"
+      ],
+      "standalone": []
+    },
+    "LanguaL all active facets": {
+      "status": "fallback",
+      "matched": [
+        "26930 - YOGHURT (EFSA FOODEX2)"
+      ],
+      "standalone": []
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "yogurt"
+      ]
+    }
+  },
+  {
+    "raw_line": "toasted sesame oil",
+    "direct_surface": "toasted sesame oil",
+    "FoodOn food-product branch": {
+      "status": "fallback",
+      "matched": [
+        "sesame oil"
+      ],
+      "standalone": []
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "sesame oil"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "sesame oil"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "sesame oil"
+      ]
+    }
+  },
+  {
+    "raw_line": "gochujang",
+    "direct_surface": "gochujang",
+    "FoodOn food-product branch": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "gochujang"
+      ]
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "gochujang"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "gochujang"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "gochujang"
+      ]
+    }
+  },
+  {
+    "raw_line": "mirin",
+    "direct_surface": "mirin",
+    "FoodOn food-product branch": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "mirin"
+      ]
+    },
+    "LanguaL product-type facet": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "mirin"
+      ]
+    },
+    "LanguaL all active facets": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "mirin"
+      ]
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "mirin"
+      ]
+    }
+  },
+  {
+    "raw_line": "garam masala",
+    "direct_surface": "garam masala",
+    "FoodOn food-product branch": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "garam masala"
+      ]
+    },
+    "LanguaL product-type facet": {
+      "status": "direct",
+      "matched": [
+        "40640 - INDIAN SPICE MIXES AND SIMILAR (OTHER THAN CURRY POWDER) (EFSA FOODEX2)"
+      ],
+      "standalone": []
+    },
+    "LanguaL all active facets": {
+      "status": "direct",
+      "matched": [
+        "40640 - INDIAN SPICE MIXES AND SIMILAR (OTHER THAN CURRY POWDER) (EFSA FOODEX2)"
+      ],
+      "standalone": []
+    },
+    "FoodData Central Foundation Foods": {
+      "status": "unmatched",
+      "matched": [],
+      "standalone": [
+        "garam masala"
+      ]
+    }
+  }
+]

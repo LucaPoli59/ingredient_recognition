@@ -1,13 +1,13 @@
 # Implementation plans
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-03
+**Last updated:** 2026-08-04
 
 This directory contains the execution plans for concrete project implementations. These plans translate work packages from the project-wide [`general_plan.md`](../general_plan.md) into bounded technical tasks, verification steps, dependencies, and completion criteria.
 
 ## Active plans
 
-- [`yummly_data_phase.md`](yummly_data_phase.md) covers Data Work packages 2.1b–2.4: the shared image store, immutable legacy-experiment compatibility, improved `ingredients_target` standardization, deterministic exact-duplicate-safe splitting, and runtime integration.
+- [`data_ingredient_refactor/`](data_ingredient_refactor/README.md) contains the active Yummly Data plan and its controlled-vocabulary evaluation for Work packages 2.1b–2.4.
 
 ## Scope
 
@@ -30,10 +30,11 @@ If an implementation requires several durable supporting documents, create a dir
 ```text
 docs/plans/<implementation_name>/
 ├── README.md
+├── <operational_plan>.md
 └── <supporting_file>.md
 ```
 
-The local `README.md` then acts as the implementation plan and indexes its supporting files.
+The local `README.md` is the directory entry point. It either contains the implementation plan directly or identifies exactly one operational plan as the source of truth, and it indexes every durable supporting file.
 
 ## Required plan content
 

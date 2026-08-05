@@ -4,7 +4,7 @@
 **Last updated:** 2026-08-04
 **Overall status:** In progress  
 **Current macro-phase:** Data
-**Current focus:** Complete the Data target-generation design before regenerating targets or integrating a new runtime default.
+**Current focus:** Review and approve the Data 2.2c controlled-vocabulary contract before implementing a replacement target generation.
 
 ## Purpose
 
@@ -32,7 +32,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | Complete the active Data target-generation work, then regenerate targets and resume runtime integration. |
+| 2 | Data | **In progress** | Approve or revise the 2.2c FoodOn-plus-local-concepts contract and the separation of semantic canonicalization from train-only label selection. |
 | 3 | Ingredient selection | **In progress** | Formalize relevance and visual-distinguishability criteria. |
 | 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
@@ -105,7 +105,7 @@ The Data macro-section covers source understanding, shared image storage, histor
 #### Evidence
 
 - [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md)
-- [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md)
+- [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md)
 - [`../src_scratches/data_anlysis/README.md`](../src_scratches/data_anlysis/README.md)
 
 #### Completion gate
@@ -133,7 +133,7 @@ Move image storage out of the split directories. Train, validation, and test ret
 
 #### Evidence
 
-- [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md)
+- [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md)
 
 #### Completion gate
 
@@ -251,6 +251,34 @@ Every extractor change is traceable to an explicit post-audit decision, passes r
 #### Next action
 
 Follow the active Data implementation plan for subsequent target-generation work.
+
+### 2.2c Controlled-vocabulary research
+
+**Status:** In progress — discussion checkpoint
+
+#### Completed research
+
+- [x] Compared FoodOn, LanguaL, FoodEx2, and FoodData Central as general food or ingredient vocabulary candidates.
+- [x] Ran a reproducible train-only lexical-coverage and support-sensitivity experiment while retaining a full-corpus diagnostic.
+- [x] Verified the motivating `english muffin` and `fish fillet` cases and quantified their train support.
+- [x] Evaluated direct, fallback, ambiguous, and local-concept outcomes without changing metadata or production code.
+- [x] Proposed a minimal deterministic association contract and recorded its trade-offs.
+
+#### Evidence and recommendation
+
+- [`research/topics/ingredient_vocabularies/vocabulary_catalog.md`](research/topics/ingredient_vocabularies/vocabulary_catalog.md)
+- [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md)
+- [`../src_scratches/data_anlysis/controlled_vocabulary_research.py`](../src_scratches/data_anlysis/controlled_vocabulary_research.py)
+
+The recommendation is to use pinned FoodOn v2025-07-31 as an external reference lexicon while retaining ambiguous or uncovered terms as local concepts. Project recognizability overrides take precedence over conflicting fine-grained ontology matches, and automatic hierarchy ascent remains prohibited in the standard pipeline. Explicit reviewed parent abstractions are retained only as deferred, separately versioned difficulty-reduction experiments. Support 500 is demonstrably too destructive, but its replacement remains undecided: a reproducible train-only threshold sweep must first compare retained ingredient count, assignment coverage, recipe retention, and concrete gained/lost ingredients. The selected policy will produce one shared `ingredients_target` vocabulary for all standard models rather than separate semantic and learnable vocabularies.
+
+#### Completion gate
+
+The research evidence and proposed implementation contract are complete. The remaining gate is explicit approval or revision of the contract before Work package 2.2d starts.
+
+#### Next action
+
+Discuss the remaining 2.2c decisions and agree on the threshold-sweep outputs, then update the active Data implementation plan with the accepted 2.2d scope.
 
 ### 2.3 Deterministic metadata generation and split
 
@@ -588,18 +616,21 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-02 | Model research | A broad primary-source discovery synthesized models, data processing, augmentation, leakage control, evaluation, and a compute-aware experimental program. | Work package 4.3 **Done**; Model research **In progress** | [`research/discovery/2026-08-02/README.md`](research/discovery/2026-08-02/README.md) |
 | 2026-08-03 | Planning | Feature plans became the operational trackers during implementation; general-plan synchronization was moved to feature completion except for material project-level changes. Necessary-only code comments were established as a common implementation directive. | Implementation planning policy **Done** | [`plans/README.md`](plans/README.md) |
 | 2026-08-03 | Planning | Feature-plan tracking was changed from continuous updates to step-completion checkpoints. | Implementation tracking policy **Done** | [`plans/README.md`](plans/README.md) |
-| 2026-08-02 | Data planning | The shared image store was introduced as prerequisite 2.1b, and a codebase-grounded implementation plan was created for Data Work packages 2.1b–2.7. | Work package 2.1b **In progress** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
-| 2026-08-02 | Data planning | The initial manifest-heavy benchmark design was superseded by a smaller pipeline: immutable legacy artifacts, in-memory experiment compatibility, deterministic `ingredients_target` generation, exact-SHA grouping only, and split metadata as the source of truth. | Work packages 2.1b–2.4 **In progress/Pending** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
-| 2026-08-03 | Data implementation | A verified common image store and first deterministic target metadata generation were created. The legacy store and artifacts were not changed. | Work packages 2.1b, 2.2, and 2.3 **Done**; 2.1c and 2.4 **In progress/Pending** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
-| 2026-08-03 | Data planning | Split vocabulary work into an analysis-and-discussion gate (2.2a) and a later approved extractor change (2.2b); the initial 209-label generation remains a validated candidate. | Work packages 2.2a–2.2b **Pending**; 2.3 **Deferred** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
-| 2026-08-04 | Data planning | Deferred legacy-experiment compatibility until the retained historical experiments are selected; accepted removal of `<UNK>` from new multi-label outputs while preserving selected legacy artifacts. | Work package 2.1c **Deferred**; 2.4 **In progress** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
+| 2026-08-02 | Data planning | The shared image store was introduced as prerequisite 2.1b, and a codebase-grounded implementation plan was created for Data Work packages 2.1b–2.7. | Work package 2.1b **In progress** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
+| 2026-08-02 | Data planning | The initial manifest-heavy benchmark design was superseded by a smaller pipeline: immutable legacy artifacts, in-memory experiment compatibility, deterministic `ingredients_target` generation, exact-SHA grouping only, and split metadata as the source of truth. | Work packages 2.1b–2.4 **In progress/Pending** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
+| 2026-08-03 | Data implementation | A verified common image store and first deterministic target metadata generation were created. The legacy store and artifacts were not changed. | Work packages 2.1b, 2.2, and 2.3 **Done**; 2.1c and 2.4 **In progress/Pending** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
+| 2026-08-03 | Data planning | Split vocabulary work into an analysis-and-discussion gate (2.2a) and a later approved extractor change (2.2b); the initial 209-label generation remains a validated candidate. | Work packages 2.2a–2.2b **Pending**; 2.3 **Deferred** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
+| 2026-08-04 | Data planning | Deferred legacy-experiment compatibility until the retained historical experiments are selected; accepted removal of `<UNK>` from new multi-label outputs while preserving selected legacy artifacts. | Work package 2.1c **Deferred**; 2.4 **In progress** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
 | 2026-08-04 | Data analysis | Completed the 2.2a audit of the 209-target candidate: support and split coverage are stable, while mechanical fragmentation, mixed targets, and unresolved granularity choices require an explicit decision before extractor changes. | Work package 2.2a **Done**; 2.2b **Pending — awaiting decision** | [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md) |
-| 2026-08-04 | Data decision | Adopted practical prepared-image recognizability as the primary 2.2b granularity criterion and approved merges for broth/stock, soy-sauce styles, yogurt variants, toasted sesame oil, and tomato paste/sauce while retaining fresh tomato and red/green bell peppers. | Work package 2.2b **Pending — final scope confirmation** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
-| 2026-08-04 | Data decision | Approved ground/powder spice merging, the onion and sugar taxonomies, one retained coriander/cilantro target, and colour-specific mapping of bare red/green pepper. | Work package 2.2b **Pending — one clarification** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
-| 2026-08-04 | Data decision | Collapsed `chili powder` and generic powdered, ground, crushed, dried-crushed, and flaked red-pepper seasonings into `chili`; fresh red and green bell peppers remain separate. This closes the post-audit decision gate. | Work package 2.2b **Pending — scope approved** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md) |
+| 2026-08-04 | Data decision | Adopted practical prepared-image recognizability as the primary 2.2b granularity criterion and approved merges for broth/stock, soy-sauce styles, yogurt variants, toasted sesame oil, and tomato paste/sauce while retaining fresh tomato and red/green bell peppers. | Work package 2.2b **Pending — final scope confirmation** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
+| 2026-08-04 | Data decision | Approved ground/powder spice merging, the onion and sugar taxonomies, one retained coriander/cilantro target, and colour-specific mapping of bare red/green pepper. | Work package 2.2b **Pending — one clarification** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
+| 2026-08-04 | Data decision | Collapsed `chili powder` and generic powdered, ground, crushed, dried-crushed, and flaked red-pepper seasonings into `chili`; fresh red and green bell peppers remain separate. This closes the post-audit decision gate. | Work package 2.2b **Pending — scope approved** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md) |
 | 2026-08-04 | Data documentation | Created the long-term source of truth for custom target mappings, multi-target expansions, exclusions, retained distinctions, and collision boundaries. | Work package 2.2b **Pending — mapping contract recorded** | [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
-| 2026-08-04 | Data implementation | Implemented the approved 2.2b rules and generated the selected 161-target `ingredients_target_v4_metadata.json` candidate. It retains 60,354 records, passes image, split, leakage, distribution, vocabulary, and deterministic-rebuild checks, and leaves legacy artifacts unchanged. | Work packages 2.2b and 2.3 **Done**; 2.4 **In progress** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md), [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
-| 2026-08-04 | Data design | Reopened the target-generation design after observing information loss in the current candidate; the active Data implementation plan now governs the research and follow-on implementation before runtime integration resumes. | Data **In progress**; runtime integration **Deferred** | [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) |
+| 2026-08-04 | Data implementation | Implemented the approved 2.2b rules and generated the selected 161-target `ingredients_target_v4_metadata.json` candidate. It retains 60,354 records, passes image, split, leakage, distribution, vocabulary, and deterministic-rebuild checks, and leaves legacy artifacts unchanged. | Work packages 2.2b and 2.3 **Done**; 2.4 **In progress** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
+| 2026-08-04 | Data design | Reopened the target-generation design after observing information loss in the current candidate; the active Data implementation plan now governs the research and follow-on implementation before runtime integration resumes. | Data **In progress**; runtime integration **Deferred** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
+| 2026-08-04 | Data research | Completed the controlled-vocabulary research checkpoint. FoodOn is recommended as a pinned semantic reference with retained local concepts; the experiment shows that support 500 retains only 65.32% of train recipe-concept assignments and still removes correctly associated `english muffin` and `fish fillet`. | Work package 2.2c **In progress — awaiting decision** | [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) |
+| 2026-08-04 | Data decision | Deferred the final support and minimum-target filtering policy until a reproducible train-only threshold sweep compares vocabulary size, assignment coverage, recipe retention, and concrete ingredients gained or lost. | Work package 2.2c **In progress — threshold policy pending** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
+| 2026-08-04 | Data decision | Kept `ingredients_target` as the single shared standard vocabulary across splits and models; optional subsets may exist only as named experiments. Automatic FoodOn parent traversal remains disabled, while explicit reviewed parent mappings are preserved as a deferred difficulty-reduction experiment. | Work package 2.2c **In progress — scope partially approved** | [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md), [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
 
 ## Tracker maintenance rules
 
@@ -618,7 +649,9 @@ This table is append-only. Add one row when a macro-section or significant work 
 - [`project_objective/problem_definition.md`](project_objective/problem_definition.md) defines the research question and success criteria.
 - [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md) contains the evidence behind the current data priorities.
 - [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md) contains the evidence and provisional classifications for Work package 2.2a.
+- [`research/topics/ingredient_vocabularies/README.md`](research/topics/ingredient_vocabularies/README.md) indexes the reusable, dataset-independent vocabulary catalog.
+- [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) records the Yummly-specific Work package 2.2c corpus evidence and implementation decision gate.
 - [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) contains the binding benchmark policies and readiness checklist.
-- [`plans/yummly_data_phase.md`](plans/yummly_data_phase.md) is the active implementation plan for Data Work packages 2.1b–2.4.
+- [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) is the active implementation plan for Data Work packages 2.1b–2.4.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.
 - [`implementation_details/models.md`](implementation_details/models.md) describes the model implementations currently available.

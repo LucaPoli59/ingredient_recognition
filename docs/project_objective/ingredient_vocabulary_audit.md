@@ -188,4 +188,4 @@ After final approval, Work package 2.2b must add a regression test for every acc
 - [`yummly_data_audit.md`](yummly_data_audit.md) documents the source data, legacy targets, leakage, and observability limitations.
 - [`benchmark_decisions.md`](benchmark_decisions.md) defines the binding benchmark policies.
 - [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md) is the durable mapping registry.
-- [`../plans/yummly_data_phase.md`](../plans/yummly_data_phase.md) defines Work packages 2.2a and 2.2b and their decision gate.
+- [`../plans/data_ingredient_refactor/yummly_data_phase.md`](../plans/data_ingredient_refactor/yummly_data_phase.md) defines Work packages 2.2a and 2.2b and their decision gate.

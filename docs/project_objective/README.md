@@ -35,4 +35,4 @@ Keep each file focused on a clearly identified aspect of the objective. Update t
 
 Read the data audit first, then the problem definition, benchmark decisions, and candidate vocabulary audit. Discovery and model research must use these documents as the current statement of project scope. Existing results on the 182-label `ingredients_ok` split remain valid historical experiments, while new comparative claims use a deterministic `ingredients_target` generation after the readiness checklist passes.
 
-Project progress and the ordered research plan are maintained in [`../general_plan.md`](../general_plan.md). Detailed execution plans for concrete implementations belong in [`../plans/`](../plans/README.md).
+Project progress and the ordered research plan are maintained in [`../general_plan.md`](../general_plan.md). Detailed execution plans for concrete implementations belong in [`../plans/`](../plans/README.md); the Yummly-specific controlled-vocabulary evaluation is kept with its active plan in [`../plans/data_ingredient_refactor/`](../plans/data_ingredient_refactor/README.md).

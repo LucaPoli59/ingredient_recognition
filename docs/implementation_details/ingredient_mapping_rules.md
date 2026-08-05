@@ -7,9 +7,9 @@
 
 This document is the durable registry of custom semantic mappings used to derive the Yummly `ingredients_target` field from the original `ingredients` lines. It records both the rules implemented by the first candidate standardizer and the post-audit rules implemented in `ingredients_target_v4_metadata.json`.
 
-`v4` is a tested, reproducible baseline rather than the selected next benchmark generation. Its frequency filter runs before controlled-concept association and can remove valid ingredients. [Work package 2.2c of the Data plan](../plans/yummly_data_phase.md#work-package-22c--controlled-vocabulary-research) is selecting the replacement vocabulary and Work package 2.2d will implement it. Until then, this registry remains authoritative only for the retained baseline rules; a vocabulary decision must update this document, the standardizer, and its tests together.
+`v4` is a tested, reproducible baseline rather than the selected next benchmark generation. Its frequency filter runs before controlled-concept association and can remove valid ingredients. [Work package 2.2c of the Data plan](../plans/data_ingredient_refactor/yummly_data_phase.md#work-package-22c--controlled-vocabulary-research) is selecting the replacement vocabulary and Work package 2.2d will implement it. Until then, this registry remains authoritative only for the retained baseline rules; a vocabulary decision must update this document, the standardizer, and its tests together.
 
-This registry remains part of the implementation documentation after the feature plan is completed. Future changes to ingredient mappings must update this document, the standardizer, and the corresponding regression tests in the same change. Execution status belongs in [`../plans/yummly_data_phase.md`](../plans/yummly_data_phase.md); audit evidence and decision rationale belong in [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md).
+This registry remains part of the implementation documentation after the feature plan is completed. Future changes to ingredient mappings must update this document, the standardizer, and the corresponding regression tests in the same change. Execution status belongs in [`../plans/data_ingredient_refactor/yummly_data_phase.md`](../plans/data_ingredient_refactor/yummly_data_phase.md); audit evidence and decision rationale belong in [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md).
 
 The lifecycle labels used below are:
 
@@ -191,6 +191,20 @@ The recognizability policy is not permission for unrestricted taxonomy collapse.
 - garlic and onion powders, which are outside the approved six-family spice collapse;
 - visually meaningful subtypes such as baby spinach, romaine lettuce, and French bread until the later ingredient-selection phase makes a different explicit decision.
 
+## Deferred ontology-abstraction experiments
+
+Automatic traversal from a FoodOn concept to one of its parents is not part of the standard `ingredients_target` pipeline. Ontology depth is not a reliable proxy for prepared-image recognizability, and multiple inheritance can make an automatic parent choice inconsistent.
+
+Parent-based abstraction is nevertheless retained as a possible future way to reduce experimental label-space difficulty. Such an experiment must:
+
+- define every child-to-parent mapping explicitly rather than selecting parents by depth;
+- record the recognizability or experimental rationale for each mapping;
+- use a separately named and versioned configuration or metadata generation;
+- preserve the standard `ingredients_target` vocabulary as the default comparison baseline;
+- report vocabulary-size, coverage, recipe-retention, and model-performance changes against that baseline.
+
+**Status:** Deferred. No parent-abstraction mapping is active in the standard pipeline.
+
 ## Maintenance and verification
 
 Every mapping change must include:
@@ -209,5 +223,5 @@ Work package 2.2b was implemented in `ingredients_target_v4_metadata.json` on 20
 - [`../../src/data_processing/ingredient_standardization.py`](../../src/data_processing/ingredient_standardization.py) contains the current `v1` implementation.
 - [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md) contains the quantitative evidence and decision history.
 - [`../project_objective/benchmark_decisions.md`](../project_objective/benchmark_decisions.md) defines the binding benchmark-level policies.
-- [`../plans/yummly_data_phase.md`](../plans/yummly_data_phase.md) tracks implementation progress.
+- [`../plans/data_ingredient_refactor/yummly_data_phase.md`](../plans/data_ingredient_refactor/yummly_data_phase.md) tracks implementation progress.
 - [`../../src_scratches/data_anlysis/ingredient_vocabulary_audit.py`](../../src_scratches/data_anlysis/ingredient_vocabulary_audit.py) reproduces the aggregate audit and counterfactual packages.

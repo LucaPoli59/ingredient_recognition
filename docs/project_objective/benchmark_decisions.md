@@ -6,7 +6,7 @@
 
 ## Purpose
 
-This document records the decisions that govern the Yummly data pipeline and the ingredient-recognition benchmark. The detailed evidence remains in [`yummly_data_audit.md`](yummly_data_audit.md), while implementation order and acceptance checks remain in [`../plans/yummly_data_phase.md`](../plans/yummly_data_phase.md).
+This document records the decisions that govern the Yummly data pipeline and the ingredient-recognition benchmark. The detailed evidence remains in [`yummly_data_audit.md`](yummly_data_audit.md), while implementation order and acceptance checks remain in [`../plans/data_ingredient_refactor/yummly_data_phase.md`](../plans/data_ingredient_refactor/yummly_data_phase.md).
 
 The existing 65,146-record metadata remains valid for historical experiments. It is a legacy artifact, not the target representation for new experiments. New generations use a simpler pipeline that avoids duplicated manifests and subjective review stages.
 
@@ -37,7 +37,7 @@ The DataModule continues to accept a configurable `feature_label`. This is requi
 
 ## D2: controlled-vocabulary target generation
 
-The new target-generation pipeline starts from the original ingredient lines, not from `ingredients_ok`. A controlled-vocabulary investigation is in progress in [Work package 2.2c of the Data plan](../plans/yummly_data_phase.md#work-package-22c--controlled-vocabulary-research); no candidate vocabulary is yet binding.
+The new target-generation pipeline starts from the original ingredient lines, not from `ingredients_ok`. A controlled-vocabulary investigation is in progress in [Work package 2.2c of the Data plan](../plans/data_ingredient_refactor/yummly_data_phase.md#work-package-22c--controlled-vocabulary-research); no candidate vocabulary is yet binding.
 
 The most probable historical lineage is [`../../prev_attempts/attempt1/preprocessing_v2.py`](../../prev_attempts/attempt1/preprocessing_v2.py): it produces flat string labels and its split sizes match the historical files. [`../../prev_attempts/attempt2/pre_process.py`](../../prev_attempts/attempt2/pre_process.py) produces nested category/subcategory pairs and was not the generator of the current representation.
 
@@ -161,6 +161,6 @@ Earlier planning proposed per-line ingredient mappings, manual image reviews, pe
 - [`ingredient_vocabulary_audit.md`](ingredient_vocabulary_audit.md)
 - [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md)
 - [`problem_definition.md`](problem_definition.md)
-- [`../plans/yummly_data_phase.md`](../plans/yummly_data_phase.md)
+- [`../plans/data_ingredient_refactor/yummly_data_phase.md`](../plans/data_ingredient_refactor/yummly_data_phase.md)
 - [`../general_plan.md`](../general_plan.md)
 - [`../../src_scratches/data_anlysis/README.md`](../../src_scratches/data_anlysis/README.md)
