@@ -1,11 +1,8 @@
 from typing import List, Dict, Any, Optional
 import json
-from uu import encode
-
 import numpy as np
 from typing_extensions import Self
 from abc import ABC, abstractmethod
-import torch
 
 from settings.config import DEF_UNKNOWN_TOKEN, DEF_PAD_TOKEN, DEF_NONE_TOKEN, DEF_MAKS_TOKEN
 
@@ -131,7 +128,9 @@ class MultiLabelBinarizer(LabelEncoderInterface):
         self._inverted_encode_map = None
 
     def get_index(self, label: str):
-        return self.encode_map.get(label, len(self.encode_map) - 1)
+        if label not in self.encode_map:
+            raise KeyError(f"Unknown label {label!r}; this encoder has no unknown-label class")
+        return self.encode_map[label]
 
     def _encode(self, labels: List[str]):
         encoded_labels = np.zeros(len(self.encode_map))
@@ -162,6 +161,9 @@ class MultiLabelBinarizerRobust(MultiLabelBinarizer):
         config = super().to_config()
         config['unknown_token'] = self.unknown_token
         return config
+
+    def get_index(self, label: str):
+        return self.encode_map.get(label, self.encode_map[self.unknown_token])
 
     def _fit(self):
         super()._fit()

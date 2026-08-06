@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-05
+**Last updated:** 2026-08-06
 **Overall status:** In progress  
 **Current macro-phase:** Data
-**Current focus:** Approve the remaining 2.2c controlled-vocabulary association contract, then implement the replacement target-generation pipeline.
+**Current focus:** Finish the runtime smoke validation for the implemented FoodOn-first `v5` target integration.
 
 ## Purpose
 
@@ -32,7 +32,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | Approve the remaining 2.2c FoodOn-plus-local-concepts association contract, then implement and validate the replacement target generation. |
+| 2 | Data | **In progress** | Runtime integration is implemented; validate training, checkpoint reload, and dashboard behavior in a compatible ML environment. |
 | 3 | Ingredient selection | **In progress** | Formalize relevance and visual-distinguishability criteria. |
 | 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
@@ -84,9 +84,9 @@ The Data macro-section covers source understanding, shared image storage, histor
 | 2.1 Yummly exploratory audit | **Done** | Re-run only when a new metadata generation needs comparison. |
 | 2.1b Shared image store and metadata decoupling | **Done** | Shared store was staged with SHA-256 verification; DataModule resolves images independently of split metadata. |
 | 2.1c Historical experiment compatibility | **Deferred** | Select the historical experiments to retain before building schema-specific compatibility and running smoke tests. |
-| 2.2 Improved `ingredients_target` standardization | **In progress** | Refine the target-generation approach in the active Data plan before a final replacement generation. |
-| 2.3 Deterministic metadata generation and split | **Done** | `v4` passed all automatic checks and a read-only deterministic rebuild equality check. |
-| 2.4 Runtime target integration and `<UNK>` removal | **Deferred** | Resume after the vocabulary decision and regenerated metadata pass their gates. |
+| 2.2 Improved `ingredients_target` standardization | **Done** | FoodOn-first `v5` generation is frozen; the exact-plus-fallback pipeline and post-association support policy are implemented. |
+| 2.3 Deterministic metadata generation and split | **Done** | `v4` remains the baseline; `v5` also passed all automatic image, split, leakage, distribution, vocabulary, and cardinality checks. |
+| 2.4 Runtime target integration and `<UNK>` removal | **In progress** | Code and data-contract tests pass; run the remaining training, checkpoint-reload, and dashboard smoke tests after restoring a compatible Torch/NumPy/Lightning environment. |
 
 ### 2.1 Yummly exploratory audit
 
@@ -101,12 +101,14 @@ The Data macro-section covers source understanding, shared image storage, histor
 - [x] Determined that attempt 1 is the probable lineage of the flat `ingredients_ok` targets and that attempt 2 is a different nested-category experiment.
 - [x] Inventoried historical configurations and checkpoints under `experiments/basic`.
 - [x] Consolidated permanent findings and removed temporary research notes.
+- [x] Added a lightweight, read-only audit for a selected metadata generation, split, and ingredient field; it reports complete value counts and per-recipe distributions.
 
 #### Evidence
 
 - [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md)
 - [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md)
 - [`../src_scratches/data_anlysis/README.md`](../src_scratches/data_anlysis/README.md)
+- [`../src_scratches/data_anlysis/metadata_field_audit.py`](../src_scratches/data_anlysis/metadata_field_audit.py)
 
 #### Completion gate
 
@@ -194,7 +196,8 @@ Identical inputs and rules produce identical targets and ordering; known collisi
 
 #### Next action
 
-Follow the active Data implementation plan and resume runtime integration only after its target-generation work is complete.
+Use the active Data implementation plan to maintain the frozen `v5` generation;
+runtime integration is tracked separately under Work package 2.4.
 
 ### 2.2a Ingredient vocabulary audit
 
@@ -254,14 +257,14 @@ Follow the active Data implementation plan for subsequent target-generation work
 
 ### 2.2c Controlled-vocabulary research
 
-**Status:** In progress — discussion checkpoint
+**Status:** Done
 
 #### Completed research
 
 - [x] Compared FoodOn, LanguaL, FoodEx2, and FoodData Central as general food or ingredient vocabulary candidates.
 - [x] Ran a reproducible train-only lexical-coverage and support-sensitivity experiment while retaining a full-corpus diagnostic.
 - [x] Verified the motivating `english muffin` and `fish fillet` cases and quantified their train support.
-- [x] Evaluated direct, fallback, ambiguous, and local-concept outcomes without changing metadata or production code.
+- [x] Evaluated direct, fallback, ambiguous, and local-concept outcomes before changing production metadata generation.
 - [x] Proposed a minimal deterministic association contract and recorded its trade-offs.
 
 #### Evidence and recommendation
@@ -269,16 +272,32 @@ Follow the active Data implementation plan for subsequent target-generation work
 - [`research/topics/ingredient_vocabularies/vocabulary_catalog.md`](research/topics/ingredient_vocabularies/vocabulary_catalog.md)
 - [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md)
 - [`../src_scratches/data_anlysis/controlled_vocabulary_research.py`](../src_scratches/data_anlysis/controlled_vocabulary_research.py)
+- [`../src_scratches/data_anlysis/fuzzy_foodon_research.py`](../src_scratches/data_anlysis/fuzzy_foodon_research.py)
 
-The recommendation is to use pinned FoodOn v2025-07-31 as an external reference lexicon while retaining ambiguous or uncovered terms as local concepts. Project recognizability overrides take precedence over conflicting fine-grained ontology matches, and automatic hierarchy ascent remains prohibited in the standard pipeline. Explicit reviewed parent abstractions are retained only as deferred, separately versioned difficulty-reduction experiments. The train-only sweep fixed the standard filter at support >= 500 and at least three retained targets per recipe; it must be numerically revalidated after association. The selected policy will produce one shared `ingredients_target` vocabulary for all standard models rather than separate semantic and learnable vocabularies.
+The recommendation is to use pinned FoodOn v2025-07-31 as an external reference lexicon while retaining ambiguous or uncovered terms as local concepts. FoodOn exact association runs on the mechanically cleaned source line before local fallback standardization; the older recognizability mappings no longer override a direct ontology concept. The completed bounded fuzzy evaluation found concrete semantic collisions for negligible coverage gain, so the pipeline retries only exact association after fallback and then retains a local concept. Automatic hierarchy ascent remains prohibited, while explicit reviewed parent abstractions remain deferred, separately versioned difficulty-reduction experiments. The train-only sweep fixed the standard filter at support >= 500 and at least three retained targets per recipe; it must be numerically revalidated after association. The selected policy will produce one shared `ingredients_target` vocabulary for all standard models rather than separate semantic and learnable vocabularies.
 
 #### Completion gate
 
-The research evidence and proposed implementation contract are complete. The remaining gate is explicit approval or revision of the contract before Work package 2.2d starts.
+The exact-association evidence and final association contract are complete:
+fuzzy recovery is rejected, and the exact-plus-fallback protocol is implemented
+and covered by the `v5` generation.
 
 #### Next action
 
-Discuss the remaining 2.2c decisions and agree on the threshold-sweep outputs, then update the active Data implementation plan with the accepted 2.2d scope.
+Maintain the pinned FoodOn resource and the mapping registry when the pipeline
+changes; do not alter `v1`–`v5` in place.
+
+### 2.2d Controlled-vocabulary target-generation implementation
+
+**Status:** Done
+
+The new [`v5` metadata generation](plans/data_ingredient_refactor/yummly_data_phase.md#implementation-artifacts-and-results)
+uses the pinned offline FoodOn food-product index, exact lexical association,
+approved fallback standardization, exact retry, and retained local concepts.
+Support is computed only from the source training split at 500 recipes per
+target, and recipes retain at least three supported targets. The builder passed
+the deterministic exact-image-aware split validator and left `v1`–`v4`
+unchanged.
 
 ### 2.3 Deterministic metadata generation and split
 
@@ -297,7 +316,10 @@ Discuss the remaining 2.2c decisions and agree on the threshold-sweep outputs, t
 
 #### Completion gate
 
-The three `v4` metadata files are reproducible, pass every assertion, contain valid `ingredients_target` lists, and have no byte-identical image crossing split boundaries. A full read-only rebuild matched the saved JSON objects exactly. This gate is satisfied.
+The three `v4` baseline files and the new `v5` metadata files are reproducible,
+pass every assertion, contain valid `ingredients_target` lists, and have no
+byte-identical image crossing split boundaries. A full read-only rebuild
+matched the saved `v5` JSON objects exactly. This gate is satisfied.
 
 #### Next action
 
@@ -305,17 +327,17 @@ Follow the active Data implementation plan before generating a replacement.
 
 ### 2.4 Runtime target integration and `<UNK>` removal
 
-**Status:** Deferred
+**Status:** In progress
 
 #### Required work
 
-- [ ] Keep `feature_label` configurable and change only its default to `ingredients_target` for new configurations.
-- [ ] Derive the vocabulary deterministically from training metadata and preserve it with each experiment rather than in a standalone data artifact.
+- [x] Keep `feature_label` configurable and change only its default to `ingredients_target` for new configurations.
+- [x] Derive the vocabulary deterministically from training metadata and preserve it with each experiment rather than in a standalone data artifact.
 - [x] Decide that new multi-label vocabularies and outputs omit `<UNK>` because it has no positive training target.
-- [ ] Remove `<UNK>` from the new multi-label encoder and add regression tests.
-- [ ] Preserve all saved `<UNK>` behavior for any legacy experiment selected for retention.
-- [ ] Treat a future ingestion or sequence-token use, if needed, as a separate explicitly documented decision.
-- [ ] Update statistics and dashboard consumers, then run minimal training, reload, and visualization smoke tests.
+- [x] Remove `<UNK>` from the new multi-label encoder and add regression tests.
+- [x] Preserve saved `<UNK>` behavior through the serialized robust encoder contract used by legacy experiments.
+- [x] Treat a future ingestion or sequence-token use, if needed, as a separate explicitly documented decision.
+- [ ] Complete downstream smoke validation: the statistics consumer now uses the selected metadata and common image root, and the dashboard reconstructs the DataModule from saved configuration; training, reload, and visualization execution still require a compatible ML environment.
 
 #### Completion gate
 
@@ -323,7 +345,7 @@ New experiments default to `ingredients_target` and omit `<UNK>` from their mult
 
 #### Next action
 
-Resume after the active Data target-generation work produces a validated replacement metadata generation.
+Restore a compatible Torch/NumPy/Lightning environment and execute the bounded training, checkpoint-reload, and dashboard smoke tests. No target-policy decision is pending.
 
 ### Data macro-section completion gate
 
@@ -633,6 +655,12 @@ This table is append-only. Add one row when a macro-section or significant work 
 | 2026-08-04 | Data decision | Kept `ingredients_target` as the single shared standard vocabulary across splits and models; optional subsets may exist only as named experiments. Automatic FoodOn parent traversal remains disabled, while explicit reviewed parent mappings are preserved as a deferred difficulty-reduction experiment. | Work package 2.2c **In progress — scope partially approved** | [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md), [`implementation_details/ingredient_mapping_rules.md`](implementation_details/ingredient_mapping_rules.md) |
 | 2026-08-05 | Data analysis | Executed the reproducible provisional train-only support-threshold sweep. Its output quantifies vocabulary size, assignment retention, recipe target-cardinality buckets, and named losses between thresholds without changing metadata. | Work package 2.2c **In progress — support/minimum-target decision pending** | [`src_scratches/data_anlysis/ingredient_threshold_sweep.py`](../src_scratches/data_anlysis/ingredient_threshold_sweep.py), [`controlled-vocabulary evaluation`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) |
 | 2026-08-05 | Data decision | Fixed the standard filtering policy at support >= 500 distinct train recipes and at least three retained targets per recipe. | Work package 2.2c **In progress — association-contract approval pending** | [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) |
+| 2026-08-05 | Data decision | Revised the controlled-vocabulary direction: FoodOn association is attempted on the mechanically cleaned source line before local fallback standardization. The older recognizability mappings no longer override a direct FoodOn concept; visual distinguishability is deferred to Ingredient selection. A bounded fuzzy recovery after fallback is the remaining 2.2c question. | Work package 2.2c **In progress — fuzzy-recovery evaluation pending** | [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) |
+| 2026-08-05 | Data research and decision | Evaluated typo-only FoodOn fuzzy recovery on synthetic known matches and the true local tail. The apparent synthetic precision did not transfer to local concepts: even the strict profile produced collisions such as `fish stock` -> `fish stick`, while recovering only 99 of 34,369 local terms. Fuzzy association is rejected. | Work package 2.2c **Done — implementation contract awaiting approval** | [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md), [`../src_scratches/data_anlysis/fuzzy_foodon_research.py`](../src_scratches/data_anlysis/fuzzy_foodon_research.py) |
+
+| 2026-08-05 | Data implementation | Implemented the approved FoodOn-first pipeline, generated `ingredients_target_v5_metadata.json`, and passed the exact-image-aware validation with 47,965/5,996/5,996 records and 165 train-supported targets. A clean rebuild matched all three saved JSON files byte-for-byte; legacy generations remain unchanged. | Work packages 2.2c, 2.2d, and 2.3 **Done**; 2.4 **Deferred** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`../src/data_processing/resources/foodon_food_product_v2025_07_31.json`](../src/data_processing/resources/foodon_food_product_v2025_07_31.json) |
+| 2026-08-06 | Data tooling | Added a reusable read-only audit for one metadata generation, split, and selected ingredient field. It reports complete value counts, distinct recipe support, cardinality distributions, cuisine summaries, and optional current-normalizer and co-occurrence views. | Data tooling **Done**; runtime integration **Deferred** | [`../src_scratches/data_anlysis/metadata_field_audit.py`](../src_scratches/data_anlysis/metadata_field_audit.py), [`../src_scratches/data_anlysis/README.md`](../src_scratches/data_anlysis/README.md) |
+| 2026-08-06 | Runtime integration | Selected `v5` as the new default, removed `<UNK>` from new multi-label output space, retained the serialized robust encoder contract for legacy experiments, and updated the image-statistics consumer for the common image store. All 16 executable tests pass; full ML smoke execution awaits a compatible Torch/NumPy/Lightning environment. | Work package 2.4 **In progress** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`../tests/test_multilabel_encoder_contract.py`](../tests/test_multilabel_encoder_contract.py) |
 
 ## Tracker maintenance rules
 

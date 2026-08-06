@@ -1,10 +1,10 @@
-"""Compare train-only support thresholds for provisional ingredient targets.
+"""Compare train-only support thresholds for ingredient target candidates.
 
-The script normalizes the original ``ingredients`` field with the current
-deterministic rules, then measures candidate support thresholds.  It is a
-decision aid only: it never writes metadata, changes the split, or chooses a
-threshold.  The later controlled-vocabulary pipeline must rerun the same
-analysis after its final association rules are implemented.
+Without ``--foodon-index`` the script preserves the original provisional
+normalizer report.  With the pinned index it evaluates the FoodOn-first
+association on all records, derives support from the source train split only,
+and reports the post-association threshold candidates.  It never writes
+metadata, changes the split, or chooses a threshold.
 """
 
 from __future__ import annotations
@@ -21,6 +21,8 @@ if str(REPOSITORY_ROOT) not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from src.data_processing.ingredient_standardization import normalized_recipe_targets
+from src.data_processing.foodon_lexicon import load_packaged_foodon
+from src.data_processing.ingredient_target_generation import derive_controlled_targets
 
 
 DEFAULT_THRESHOLDS = (10, 25, 50, 75, 100, 150, 200, 250, 300, 400, 500, 750, 1000)
@@ -130,10 +132,88 @@ def build_report(records: list[dict[str, object]], thresholds: tuple[int, ...]) 
     }
 
 
+def build_controlled_report(
+    dataset_root: Path,
+    metadata_filename: str,
+    foodon_index: Path,
+    thresholds: tuple[int, ...],
+    min_targets_per_recipe: int = 3,
+) -> dict[str, object]:
+    """Build the same threshold report after the approved controlled mapping."""
+    all_records: list[dict[str, object]] = []
+    for split in ("train", "val", "test"):
+        with (dataset_root / split / metadata_filename).open(encoding="utf-8") as handle:
+            split_records = json.load(handle)
+        if not isinstance(split_records, list):
+            raise ValueError(f"expected a JSON list in {dataset_root / split / metadata_filename}")
+        all_records.extend(split_records)
+    with (dataset_root / "train" / metadata_filename).open(encoding="utf-8") as handle:
+        train_records = json.load(handle)
+    generation = derive_controlled_targets(
+        all_records,
+        train_records,
+        load_packaged_foodon(foodon_index),
+        min_recipe_support=1,
+        min_targets_per_recipe=min_targets_per_recipe,
+    )
+    support = Counter(generation.train_support)
+    rows = []
+    total_assignments = sum(support.values())
+    retained_by_threshold: dict[int, set[str]] = {}
+    for threshold in thresholds:
+        retained = {target for target, count in support.items() if count >= threshold}
+        retained_by_threshold[threshold] = retained
+        cardinalities = [len(set(targets) & retained) for targets in generation.unfiltered_targets_by_record]
+        assignments = sum(support[target] for target in retained)
+        rows.append(
+            {
+                "minimum_train_recipe_support": threshold,
+                "vocabulary_size": len(retained),
+                "retained_train_recipe_target_assignments": assignments,
+                "retained_train_assignment_fraction": assignments / total_assignments if total_assignments else 0.0,
+                "recipes_with_zero_targets": sum(value == 0 for value in cardinalities),
+                "recipes_with_one_target": sum(value == 1 for value in cardinalities),
+                "recipes_with_two_targets": sum(value == 2 for value in cardinalities),
+                "recipes_with_at_least_three_targets": sum(value >= min_targets_per_recipe for value in cardinalities),
+            }
+        )
+    transitions = []
+    for lower, higher in zip(thresholds, thresholds[1:]):
+        removed = retained_by_threshold[lower] - retained_by_threshold[higher]
+        transitions.append(
+            {
+                "from_minimum_support": lower,
+                "to_minimum_support": higher,
+                "ingredients_removed": ordered_targets(removed, support),
+                "removed_ingredient_count": len(removed),
+                "removed_assignment_count": sum(support[target] for target in removed),
+            }
+        )
+    return {
+        "purpose": "Train-only support-threshold comparison after FoodOn-first controlled association.",
+        "method": {
+            "source": f"{dataset_root}/{{train,val,test}}/{metadata_filename} original ingredients field",
+            "association": "FoodOn exact association, bounded fallback, exact retry, then local concept",
+            "support": "Number of distinct source-train recipes containing a canonical target.",
+            "non_goal": "This output does not select a threshold or generate metadata.",
+        },
+        "corpus": {
+            "all_records": len(all_records),
+            "train_records_for_support": len(train_records),
+            "canonical_targets_before_threshold": len(support),
+            "train_recipe_target_assignments_before_threshold": total_assignments,
+        },
+        "thresholds": rows,
+        "transitions": transitions,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset-root", type=Path, default=Path("data/input/yummly"))
     parser.add_argument("--metadata-filename", default="metadata.json")
+    parser.add_argument("--foodon-index", type=Path, help="Evaluate the approved FoodOn-first mapping")
+    parser.add_argument("--min-targets-per-recipe", type=int, default=3)
     parser.add_argument(
         "--thresholds",
         type=parse_thresholds,
@@ -147,7 +227,16 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    report = build_report(load_train_records(args.dataset_root, args.metadata_filename), args.thresholds)
+    if args.foodon_index:
+        report = build_controlled_report(
+            args.dataset_root,
+            args.metadata_filename,
+            args.foodon_index,
+            args.thresholds,
+            args.min_targets_per_recipe,
+        )
+    else:
+        report = build_report(load_train_records(args.dataset_root, args.metadata_filename), args.thresholds)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("w", encoding="utf-8") as handle:
         json.dump(report, handle, ensure_ascii=False, indent=2)

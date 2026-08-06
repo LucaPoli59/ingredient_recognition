@@ -1,0 +1,135 @@
+{
+  "foodon": {
+    "input_filename": "foodon-synonyms-root.tsv",
+    "lexical_surfaces": 17284,
+    "preferred_concepts": 14185,
+    "sha256": "1900fb2c80d834287cfdd0b52a98957b18269e86c197617711bc3a5d8541deb2"
+  },
+  "guardrails": [
+    "Only terms still unmatched after exact association and fallback are evaluated.",
+    "The matcher allows a typo in exactly one aligned token; it never adds/removes/reorders words.",
+    "It rejects ties between FoodOn concepts instead of choosing one.",
+    "It does not use substring, token-set, semantic, image, cuisine, title, or hierarchy signals.",
+    "The gold benchmark uses deterministic synthetic typo perturbations of observed exact FoodOn matches."
+  ],
+  "profiles": [
+    {
+      "gold_typo_benchmark": {
+        "accepted_precision": 0.99913307325531,
+        "accepted_recall": 0.6094658910629297,
+        "by_perturbation": {
+          "deletion": {
+            "accepted": 776,
+            "correct": 776,
+            "rejected-no-candidate": 364,
+            "rejected-tie": 134,
+            "tested": 1274
+          },
+          "substitution": {
+            "accepted": 988,
+            "correct": 988,
+            "rejected-no-candidate": 121,
+            "rejected-tie": 171,
+            "tested": 1280
+          },
+          "transposition": {
+            "accepted": 543,
+            "correct": 541,
+            "rejected-no-candidate": 594,
+            "rejected-tie": 91,
+            "tested": 1228,
+            "wrong": 2
+          }
+        },
+        "combined": {
+          "accepted": 2307,
+          "correct": 2305,
+          "rejected-no-candidate": 1079,
+          "rejected-tie": 396,
+          "tested": 3782,
+          "wrong": 2
+        }
+      },
+      "maximum_single_token_damerau_levenshtein_distance": 1,
+      "minimum_changed_word_length": 5,
+      "name": "one-edit, changed word length >= 5",
+      "unmatched_local_corpus": {
+        "line_occurrence_outcomes": {
+          "accepted": 1810,
+          "not-applicable": 45068,
+          "rejected-no-candidate": 225105,
+          "rejected-tie": 1631
+        },
+        "local_line_occurrences": 273614,
+        "rescued_line_occurrences": 1810,
+        "rescued_terms_at_train_support_500": 0,
+        "unique_local_terms": 34369,
+        "unique_term_outcomes": {
+          "accepted": 99,
+          "not-applicable": 46,
+          "rejected-no-candidate": 34176,
+          "rejected-tie": 48
+        }
+      }
+    },
+    {
+      "gold_typo_benchmark": {
+        "accepted_precision": 1.0,
+        "accepted_recall": 0.7197250132205183,
+        "by_perturbation": {
+          "deletion": {
+            "accepted": 776,
+            "correct": 776,
+            "rejected-no-candidate": 364,
+            "rejected-tie": 134,
+            "tested": 1274
+          },
+          "substitution": {
+            "accepted": 988,
+            "correct": 988,
+            "rejected-no-candidate": 121,
+            "rejected-tie": 171,
+            "tested": 1280
+          },
+          "transposition": {
+            "accepted": 958,
+            "correct": 958,
+            "rejected-no-candidate": 118,
+            "rejected-tie": 152,
+            "tested": 1228
+          }
+        },
+        "combined": {
+          "accepted": 2722,
+          "correct": 2722,
+          "rejected-no-candidate": 603,
+          "rejected-tie": 457,
+          "tested": 3782
+        }
+      },
+      "maximum_single_token_damerau_levenshtein_distance": 2,
+      "minimum_changed_word_length": 5,
+      "name": "up-to-two-edits, changed word length >= 5",
+      "unmatched_local_corpus": {
+        "line_occurrence_outcomes": {
+          "accepted": 5956,
+          "not-applicable": 45068,
+          "rejected-no-candidate": 217842,
+          "rejected-tie": 4748
+        },
+        "local_line_occurrences": 273614,
+        "rescued_line_occurrences": 5956,
+        "rescued_terms_at_train_support_500": 2,
+        "unique_local_terms": 34369,
+        "unique_term_outcomes": {
+          "accepted": 311,
+          "not-applicable": 46,
+          "rejected-no-candidate": 33799,
+          "rejected-tie": 213
+        }
+      }
+    }
+  ],
+  "purpose": "Research-only bounded fuzzy FoodOn evaluation after exact-plus-fallback association.",
+  "train_gold_terms": 1280
+}

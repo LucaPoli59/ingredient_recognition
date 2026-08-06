@@ -1,0 +1,166 @@
+value,occurrence_count,recipe_support,recipe_prevalence,occurrences_per_supporting_recipe,examples
+salt,30023,30023,0.62593558,1.0,salt
+pepper,19137,19137,0.39897842,1.0,pepper
+garlic,19050,19050,0.3971646,1.0,garlic
+onion,10043,10043,0.20938184,1.0,onion
+olive oil,9968,9968,0.2078182,1.0,olive oil
+cheese,9166,9166,0.19109768,1.0,cheese
+sugar,9105,9105,0.18982591,1.0,sugar
+cilantro,8944,8944,0.1864693,1.0,cilantro
+egg food product,8841,8841,0.1843219,1.0,egg food product
+water food product,7803,7803,0.16268112,1.0,water food product
+butter,7769,7769,0.16197227,1.0,butter
+flour,6071,6071,0.12657146,1.0,flour
+ginger,5894,5894,0.12288127,1.0,ginger
+tomato,5717,5717,0.11919108,1.0,tomato
+soy sauce,5639,5639,0.11756489,1.0,soy sauce
+chicken,5371,5371,0.11197748,1.0,chicken
+cumin,4844,4844,0.10099031,1.0,cumin
+olive oil extra virgin,4261,4261,0.08883561,1.0,olive oil extra virgin
+vegetable oil,4157,4157,0.08666736,1.0,vegetable oil
+parsley,4080,4080,0.08506202,1.0,parsley
+chili,3986,3986,0.08310226,1.0,chili
+lemon juice,3940,3940,0.08214323,1.0,lemon juice
+milk,3864,3864,0.08055874,1.0,milk
+scallion,3782,3782,0.07884916,1.0,scallion
+carrot,3727,3727,0.07770249,1.0,carrot
+chicken broth,3423,3423,0.07136454,1.0,chicken broth
+basil,3280,3280,0.0683832,1.0,basil
+oregano,3258,3258,0.06792453,1.0,oregano
+red onion,3228,3228,0.06729907,1.0,red onion
+green onion,3060,3060,0.06379652,1.0,green onion
+lime juice,3053,3053,0.06365058,1.0,lime juice
+chili powder,2907,2907,0.06060669,1.0,chili powder
+sesame oil,2851,2851,0.05943917,1.0,sesame oil
+chili pepper,2688,2688,0.05604086,1.0,chili pepper
+oil,2647,2647,0.05518607,1.0,oil
+cinnamon,2564,2564,0.05345564,1.0,cinnamon
+turmeric,2548,2548,0.05312207,1.0,turmeric
+lime,2517,2517,0.05247576,1.0,lime
+shallot,2363,2363,0.04926509,1.0,shallot
+honey,2361,2361,0.04922339,1.0,honey
+red bell pepper,2321,2321,0.04838945,1.0,red bell pepper
+thyme food product,2298,2298,0.04790993,1.0,thyme food product
+yogurt food product,2256,2256,0.0470343,1.0,yogurt food product
+garlic powder,2144,2144,0.04469926,1.0,garlic powder
+avocado,2129,2129,0.04438653,1.0,avocado
+corn starch,2061,2061,0.04296883,1.0,corn starch
+brown sugar,2033,2033,0.04238507,1.0,brown sugar
+cayenne pepper,1983,1983,0.04134265,1.0,cayenne pepper
+sour cream,1936,1936,0.04036276,1.0,sour cream
+bay leaf,1919,1919,0.04000834,1.0,bay leaf
+vanilla extract,1908,1908,0.03977901,1.0,vanilla extract
+yellow onion,1837,1837,0.03829876,1.0,yellow onion
+panko breadcrumbs,1814,1814,0.03781924,1.0,panko breadcrumbs
+lemon,1802,1802,0.03756906,1.0,lemon
+garam masala,1744,1744,0.03635985,1.0,garam masala
+fish sauce,1743,1743,0.036339,1.0,fish sauce
+rice vinegar,1713,1713,0.03571354,1.0,rice vinegar
+cooking spray,1620,1620,0.03377463,1.0,cooking spray
+cucumber,1553,1553,0.03237778,1.0,cucumber
+canola oil,1547,1547,0.03225268,1.0,canola oil
+mayonnaise,1488,1488,0.03102262,1.0,mayonnaise
+jalapeno chilies,1487,1487,0.03100177,1.0,jalapeno chilies
+paprika,1423,1423,0.02966747,1.0,paprika
+mint,1409,1409,0.02937559,1.0,mint
+cumin seed,1399,1399,0.0291671,1.0,cumin seed
+coconut milk,1395,1395,0.02908371,1.0,coconut milk
+dijon mustard,1392,1392,0.02902116,1.0,dijon mustard
+shrimp food product,1391,1391,0.02900031,1.0,shrimp food product
+heavy cream,1375,1375,0.02866674,1.0,heavy cream
+tomato paste,1360,1360,0.02835401,1.0,tomato paste
+baking powder,1309,1309,0.02729073,1.0,baking powder
+black turtle bean,1246,1246,0.02597728,1.0,black turtle bean
+zucchini food product,1244,1244,0.02593558,1.0,zucchini food product
+celery,1202,1202,0.02505994,1.0,celery
+greek yogurt,1189,1189,0.02478891,1.0,greek yogurt
+red wine vinegar,1133,1133,0.02362139,1.0,red wine vinegar
+beef ground,1124,1124,0.02343375,1.0,beef ground
+salsa,1076,1076,0.02243302,1.0,salsa
+egg whites,1053,1053,0.02195351,1.0,egg whites
+green bell pepper,1050,1050,0.02189096,1.0,green bell pepper
+nutmeg,1044,1044,0.02176587,1.0,nutmeg
+potato,1009,1009,0.02103617,1.0,potato
+corn tortillas,1001,1001,0.02086938,1.0,corn tortillas
+mushroom,996,996,0.02076514,1.0,mushroom
+tomato sauce,938,938,0.01955593,1.0,tomato sauce
+dry white wine,931,931,0.01940999,1.0,dry white wine
+rice,930,930,0.01938914,1.0,rice
+italian seasoning,899,899,0.01874283,1.0,italian seasoning
+spinach,896,896,0.01868029,1.0,spinach
+worcestershire sauce,886,886,0.0184718,1.0,worcestershire sauce
+cherry tomatoes,856,856,0.01784635,1.0,cherry tomatoes
+white onion,855,855,0.0178255,1.0,white onion
+baking soda,851,851,0.0177421,1.0,baking soda
+pork,847,847,0.01765871,1.0,pork
+rosemary food product,838,838,0.01747107,1.0,rosemary food product
+vanilla bean food product,832,832,0.01734598,1.0,vanilla bean food product
+chive leaf raw,831,831,0.01732513,1.0,chive leaf raw
+flour tortillas,828,828,0.01726259,1.0,flour tortillas
+onion powder,822,822,0.0171375,1.0,onion powder
+peanut,821,821,0.01711665,1.0,peanut
+egg yolks,815,815,0.01699156,1.0,egg yolks
+mirin,812,812,0.01692901,1.0,mirin
+balsamic vinegar,809,809,0.01686647,1.0,balsamic vinegar
+curry powder,801,801,0.01669968,1.0,curry powder
+sesame seed,796,796,0.01659543,1.0,sesame seed
+parmesan cheese food product,789,789,0.01644949,1.0,parmesan cheese food product
+smoked paprika,769,769,0.01603252,1.0,smoked paprika
+pea,767,767,0.01599083,1.0,pea
+chickpea,763,763,0.01590743,1.0,chickpea
+peanut oil,745,745,0.01553216,1.0,peanut oil
+sriracha,743,743,0.01549046,1.0,sriracha
+hot pepper food product,741,741,0.01544876,1.0,hot pepper food product
+cream cheese,739,739,0.01540707,1.0,cream cheese
+garlic clove,738,738,0.01538622,1.0,garlic clove
+corn,715,715,0.0149067,1.0,corn
+ginger ground,713,713,0.01486501,1.0,ginger ground
+oyster sauce,712,712,0.01484416,1.0,oyster sauce
+white sugar,711,711,0.01482331,1.0,white sugar
+dill food product,706,706,0.01471907,1.0,dill food product
+lime wedges,706,706,0.01471907,1.0,lime wedges
+coconut oil,695,695,0.01448973,1.0,coconut oil
+beef,685,685,0.01428125,1.0,beef
+ketchup,683,683,0.01423955,1.0,ketchup
+feta cheese,657,657,0.01369749,1.0,feta cheese
+lemon zest,646,646,0.01346815,1.0,lemon zest
+bacon food product,639,639,0.01332221,1.0,bacon food product
+orange juice,630,630,0.01313458,1.0,orange juice
+shiitake mushroom,629,629,0.01311373,1.0,shiitake mushroom
+plum tomato,628,628,0.01309288,1.0,plum tomato
+green beans,625,625,0.01303033,1.0,green beans
+maple syrup,614,614,0.012801,1.0,maple syrup
+bell pepper,607,607,0.01265506,1.0,bell pepper
+sweet potato,605,605,0.01261336,1.0,sweet potato
+hot sauce,591,591,0.01232148,1.0,hot sauce
+mozzarella cheese,577,577,0.0120296,1.0,mozzarella cheese
+coriander,576,576,0.01200876,1.0,coriander
+cinnamon stick,574,574,0.01196706,1.0,cinnamon stick
+pasta,567,567,0.01182112,1.0,pasta
+hoisin sauce,562,562,0.01171688,1.0,hoisin sauce
+black olive,542,542,0.01129991,1.0,black olive
+buttermilk food product,539,539,0.01123736,1.0,buttermilk food product
+sake,535,535,0.01115397,1.0,sake
+white wine vinegar,533,533,0.01111227,1.0,white wine vinegar
+chinese five spice powder,531,531,0.01107057,1.0,chinese five spice powder
+almond,516,516,0.01075784,1.0,almond
+lemongrass food product,516,516,0.01075784,1.0,lemongrass food product
+coriander seed whole or pieces,510,510,0.01063275,1.0,coriander seed whole or pieces
+beansprouts,509,509,0.0106119,1.0,beansprouts
+shaoxing wine,505,505,0.01052851,1.0,shaoxing wine
+vegetable broth,505,505,0.01052851,1.0,vegetable broth
+cauliflower,504,504,0.01050766,1.0,cauliflower
+baby spinach,501,501,0.01044512,1.0,baby spinach
+roma tomato,497,497,0.01036172,1.0,roma tomato
+eggplant,496,496,0.01034087,1.0,eggplant
+bread,496,496,0.01034087,1.0,bread
+caper food product,488,488,0.01017409,1.0,caper food product
+curry leaves,484,484,0.01009069,1.0,curry leaves
+white wine,483,483,0.01006984,1.0,white wine
+lettuce,483,483,0.01006984,1.0,lettuce
+welsh onion,483,483,0.01006984,1.0,welsh onion
+french bread,479,479,0.00998645,1.0,french bread
+fennel seed,476,476,0.0099239,1.0,fennel seed
+cabbage,475,475,0.00990305,1.0,cabbage
+strawberry,470,470,0.00979881,1.0,strawberry
+banana,454,454,0.00946524,1.0,banana

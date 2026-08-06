@@ -101,7 +101,11 @@ class ImagesRecipesDataset(_ImagesRecipesDataset):
         if transform is None:
             transform = v2.Compose([v2.ToImage(), v2.Resize((224, 224)), v2.ToDtype(torch.float32, scale=True)])
         if label_encoder is None:
-            label_encoder = MultiLabelBinarizerRobust()  # default encoder
+            label_encoder = (
+                MultiLabelBinarizer()
+                if feature_label == "ingredients_target"
+                else MultiLabelBinarizerRobust()
+            )
         if category is not None:
             category = category.lower()
             if category not in FOOD_CATEGORIES:
@@ -280,7 +284,11 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
     def _set_def_params(self):
         """Sets some default parameters if not provided"""
         if self.label_encoder is None:
-            self.label_encoder = MultiLabelBinarizerRobust()  # default encoder
+            self.label_encoder = (
+                MultiLabelBinarizer()
+                if self.recipe_feature_label == "ingredients_target"
+                else MultiLabelBinarizerRobust()
+            )
 
         if self.category is not None:
             self.category = self.category.lower()
@@ -377,19 +385,19 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
 
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers,
-                          pin_memory=True, persistent_workers=True)
+                          pin_memory=True, persistent_workers=self.num_workers > 0)
 
     def val_dataloader(self):
         return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers,
-                          pin_memory=True, persistent_workers=True)
+                          pin_memory=True, persistent_workers=self.num_workers > 0)
 
     def test_dataloader(self):
         return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers,
-                          pin_memory=True, persistent_workers=True)
+                          pin_memory=True, persistent_workers=self.num_workers > 0)
 
     def predict_dataloader(self):
         return DataLoader(self.predict_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers,
-                          pin_memory=True, persistent_workers=True)
+                          pin_memory=True, persistent_workers=self.num_workers > 0)
 
     def get_num_classes(self):
         return self.label_encoder.num_classes

@@ -1,0 +1,1144 @@
+{
+  "metadata": {
+    "path": "H:\\programmazione\\python_projects\\ingredient_recognition\\data\\input\\yummly\\train\\ingredients_target_v5_metadata.json",
+    "filename": "ingredients_target_v5_metadata.json",
+    "split": "train",
+    "field": "ingredients_target",
+    "records": 47965,
+    "paths": [
+      "H:\\programmazione\\python_projects\\ingredient_recognition\\data\\input\\yummly\\train\\ingredients_target_v5_metadata.json"
+    ]
+  },
+  "field_quality": {
+    "missing_or_null_field_records": 0,
+    "non_list_field_records": 0,
+    "invalid_items": 0,
+    "empty_string_items": 0,
+    "records_with_any_problem": 0,
+    "duplicate_items_within_records": 0,
+    "examples": []
+  },
+  "value_summary": {
+    "unique_value_count": 165,
+    "total_value_occurrences": 369837,
+    "total_recipe_assignments": 369837,
+    "top_k": 100,
+    "top_values": [
+      {
+        "value": "salt",
+        "occurrence_count": 30023,
+        "recipe_support": 30023,
+        "recipe_prevalence": 0.62593558,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "salt"
+      },
+      {
+        "value": "pepper",
+        "occurrence_count": 19137,
+        "recipe_support": 19137,
+        "recipe_prevalence": 0.39897842,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "pepper"
+      },
+      {
+        "value": "garlic",
+        "occurrence_count": 19050,
+        "recipe_support": 19050,
+        "recipe_prevalence": 0.3971646,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "garlic"
+      },
+      {
+        "value": "onion",
+        "occurrence_count": 10043,
+        "recipe_support": 10043,
+        "recipe_prevalence": 0.20938184,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "onion"
+      },
+      {
+        "value": "olive oil",
+        "occurrence_count": 9968,
+        "recipe_support": 9968,
+        "recipe_prevalence": 0.2078182,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "olive oil"
+      },
+      {
+        "value": "cheese",
+        "occurrence_count": 9166,
+        "recipe_support": 9166,
+        "recipe_prevalence": 0.19109768,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "cheese"
+      },
+      {
+        "value": "sugar",
+        "occurrence_count": 9105,
+        "recipe_support": 9105,
+        "recipe_prevalence": 0.18982591,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "sugar"
+      },
+      {
+        "value": "cilantro",
+        "occurrence_count": 8944,
+        "recipe_support": 8944,
+        "recipe_prevalence": 0.1864693,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "cilantro"
+      },
+      {
+        "value": "egg food product",
+        "occurrence_count": 8841,
+        "recipe_support": 8841,
+        "recipe_prevalence": 0.1843219,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "egg food product"
+      },
+      {
+        "value": "water food product",
+        "occurrence_count": 7803,
+        "recipe_support": 7803,
+        "recipe_prevalence": 0.16268112,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "water food product"
+      },
+      {
+        "value": "butter",
+        "occurrence_count": 7769,
+        "recipe_support": 7769,
+        "recipe_prevalence": 0.16197227,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "butter"
+      },
+      {
+        "value": "flour",
+        "occurrence_count": 6071,
+        "recipe_support": 6071,
+        "recipe_prevalence": 0.12657146,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "flour"
+      },
+      {
+        "value": "ginger",
+        "occurrence_count": 5894,
+        "recipe_support": 5894,
+        "recipe_prevalence": 0.12288127,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "ginger"
+      },
+      {
+        "value": "tomato",
+        "occurrence_count": 5717,
+        "recipe_support": 5717,
+        "recipe_prevalence": 0.11919108,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "tomato"
+      },
+      {
+        "value": "soy sauce",
+        "occurrence_count": 5639,
+        "recipe_support": 5639,
+        "recipe_prevalence": 0.11756489,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "soy sauce"
+      },
+      {
+        "value": "chicken",
+        "occurrence_count": 5371,
+        "recipe_support": 5371,
+        "recipe_prevalence": 0.11197748,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "chicken"
+      },
+      {
+        "value": "cumin",
+        "occurrence_count": 4844,
+        "recipe_support": 4844,
+        "recipe_prevalence": 0.10099031,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "cumin"
+      },
+      {
+        "value": "olive oil extra virgin",
+        "occurrence_count": 4261,
+        "recipe_support": 4261,
+        "recipe_prevalence": 0.08883561,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "olive oil extra virgin"
+      },
+      {
+        "value": "vegetable oil",
+        "occurrence_count": 4157,
+        "recipe_support": 4157,
+        "recipe_prevalence": 0.08666736,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "vegetable oil"
+      },
+      {
+        "value": "parsley",
+        "occurrence_count": 4080,
+        "recipe_support": 4080,
+        "recipe_prevalence": 0.08506202,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "parsley"
+      },
+      {
+        "value": "chili",
+        "occurrence_count": 3986,
+        "recipe_support": 3986,
+        "recipe_prevalence": 0.08310226,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "chili"
+      },
+      {
+        "value": "lemon juice",
+        "occurrence_count": 3940,
+        "recipe_support": 3940,
+        "recipe_prevalence": 0.08214323,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "lemon juice"
+      },
+      {
+        "value": "milk",
+        "occurrence_count": 3864,
+        "recipe_support": 3864,
+        "recipe_prevalence": 0.08055874,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "milk"
+      },
+      {
+        "value": "scallion",
+        "occurrence_count": 3782,
+        "recipe_support": 3782,
+        "recipe_prevalence": 0.07884916,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "scallion"
+      },
+      {
+        "value": "carrot",
+        "occurrence_count": 3727,
+        "recipe_support": 3727,
+        "recipe_prevalence": 0.07770249,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "carrot"
+      },
+      {
+        "value": "chicken broth",
+        "occurrence_count": 3423,
+        "recipe_support": 3423,
+        "recipe_prevalence": 0.07136454,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "chicken broth"
+      },
+      {
+        "value": "basil",
+        "occurrence_count": 3280,
+        "recipe_support": 3280,
+        "recipe_prevalence": 0.0683832,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "basil"
+      },
+      {
+        "value": "oregano",
+        "occurrence_count": 3258,
+        "recipe_support": 3258,
+        "recipe_prevalence": 0.06792453,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "oregano"
+      },
+      {
+        "value": "red onion",
+        "occurrence_count": 3228,
+        "recipe_support": 3228,
+        "recipe_prevalence": 0.06729907,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "red onion"
+      },
+      {
+        "value": "green onion",
+        "occurrence_count": 3060,
+        "recipe_support": 3060,
+        "recipe_prevalence": 0.06379652,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "green onion"
+      },
+      {
+        "value": "lime juice",
+        "occurrence_count": 3053,
+        "recipe_support": 3053,
+        "recipe_prevalence": 0.06365058,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "lime juice"
+      },
+      {
+        "value": "chili powder",
+        "occurrence_count": 2907,
+        "recipe_support": 2907,
+        "recipe_prevalence": 0.06060669,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "chili powder"
+      },
+      {
+        "value": "sesame oil",
+        "occurrence_count": 2851,
+        "recipe_support": 2851,
+        "recipe_prevalence": 0.05943917,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "sesame oil"
+      },
+      {
+        "value": "chili pepper",
+        "occurrence_count": 2688,
+        "recipe_support": 2688,
+        "recipe_prevalence": 0.05604086,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "chili pepper"
+      },
+      {
+        "value": "oil",
+        "occurrence_count": 2647,
+        "recipe_support": 2647,
+        "recipe_prevalence": 0.05518607,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "oil"
+      },
+      {
+        "value": "cinnamon",
+        "occurrence_count": 2564,
+        "recipe_support": 2564,
+        "recipe_prevalence": 0.05345564,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "cinnamon"
+      },
+      {
+        "value": "turmeric",
+        "occurrence_count": 2548,
+        "recipe_support": 2548,
+        "recipe_prevalence": 0.05312207,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "turmeric"
+      },
+      {
+        "value": "lime",
+        "occurrence_count": 2517,
+        "recipe_support": 2517,
+        "recipe_prevalence": 0.05247576,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "lime"
+      },
+      {
+        "value": "shallot",
+        "occurrence_count": 2363,
+        "recipe_support": 2363,
+        "recipe_prevalence": 0.04926509,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "shallot"
+      },
+      {
+        "value": "honey",
+        "occurrence_count": 2361,
+        "recipe_support": 2361,
+        "recipe_prevalence": 0.04922339,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "honey"
+      },
+      {
+        "value": "red bell pepper",
+        "occurrence_count": 2321,
+        "recipe_support": 2321,
+        "recipe_prevalence": 0.04838945,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "red bell pepper"
+      },
+      {
+        "value": "thyme food product",
+        "occurrence_count": 2298,
+        "recipe_support": 2298,
+        "recipe_prevalence": 0.04790993,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "thyme food product"
+      },
+      {
+        "value": "yogurt food product",
+        "occurrence_count": 2256,
+        "recipe_support": 2256,
+        "recipe_prevalence": 0.0470343,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "yogurt food product"
+      },
+      {
+        "value": "garlic powder",
+        "occurrence_count": 2144,
+        "recipe_support": 2144,
+        "recipe_prevalence": 0.04469926,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "garlic powder"
+      },
+      {
+        "value": "avocado",
+        "occurrence_count": 2129,
+        "recipe_support": 2129,
+        "recipe_prevalence": 0.04438653,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "avocado"
+      },
+      {
+        "value": "corn starch",
+        "occurrence_count": 2061,
+        "recipe_support": 2061,
+        "recipe_prevalence": 0.04296883,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "corn starch"
+      },
+      {
+        "value": "brown sugar",
+        "occurrence_count": 2033,
+        "recipe_support": 2033,
+        "recipe_prevalence": 0.04238507,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "brown sugar"
+      },
+      {
+        "value": "cayenne pepper",
+        "occurrence_count": 1983,
+        "recipe_support": 1983,
+        "recipe_prevalence": 0.04134265,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "cayenne pepper"
+      },
+      {
+        "value": "sour cream",
+        "occurrence_count": 1936,
+        "recipe_support": 1936,
+        "recipe_prevalence": 0.04036276,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "sour cream"
+      },
+      {
+        "value": "bay leaf",
+        "occurrence_count": 1919,
+        "recipe_support": 1919,
+        "recipe_prevalence": 0.04000834,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "bay leaf"
+      },
+      {
+        "value": "vanilla extract",
+        "occurrence_count": 1908,
+        "recipe_support": 1908,
+        "recipe_prevalence": 0.03977901,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "vanilla extract"
+      },
+      {
+        "value": "yellow onion",
+        "occurrence_count": 1837,
+        "recipe_support": 1837,
+        "recipe_prevalence": 0.03829876,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "yellow onion"
+      },
+      {
+        "value": "panko breadcrumbs",
+        "occurrence_count": 1814,
+        "recipe_support": 1814,
+        "recipe_prevalence": 0.03781924,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "panko breadcrumbs"
+      },
+      {
+        "value": "lemon",
+        "occurrence_count": 1802,
+        "recipe_support": 1802,
+        "recipe_prevalence": 0.03756906,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "lemon"
+      },
+      {
+        "value": "garam masala",
+        "occurrence_count": 1744,
+        "recipe_support": 1744,
+        "recipe_prevalence": 0.03635985,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "garam masala"
+      },
+      {
+        "value": "fish sauce",
+        "occurrence_count": 1743,
+        "recipe_support": 1743,
+        "recipe_prevalence": 0.036339,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "fish sauce"
+      },
+      {
+        "value": "rice vinegar",
+        "occurrence_count": 1713,
+        "recipe_support": 1713,
+        "recipe_prevalence": 0.03571354,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "rice vinegar"
+      },
+      {
+        "value": "cooking spray",
+        "occurrence_count": 1620,
+        "recipe_support": 1620,
+        "recipe_prevalence": 0.03377463,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "cooking spray"
+      },
+      {
+        "value": "cucumber",
+        "occurrence_count": 1553,
+        "recipe_support": 1553,
+        "recipe_prevalence": 0.03237778,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "cucumber"
+      },
+      {
+        "value": "canola oil",
+        "occurrence_count": 1547,
+        "recipe_support": 1547,
+        "recipe_prevalence": 0.03225268,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "canola oil"
+      },
+      {
+        "value": "mayonnaise",
+        "occurrence_count": 1488,
+        "recipe_support": 1488,
+        "recipe_prevalence": 0.03102262,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "mayonnaise"
+      },
+      {
+        "value": "jalapeno chilies",
+        "occurrence_count": 1487,
+        "recipe_support": 1487,
+        "recipe_prevalence": 0.03100177,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "jalapeno chilies"
+      },
+      {
+        "value": "paprika",
+        "occurrence_count": 1423,
+        "recipe_support": 1423,
+        "recipe_prevalence": 0.02966747,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "paprika"
+      },
+      {
+        "value": "mint",
+        "occurrence_count": 1409,
+        "recipe_support": 1409,
+        "recipe_prevalence": 0.02937559,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "mint"
+      },
+      {
+        "value": "cumin seed",
+        "occurrence_count": 1399,
+        "recipe_support": 1399,
+        "recipe_prevalence": 0.0291671,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "cumin seed"
+      },
+      {
+        "value": "coconut milk",
+        "occurrence_count": 1395,
+        "recipe_support": 1395,
+        "recipe_prevalence": 0.02908371,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "coconut milk"
+      },
+      {
+        "value": "dijon mustard",
+        "occurrence_count": 1392,
+        "recipe_support": 1392,
+        "recipe_prevalence": 0.02902116,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "dijon mustard"
+      },
+      {
+        "value": "shrimp food product",
+        "occurrence_count": 1391,
+        "recipe_support": 1391,
+        "recipe_prevalence": 0.02900031,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "shrimp food product"
+      },
+      {
+        "value": "heavy cream",
+        "occurrence_count": 1375,
+        "recipe_support": 1375,
+        "recipe_prevalence": 0.02866674,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "heavy cream"
+      },
+      {
+        "value": "tomato paste",
+        "occurrence_count": 1360,
+        "recipe_support": 1360,
+        "recipe_prevalence": 0.02835401,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "tomato paste"
+      },
+      {
+        "value": "baking powder",
+        "occurrence_count": 1309,
+        "recipe_support": 1309,
+        "recipe_prevalence": 0.02729073,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "baking powder"
+      },
+      {
+        "value": "black turtle bean",
+        "occurrence_count": 1246,
+        "recipe_support": 1246,
+        "recipe_prevalence": 0.02597728,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "black turtle bean"
+      },
+      {
+        "value": "zucchini food product",
+        "occurrence_count": 1244,
+        "recipe_support": 1244,
+        "recipe_prevalence": 0.02593558,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "zucchini food product"
+      },
+      {
+        "value": "celery",
+        "occurrence_count": 1202,
+        "recipe_support": 1202,
+        "recipe_prevalence": 0.02505994,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "celery"
+      },
+      {
+        "value": "greek yogurt",
+        "occurrence_count": 1189,
+        "recipe_support": 1189,
+        "recipe_prevalence": 0.02478891,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "greek yogurt"
+      },
+      {
+        "value": "red wine vinegar",
+        "occurrence_count": 1133,
+        "recipe_support": 1133,
+        "recipe_prevalence": 0.02362139,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "red wine vinegar"
+      },
+      {
+        "value": "beef ground",
+        "occurrence_count": 1124,
+        "recipe_support": 1124,
+        "recipe_prevalence": 0.02343375,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "beef ground"
+      },
+      {
+        "value": "salsa",
+        "occurrence_count": 1076,
+        "recipe_support": 1076,
+        "recipe_prevalence": 0.02243302,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "salsa"
+      },
+      {
+        "value": "egg whites",
+        "occurrence_count": 1053,
+        "recipe_support": 1053,
+        "recipe_prevalence": 0.02195351,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "egg whites"
+      },
+      {
+        "value": "green bell pepper",
+        "occurrence_count": 1050,
+        "recipe_support": 1050,
+        "recipe_prevalence": 0.02189096,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "green bell pepper"
+      },
+      {
+        "value": "nutmeg",
+        "occurrence_count": 1044,
+        "recipe_support": 1044,
+        "recipe_prevalence": 0.02176587,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "nutmeg"
+      },
+      {
+        "value": "potato",
+        "occurrence_count": 1009,
+        "recipe_support": 1009,
+        "recipe_prevalence": 0.02103617,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "potato"
+      },
+      {
+        "value": "corn tortillas",
+        "occurrence_count": 1001,
+        "recipe_support": 1001,
+        "recipe_prevalence": 0.02086938,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "corn tortillas"
+      },
+      {
+        "value": "mushroom",
+        "occurrence_count": 996,
+        "recipe_support": 996,
+        "recipe_prevalence": 0.02076514,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "mushroom"
+      },
+      {
+        "value": "tomato sauce",
+        "occurrence_count": 938,
+        "recipe_support": 938,
+        "recipe_prevalence": 0.01955593,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "tomato sauce"
+      },
+      {
+        "value": "dry white wine",
+        "occurrence_count": 931,
+        "recipe_support": 931,
+        "recipe_prevalence": 0.01940999,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "dry white wine"
+      },
+      {
+        "value": "rice",
+        "occurrence_count": 930,
+        "recipe_support": 930,
+        "recipe_prevalence": 0.01938914,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "rice"
+      },
+      {
+        "value": "italian seasoning",
+        "occurrence_count": 899,
+        "recipe_support": 899,
+        "recipe_prevalence": 0.01874283,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "italian seasoning"
+      },
+      {
+        "value": "spinach",
+        "occurrence_count": 896,
+        "recipe_support": 896,
+        "recipe_prevalence": 0.01868029,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "spinach"
+      },
+      {
+        "value": "worcestershire sauce",
+        "occurrence_count": 886,
+        "recipe_support": 886,
+        "recipe_prevalence": 0.0184718,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "worcestershire sauce"
+      },
+      {
+        "value": "cherry tomatoes",
+        "occurrence_count": 856,
+        "recipe_support": 856,
+        "recipe_prevalence": 0.01784635,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "cherry tomatoes"
+      },
+      {
+        "value": "white onion",
+        "occurrence_count": 855,
+        "recipe_support": 855,
+        "recipe_prevalence": 0.0178255,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "white onion"
+      },
+      {
+        "value": "baking soda",
+        "occurrence_count": 851,
+        "recipe_support": 851,
+        "recipe_prevalence": 0.0177421,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "baking soda"
+      },
+      {
+        "value": "pork",
+        "occurrence_count": 847,
+        "recipe_support": 847,
+        "recipe_prevalence": 0.01765871,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "pork"
+      },
+      {
+        "value": "rosemary food product",
+        "occurrence_count": 838,
+        "recipe_support": 838,
+        "recipe_prevalence": 0.01747107,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "rosemary food product"
+      },
+      {
+        "value": "vanilla bean food product",
+        "occurrence_count": 832,
+        "recipe_support": 832,
+        "recipe_prevalence": 0.01734598,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "vanilla bean food product"
+      },
+      {
+        "value": "chive leaf raw",
+        "occurrence_count": 831,
+        "recipe_support": 831,
+        "recipe_prevalence": 0.01732513,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "chive leaf raw"
+      },
+      {
+        "value": "flour tortillas",
+        "occurrence_count": 828,
+        "recipe_support": 828,
+        "recipe_prevalence": 0.01726259,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "flour tortillas"
+      },
+      {
+        "value": "onion powder",
+        "occurrence_count": 822,
+        "recipe_support": 822,
+        "recipe_prevalence": 0.0171375,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "onion powder"
+      },
+      {
+        "value": "peanut",
+        "occurrence_count": 821,
+        "recipe_support": 821,
+        "recipe_prevalence": 0.01711665,
+        "occurrences_per_supporting_recipe": 1.0,
+        "examples": "peanut"
+      }
+    ],
+    "support_distribution": {
+      "count": 165,
+      "min": 454,
+      "p25": 657.0,
+      "median": 1001.0,
+      "p75": 2298.0,
+      "p95": 8633.399999999983,
+      "max": 30023,
+      "mean": 2241.4363636363637
+    },
+    "support_histogram": {
+      "454": 1,
+      "470": 1,
+      "475": 1,
+      "476": 1,
+      "479": 1,
+      "483": 3,
+      "484": 1,
+      "488": 1,
+      "496": 2,
+      "497": 1,
+      "501": 1,
+      "504": 1,
+      "505": 2,
+      "509": 1,
+      "510": 1,
+      "516": 2,
+      "531": 1,
+      "533": 1,
+      "535": 1,
+      "539": 1,
+      "542": 1,
+      "562": 1,
+      "567": 1,
+      "574": 1,
+      "576": 1,
+      "577": 1,
+      "591": 1,
+      "605": 1,
+      "607": 1,
+      "614": 1,
+      "625": 1,
+      "628": 1,
+      "629": 1,
+      "630": 1,
+      "639": 1,
+      "646": 1,
+      "657": 1,
+      "683": 1,
+      "685": 1,
+      "695": 1,
+      "706": 2,
+      "711": 1,
+      "712": 1,
+      "713": 1,
+      "715": 1,
+      "738": 1,
+      "739": 1,
+      "741": 1,
+      "743": 1,
+      "745": 1,
+      "763": 1,
+      "767": 1,
+      "769": 1,
+      "789": 1,
+      "796": 1,
+      "801": 1,
+      "809": 1,
+      "812": 1,
+      "815": 1,
+      "821": 1,
+      "822": 1,
+      "828": 1,
+      "831": 1,
+      "832": 1,
+      "838": 1,
+      "847": 1,
+      "851": 1,
+      "855": 1,
+      "856": 1,
+      "886": 1,
+      "896": 1,
+      "899": 1,
+      "930": 1,
+      "931": 1,
+      "938": 1,
+      "996": 1,
+      "1001": 1,
+      "1009": 1,
+      "1044": 1,
+      "1050": 1,
+      "1053": 1,
+      "1076": 1,
+      "1124": 1,
+      "1133": 1,
+      "1189": 1,
+      "1202": 1,
+      "1244": 1,
+      "1246": 1,
+      "1309": 1,
+      "1360": 1,
+      "1375": 1,
+      "1391": 1,
+      "1392": 1,
+      "1395": 1,
+      "1399": 1,
+      "1409": 1,
+      "1423": 1,
+      "1487": 1,
+      "1488": 1,
+      "1547": 1,
+      "1553": 1,
+      "1620": 1,
+      "1713": 1,
+      "1743": 1,
+      "1744": 1,
+      "1802": 1,
+      "1814": 1,
+      "1837": 1,
+      "1908": 1,
+      "1919": 1,
+      "1936": 1,
+      "1983": 1,
+      "2033": 1,
+      "2061": 1,
+      "2129": 1,
+      "2144": 1,
+      "2256": 1,
+      "2298": 1,
+      "2321": 1,
+      "2361": 1,
+      "2363": 1,
+      "2517": 1,
+      "2548": 1,
+      "2564": 1,
+      "2647": 1,
+      "2688": 1,
+      "2851": 1,
+      "2907": 1,
+      "3053": 1,
+      "3060": 1,
+      "3228": 1,
+      "3258": 1,
+      "3280": 1,
+      "3423": 1,
+      "3727": 1,
+      "3782": 1,
+      "3864": 1,
+      "3940": 1,
+      "3986": 1,
+      "4080": 1,
+      "4157": 1,
+      "4261": 1,
+      "4844": 1,
+      "5371": 1,
+      "5639": 1,
+      "5717": 1,
+      "5894": 1,
+      "6071": 1,
+      "7769": 1,
+      "7803": 1,
+      "8841": 1,
+      "8944": 1,
+      "9105": 1,
+      "9166": 1,
+      "9968": 1,
+      "10043": 1,
+      "19050": 1,
+      "19137": 1,
+      "30023": 1
+    }
+  },
+  "cardinality": {
+    "valid_values_per_record": {
+      "count": 47965,
+      "min": 3,
+      "p25": 5.0,
+      "median": 7.0,
+      "p75": 10.0,
+      "p95": 14.0,
+      "max": 34,
+      "mean": 7.710559783175232
+    },
+    "unique_values_per_record": {
+      "count": 47965,
+      "min": 3,
+      "p25": 5.0,
+      "median": 7.0,
+      "p75": 10.0,
+      "p95": 14.0,
+      "max": 34,
+      "mean": 7.710559783175232
+    },
+    "valid_value_histogram": {
+      "3": 3774,
+      "4": 4705,
+      "5": 5540,
+      "6": 5860,
+      "7": 5560,
+      "8": 5127,
+      "9": 4391,
+      "10": 3502,
+      "11": 2931,
+      "12": 2220,
+      "13": 1557,
+      "14": 1096,
+      "15": 663,
+      "16": 446,
+      "17": 266,
+      "18": 167,
+      "19": 65,
+      "20": 36,
+      "21": 25,
+      "22": 8,
+      "23": 14,
+      "24": 5,
+      "25": 3,
+      "26": 3,
+      "34": 1
+    },
+    "unique_value_histogram": {
+      "3": 3774,
+      "4": 4705,
+      "5": 5540,
+      "6": 5860,
+      "7": 5560,
+      "8": 5127,
+      "9": 4391,
+      "10": 3502,
+      "11": 2931,
+      "12": 2220,
+      "13": 1557,
+      "14": 1096,
+      "15": 663,
+      "16": 446,
+      "17": 266,
+      "18": 167,
+      "19": 65,
+      "20": 36,
+      "21": 25,
+      "22": 8,
+      "23": 14,
+      "24": 5,
+      "25": 3,
+      "26": 3,
+      "34": 1
+    }
+  },
+  "cuisine_summary": [
+    {
+      "cuisine": "american",
+      "record_count": 9011,
+      "unique_value_count": 160,
+      "top_values": "salt:6716 | pepper:4661 | sugar:2308 | butter:2049 | olive oil:1834 | flour:1797 | garlic:1781 | egg food product:1629 | onion:1559 | cheese:1406 | lemon juice:1390 | water food product:1114 | cooking spray:1054 | olive oil extra virgin:929 | parsley:820 | milk:765 | dijon mustard:757 | thyme food product:748 | vanilla extract:678 | vegetable oil:614 | mayonnaise:587 | cinnamon:573 | shallot:554 | chili:552 | carrot:495 | red onion:495 | honey:458 | celery:451 | cumin:442 | cilantro:434 | green onion:433 | lime juice:419 | worcestershire sauce:398 | garlic clove:386 | basil:385 | tomato:375 | baking powder:373 | cayenne pepper:353 | bay leaf:342 | chive leaf raw:327 | baking soda:325 | chili powder:313 | red wine vinegar:311 | oregano:310 | chicken broth:310 | sour cream:308 | red bell pepper:300 | balsamic vinegar:297 | buttermilk food product:290 | nutmeg:281 | paprika:264 | green bell pepper:263 | brown sugar:258 | garlic powder:254 | orange juice:249 | mint:244 | rosemary food product:241 | ketchup:237 | egg whites:221 | white wine vinegar:215 | scallion:204 | bacon food product:203 | heavy cream:199 | ginger:194 | soy sauce:191 | hot sauce:186 | canola oil:182 | sweet potato:172 | lemon:169 | dill food product:167 | tomato paste:159 | chicken:158 | green beans:154 | ginger ground:148 | avocado:147 | yellow onion:147 | lemon zest:140 | maple syrup:136 | shrimp food product:130 | vanilla bean food product:126 | zucchini food product:125 | plum tomato:123 | white sugar:117 | dry white wine:112 | cream cheese:111 | mushroom:108 | egg yolks:108 | cucumber:100 | caper food product:99 | almond:98 | onion powder:98 | black turtle bean:92 | baby spinach:90 | tomato sauce:88 | yogurt food product:80 | cherry tomatoes:80 | beef ground:78 | potato:78 | strawberry:76 | curry powder:76"
+    },
+    {
+      "cuisine": "italian",
+      "record_count": 6397,
+      "unique_value_count": 157,
+      "top_values": "salt:4095 | pepper:3261 | garlic:3110 | cheese:2962 | olive oil:2354 | basil:1770 | onion:1602 | egg food product:1365 | parsley:1311 | olive oil extra virgin:1229 | butter:1096 | oregano:1023 | tomato:977 | chili:889 | water food product:864 | flour:820 | italian seasoning:770 | sugar:742 | milk:523 | carrot:513 | chicken broth:504 | parmesan cheese food product:485 | chicken:451 | garlic powder:391 | mozzarella cheese:391 | tomato sauce:376 | tomato paste:371 | thyme food product:370 | dry white wine:343 | beef ground:338 | pasta:328 | zucchini food product:314 | red onion:307 | rosemary food product:303 | yellow onion:302 | lemon juice:282 | mushroom:260 | bay leaf:259 | celery:251 | spinach:251 | red bell pepper:237 | balsamic vinegar:230 | heavy cream:225 | lemon:209 | caper food product:185 | red wine vinegar:182 | shallot:173 | beef:166 | garlic clove:166 | cherry tomatoes:165 | white wine:159 | vegetable oil:155 | green bell pepper:152 | nutmeg:145 | eggplant:144 | baking powder:139 | vanilla extract:131 | onion powder:128 | pork:128 | baby spinach:121 | plum tomato:120 | egg yolks:119 | egg whites:117 | cooking spray:115 | lemon zest:114 | honey:111 | fennel seed:108 | black olive:107 | cream cheese:104 | white sugar:100 | mayonnaise:99 | roma tomato:96 | hot pepper food product:93 | potato:92 | scallion:89 | bacon food product:85 | bell pepper:80 | mint:76 | paprika:73 | dijon mustard:72 | oil:71 | green onion:70 | shrimp food product:68 | panko breadcrumbs:65 | pea:65 | green beans:63 | worcestershire sauce:60 | bread:60 | chickpea:57 | white onion:56 | cucumber:55 | chive leaf raw:52 | vegetable broth:50 | white wine vinegar:49 | brown sugar:48 | cayenne pepper:48 | almond:45 | sour cream:45 | vanilla bean food product:43 | baking soda:43"
+    },
+    {
+      "cuisine": "mexican",
+      "record_count": 6015,
+      "unique_value_count": 155,
+      "top_values": "salt:3715 | cilantro:3177 | garlic:2590 | cheese:2460 | cumin:2169 | pepper:2055 | onion:1808 | avocado:1465 | tomato:1462 | chili powder:1319 | olive oil:1266 | sour cream:1228 | lime:1186 | black turtle bean:1013 | lime juice:964 | salsa:957 | corn tortillas:894 | jalapeno chilies:868 | chicken:843 | water food product:842 | red onion:838 | flour tortillas:675 | oregano:666 | chicken broth:590 | vegetable oil:570 | corn:542 | scallion:539 | garlic powder:482 | white onion:477 | chili pepper:454 | egg food product:435 | butter:434 | cayenne pepper:408 | yellow onion:393 | red bell pepper:369 | beef ground:360 | flour:338 | green onion:329 | sugar:313 | lime wedges:284 | canola oil:267 | chili:262 | lettuce:258 | olive oil extra virgin:254 | milk:250 | cinnamon:243 | black olive:219 | paprika:216 | tomato sauce:216 | roma tomato:211 | green bell pepper:205 | oil:200 | mayonnaise:195 | onion powder:194 | hot sauce:189 | bell pepper:174 | smoked paprika:163 | beef:160 | tomato paste:157 | cream cheese:152 | carrot:149 | bay leaf:148 | rice:141 | cherry tomatoes:130 | zucchini food product:127 | plum tomato:127 | hot pepper food product:118 | honey:113 | cooking spray:111 | shrimp food product:108 | vegetable broth:92 | lemon juice:92 | yogurt food product:89 | baking powder:87 | garlic clove:84 | orange juice:81 | sweet potato:80 | brown sugar:76 | cumin seed:73 | red wine vinegar:72 | bacon food product:69 | coriander:67 | cabbage:65 | cucumber:59 | parsley:59 | vanilla extract:59 | potato:54 | celery:53 | spinach:50 | cinnamon stick:50 | heavy cream:44 | lemon:43 | greek yogurt:43 | pork:42 | coconut oil:41 | worcestershire sauce:40 | shallot:40 | mushroom:39 | thyme food product:38 | cauliflower:35"
+    },
+    {
+      "cuisine": "french",
+      "record_count": 4282,
+      "unique_value_count": 163,
+      "top_values": "salt:2533 | butter:2120 | egg food product:1765 | sugar:1628 | pepper:1278 | milk:1180 | flour:1014 | garlic:794 | cinnamon:703 | shallot:642 | vanilla extract:624 | olive oil:623 | heavy cream:586 | water food product:584 | thyme food product:573 | cheese:532 | vanilla bean food product:454 | onion:437 | french bread:394 | egg yolks:357 | parsley:348 | bay leaf:322 | egg whites:301 | brown sugar:294 | olive oil extra virgin:263 | bread:263 | maple syrup:255 | nutmeg:253 | lemon juice:238 | dry white wine:220 | carrot:204 | dijon mustard:181 | honey:170 | lemon:159 | yellow onion:158 | vegetable oil:155 | chicken broth:150 | cream cheese:128 | tomato:126 | basil:126 | white sugar:124 | strawberry:122 | chicken:117 | baking powder:116 | white wine:106 | corn starch:94 | chive leaf raw:93 | oil:93 | bacon food product:92 | rosemary food product:91 | banana:89 | worcestershire sauce:89 | garlic powder:87 | mayonnaise:83 | tomato paste:78 | potato:77 | mushroom:76 | canola oil:76 | cooking spray:75 | celery:73 | zucchini food product:72 | lemon zest:72 | red onion:70 | chili:67 | balsamic vinegar:64 | red wine vinegar:63 | white wine vinegar:63 | sour cream:60 | scallion:56 | paprika:55 | cayenne pepper:55 | almond:52 | ginger:52 | oregano:52 | garlic clove:51 | cilantro:49 | orange juice:46 | soy sauce:46 | parmesan cheese food product:44 | green beans:43 | coconut oil:43 | caper food product:42 | mint:38 | cherry tomatoes:37 | mozzarella cheese:37 | dill food product:36 | ketchup:36 | beef:35 | yogurt food product:34 | green onion:33 | buttermilk food product:32 | shrimp food product:32 | spinach:32 | onion powder:31 | baking soda:31 | vegetable broth:30 | eggplant:29 | red bell pepper:29 | coconut milk:28 | white onion:28"
+    },
+    {
+      "cuisine": "indian",
+      "record_count": 4072,
+      "unique_value_count": 159,
+      "top_values": "salt:3316 | cilantro:2330 | turmeric:2200 | garlic:2060 | onion:2032 | garam masala:1714 | ginger:1708 | cumin:1399 | tomato:1277 | cumin seed:1188 | chili pepper:1075 | water food product:1075 | oil:1011 | pepper:938 | yogurt food product:837 | chili powder:832 | chicken:690 | chili:657 | vegetable oil:587 | cayenne pepper:566 | lemon juice:521 | cinnamon:484 | curry leaves:473 | curry powder:466 | sugar:464 | olive oil:450 | butter:436 | bay leaf:435 | potato:368 | coconut milk:349 | cinnamon stick:335 | coriander seed whole or pieces:332 | mint:330 | carrot:304 | coriander:301 | flour:298 | chickpea:294 | red onion:288 | tomato paste:280 | paprika:277 | pea:244 | lemon:243 | fennel seed:223 | milk:218 | yellow onion:216 | canola oil:209 | cauliflower:202 | rice:184 | ginger ground:184 | coconut oil:182 | lime juice:160 | greek yogurt:151 | chicken broth:148 | spinach:143 | egg food product:140 | heavy cream:132 | jalapeno chilies:127 | lime:115 | cucumber:103 | shallot:99 | nutmeg:99 | olive oil extra virgin:96 | eggplant:87 | almond:85 | sweet potato:81 | brown sugar:80 | plum tomato:80 | white onion:78 | honey:68 | red bell pepper:68 | scallion:67 | garlic powder:67 | parsley:63 | tomato sauce:63 | vegetable broth:62 | baking powder:61 | baby spinach:59 | zucchini food product:54 | hot pepper food product:51 | lime wedges:50 | green beans:50 | green onion:49 | cheese:49 | shrimp food product:49 | smoked paprika:47 | corn starch:46 | baking soda:42 | peanut oil:41 | green bell pepper:40 | peanut:39 | sesame seed:39 | bell pepper:37 | cooking spray:36 | bread:31 | white sugar:30 | cabbage:30 | roma tomato:29 | soy sauce:28 | beef:28 | mushroom:28"
+    },
+    {
+      "cuisine": "chinese",
+      "record_count": 4031,
+      "unique_value_count": 162,
+      "top_values": "soy sauce:2904 | garlic:2283 | ginger:1919 | salt:1866 | sesame oil:1752 | pepper:1447 | sugar:1402 | corn starch:1393 | scallion:1195 | water food product:1165 | green onion:998 | chicken:968 | vegetable oil:885 | egg food product:729 | rice vinegar:694 | chicken broth:616 | carrot:560 | oil:553 | oyster sauce:549 | chinese five spice powder:490 | shaoxing wine:484 | onion:470 | hoisin sauce:446 | chili:410 | honey:409 | pork:386 | peanut oil:385 | cilantro:358 | chili pepper:354 | flour:352 | brown sugar:351 | shiitake mushroom:298 | canola oil:277 | sesame seed:276 | shrimp food product:255 | olive oil:226 | red bell pepper:222 | rice:190 | mushroom:190 | sriracha:181 | ginger ground:162 | cabbage:153 | ketchup:148 | egg whites:147 | peanut:137 | beansprouts:137 | white sugar:132 | garlic powder:123 | shallot:121 | fish sauce:118 | butter:114 | baking powder:104 | celery:102 | orange juice:99 | pea:97 | hot pepper food product:92 | green bell pepper:90 | baking soda:86 | yellow onion:84 | cucumber:81 | mirin:76 | lemon juice:74 | green beans:66 | beef:64 | lime juice:61 | red onion:61 | milk:59 | tomato:58 | lime:57 | cinnamon stick:53 | zucchini food product:53 | beef ground:48 | red wine vinegar:46 | coconut oil:46 | bell pepper:45 | almond:44 | vegetable broth:43 | cayenne pepper:42 | tomato paste:42 | chive leaf raw:40 | olive oil extra virgin:40 | sake:40 | balsamic vinegar:39 | coriander:38 | white onion:36 | worcestershire sauce:36 | lemon:35 | chili powder:35 | hot sauce:33 | jalapeno chilies:33 | eggplant:33 | bay leaf:31 | paprika:31 | egg yolks:31 | cumin:29 | coconut milk:28 | basil:28 | cauliflower:28 | mint:27 | curry powder:27"
+    },
+    {
+      "cuisine": "thai",
+      "record_count": 3981,
+      "unique_value_count": 162,
+      "top_values": "garlic:2322 | cilantro:1895 | fish sauce:1540 | salt:1463 | ginger:1265 | soy sauce:1209 | lime juice:1157 | chicken:942 | coconut milk:913 | pepper:884 | scallion:876 | carrot:855 | lime:849 | water food product:764 | sugar:760 | brown sugar:576 | chili:575 | peanut:569 | chili pepper:560 | vegetable oil:559 | sesame oil:555 | red bell pepper:533 | onion:529 | green onion:527 | rice vinegar:488 | egg food product:479 | basil:472 | shallot:453 | olive oil:451 | lemongrass food product:448 | chicken broth:415 | shrimp food product:392 | sriracha:388 | mint:366 | beansprouts:338 | oil:321 | honey:311 | lime wedges:296 | cucumber:285 | red onion:275 | coconut oil:262 | zucchini food product:213 | corn starch:200 | peanut oil:195 | hot pepper food product:192 | canola oil:190 | jalapeno chilies:178 | turmeric:172 | rice:160 | curry powder:159 | cumin:157 | tomato:141 | mushroom:137 | oyster sauce:130 | yellow onion:127 | ginger ground:125 | green beans:121 | cayenne pepper:118 | sweet potato:116 | coriander:115 | lemon juice:111 | sesame seed:111 | bell pepper:107 | garlic powder:104 | butter:102 | olive oil extra virgin:98 | cherry tomatoes:97 | pork:96 | flour:91 | chili powder:84 | cabbage:84 | vegetable broth:83 | shiitake mushroom:74 | avocado:72 | white sugar:69 | hoisin sauce:69 | lemon:66 | coriander seed whole or pieces:66 | maple syrup:65 | mayonnaise:61 | pea:60 | green bell pepper:58 | chickpea:54 | cheese:50 | potato:48 | tomato paste:47 | beef:47 | eggplant:46 | cooking spray:45 | cauliflower:44 | cumin seed:43 | milk:42 | celery:41 | ketchup:39 | lettuce:39 | cinnamon:38 | chive leaf raw:38 | paprika:38 | white onion:37 | parsley:36"
+    },
+    {
+      "cuisine": "japanese",
+      "record_count": 3581,
+      "unique_value_count": 163,
+      "top_values": "salt:1925 | panko breadcrumbs:1612 | pepper:1397 | egg food product:1169 | soy sauce:1166 | garlic:1028 | flour:744 | sugar:729 | mirin:719 | ginger:648 | water food product:646 | cheese:645 | butter:589 | olive oil:535 | chicken:519 | sake:487 | scallion:474 | sesame oil:469 | onion:431 | vegetable oil:422 | green onion:421 | rice vinegar:412 | milk:355 | carrot:337 | parsley:291 | oil:285 | garlic powder:280 | sesame seed:265 | mayonnaise:225 | honey:209 | corn starch:190 | lemon juice:187 | shiitake mushroom:185 | chili:176 | canola oil:159 | brown sugar:155 | cilantro:153 | basil:151 | parmesan cheese food product:151 | avocado:142 | cayenne pepper:140 | olive oil extra virgin:135 | chicken broth:133 | dijon mustard:132 | lemon:132 | paprika:131 | worcestershire sauce:128 | cucumber:118 | ketchup:116 | onion powder:112 | egg whites:112 | thyme food product:109 | sriracha:109 | zucchini food product:108 | shrimp food product:106 | chive leaf raw:103 | yellow onion:99 | tomato:98 | shallot:97 | cream cheese:95 | pork:94 | mushroom:92 | rice:90 | beef ground:88 | oregano:86 | beef:81 | lime juice:80 | jalapeno chilies:80 | bacon food product:77 | red bell pepper:74 | cooking spray:73 | cabbage:71 | spinach:69 | red onion:69 | buttermilk food product:67 | egg yolks:66 | nutmeg:66 | sour cream:65 | cumin:65 | pasta:65 | lime:64 | chili pepper:64 | mozzarella cheese:62 | smoked paprika:62 | heavy cream:61 | white sugar:60 | hot sauce:60 | chili powder:60 | eggplant:58 | italian seasoning:57 | potato:55 | lemon zest:54 | peanut oil:54 | baking powder:51 | cauliflower:51 | celery:50 | yogurt food product:49 | green beans:45 | sweet potato:44 | pea:44"
+    },
+    {
+      "cuisine": "greek",
+      "record_count": 3523,
+      "unique_value_count": 155,
+      "top_values": "salt:2137 | pepper:1511 | garlic:1178 | yogurt food product:1104 | olive oil:951 | greek yogurt:930 | lemon juice:836 | oregano:793 | cheese:708 | egg food product:676 | cucumber:624 | red onion:594 | feta cheese:527 | sugar:508 | lemon:496 | tomato:459 | olive oil extra virgin:444 | butter:437 | parsley:432 | dill food product:418 | honey:412 | flour:374 | baking powder:339 | chicken:338 | milk:334 | cinnamon:328 | vanilla extract:318 | onion:307 | banana:307 | red wine vinegar:278 | water food product:267 | baking soda:233 | mint:227 | garlic powder:223 | cherry tomatoes:208 | strawberry:205 | spinach:186 | basil:182 | scallion:164 | lemon zest:157 | vanilla bean food product:146 | black olive:141 | avocado:136 | dijon mustard:135 | cumin:132 | thyme food product:127 | chickpea:126 | cilantro:123 | brown sugar:117 | red bell pepper:112 | mayonnaise:111 | zucchini food product:106 | onion powder:105 | nutmeg:104 | cream cheese:103 | chicken broth:100 | chili:96 | carrot:93 | green onion:88 | paprika:85 | rosemary food product:83 | egg whites:75 | maple syrup:74 | chive leaf raw:72 | sour cream:69 | baby spinach:69 | yellow onion:67 | almond:66 | lime juice:65 | vegetable oil:65 | lime:64 | celery:63 | coconut oil:62 | roma tomato:62 | cayenne pepper:61 | white wine vinegar:60 | potato:59 | balsamic vinegar:58 | beef ground:55 | lettuce:55 | orange juice:53 | green bell pepper:50 | shallot:49 | egg yolks:47 | parmesan cheese food product:46 | buttermilk food product:44 | oil:43 | pasta:43 | tomato paste:43 | corn starch:42 | bell pepper:41 | caper food product:41 | hot pepper food product:41 | chili powder:37 | smoked paprika:35 | eggplant:34 | heavy cream:34 | plum tomato:34 | bay leaf:34 | white sugar:33"
+    },
+    {
+      "cuisine": "spanish",
+      "record_count": 3072,
+      "unique_value_count": 161,
+      "top_values": "salt:2257 | garlic:1904 | pepper:1705 | olive oil:1278 | onion:868 | olive oil extra virgin:773 | tomato:744 | parsley:702 | water food product:482 | welsh onion:469 | chicken broth:457 | egg food product:454 | cumin:405 | butter:392 | cilantro:392 | red bell pepper:377 | smoked paprika:369 | chicken:345 | cheese:336 | bay leaf:303 | oregano:303 | chili:302 | thyme food product:298 | paprika:253 | sugar:251 | lemon:250 | yellow onion:244 | flour:243 | red onion:231 | shrimp food product:219 | carrot:217 | lemon juice:209 | dry white wine:194 | cayenne pepper:192 | chili powder:191 | pea:177 | green bell pepper:169 | potato:153 | tomato paste:148 | vegetable oil:145 | red wine vinegar:143 | milk:138 | shallot:135 | garlic powder:133 | jalapeno chilies:132 | white wine:130 | basil:130 | sour cream:127 | canola oil:121 | chickpea:121 | scallion:118 | lime juice:115 | cucumber:112 | green onion:112 | hot pepper food product:109 | tomato sauce:109 | plum tomato:104 | cinnamon:103 | chili pepper:102 | honey:100 | rice:96 | lime:93 | celery:93 | avocado:92 | caper food product:88 | mayonnaise:87 | rosemary food product:84 | worcestershire sauce:81 | chive leaf raw:79 | brown sugar:78 | cherry tomatoes:77 | almond:77 | onion powder:77 | beef ground:75 | bell pepper:75 | zucchini food product:72 | dijon mustard:72 | heavy cream:71 | turmeric:70 | bread:68 | black turtle bean:68 | oil:63 | balsamic vinegar:62 | ginger:61 | white onion:61 | nutmeg:59 | lemon zest:56 | cooking spray:55 | white wine vinegar:55 | mint:54 | bacon food product:53 | egg yolks:50 | vegetable broth:49 | pork:49 | salsa:47 | green beans:46 | soy sauce:45 | mushroom:45 | corn:44 | cumin seed:44"
+    }
+  ],
+  "normalized_ingredients": null,
+  "pair_summary": {
+    "enabled": false,
+    "pair_count": 0,
+    "top_pairs": []
+  }
+}

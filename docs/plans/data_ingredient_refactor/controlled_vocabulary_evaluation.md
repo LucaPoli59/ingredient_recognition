@@ -4,13 +4,15 @@
 **Last updated:** 2026-08-05
 
 **Work package:** Data 2.2c  
-**Status:** Research complete; implementation recommendation awaiting approval
+**Status:** Done; implementation completed in Work package 2.2d
 
 ## Objective
 
-This study tests whether an external controlled vocabulary can improve Yummly ingredient canonicalization without an online service, fuzzy matching, a manual review workflow, or per-line mapping artifacts. It evaluates the candidates described in the reusable [`vocabulary_catalog.md`](../../research/topics/ingredient_vocabularies/vocabulary_catalog.md) and defines the decision gate before Work package 2.2d changes production code or generates new metadata.
+This study tests whether an external controlled vocabulary can improve Yummly ingredient canonicalization without an online service, a manual review workflow, or per-line mapping artifacts. It evaluates the candidates described in the reusable [`vocabulary_catalog.md`](../../research/topics/ingredient_vocabularies/vocabulary_catalog.md) and records the decision gate that preceded Work package 2.2d. It also evaluates, and rejects, bounded fuzzy recovery after exact association and fallback.
 
-The study does not modify `ingredients_target`, the existing `v1`–`v4` metadata, the split, the DataModule, or historical experiments.
+The evaluation phase did not modify `ingredients_target`, the existing `v1`–`v4`
+metadata, the split, the DataModule, or historical experiments. The separate
+2.2d implementation later used this contract to create `v5`.
 
 ## Materials and reproducibility
 
@@ -22,7 +24,9 @@ The quantitative experiment used:
 - the official LanguaL 2017 XML export, evaluated both as product-type facet A and, diagnostically, across all active facets;
 - the USDA Foundation Foods April 2026 JSON release as a database-shaped comparison rather than an ontology candidate.
 
-[`../../../src_scratches/data_anlysis/controlled_vocabulary_research.py`](../../../src_scratches/data_anlysis/controlled_vocabulary_research.py) reproduces the study. It writes only aggregate results and a fixed edge-case report under [`../../../src_scratches/data_anlysis/outputs/controlled_vocabulary_research/`](../../../src_scratches/data_anlysis/outputs/controlled_vocabulary_research/); it does not persist one mapping per source line.
+[`../../../src_scratches/data_anlysis/controlled_vocabulary_research.py`](../../../src_scratches/data_anlysis/controlled_vocabulary_research.py) reproduces the exact-association study. [`../../../src_scratches/data_anlysis/fuzzy_foodon_research.py`](../../../src_scratches/data_anlysis/fuzzy_foodon_research.py) reproduces the bounded fuzzy evaluation and writes only aggregate results under [`../../../src_scratches/data_anlysis/outputs/fuzzy_foodon_research/`](../../../src_scratches/data_anlysis/outputs/fuzzy_foodon_research/); neither script persists one mapping per source line.
+
+The fuzzy study uses the root [`foodon-synonyms.tsv` at the pinned FoodOn commit](https://raw.githubusercontent.com/FoodOntology/foodon/7ede44c/foodon-synonyms.tsv), SHA-256 `1900fb2c80d834287cfdd0b52a98957b18269e86c197617711bc3a5d8541deb2`. This is important because the similarly named `src/ontology/foodon-synonyms.tsv` at the same commit is a different export and does not reproduce the 14,185-concept study index.
 
 ## Association protocol tested
 
@@ -35,13 +39,13 @@ The experiment uses a deliberately conservative lexical protocol:
 5. permit final-token singularization only when the singular form resolves to exactly one vocabulary concept;
 6. retain ambiguous or unmatched outputs as local concepts rather than deleting them or using `<UNK>`.
 
-There is no edit distance, embedding similarity, substring containment, model prediction, or automatic hierarchy ascent.
+This is the accepted production association protocol. Bounded fuzzy recovery was evaluated separately and rejected below. Embedding similarity, model prediction, substring containment, and automatic hierarchy ascent are outside both protocols.
 
 ## Candidate coverage on train
 
 Percentages below use the 622,564 train ingredient-line occurrences. `Local` means that the term remains usable as a project-owned standalone concept; it is not lost.
 
-These values measure deterministic lexical association coverage, not accepted semantic accuracy. A unique ontology label can still be too fine-grained or have the wrong task-specific sense; the edge-case analysis and proposed recognizability precedence address that separate question.
+These values measure deterministic lexical association coverage, not accepted semantic accuracy. A unique ontology label can still have the wrong task-specific sense; later Ingredient selection work, rather than this standardization work package, decides visual distinguishability for experimental label subsets.
 
 | Candidate index | Direct unique association | Association after fallback | Ambiguous | Local unmatched | Interpretation |
 | --- | ---: | ---: | ---: | ---: | --- |
@@ -49,6 +53,21 @@ These values measure deterministic lexical association coverage, not accepted se
 | LanguaL all active facets | 18.65% | 20.49% | 0.94% | 59.93% | Higher coverage than facet A, but semantically unsafe because non-identity facets are mixed in |
 | LanguaL product-type facet A | 3.79% | 3.34% | 0.62% | 92.25% | Too sparse as a standalone ingredient vocabulary |
 | FoodData Central Foundation Foods | 0.00% | 0.00% | 0.00% | 100.00% | Confirms that food-record descriptions are not an ingredient lexicon |
+
+## Bounded fuzzy-recovery evaluation
+
+Fuzzy matching was evaluated only after the accepted exact-plus-fallback protocol had left a local concept. The evaluator permits a character-level Damerau-Levenshtein change in exactly one aligned token, keeps token order and token count fixed, rejects a tie between FoodOn concepts, and excludes substring, token-set, semantic, image, cuisine, title, and hierarchy signals. It is therefore much narrower than general-purpose fuzzy matching.
+
+The automated positive benchmark applies deterministic deletion, substitution, and adjacent-transposition perturbations to 1,280 observed direct FoodOn surfaces. The real-corpus test then uses the 34,369 unmatched local train terms (273,614 line occurrences). The benchmark measures typo recovery, but cannot represent the important negative case: a valid non-FoodOn term that happens to be closest to an unrelated FoodOn label.
+
+| Profile | Synthetic accepted matches | Synthetic correctness among accepted matches | Real local terms accepted | Real line occurrences accepted | Result |
+| --- | ---: | ---: | ---: | ---: | --- |
+| One edit; changed token length at least 5 | 2,305 / 2,307 | 99.91% | 99 / 34,369 (0.29%) | 1,810 / 273,614 (0.66%) | Too little benefit and still unsafe |
+| Up to two edits; changed token length at least 5 | 2,722 / 2,722 | 100.00% | 311 / 34,369 (0.91%) | 5,956 / 273,614 (2.18%) | Higher apparent recovery but clear semantic collisions |
+
+No one-edit accepted local term has independent train support of 500. A more tolerant two-edit rule yields misleadingly perfect synthetic precision because its gold inputs begin as known FoodOn labels; it nevertheless associates valid local terms with unrelated concepts in the real corpus. Fixed diagnostic probes include `mirin` -> `marlin food product`, `French bread` -> `green bean pod`, `beef stock` -> `beef steak`, and `ricotta` -> `risotto`. Even the one-edit profile admits `fish stock` -> `fish stick food product` and `gingerroot` -> `krachai`.
+
+**Decision:** do not include fuzzy matching in the target-generation pipeline. Its small aggregate gain cannot justify irreversible false associations, especially because the project deliberately has no manual review stage. Exact FoodOn association, bounded local fallback, an exact retry, and retention of a local concept are sufficient and deterministic.
 
 The FoodOn index contains 14,185 labeled concepts in the selected descendant branch. It yielded 1,468 external concepts on train before support filtering, while 34,399 distinct local concepts remained. The large local tail is expected: it includes inflected phrases, recipe-specific products, brand-like descriptions, composite instructions, and rare culturally specific ingredients.
 
@@ -101,13 +120,13 @@ The complete output records every target removed between adjacent thresholds, ra
 
 ### FoodOn is useful as a reference, not as the complete target vocabulary
 
-FoodOn is the preferred external resource because it has versioned identifiers, food-product coverage, typed synonyms, and a downloadable offline representation. However, 44.17% of train occurrences remain local and a further 4.66% are lexically ambiguous. Forcing those terms into a FoodOn parent or a fuzzy nearest concept would replace transparent incompleteness with silent semantic errors.
+FoodOn is the preferred external resource because it has versioned identifiers, food-product coverage, typed synonyms, and a downloadable offline representation. However, 44.17% of train occurrences remain local and a further 4.66% are lexically ambiguous under exact lexical association. The fuzzy evaluation confirms that these local concepts must be retained when no safe exact association exists.
 
-### The ontology hierarchy cannot choose visual granularity automatically
+### The ontology hierarchy cannot choose the target level automatically
 
-FoodOn directly distinguishes `tomato paste` from `tomato sauce` and Greek from generic yogurt. Those distinctions are semantically legitimate but conflict with the project's approved prepared-image recognizability merges. Conversely, a generic surface such as `pepper` can refer to multiple product families. A fixed parent depth or first-parent rule would therefore be inconsistent and order-dependent.
+FoodOn directly distinguishes `tomato paste` from `tomato sauce` and Greek from generic yogurt. Those distinctions are semantically legitimate; selecting or collapsing concepts for visual difficulty is a separate Macro-section 3 decision. Conversely, a generic surface such as `pepper` can refer to multiple product families. A fixed parent depth or first-parent rule would therefore be inconsistent and order-dependent.
 
-Project-approved recognizability overrides must take precedence over direct ontology matching. Otherwise a successful fine-grained FoodOn match would bypass the accepted merge and reintroduce distinctions already rejected for this task.
+The controlled vocabulary must therefore be consulted before the local fallback rules. Those rules normalize unassociated source forms; they do not override a direct FoodOn concept merely because the older `v4` baseline collapsed it.
 
 Automatic parent traversal is excluded from the standard pipeline, but explicit parent-based abstraction is retained as a deferred experimental option. A future experiment may deliberately map selected fine-grained concepts to named parents to reduce label-space difficulty, provided that every mapping is reviewed, versioned, reproducible, and evaluated against the unchanged standard `ingredients_target` vocabulary. It must never be enabled implicitly by ontology depth or replace the default targets.
 
@@ -119,14 +138,14 @@ Moving the threshold after concept association fixes premature fragmentation, bu
 
 High-support examples such as `garam masala` and `mirin` remain valuable local concepts under the conservative FoodOn branch. An external identifier is helpful metadata, not a condition for an ingredient to exist. `<UNK>` would collapse unrelated meanings and is inappropriate for these multi-label targets.
 
-## Recommended implementation contract for 2.2d
+## Implemented contract for 2.2d
 
 1. Pin FoodOn v2025-07-31 and use only its `food product` descendant branch as the external reference lexicon.
 2. Keep output metadata simple: `ingredients_target` remains a list of canonical strings. FoodOn IDs are implementation-time association anchors, not additional per-record fields.
-3. Apply the explicit recognizability rules in [`../../implementation_details/ingredient_mapping_rules.md`](../../implementation_details/ingredient_mapping_rules.md) before direct ontology matching whenever a rule intentionally collapses a distinction that FoodOn preserves.
-4. For other lines, use exact preferred-label matching, then exact synonyms, then the approved bounded fallback and vocabulary-validated final-token singularization.
-5. Accept a vocabulary association only when deterministic precedence produces one concept. Keep an unresolved or ambiguous normalized term as a local concept.
-6. Do not use unspecified broad/narrow synonyms, fuzzy matching, embeddings, substring containment, cuisine, recipe title, images, or automatic parent traversal to force an association.
+3. For each mechanically cleaned line, use exact preferred-label matching, then exact synonyms and vocabulary-validated final-token singularization.
+4. Only when that attempt has no unambiguous concept, apply the bounded fallback rules in [`../../implementation_details/ingredient_mapping_rules.md`](../../implementation_details/ingredient_mapping_rules.md) and retry the lexical association.
+5. Do not apply fuzzy recovery. The completed bounded evaluation found a negligible safe-looking gain and concrete semantic false associations even under a strict typo-only protocol.
+6. Keep an unresolved or ambiguous normalized term as a local concept. Do not use embeddings, substring containment, cuisine, recipe title, images, or automatic parent traversal to force an association.
 7. Before selecting a support threshold or minimum-target recipe rule, run a reproducible train-only threshold sweep. The provisional current-normalizer sweep now reports retained ingredients, assignments, zero/one/two/at-least-three target recipe buckets, and named targets lost at every adjacent threshold transition. Re-run the same measurement after controlled-vocabulary association to validate the selected threshold numerically.
 8. Use that evidence to select one standard `ingredients_target` vocabulary. The selected policy is support >= 500 distinct train recipes and at least three retained targets per recipe. The standard pipeline must not maintain separate semantic and learnable vocabularies.
 9. Validation and test data must not influence threshold selection. After a train-only choice is made, the same `ingredients_target` vocabulary is written and used consistently across train, validation, test, and model implementations.
@@ -135,10 +154,11 @@ High-support examples such as `garam masala` and `mirin` remain valuable local c
 
 ## Decision gate
 
-Work package 2.2d must not start until the following recommendations are accepted or revised:
+The following recommendations were accepted and implemented by Work package 2.2d:
 
 - FoodOn is adopted as a pinned reference lexicon, with local concepts retained for incomplete or ambiguous coverage;
-- project recognizability overrides run before a conflicting direct FoodOn match;
+- FoodOn association runs before local fallback standardization; the older recognizability mappings no longer override a direct FoodOn concept;
+- bounded fuzzy recovery is rejected after the fallback retry; unmatched or ambiguous terms remain local concepts;
 - automatic ontology parent traversal is rejected from the standard pipeline, while explicit reviewed parent mappings are retained as a deferred option for separately versioned difficulty-reduction experiments;
 - the support threshold and minimum-target rule are fixed at >= 500 distinct train recipes and >= 3 retained targets per recipe, selected from train-only evidence and subject to numerical revalidation after association;
 - after that revalidation, one shared `ingredients_target` vocabulary is used across all splits and model implementations; optional subsets remain separately named experiments.

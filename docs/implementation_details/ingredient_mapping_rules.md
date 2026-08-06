@@ -1,13 +1,13 @@
 # Ingredient target mapping rules
 
 **Created:** 2026-08-04  
-**Last updated:** 2026-08-04
+**Last updated:** 2026-08-05
 
 ## Purpose and authority
 
-This document is the durable registry of custom semantic mappings used to derive the Yummly `ingredients_target` field from the original `ingredients` lines. It records both the rules implemented by the first candidate standardizer and the post-audit rules implemented in `ingredients_target_v4_metadata.json`.
+This document is the durable registry of custom fallback mappings used by the Yummly standardizer. It records both the rules implemented by the first candidate standardizer and the post-audit rules implemented in `ingredients_target_v4_metadata.json`.
 
-`v4` is a tested, reproducible baseline rather than the selected next benchmark generation. Its frequency filter runs before controlled-concept association and can remove valid ingredients. [Work package 2.2c of the Data plan](../plans/data_ingredient_refactor/yummly_data_phase.md#work-package-22c--controlled-vocabulary-research) is selecting the replacement vocabulary and Work package 2.2d will implement it. Until then, this registry remains authoritative only for the retained baseline rules; a vocabulary decision must update this document, the standardizer, and its tests together.
+`v4` is a tested, reproducible baseline rather than the selected next benchmark generation. Its frequency filter runs before controlled-concept association and can remove valid ingredients. Work packages 2.2c and 2.2d now select and implement the pinned FoodOn-first pipeline; the validated `v5` generation is the current standard candidate. The revised direction consults FoodOn before this fallback registry: these rules apply only when no unambiguous FoodOn association was obtained from the mechanically cleaned source line. A vocabulary decision must update this document, the standardizer, and its tests together.
 
 This registry remains part of the implementation documentation after the feature plan is completed. Future changes to ingredient mappings must update this document, the standardizer, and the corresponding regression tests in the same change. Execution status belongs in [`../plans/data_ingredient_refactor/yummly_data_phase.md`](../plans/data_ingredient_refactor/yummly_data_phase.md); audit evidence and decision rationale belong in [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md).
 
@@ -15,21 +15,23 @@ The lifecycle labels used below are:
 
 - **Active in `v1`**: implemented by [`ingredient_standardization.py`](../../src/data_processing/ingredient_standardization.py) and used to generate `ingredients_target_v1_metadata.json`.
 - **Baseline in `v4`**: implemented by [`ingredient_standardization.py`](../../src/data_processing/ingredient_standardization.py), covered by [`../../tests/test_ingredient_standardization.py`](../../tests/test_ingredient_standardization.py), and used to generate `ingredients_target_v4_metadata.json`; it is not selected for runtime integration.
+- **Fallback in `v5`**: the same bounded rules are applied only after an exact FoodOn association fails; the resulting canonical target may be an offline FoodOn preferred label or a retained local concept.
 - **Preserved boundary**: an explicit non-mapping or collision boundary that implementations must retain.
 
-No rule may be inferred from lexical similarity, edit distance, co-occurrence, or embedding similarity. Matching must be deterministic and token- or phrase-bounded.
+No custom rule in this registry may be inferred from lexical similarity, edit distance, co-occurrence, or embedding similarity. Registry rules must be deterministic and token- or phrase-bounded. FoodOn fuzzy recovery was evaluated and rejected; it is not authorized by this registry or the standard generator.
 
 ## Processing contract
 
-For a new metadata generation, the standardizer must:
+For a new metadata generation, the generator must:
 
 1. read the original `ingredients` lines without modifying them;
 2. normalize case, Unicode, quantities, units, punctuation, and approved non-semantic preparation text;
-3. apply the explicit rules in this registry at a stage where meaningful qualifiers are still available;
-4. allow a rule to emit zero, one, or multiple targets;
-5. deduplicate and deterministically order the targets within each recipe;
-6. compute support by distinct source recipes and retain targets with support of at least 500 recipes;
-7. retain recipes with at least three supported targets.
+3. attempt an exact FoodOn preferred-label or exact-synonym association before applying this registry;
+4. apply the explicit rules in this registry only to an unmatched line, then retry exact FoodOn association;
+5. retain an unresolved normalized term as a local concept rather than deleting it or mapping it to `<UNK>`;
+6. allow a rule to emit zero, one, or multiple targets, then deduplicate and deterministically order the targets within each recipe;
+7. compute support by distinct source recipes and retain targets with support of at least 500 recipes;
+8. retain recipes with at least three supported targets.
 
 Qualifier-sensitive mappings such as `fresh coriander`, `crushed red pepper`, and `toasted sesame oil` must run before generic descriptor removal can erase the evidence needed to choose the correct target.
 
@@ -216,11 +218,13 @@ Every mapping change must include:
 5. regeneration of a new metadata version rather than modification of an existing generation;
 6. comparison of vocabulary size, support, retained recipes, and affected records with the preceding candidate.
 
-Work package 2.2b was implemented in `ingredients_target_v4_metadata.json` on 2026-08-04. The preceding `_ingredients_target_v2_metadata.json` and `_ingredients_target_v3_metadata.json` files are retained as non-selected diagnostic generations: their automatic data checks passed, but review of their comparison output exposed out-of-scope normalizations that were corrected before `v4` was generated. Their leading underscore prevents accidental selection by convention. `v4` must not be selected for new consumers; it remains a reproducible baseline until Work packages 2.2c and 2.2d define and validate its replacement.
+Work package 2.2b was implemented in `ingredients_target_v4_metadata.json` on 2026-08-04. The preceding `_ingredients_target_v2_metadata.json` and `_ingredients_target_v3_metadata.json` files are retained as non-selected diagnostic generations: their automatic data checks passed, but review of their comparison output exposed out-of-scope normalizations that were corrected before `v4` was generated. Their leading underscore prevents accidental selection by convention. Work package 2.2d generated `ingredients_target_v5_metadata.json` on 2026-08-05 using the pinned FoodOn index, exact-plus-fallback association, train-only support >= 500, and minimum three targets per retained recipe. `v4` remains the comparison baseline; `v5` is the validated standard candidate pending runtime integration.
 
 ## Related documents and code
 
 - [`../../src/data_processing/ingredient_standardization.py`](../../src/data_processing/ingredient_standardization.py) contains the current `v1` implementation.
+- [`../../src/data_processing/foodon_lexicon.py`](../../src/data_processing/foodon_lexicon.py) loads the pinned FoodOn resource used by `v5`.
+- [`../../src/data_processing/ingredient_target_generation.py`](../../src/data_processing/ingredient_target_generation.py) implements the FoodOn-first association contract.
 - [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md) contains the quantitative evidence and decision history.
 - [`../project_objective/benchmark_decisions.md`](../project_objective/benchmark_decisions.md) defines the binding benchmark-level policies.
 - [`../plans/data_ingredient_refactor/yummly_data_phase.md`](../plans/data_ingredient_refactor/yummly_data_phase.md) tracks implementation progress.

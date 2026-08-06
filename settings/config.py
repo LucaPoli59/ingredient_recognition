@@ -1,12 +1,15 @@
 import os
-import matplotlib
+try:
+    import matplotlib
+except ImportError:
+    matplotlib = None
 
 PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_PATH = os.path.join(PROJECT_PATH, 'data')
 INPUT_PATH = os.path.join(DATA_PATH, 'input')
 RAW_INPUT_PATH = os.path.join(DATA_PATH, 'raw_input')
 METADATA_FILENAME = 'metadata.json'
-YUMMLY_TARGET_METADATA_FILENAME = 'ingredients_target_v1_metadata.json'
+YUMMLY_TARGET_METADATA_FILENAME = 'ingredients_target_v5_metadata.json'
 
 YUMMLY_PATH = os.path.join(INPUT_PATH, 'yummly')
 YUMMLY_RECIPES_PATH = os.path.join(YUMMLY_PATH, 'recipes_general')
@@ -73,6 +76,7 @@ WANDB_ENTITY = 'luca-bicocca'
 LP_MAX_PHASE = 4  # LAYER-WISE PRETRAINING MAX PHASES
 
 # matplotlib.style.use('ggplot')
-matplotlib.rcParams['figure.figsize'] = (5, 5)
-matplotlib.rcParams['axes.grid'] = False
+if matplotlib is not None:
+    matplotlib.rcParams['figure.figsize'] = (5, 5)
+    matplotlib.rcParams['axes.grid'] = False
 

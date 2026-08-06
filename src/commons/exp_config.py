@@ -10,12 +10,12 @@ from torchmetrics import Accuracy, HammingDistance, Precision, Recall, F1Score
 import optuna
 
 from src.commons.config_enc_dec import encode_config, decode_config
-from settings.config import YUMMLY_PATH, YUMMLY_RECIPES_PATH, DEF_BATCH_SIZE, DEF_LR, DEF_UNKNOWN_TOKEN, DEF_N_TRIALS, \
+from settings.config import YUMMLY_PATH, YUMMLY_RECIPES_PATH, DEF_BATCH_SIZE, DEF_LR, DEF_N_TRIALS, \
     METADATA_FILENAME, YUMMLY_TARGET_METADATA_FILENAME, WANDB_PROJECT_NAME
 from src.models.dummy import DummyModel
 from src.lightning.lgn_models import BaseLGNM
 from src.lightning.lgn_trainers import BaseTrainer
-from src.data_processing.labels_encoders import MultiLabelBinarizerRobust
+from src.data_processing.labels_encoders import MultiLabelBinarizer
 from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
 from src.commons.utils import MyMLAccuracy
 
@@ -86,11 +86,10 @@ DEF_EXP_CONFIG = {
         "feature_label": "ingredients_target",
         "num_workers": os.cpu_count(),
         "label_encoder": {
-            "type": MultiLabelBinarizerRobust,
+            "type": MultiLabelBinarizer,
             "classes": None,
             "encode_map": None,
-            "fitted": False,
-            "unknown_token": DEF_UNKNOWN_TOKEN
+            "fitted": False
         }
     },
     "logging_hyper_parameters": {  # useds by BaseTrainer (and subclasses)
