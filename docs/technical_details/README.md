@@ -1,6 +1,7 @@
 # Technical details
 
 **Creation date:** 2026-07-29
+**Last updated:** 2026-08-06
 
 This folder collects in-depth technical notes on concepts, limitations and problems that emerged in the project. The goal is to preserve the machine learning, neural network, data processing, or systems reasoning behind a technical decision so that it is reusable and verifiable in the future.
 
@@ -37,3 +38,4 @@ The affected code can be cited as a reference, but detailed implementation instr
 ## Documents available
 
 - [`dino/gradcam_frozen_vit_tokens/explaination.md`](dino/gradcam_frozen_vit_tokens/explaination.md): Differentiable interpretability, Grad-CAM and token-based representations in DINOv2.
+- [`data/yummly_benchmark_split/explaination.md`](data/yummly_benchmark_split/explaination.md): Yummly-specific split allocation, validation guarantees, and evaluation limits.

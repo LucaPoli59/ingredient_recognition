@@ -1,7 +1,7 @@
 # Topic research
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-04
+**Last updated:** 2026-08-06
 
 Use this directory for detailed research on a single, well-defined topic.
 
@@ -17,3 +17,4 @@ Use a lowercase, descriptive directory name for `<topic>`. Its `README.md` must 
 ## Available topics
 
 - [`ingredient_vocabularies/`](ingredient_vocabularies/README.md) provides a dataset-independent catalog of controlled food and ingredient vocabularies.
+- [`dataset_splitting/`](dataset_splitting/README.md) records the evidence and methodology for the frozen Yummly benchmark split.

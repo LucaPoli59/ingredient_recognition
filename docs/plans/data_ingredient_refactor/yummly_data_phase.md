@@ -417,11 +417,11 @@ not used as runtime inputs for the new generation.
 
 ### Implementation artifacts and results
 
-- [`../../../../src/data_processing/foodon_lexicon.py`](../../../../src/data_processing/foodon_lexicon.py) loads the pinned offline index and performs exact lexical association plus vocabulary-validated final-token singularization.
-- [`../../../../src/data_processing/ingredient_target_generation.py`](../../../../src/data_processing/ingredient_target_generation.py) implements exact FoodOn, fallback, retry, and local-concept retention.
-- [`../../../../scripts/build_yummly_foodon_metadata.py`](../../../../scripts/build_yummly_foodon_metadata.py) generates the new metadata and reuses the exact-image-aware split validator.
-- [`../../../../src_scratches/data_anlysis/outputs/controlled_target_generation/report.json`](../../../../src_scratches/data_anlysis/outputs/controlled_target_generation/report.json) records the aggregate generation result.
-- [`../../../../src_scratches/data_anlysis/outputs/controlled_target_generation/threshold_sweep.json`](../../../../src_scratches/data_anlysis/outputs/controlled_target_generation/threshold_sweep.json) records the post-association threshold comparison.
+- [`../../../src/data_processing/foodon_lexicon.py`](../../../src/data_processing/foodon_lexicon.py) loads the pinned offline index and performs exact lexical association plus vocabulary-validated final-token singularization.
+- [`../../../src/data_processing/ingredient_target_generation.py`](../../../src/data_processing/ingredient_target_generation.py) implements exact FoodOn, fallback, retry, and local-concept retention.
+- [`../../../scripts/build_yummly_foodon_metadata.py`](../../../scripts/build_yummly_foodon_metadata.py) generates the new metadata and reuses the exact-image-aware split validator.
+- [`../../../src_scratches/data_anlysis/outputs/controlled_target_generation/report.json`](../../../src_scratches/data_anlysis/outputs/controlled_target_generation/report.json) records the aggregate generation result.
+- [`../../../src_scratches/data_anlysis/outputs/controlled_target_generation/threshold_sweep.json`](../../../src_scratches/data_anlysis/outputs/controlled_target_generation/threshold_sweep.json) records the post-association threshold comparison.
 
 The generated `v5` candidate contains 47,965/5,996/5,996 train/validation/test
 records and 165 train-supported canonical targets. It retains 59,957 records

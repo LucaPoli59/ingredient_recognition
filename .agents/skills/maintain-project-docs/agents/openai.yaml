@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain Project Documentation"
+  short_description: "Store durable project knowledge correctly"
+  default_prompt: "Use $maintain-project-docs to store this finding in the correct project document and keep all documentation indexes and trackers synchronized."

@@ -1,7 +1,7 @@
 # Yummly data and benchmark decisions
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-04
+**Last updated:** 2026-08-06
 **Status:** Active and binding
 
 ## Purpose
@@ -18,7 +18,7 @@ The existing 65,146-record metadata remains valid for historical experiments. It
 | D2 | How is `ingredients_target` produced? | Derive it deterministically from the original `ingredients` lines by associating them to a selected controlled vocabulary, with a small tested standardization fallback. Choose the concept level primarily by practical recognizability in the prepared-dish image, and preserve `ingredients` unchanged. |
 | D3 | Which persistent artifacts are required? | Store the common images and one selected metadata file per split. Do not create separate mapping, review, family, split, vocabulary, or validation-report artifacts. |
 | D4 | How is image quality handled? | Apply automatic existence and decoding checks. Do not add a manual image-review or adjudication workflow; models must tolerate remaining noise. |
-| D5 | How are leakage groups and splits built? | Group byte-identical images by SHA-256 only, then create a deterministic 80/10/10 split balanced for cuisine and ingredient targets. Do not use fuzzy recipe families. |
+| D5 | How are leakage groups and splits built? | Group byte-identical images by SHA-256 only, then create and freeze one reproducible 80/10/10 multi-label-stratified split balanced for cuisine and ingredient targets. Do not use pure random splitting or fuzzy recipe families. |
 | D6 | How is the vocabulary represented? | Derive it deterministically from training metadata and save its class order with each experiment or checkpoint. Do not maintain a separate dataset-level vocabulary file. |
 | D7 | How are historical experiments kept compatible? | Do not rewrite their metadata, configurations, or checkpoints. Compatibility work is deferred until the historical experiments to retain are selected; then adapt their paths and known schemas in memory when loading. |
 | D8 | What happens to `<UNK>`? | Remove it from new multi-label vocabularies and outputs because it has no positive training target. Preserve saved behavior for any legacy experiment selected for retention. |
@@ -93,13 +93,21 @@ The split builder must:
 
 1. compute image SHA-256 values during the build;
 2. allocate every byte-identical group wholly to one split;
-3. use a fixed seed and deterministic ordering;
+3. use a fully specified deterministic allocation; if randomized tie-breaking is introduced, declare and freeze its seed;
 4. target an 80/10/10 record allocation;
 5. balance cuisine and `ingredients_target` marginals within documented tolerances;
 6. assert that no record or exact-image group crosses splits;
 7. produce identical metadata content for identical input, configuration, and seed.
 
 Perceptual hashes, recipe names, ingredient similarity, and manual decisions must not create allocation groups. They are too dependent on arbitrary thresholds or interpretation for the chosen project scope.
+
+The frozen split is shared by every standard model so model comparisons use
+identical examples. It is a controlled in-distribution benchmark, not an
+out-of-distribution evaluation. The test split is unavailable to model,
+threshold, or hyperparameter selection. The general research rationale is
+recorded in [`../research/topics/dataset_splitting/split_strategy.md`](../research/topics/dataset_splitting/split_strategy.md);
+the current Yummly implementation and validation contract are in
+[`../technical_details/data/yummly_benchmark_split/explaination.md`](../technical_details/data/yummly_benchmark_split/explaination.md).
 
 ## D6: vocabulary ownership
 
@@ -163,4 +171,6 @@ Earlier planning proposed per-line ingredient mappings, manual image reviews, pe
 - [`problem_definition.md`](problem_definition.md)
 - [`../plans/data_ingredient_refactor/yummly_data_phase.md`](../plans/data_ingredient_refactor/yummly_data_phase.md)
 - [`../general_plan.md`](../general_plan.md)
+- [`../research/topics/dataset_splitting/split_strategy.md`](../research/topics/dataset_splitting/split_strategy.md)
+- [`../technical_details/data/yummly_benchmark_split/explaination.md`](../technical_details/data/yummly_benchmark_split/explaination.md)
 - [`../../src_scratches/data_anlysis/README.md`](../../src_scratches/data_anlysis/README.md)
