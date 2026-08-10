@@ -25,7 +25,7 @@ from src.data_processing.ingredient_standardization import (
     DEFAULT_MIN_RECIPE_SUPPORT,
     DEFAULT_MIN_TARGETS_PER_RECIPE,
 )
-from scripts.build_yummly_metadata import (
+from data.build_yummly_metadata import (
     SPLITS,
     allocate_groups,
     load_source_records,
