@@ -1,14 +1,15 @@
 # Implementation plans
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-10
+**Last updated:** 2026-08-12
 
 This directory contains the execution plans for concrete project implementations. These plans translate work packages from the project-wide [`general_plan.md`](../general_plan.md) into bounded technical tasks, verification steps, dependencies, and completion criteria.
 
 ## Active plans
 
 - [`data_ingredient_refactor/`](data_ingredient_refactor/README.md) contains the active Yummly Data plan and its controlled-vocabulary evaluation for Work packages 2.1b–2.4.
-- [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the active Macro-section 3 plan for historical reproduction, `v5` ResNet learnability analysis, visual-observability evidence, and final named ingredient tiers.
+- [`reference_selector_research.md`](reference_selector_research.md) is the active Work package 4.6 plan for researching and freezing the reference selector that gates Macro-section 3.
+- [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the deferred Macro-section 3 plan for historical reproduction, v5 learnability analysis, visual-observability evidence, and final named ingredient tiers.
 
 ## Scope
 
@@ -23,6 +24,7 @@ Use one descriptive Markdown file per bounded implementation:
 ```text
 docs/plans/
 ├── README.md
+├── reference_selector_research.md
 ├── recognizable_ingredient_selection.md
 └── <implementation_name>.md
 ```

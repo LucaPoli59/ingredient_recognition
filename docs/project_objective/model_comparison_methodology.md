@@ -199,7 +199,7 @@ vocabulary decisions as uncertain.
 
 | Owner | Required decision or artifact | Status |
 | --- | --- | --- |
-| Macro-section 4 | Choose and justify M_ref; define the model categories to compare. | Pending; this is the resume gate for Macro-section 3 execution. |
+| Macro-section 4 | Choose and justify M_ref; define the model categories to compare. | Pending; [`reference_selector_research.md`](../plans/reference_selector_research.md) is the resume-gate plan for Macro-section 3. |
 | Macro-section 3 | Freeze the M_ref learnability protocol and produce versioned V_selected evidence. | Deferred until M_ref is selected. |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
@@ -209,5 +209,6 @@ vocabulary decisions as uncertain.
 - [problem_definition.md](problem_definition.md)
 - [benchmark_decisions.md](benchmark_decisions.md)
 - [general_plan.md](../general_plan.md)
+- [reference_selector_research.md](../plans/reference_selector_research.md)
 - [recognizable_ingredient_selection.md](../plans/recognizable_ingredient_selection.md)
 - [label_learnability/README.md](../research/topics/label_learnability/README.md)

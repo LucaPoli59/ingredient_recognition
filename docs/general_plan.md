@@ -4,7 +4,7 @@
 **Last updated:** 2026-08-12
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Complete focused Macro-section 4 research and choose the justified reference selector that gates deferred Macro-section 3 execution, while completing the remaining runtime smoke checks for Data 2.4.
+**Current focus:** Complete Work package 4.6 reference-selector research and decision, while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -34,7 +34,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed with a verified manifest and anchors; finish the remaining runtime smoke tests for 2.4. |
 | 3 | Ingredient selection | **Deferred** | The historical rule is reconstructed and the decision profile is adopted; resume after Macro-section 4 selects the justified reference selector. |
-| 4 | Model research | **In progress** | Complete focused research, choose the reference selector, and approve a bounded model shortlist. |
+| 4 | Model research | **In progress** | Complete focused research, freeze the justified reference selector, and approve a bounded model shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Resume after comparable benchmark runs are complete. |
@@ -203,8 +203,9 @@ This macro-section surveys candidate methods and turns them into testable archit
 | 4.1 Existing-model inventory | **Done** | Maintain when implementation changes. |
 | 4.2 DINOv2 deep dive | **Done** | Revisit only if its integration changes. |
 | 4.3 State-of-the-art discovery | **Done** | Refresh only when a material research update justifies a new dated snapshot. |
-| 4.4 Focused model topics | **Pending** | Open the prioritized target-processing, augmentation, representation/head, calibration, and reference-selector topics. |
-| 4.5 Candidate shortlist | **Pending** | Convert focused evidence into the final approved implementation shortlist and choose the justified reference selector for Macro-section 3. |
+| 4.4 Focused model topics | **Pending** | Open the prioritized target-processing, augmentation, representation/head, and calibration topics. |
+| 4.5 Candidate shortlist | **Pending** | Convert the non-selector focused evidence into the final approved implementation shortlist. |
+| 4.6 Reference-selector decision | **Pending** | Research, compare, and freeze the justified M_ref selection instrument before Macro-section 3 resumes. |
 
 ### Completed
 
@@ -218,7 +219,7 @@ This macro-section surveys candidate methods and turns them into testable archit
 
 - [ ] Review at least the two preceding discoveries before every new discovery when they exist.
 - [ ] Investigate the discovery's prioritized topics: ingredient parsing and standardization, food-safe preprocessing and augmentation, representation/class-query implementation, and multi-label calibration.
-- [ ] Define the criteria and choose the reference selector for learnability-based vocabulary selection before resuming Macro-section 3; it need not be the final winning model category.
+- [ ] Execute the bounded reference-selector research and decision protocol before resuming Macro-section 3; M_ref need not be the final winning model category.
 - [ ] Compare candidates on scientific fit, data requirements, compute, calibration, interpretability, and integration cost.
 - [ ] Produce a bounded shortlist with an explicit hypothesis for each proposed model.
 
@@ -228,7 +229,7 @@ The research record supports a prioritized shortlist of models, every candidate 
 
 ### Next action
 
-Create focused topic records from the [2026-08-02 discovery](research/discovery/2026-08-02/README.md), including the reference-selector decision; approve the final model shortlist and `M_ref` only after the data contract is stable.
+Start [`reference_selector_research.md`](plans/reference_selector_research.md): register the eligible candidates and freeze its research rubric before reviewing focused evidence. Approve M_ref only after the data contract is stable; keep the broader model shortlist in Work package 4.5.
 
 ## 5. Additional model implementation
 
@@ -465,6 +466,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-12 | Ingredient selection protocol | Removed repeated-seed training because the available time cannot support it. The `v5` study uses one declared seed per configuration, temporal/configuration checks, and finite-validation-sample uncertainty where feasible; it makes no seed-level stability claim. | Work package 3.2 **In progress** | [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) |
 | 2026-08-12 | Comparative methodology | Bound the shared-vocabulary design: Macro-section 4 selects the reference selector, Macro-section 3 produces the selected vocabulary, and Macro-sections 6–7 separate full-task model comparison, transferred vocabulary ablation, support-matched random controls, and optional local adaptation. | Benchmark methodology **Active** | [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
 | 2026-08-12 | Ingredient selection | Deferred new `v5` selection execution until Macro-section 4 chooses the justified reference selector. Historical reconstruction and decision-profile planning remain retained. | Macro-section 3 and work packages 3.2–3.5 **Deferred**; Model research **In progress** | [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md), [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) |
+| 2026-08-12 | Model research planning | Opened Work package 4.6 and its bounded research plan to select the reference selector independently from the final model shortlist. | Work package 4.6 **Pending**; Macro-section 3 remains **Deferred** | [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 
 ## Tracker maintenance rules
 
@@ -489,6 +491,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 - [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) owns the binding methodology for shared vocabulary selection, model comparison, random-reduction controls, and local adaptation.
 - [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) is the active implementation plan for the Data work packages summarized in this section.
 - [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) is the active implementation plan for Macro-section 3 and the maintained home of the historical discrepancy resolutions.
+- [`plans/reference_selector_research.md`](plans/reference_selector_research.md) is the operational research and decision plan for Work package 4.6.
 - [`research/topics/label_learnability/learnability_assessment.md`](research/topics/label_learnability/learnability_assessment.md) provides the reusable evidence behind the Phase 3 decision-profile framework.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.
 - [`implementation_details/models.md`](implementation_details/models.md) describes the model implementations currently available.
