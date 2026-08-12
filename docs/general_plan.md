@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-10
+**Last updated:** 2026-08-12
 **Overall status:** In progress  
 **Current macro-phase:** Data and Ingredient selection
-**Current focus:** Validate the retained historical selection anchors for Data 2.1c and freeze the reproducible `v5` ingredient-learnability protocol for Macro-section 3.
+**Current focus:** Freeze the reproducible `v5` ingredient-learnability protocol for Macro-section 3 while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -32,7 +32,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | The minimum historical retention set is selected; validate its manifest and compatibility anchors, then finish the remaining runtime smoke tests. |
+| 2 | Data | **In progress** | Historical compatibility 2.1c is closed with a verified manifest and anchors; finish the remaining runtime smoke tests for 2.4. |
 | 3 | Ingredient selection | **In progress** | The historical ResNet rule is reconstructed; freeze and pilot an improved learning-dynamics protocol on `v5`. |
 | 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
@@ -83,22 +83,22 @@ The entries below are intentionally limited to first-level Data work packages. L
 
 | Work package | Status | Next action |
 | --- | --- | --- |
-| 2.1 Yummly data understanding, storage, and compatibility | **In progress** | Audit, shared image store, and retention selection are complete; manifest, reproduce, and smoke-load the selected historical anchors read-only. |
+| 2.1 Yummly data understanding, storage, and compatibility | **Done** | Audit, shared image store, retention manifest, historical reproduction, and read-only anchor smoke checks are complete. |
 | 2.2 `ingredients_target` standardization and vocabulary | **Done** | FoodOn-first `v5` generation, exact-plus-fallback association, mapping rules, and support policy are frozen. |
 | 2.3 Deterministic metadata generation and split | **Done** | `v4` remains the baseline; `v5` also passed all automatic image, split, leakage, distribution, vocabulary, and cardinality checks. |
 | 2.4 Runtime target integration and `<UNK>` removal | **In progress** | Code and data-contract tests pass; run the remaining training, checkpoint-reload, and dashboard smoke tests after restoring a compatible Torch/NumPy/Lightning environment. |
 
 ### 2.1 Yummly data understanding, storage, and compatibility
 
-**Status:** In progress
+**Status:** Done
 
-The Yummly audit, lineage reconstruction, quality analysis, shared image store, and read-only field audit are complete. The November 2024 ResNet ingredient-selection process has also been reconstructed, and Data Work package 2.1c now identifies the minimum retained aggregate evidence, immutable selected metadata, analysis provenance, and three executable checkpoint anchors. Compatibility work has resumed against that bounded set; no cleanup is authorized before its manifest, reproduction, and read-only smoke gates pass.
+The Yummly audit, lineage reconstruction, quality analysis, shared image store, and read-only field audit are complete. The November 2024 ResNet ingredient-selection process has also been reconstructed. Data Work package 2.1c now has a maintained retention manifest, exact historical reproduction, immutable selected metadata, analysis provenance, and three executable checkpoint anchors; its compatibility gate passed read-only on 2026-08-12. No cleanup has been authorized.
 
 **Evidence:** [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md), [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md), and [`../src_scratches/data_anlysis/README.md`](../src_scratches/data_anlysis/README.md).
 
 **Completion gate:** The selected retention manifest is verified, maintained code reproduces the historical 40-label intersection, and the retained checkpoint anchors load through the shared image layout without rewriting saved semantics.
 
-**Next action:** Generate the retention manifest, verify artifact and metadata hashes, reproduce the historical selection, and smoke-load the H1/H2/H3 checkpoint anchors read-only.
+**Next action:** Maintain the retention manifest and compatibility validator; any cleanup proposal requires a separate reviewed decision. The active Data dependency is now Work package 2.4 runtime smoke validation.
 
 ### 2.2 Improved `ingredients_target` standardization
 
@@ -450,6 +450,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-06 | Project governance | Consolidated the cross-category documentation rules: durable storage, source-of-truth boundaries, directory responsibilities, provenance, retention, and completion checks. | Documentation organization **Done** | [`README_DOCS_ORGN.md`](README_DOCS_ORGN.md) |
 | 2026-08-06 | Project governance | Reduced the Data section to first-level work packages and moved lower-level implementation detail to the active feature plan and durable evidence documents. | Documentation organization **Done**; Data summary **Synchronized** | [`README_DOCS_ORGN.md`](README_DOCS_ORGN.md), [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
 | 2026-08-10 | Data compatibility | Reconstructed the November 2024 ResNet ingredient-selection evidence, selected the minimum retained artifact set and three executable checkpoint anchors, and resumed the read-only compatibility work. | Work package 2.1 **In progress**; retention dependency **Done** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
+| 2026-08-12 | Data compatibility | Closed 2.1c with a 72-entry SHA-256 retention manifest, exact four-run/40-label reproduction, shared-image metadata smoke checks, and H1/H2/H3 checkpoint-anchor loads. No legacy artifact was rewritten or deleted. | Work package 2.1 **Done**; Data 2.4 remains **In progress** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`../scripts/validate_legacy_experiments.py`](../scripts/validate_legacy_experiments.py) |
 | 2026-08-10 | Ingredient selection | Accepted the historical max-train-F1 Q3 intersection as a baseline, resolved its reporting discrepancies, and opened a reproducible `v5` learning-dynamics feature plan with controls and observability evidence. | Work package 3.1 **Done**; 3.2 **In progress** | [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) |
 
 ## Tracker maintenance rules

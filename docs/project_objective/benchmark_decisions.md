@@ -1,7 +1,7 @@
 # Yummly data and benchmark decisions
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-10
+**Last updated:** 2026-08-12
 **Status:** Active and binding
 
 ## Purpose
@@ -20,7 +20,7 @@ The existing 65,146-record metadata remains valid for historical experiments. It
 | D4 | How is image quality handled? | Apply automatic existence and decoding checks. Do not add a manual image-review or adjudication workflow; models must tolerate remaining noise. |
 | D5 | How are leakage groups and splits built? | Group byte-identical images by SHA-256 only, then create and freeze one reproducible 80/10/10 multi-label-stratified split balanced for cuisine and ingredient targets. Do not use pure random splitting or fuzzy recipe families. |
 | D6 | How is the vocabulary represented? | Derive it deterministically from training metadata and save its class order with each experiment or checkpoint. Do not maintain a separate dataset-level vocabulary file. |
-| D7 | How are historical experiments kept compatible? | Do not rewrite their metadata, configurations, or checkpoints. Preserve the accepted minimum November 2024 ResNet selection evidence, then adapt the selected checkpoint anchors in memory and verify them read-only before any cleanup. |
+| D7 | How are historical experiments kept compatible? | Do not rewrite their metadata, configurations, or checkpoints. Preserve the accepted minimum November 2024 ResNet selection evidence, adapt selected checkpoint anchors in memory, and keep the passing read-only manifest/validator as the gate for any later cleanup. |
 | D8 | What happens to `<UNK>`? | Remove it from new multi-label vocabularies and outputs because it has no positive training target. Preserve saved behavior for any legacy experiment selected for retention. |
 | D9 | Which primary metrics are used? | Report macro mean average precision and micro F1 together; neither is sufficient alone. |
 | D10 | Where are thresholds and calibration selected? | Fit thresholds, calibration, and other selection-time parameters on validation data only. Keep the test split unavailable to selection decisions. |
@@ -128,7 +128,7 @@ Compatibility for those selected anchors is implemented during loading:
 - retain saved label encoders, class order, output dimensions, model state, and `<UNK>` behavior;
 - fail clearly on unknown schemas.
 
-The legacy `metadata.json` and `sel_ing_2410_metadata.json` files, retained configurations, metrics, and checkpoints are not rewritten. A read-only manifest and validation workflow must reproduce the exact 40-label intersection, verify artifact hashes, and prove that the selected anchors still load after the image move. No deletion is authorized until that gate passes. The previously proposed old DenseNet-schema translation is outside this bounded retention set and requires a separate selection decision if needed later.
+The legacy `metadata.json` and `sel_ing_2410_metadata.json` files, retained configurations, metrics, and checkpoints are not rewritten. [`scripts/validate_legacy_experiments.py`](../../scripts/validate_legacy_experiments.py) and its 72-entry [`retention_manifest.json`](../../src_scratches/ingredient_selection_reconstruction/retention_manifest.json) reproduce the exact 40-label intersection, verify artifact hashes, and prove that the selected anchors still load after the image move; this gate passed on 2026-08-12. No deletion is authorized by this decision. The previously proposed old DenseNet-schema translation is outside this bounded retention set and requires a separate selection decision if needed later.
 
 ## D8: `<UNK>` is removed from new multi-label outputs
 

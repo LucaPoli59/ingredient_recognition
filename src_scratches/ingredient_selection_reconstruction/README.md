@@ -8,11 +8,13 @@
 
 This temporary workspace reconstructs the November 2024 ingredient-selection experiment that predates the current project plans. It is exploratory evidence for defining Macro-section 3, not an authoritative methodology, implementation contract, or feature plan.
 
-**Review status:** Accepted on 2026-08-10. The durable retention decision is now in [`../../docs/plans/data_ingredient_refactor/yummly_data_phase.md`](../../docs/plans/data_ingredient_refactor/yummly_data_phase.md), and the discrepancy resolutions and replacement workflow are owned by [`../../docs/plans/recognizable_ingredient_selection.md`](../../docs/plans/recognizable_ingredient_selection.md).
+**Review status:** Accepted on 2026-08-10; Data 2.1c closed on 2026-08-12. The durable retention decision is now in [`../../docs/plans/data_ingredient_refactor/yummly_data_phase.md`](../../docs/plans/data_ingredient_refactor/yummly_data_phase.md), and the discrepancy resolutions and replacement workflow are owned by [`../../docs/plans/recognizable_ingredient_selection.md`](../../docs/plans/recognizable_ingredient_selection.md).
 
 ## Files
 
 - [`historical_logic_reconstruction.md`](historical_logic_reconstruction.md) records the reconstructed experiment stages, exact selection rule, involved artifacts, verified contradictions, reproducibility limits, and implications for the future plan.
+- [`retention_manifest.json`](retention_manifest.json) is the generated 72-entry, repository-relative retention manifest used by the read-only compatibility gate.
+- [`../../scripts/validate_legacy_experiments.py`](../../scripts/validate_legacy_experiments.py) verifies hashes, historical selection reproduction, metadata/image compatibility, checkpoint anchors, and saved H2 configuration state without rewriting artifacts.
 - `working/` is ignored disposable QA material used to render and inspect the external Word source; it is not part of the reconstruction deliverable.
 
 ## Working rules

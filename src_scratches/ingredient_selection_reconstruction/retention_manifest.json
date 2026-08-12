@@ -1,0 +1,593 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-12T11:26:37.732343+00:00",
+  "repository_relative_paths": true,
+  "read_only_verification": true,
+  "purpose": "Minimum retained evidence for Data work package 2.1c historical compatibility.",
+  "groups": {
+    "H1": "initial ResNet tuning context",
+    "H2": "four-run full-vocabulary train-F1 selection evidence",
+    "H3": "selected-vocabulary tuning context",
+    "H4": "selected-vocabulary validation evidence",
+    "metadata": "immutable projected legacy metadata",
+    "provenance": "analysis and launch provenance"
+  },
+  "artifacts": [
+    {
+      "path": "data/input/yummly/test/sel_ing_2410_metadata.json",
+      "group": "metadata",
+      "role": "immutable projected legacy metadata (test)",
+      "anchor": false,
+      "size": 5287135,
+      "sha256": "0E37DFE11219CD4DCF21185E4FA2AA8D6F218BCF10DC1B8E7EE72D1F4F163FF3"
+    },
+    {
+      "path": "data/input/yummly/train/sel_ing_2410_metadata.json",
+      "group": "metadata",
+      "role": "immutable projected legacy metadata (train)",
+      "anchor": false,
+      "size": 55491359,
+      "sha256": "69189FD97ADB0AAAB6748874F44CD50DAA6FC7D1A739DFE9040EC28018E5623B"
+    },
+    {
+      "path": "data/input/yummly/val/sel_ing_2410_metadata.json",
+      "group": "metadata",
+      "role": "immutable projected legacy metadata (val)",
+      "anchor": false,
+      "size": 5249234,
+      "sha256": "382D24E2C99DE5C93EEC6EF7E29F00935BB5166C42C98EC37458DA9E3474B102"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/best_trials.csv",
+      "group": "H3",
+      "role": "aggregate selected-vocabulary tuning evidence",
+      "anchor": false,
+      "size": 3626,
+      "sha256": "E613BEBBDD449216402BDA21E321E12AB3D9C21A62F1473048018C14CE0EDB61"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/full_metrics.csv",
+      "group": "H3",
+      "role": "aggregate selected-vocabulary tuning evidence",
+      "anchor": false,
+      "size": 272421,
+      "sha256": "D5198DC71DFDCC6C301014269EF61120FB35E3B5FC4393D77E816E42D4D809BF"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/hparam_config.json",
+      "group": "H3",
+      "role": "aggregate selected-vocabulary tuning evidence",
+      "anchor": false,
+      "size": 21487,
+      "sha256": "098F042FC8933120E8B365029F922A372D433EF4223CF719EFE0DB4AC286809A"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/hparam_gen_config.json",
+      "group": "H3",
+      "role": "aggregate selected-vocabulary tuning evidence",
+      "anchor": false,
+      "size": 9459,
+      "sha256": "9FDEF9FE3ED71ED76D058955D3C216642DA57D5E1A5C0F749DAEFCE020911638"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trial_64/best_model.ckpt",
+      "group": "H3",
+      "role": "executable checkpoint anchor",
+      "anchor": true,
+      "size": 134508870,
+      "sha256": "955EC8F1DF0DE0B405456867C5F4E07EAABF0DA13B9A8FD62FF18C03B39DC546"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trial_64/hparams.yaml",
+      "group": "H3",
+      "role": "saved hyperparameters",
+      "anchor": false,
+      "size": 214,
+      "sha256": "C8B812835857BFCC9F8D1B51CA669FC520A1E47E2A6C1E4F8CC54FFB243CBFD1"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trial_64/metrics.csv",
+      "group": "H3",
+      "role": "per-trial metrics",
+      "anchor": false,
+      "size": 11497,
+      "sha256": "884B4AB1F3700A870064856A1B342F5B1AFF1520D649D762E32A2AFEF22036A3"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trial_64/trial_config.json",
+      "group": "H3",
+      "role": "trial configuration",
+      "anchor": false,
+      "size": 15203,
+      "sha256": "9891CE3C4011D32AED6722E3352E18AFCE959B21E991D0B038333515693845DB"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trial_66/hparams.yaml",
+      "group": "H3",
+      "role": "saved hyperparameters",
+      "anchor": false,
+      "size": 214,
+      "sha256": "18A950E8D0F45B65A176F1958F1CFD1C27A05804985DBCD54FCEB59430F39AA9"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trial_66/metrics.csv",
+      "group": "H3",
+      "role": "per-trial metrics",
+      "anchor": false,
+      "size": 11494,
+      "sha256": "F30174B6EFAF1257246841BEAE15C29E54CDE3DFBA663E428C9CDBFC13E4D537"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trial_66/trial_config.json",
+      "group": "H3",
+      "role": "trial configuration",
+      "anchor": false,
+      "size": 15203,
+      "sha256": "5374CF238D3DA4B32638B58AF347763EFF28777B34A1CA483494172195E29E5F"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trial_68/hparams.yaml",
+      "group": "H3",
+      "role": "saved hyperparameters",
+      "anchor": false,
+      "size": 213,
+      "sha256": "F14A1EF29E25352A51B4EB98F0D81D0FE19EC6390D293C21905E209658EB950C"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trial_68/metrics.csv",
+      "group": "H3",
+      "role": "per-trial metrics",
+      "anchor": false,
+      "size": 11433,
+      "sha256": "4F828EA4E0A0C03178D457A3A25B6B3E34BB00BA0EF9D80D00DCEF03C32C01A8"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trial_68/trial_config.json",
+      "group": "H3",
+      "role": "trial configuration",
+      "anchor": false,
+      "size": 15136,
+      "sha256": "D8A4ECEACAD3F7C11173478C9CA7A9D5DAFF17E7910E132A5AB3E77729B97A7F"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}/trials_info.csv",
+      "group": "H3",
+      "role": "aggregate selected-vocabulary tuning evidence",
+      "anchor": false,
+      "size": 24627,
+      "sha256": "ACF5A9D5A8D02364D2DAC13117E1638E21CB000C34196189D3F043D023DB7418"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/full_f1.csv",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 2416,
+      "sha256": "8CB0107B21760C2A7B2E86E130AB5FBC28F38960B4C1AFC302ECC99900757DF1"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/full_f1_train.csv",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 28,
+      "sha256": "3E9471AAF39F0C72F08DA18AF596F49D158CC567FB93FE9A1BC9B3F8AE8CB1B0"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/full_metrics.csv",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 3284,
+      "sha256": "65F9158635E561C98986FA3592C91D474A8EC68F39E92587ED1F15BA2E5345E1"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_0/events.out.tfevents.1729860885.DESKTOP-HISA0J2.19896.0",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 7788,
+      "sha256": "390AEB4F4CDA0B60ABFE8DC2D21E2694718BE9C826B6BB8F13508EC42B794B3E"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_0/hparams.yaml",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 2106,
+      "sha256": "147145801BEF43BA65D0F5ECB899E009C5DFF56265C9F03ABCB665736E19AFFB"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_0/metrics.csv",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 1591,
+      "sha256": "5CDE668B86A2503ACECE3C8EFBD31229338239340F339907D2C4914C62772C41"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_0/validate-profiler.txt",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 13541,
+      "sha256": "FC279E76E714828C8D813BC45392D90013F05A13827054373EEFFB189C578916"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_1/events.out.tfevents.1729860998.DESKTOP-HISA0J2.19896.1",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 7788,
+      "sha256": "A7F52D4BED7968EFDBA797097F91081F659B33CAF9A1EB6C25FCBCEAF5253173"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_1/hparams.yaml",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 2106,
+      "sha256": "BA395EEBB69958B07383ABF4C4BE92EFF4A997237D5A7B00019DF349C47CA2AE"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_1/metrics.csv",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 1591,
+      "sha256": "C55234300088E73CC9D1AF44D8E32E503144A48410F40B08B822C291C98F7445"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_1/validate-profiler.txt",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 13541,
+      "sha256": "C1B85F679F728EDCE24D4A4027AD62AC2223BC37587CA6C3AD3D76373B82528C"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_2/events.out.tfevents.1729861102.DESKTOP-HISA0J2.19896.2",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 7726,
+      "sha256": "429F46A337F74015DEA854E87E655E6B44C2CE5C72FA377EA0562F51EB7CFBCF"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_2/hparams.yaml",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 2043,
+      "sha256": "CA65E607D24D8D4F2E16710D2E81F016ECDB1A9C4040F9AE236FA4B746B24E89"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_2/metrics.csv",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 1587,
+      "sha256": "2AFB31CED895B3B2BC536A3C5E33602D312CC3D35EDB927A7F403ABCB3EC3694"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trial_2/validate-profiler.txt",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 13541,
+      "sha256": "221347D7749D6C894B16D1665C3450BC9EA0FD86820E3BDAB935381B5AC00C35"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning_sel{10k}_test/trials_configuration.csv",
+      "group": "H4",
+      "role": "selected-vocabulary validation evidence",
+      "anchor": false,
+      "size": 405,
+      "sha256": "E34136C2D3B7F52FB1A49541FA86A0F57CC42F125E94C1A50B80878C80AF9151"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/best_trials.csv",
+      "group": "H1",
+      "role": "aggregate tuning evidence",
+      "anchor": false,
+      "size": 2916,
+      "sha256": "0F06026CAAB4366E10223A670DA2EE5161D57788AB25BF23A1455BDE36908FB1"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/full_metrics.csv",
+      "group": "H1",
+      "role": "aggregate tuning evidence",
+      "anchor": false,
+      "size": 104974,
+      "sha256": "3DCFC32E3481E4BCE39441FB27917F6D380425D6BE423BB2C97F1C4056A4F463"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/hparam_config.json",
+      "group": "H1",
+      "role": "aggregate tuning evidence",
+      "anchor": false,
+      "size": 45021,
+      "sha256": "9F975F717E5E17B89A4193F0A8612DB2C5CBAE53B360181113560F652C1FA222"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/hparam_gen_config.json",
+      "group": "H1",
+      "role": "aggregate tuning evidence",
+      "anchor": false,
+      "size": 9459,
+      "sha256": "1A85D04E59A9887FB56A5CDF8C2954F4406C41CE726CF58EC6F34EE4861C03FE"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trial_18/hparams.yaml",
+      "group": "H1",
+      "role": "saved hyperparameters",
+      "anchor": false,
+      "size": 204,
+      "sha256": "42D39AB5F15BA8ED67A232F547E289EAB83D8FFAB415F01D407AB83B835C9C4E"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trial_18/metrics.csv",
+      "group": "H1",
+      "role": "per-trial metrics",
+      "anchor": false,
+      "size": 12311,
+      "sha256": "0649C7F7990DF27F3B34F9251B80FF453463CBFDBB8C63B8110052B01AA20FAE"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trial_18/trial_config.json",
+      "group": "H1",
+      "role": "trial configuration",
+      "anchor": false,
+      "size": 14659,
+      "sha256": "7BCC4DB6A0B2544265CA3FFD8AA6FB318E7B497513F0BD55098A2BC151CFFEC9"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trial_2/hparams.yaml",
+      "group": "H1",
+      "role": "saved hyperparameters",
+      "anchor": false,
+      "size": 147,
+      "sha256": "834078B6421AFEDF264FCE120E8DB6228A1CDC5B8306525CD14B562E368B01D9"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trial_2/metrics.csv",
+      "group": "H1",
+      "role": "per-trial metrics",
+      "anchor": false,
+      "size": 12274,
+      "sha256": "08B42E4FBE3A94C54C8B9173BAFE10178A28F3D21A64F49885613203DF0778AD"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trial_2/trial_config.json",
+      "group": "H1",
+      "role": "trial configuration",
+      "anchor": false,
+      "size": 14350,
+      "sha256": "25DAF34ACBC3D6170209F5A3F717CD0FC412148F00B198A90C313E1AF9A63FB0"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trial_21/best_model.ckpt",
+      "group": "H1",
+      "role": "executable checkpoint anchor",
+      "anchor": true,
+      "size": 90283582,
+      "sha256": "CB35896B203DCCD27339C19B7CE8001C096001BFA6C2A6FF7B3F285982B41620"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trial_21/hparams.yaml",
+      "group": "H1",
+      "role": "saved hyperparameters",
+      "anchor": false,
+      "size": 204,
+      "sha256": "C1D0688FD50A86B2211885F35A0E137413C04108C2B2A5F66D72B3DB621AF58C"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trial_21/metrics.csv",
+      "group": "H1",
+      "role": "per-trial metrics",
+      "anchor": false,
+      "size": 12221,
+      "sha256": "AE679404A7B0362D2F6F0B9055F50D0502CF931C9A5C470A17818E092D6B7CA7"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trial_21/trial_config.json",
+      "group": "H1",
+      "role": "trial configuration",
+      "anchor": false,
+      "size": 14593,
+      "sha256": "4A0B4A03DE93A0AF62A443714BDCF3EE272803664DB624B41D12336CAE57C987"
+    },
+    {
+      "path": "experiments/basic/resnets_htuning{25k}/trials_info.csv",
+      "group": "H1",
+      "role": "aggregate tuning evidence",
+      "anchor": false,
+      "size": 9522,
+      "sha256": "6C2B969EA85CFC70B8FD2162CE38F8EFC843AF8FE7C7ADB71E1E4792C33BB777"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/full_f1_train.csv",
+      "group": "H2",
+      "role": "aggregate selection evidence",
+      "anchor": false,
+      "size": 272484,
+      "sha256": "70C779ED3637F5007A6B7E45E7AE73D56DF0DC3F1FA5B2C8733496AB9F9418F0"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/full_labels_stats.csv",
+      "group": "H2",
+      "role": "aggregate selection evidence",
+      "anchor": false,
+      "size": 34458,
+      "sha256": "83CD167313E272D5ACE882B925032844F2CEC2852FCEAC76FABD87018DD414C3"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/full_metrics.csv",
+      "group": "H2",
+      "role": "aggregate selection evidence",
+      "anchor": false,
+      "size": 543388,
+      "sha256": "EF380C3EE5774CB551412D13A1B145A64F29D9A4A53E65887C76FA89775018A1"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/trial_0/best_model.ckpt",
+      "group": "H2",
+      "role": "executable checkpoint anchor",
+      "anchor": true,
+      "size": 90298616,
+      "sha256": "AE444D7B0ED04BDE0B43DE81A3394FB914947B9F82A3A945D8EB98DD5AE49EB9"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/trial_0/hparams.yaml",
+      "group": "H2",
+      "role": "saved hyperparameters",
+      "anchor": false,
+      "size": 1968,
+      "sha256": "FF4B950F0FC4DE04AB6056F7341D60F316CC9D0E443A054414CED13470F4B271"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/trial_0/metrics.csv",
+      "group": "H2",
+      "role": "per-trial metrics",
+      "anchor": false,
+      "size": 315774,
+      "sha256": "3B8AA36E087EE715CF679ADC5B28C00F7B1960E158C69A09FA480B85E2CC044D"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/trial_1/hparams.yaml",
+      "group": "H2",
+      "role": "saved hyperparameters",
+      "anchor": false,
+      "size": 1933,
+      "sha256": "96AC5F2F12CC8C8B224C75BE7BF526E18DF684B94E0FFD6FAF2A2AF4036283A6"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/trial_1/metrics.csv",
+      "group": "H2",
+      "role": "per-trial metrics",
+      "anchor": false,
+      "size": 328411,
+      "sha256": "9857BBD33171261E8A5D6550C860416D9FFF38BF2961F91606D248FC6F139059"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/trial_2/hparams.yaml",
+      "group": "H2",
+      "role": "saved hyperparameters",
+      "anchor": false,
+      "size": 2030,
+      "sha256": "468FDBC45BDE47701D2F595012B2D2DAFB4A81D560E749A38073B72540AEC80C"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/trial_2/metrics.csv",
+      "group": "H2",
+      "role": "per-trial metrics",
+      "anchor": false,
+      "size": 306004,
+      "sha256": "997B5150D762B09E1FBF1DBAD8F59ECE3920F072D2F3F99B1AFFD4C733CE96C1"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/trial_3/hparams.yaml",
+      "group": "H2",
+      "role": "saved hyperparameters",
+      "anchor": false,
+      "size": 1968,
+      "sha256": "FF4B950F0FC4DE04AB6056F7341D60F316CC9D0E443A054414CED13470F4B271"
+    },
+    {
+      "path": "experiments/basic/resnets_training_BM_F1_INGS/trial_3/metrics.csv",
+      "group": "H2",
+      "role": "per-trial metrics",
+      "anchor": false,
+      "size": 320011,
+      "sha256": "5A4A01488A0DA5A30890E0E07F11B41EA0C6D388194513B39BB1E4C3B776B51B"
+    },
+    {
+      "path": "experiments/journal.log",
+      "group": "provenance",
+      "role": "historical launch or journal provenance",
+      "anchor": false,
+      "size": 652933,
+      "sha256": "63A8241220FB8449B8FEA5D138DC891427F6DA78A04E9C28381B5424D65AFE91"
+    },
+    {
+      "path": "experiments/journal_trash.log",
+      "group": "provenance",
+      "role": "historical launch or journal provenance",
+      "anchor": false,
+      "size": 39706,
+      "sha256": "8689CAA6A4ACF72514F50ADBFB564FEA81323BB4DAEB923D0DD76DDD9B032661"
+    },
+    {
+      "path": "scripts/analize_exps/analize_f1_ings.ipynb",
+      "group": "provenance",
+      "role": "analysis notebook",
+      "anchor": false,
+      "size": 455638,
+      "sha256": "18418CE1C951FCD5612FDC30203DFBE4FD6093B9AAAC6B02046ED31B3B67ED0A"
+    },
+    {
+      "path": "scripts/analize_exps/analize_test_f1.ipynb",
+      "group": "provenance",
+      "role": "analysis notebook",
+      "anchor": false,
+      "size": 178703,
+      "sha256": "2DF6A20E57EF681AE125E22E7199DAB56183F9BF22A54B4679A37FCF7687387D"
+    },
+    {
+      "path": "scripts/analize_exps/fake_study.ipynb",
+      "group": "provenance",
+      "role": "analysis notebook",
+      "anchor": false,
+      "size": 82624,
+      "sha256": "B79FBB484A478DB41DB3546AF2D53A2E6D67C3A89A1DBF0722A83FFB35697515"
+    },
+    {
+      "path": "scripts/analize_exps/refine_study_data.ipynb",
+      "group": "provenance",
+      "role": "analysis notebook",
+      "anchor": false,
+      "size": 3933547,
+      "sha256": "DAC1932AEA3AC8AE3EA27154E9B2FBA908A990ABEACBF98A86ACAFA28F8957A5"
+    },
+    {
+      "path": "scripts/analize_exps/visualize_study_data.ipynb",
+      "group": "provenance",
+      "role": "analysis notebook",
+      "anchor": false,
+      "size": 3872578,
+      "sha256": "117747407769F91CDC88B2D8D001F341CD8696B5D8FB322734DACE52798A2068"
+    },
+    {
+      "path": "scripts/launch_exps/resnet/htuning_resnets.py",
+      "group": "provenance",
+      "role": "historical launch or journal provenance",
+      "anchor": false,
+      "size": 4866,
+      "sha256": "0D33033180EFEB1374048C653EAD1D7EF28A964A19C1194DFC9105323881B7B3"
+    },
+    {
+      "path": "scripts/launch_exps/resnet/htuning_resnets_sel_ings.py",
+      "group": "provenance",
+      "role": "historical launch or journal provenance",
+      "anchor": false,
+      "size": 5009,
+      "sha256": "C17BDA2FAAEA979127CF2C0B316BCC26C736F90A4EDAE623E85A0BFFF0B0288D"
+    },
+    {
+      "path": "scripts/launch_exps/resnet/train_resnets_bs_f1_ings.py",
+      "group": "provenance",
+      "role": "historical launch or journal provenance",
+      "anchor": false,
+      "size": 2796,
+      "sha256": "2CE09DEAFC25AC45A60C0924AEB5910C083F884DFA62860A9714D15C41DFF2C5"
+    },
+    {
+      "path": "scripts/launch_exps/test_best_for_f1.py",
+      "group": "provenance",
+      "role": "historical launch or journal provenance",
+      "anchor": false,
+      "size": 2634,
+      "sha256": "CD77BC5318C16333CF237585ED983194FB6DC0FF933E3953B0E5E4A1AD7D5205"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 # Yummly data-phase implementation plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-10
+**Last updated:** 2026-08-12
 
 This plan translates the Data macro-section of [`general_plan.md`](../../general_plan.md) into a deliberately small implementation sequence. It covers the shared-image-store prerequisite, compatibility with historical experiments, generation of `ingredients_target`, deterministic split construction, and runtime integration.
 
@@ -10,15 +10,15 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 ## Progress tracker
 
 **Overall status:** In progress  
-**Current task:** Resume Work package 2.1c against the accepted minimum historical retention set.
-**Next action:** Create the read-only retention manifest, verify the legacy metadata and aggregate-selection hashes, then smoke-load the selected executable checkpoint anchors through the shared image layout.
+**Current task:** Finish the remaining Work package 2.4 runtime smoke checks in a compatible ML environment.
+**Next action:** Restore a compatible Torch/NumPy/Lightning environment, then run the bounded training, checkpoint-reload, and dashboard smoke tests; the historical 2.1c retention gate is closed.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | P0 | Inspect the current data layout, loaders, legacy preprocessing, and historical experiment artifacts | **Done** | [Verified implementation findings](#verified-implementation-findings) |
 | P1 | Agree on the simplified benchmark scope | **Done** | [Accepted design](#accepted-design) |
 | P2 | Implement and verify the shared-image-store prerequisite | **Done** | `scripts/migrate_yummly_images.py` staged and SHA-256-verified 65,146 files in `imgs/standard`; both legacy generations load through the refactored DataModule. |
-| P3 | Implement and verify historical experiment compatibility without rewriting saved artifacts | **In progress** | The minimum 2024 ResNet selection evidence and executable checkpoint anchors are now selected. Build the retention manifest, reproduce the 40-label result, and smoke-load the anchors before authorizing any cleanup. |
+| P3 | Implement and verify historical experiment compatibility without rewriting saved artifacts | **Done** | [`scripts/validate_legacy_experiments.py`](../../../scripts/validate_legacy_experiments.py) and [`retention_manifest.json`](../../../src_scratches/ingredient_selection_reconstruction/retention_manifest.json) verify 72 retained artifacts, their sizes and SHA-256 values, the four 46-label Q3 sets and exact 40-label intersection, both legacy metadata generations through `imgs/standard`, H1/H2/H3 checkpoint anchors, and saved H2 loss/augmentation state. The verifier is read-only unless explicitly invoked with `--write-manifest`; no legacy file was rewritten. |
 | P4 | Design and implement the improved `ingredients` to `ingredients_target` standardizer | **Done** | `src/data_processing/ingredient_standardization.py` uses explicit token-bounded rules, recipe support >= 500, and at least three retained targets. |
 | P4a | Audit the candidate ingredient vocabulary and present findings | **Done** | [`../../project_objective/ingredient_vocabulary_audit.md`](../../project_objective/ingredient_vocabulary_audit.md) audits 209 targets, 60,550 recipes, 707,771 raw lines, relationships, collisions, and counterfactual review packages without changing data or code. |
 | P4b | Strengthen the ingredient extractor from accepted audit findings | **Done** | All approved token-bounded rules and collision boundaries are covered by tests; `ingredients_target_v4_metadata.json` is the reproducible 161-target candidate. |
@@ -190,7 +190,7 @@ Both current metadata generations load through the common image directory; no Yu
 
 ## Work package 2.1c — historical experiment compatibility
 
-**Status:** In progress
+**Status:** Done
 
 ### Purpose
 
@@ -231,6 +231,17 @@ The implementation must:
 
 The earlier proposal to translate all nine old DenseNet checkpoint schemas is **Superseded for the 2.1c completion gate** because no DenseNet experiment belongs to the selected November 2024 ingredient-selection evidence set. Add that schema only if a DenseNet artifact is selected later through a separate retention decision.
 
+### Implementation result
+
+The read-only validator [`scripts/validate_legacy_experiments.py`](../../../scripts/validate_legacy_experiments.py) now owns the executable compatibility check. The generated [`retention_manifest.json`](../../../src_scratches/ingredient_selection_reconstruction/retention_manifest.json) contains 72 repository-relative entries with roles, sizes, SHA-256 values, and anchor flags. A passing run on 2026-08-12 established:
+
+- four H2 top-quartile sets of 46 labels, computed from maximum train F1 over epochs 0–39, with the expected 40-label intersection and class order of 183 (`<UNK>` included at the saved legacy index);
+- byte-verified projected metadata counts of 50,866/4,802/4,854 records for train/val/test, with at least three selected targets per recipe and representative original and projected records resolving through `imgs/standard`;
+- successful CPU loads of H1 trial 21 (183 outputs), H2 trial 0 (183 outputs), and H3 trial 64 (41 outputs), without rewriting checkpoint bytes;
+- saved H2 configuration evidence showing `weighted_loss: false` for all four runs and the actual `trns_aug` state for each run, independently of the inverted summary column.
+
+The manifest itself is intentionally generated under `src_scratches/` because it is a forensic retention artifact rather than a dataset or runtime contract. Re-running the validator without `--write-manifest` performs no writes and fails on any retained-file hash or semantic regression. No cleanup is authorized by this result; removal remains a separate reviewed action.
+
 ### Verification
 
 - Generate and review the retention manifest before proposing any deletion.
@@ -244,7 +255,7 @@ The earlier proposal to translate all nine old DenseNet checkpoint schemas is **
 
 ### Completion gate
 
-The manifest and hashes cover the minimum retention set; maintained code reproduces the exact historical 40-label result; every selected checkpoint anchor loads unchanged legacy metadata through the shared image layout while retaining `ingredients_ok`, original target values, class order, output shape, and `<UNK>` semantics; and repeated verification performs no writes. Only after this gate may a separate cleanup step propose removal of non-retained artifacts.
+The manifest and hashes cover the minimum retention set; maintained code reproduces the exact historical 40-label result; every selected checkpoint anchor loads unchanged legacy metadata through the shared image layout while retaining `ingredients_ok`, original target values, class order, output shape, and `<UNK>` semantics; and repeated verification performs no writes. **This gate is satisfied on 2026-08-12.** Only after this gate may a separate cleanup step propose removal of non-retained artifacts.
 
 ## Work package 2.2 — improved ingredient-target standardization
 
@@ -544,10 +555,10 @@ New experiments default to `ingredients_target` and omit `<UNK>` from their mult
   -> 2.4 runtime default and <UNK> decision
   -> freeze the first selected generation
 
-2.1c retained legacy evidence manifest and compatibility anchors (in progress)
+2.1c retained legacy evidence manifest and compatibility anchors (Done 2026-08-12)
 ```
 
-Work package 2.1c resumed on 2026-08-10 after the November 2024 ingredient-selection artifacts were reconstructed and the minimum retention set was accepted. Its work remains isolated from the new standardizer and does not block use of `v5` for new experiments.
+Work package 2.1c resumed on 2026-08-10 after the November 2024 ingredient-selection artifacts were reconstructed and the minimum retention set was accepted, then passed its manifest, reproduction, metadata/image, and checkpoint-anchor gates on 2026-08-12. Its work remains isolated from the new standardizer and does not block use of `v5` for new experiments.
 
 ## Risks and mitigations
 
@@ -609,3 +620,4 @@ The plan is complete when:
 | 2026-08-06 | Implemented Work package 2.4 runtime policy | New configurations select `v5` and a strict 165-class encoder without `<UNK>`; legacy robust configurations preserve `<UNK>`. Regression and split-contract tests pass. Training, checkpoint-reload, and dashboard smoke execution remains pending because the available ML environment is incompatible. |
 | 2026-08-10 | Selected the minimum November 2024 ResNet ingredient-selection retention set and resumed Work package 2.1c | The historical process and exact 40-label result are reconstructible from saved artifacts. Retention now covers the H1/H2/H3/H4 evidence, immutable selected metadata, analysis provenance, and three executable checkpoint anchors; no deletion is authorized before manifest, reproduction, and compatibility gates pass. |
 | 2026-08-10 | Removed old DenseNet schema translation from the 2.1c completion gate | DenseNet experiments were not part of the selected ingredient-selection evidence. Compatibility may be added later only if a separate retention decision selects a DenseNet artifact. |
+| 2026-08-12 | Closed Work package 2.1c with a maintained read-only validator and retention manifest | The validator passed artifact hashes, historical selection reproduction, shared-image metadata smoke checks, checkpoint-anchor loads, and saved H2 configuration evidence. No cleanup or legacy rewrite was performed. |

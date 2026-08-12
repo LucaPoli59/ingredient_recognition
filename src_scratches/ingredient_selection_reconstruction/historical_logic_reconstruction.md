@@ -368,7 +368,7 @@ The 2026-08-10 review resolved the open questions as follows:
 2. Train F1 was intentional as an optimization-learnability signal. It is not validation generalization or proof of literal visual recognizability.
 3. The new method will preserve separate evidence for optimization learnability, validation generalization, semantic relevance, and the `direct`/`contextual`/`not_inferable`/`uncertain` observability states.
 4. The 165-label `v5` vocabulary remains the shared default. Any smaller set is a named headline or exploratory projection, never a second implicit default.
-5. The precise minimum artifact set and executable anchors are frozen in Data Work package 2.1c. No deletion is authorized until its manifest, reproduction, and compatibility gates pass.
+5. The precise minimum artifact set and executable anchors are frozen in Data Work package 2.1c. Its manifest, reproduction, and compatibility gates passed on 2026-08-12; no deletion is authorized by that result, and any cleanup remains a separate reviewed action.
 6. The weighted-loss mistake is nonessential and will not be reproduced; the augmentation inversion is a reporting defect; and the old/new plot is retired as comparative evidence.
 
 ## Durable owners and next checkpoint
