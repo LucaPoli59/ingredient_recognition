@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-06
+**Last updated:** 2026-08-10
 **Overall status:** In progress  
-**Current macro-phase:** Data
-**Current focus:** Finish the runtime smoke validation for the implemented FoodOn-first `v5` target integration.
+**Current macro-phase:** Data and Ingredient selection
+**Current focus:** Validate the retained historical selection anchors for Data 2.1c and freeze the reproducible `v5` ingredient-learnability protocol for Macro-section 3.
 
 ## Purpose
 
@@ -32,8 +32,8 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | Runtime integration is implemented; validate training, checkpoint reload, and dashboard behavior in a compatible ML environment. |
-| 3 | Ingredient selection | **In progress** | Formalize relevance and visual-distinguishability criteria. |
+| 2 | Data | **In progress** | The minimum historical retention set is selected; validate its manifest and compatibility anchors, then finish the remaining runtime smoke tests. |
+| 3 | Ingredient selection | **In progress** | The historical ResNet rule is reconstructed; freeze and pilot an improved learning-dynamics protocol on `v5`. |
 | 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
@@ -83,7 +83,7 @@ The entries below are intentionally limited to first-level Data work packages. L
 
 | Work package | Status | Next action |
 | --- | --- | --- |
-| 2.1 Yummly data understanding, storage, and compatibility | **In progress** | Audit and shared image store are complete; select retained historical experiments before resuming compatibility work. |
+| 2.1 Yummly data understanding, storage, and compatibility | **In progress** | Audit, shared image store, and retention selection are complete; manifest, reproduce, and smoke-load the selected historical anchors read-only. |
 | 2.2 `ingredients_target` standardization and vocabulary | **Done** | FoodOn-first `v5` generation, exact-plus-fallback association, mapping rules, and support policy are frozen. |
 | 2.3 Deterministic metadata generation and split | **Done** | `v4` remains the baseline; `v5` also passed all automatic image, split, leakage, distribution, vocabulary, and cardinality checks. |
 | 2.4 Runtime target integration and `<UNK>` removal | **In progress** | Code and data-contract tests pass; run the remaining training, checkpoint-reload, and dashboard smoke tests after restoring a compatible Torch/NumPy/Lightning environment. |
@@ -92,13 +92,13 @@ The entries below are intentionally limited to first-level Data work packages. L
 
 **Status:** In progress
 
-The Yummly audit, lineage reconstruction, quality analysis, shared image store, and read-only field audit are complete. Historical experiment compatibility remains deferred so that legacy artifacts can be selected before an in-memory compatibility adapter and smoke validation are scoped.
+The Yummly audit, lineage reconstruction, quality analysis, shared image store, and read-only field audit are complete. The November 2024 ResNet ingredient-selection process has also been reconstructed, and Data Work package 2.1c now identifies the minimum retained aggregate evidence, immutable selected metadata, analysis provenance, and three executable checkpoint anchors. Compatibility work has resumed against that bounded set; no cleanup is authorized before its manifest, reproduction, and read-only smoke gates pass.
 
-**Evidence:** [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md), [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), and [`../src_scratches/data_anlysis/README.md`](../src_scratches/data_anlysis/README.md).
+**Evidence:** [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md), [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md), and [`../src_scratches/data_anlysis/README.md`](../src_scratches/data_anlysis/README.md).
 
-**Completion gate:** The legacy data path and selected retained experiments load through the shared image layout without rewriting saved semantics.
+**Completion gate:** The selected retention manifest is verified, maintained code reproduces the historical 40-label intersection, and the retained checkpoint anchors load through the shared image layout without rewriting saved semantics.
 
-**Next action:** Select the historical experiments to retain, then resume the compatibility work in the active Data implementation plan.
+**Next action:** Generate the retention manifest, verify artifact and metadata hashes, reproduce the historical selection, and smoke-load the H1/H2/H3 checkpoint anchors read-only.
 
 ### 2.2 Improved `ingredients_target` standardization
 
@@ -144,17 +144,19 @@ The Data macro-section is **Done** only when shared image loading, legacy compat
 
 **Status:** In progress
 
-This macro-section selects ingredients that are scientifically relevant and sufficiently distinguishable for meaningful image-based evaluation. Relevance and visual distinguishability are separate criteria and must not be collapsed into raw frequency.
+This macro-section selects ingredients that provide scientifically meaningful and reproducible image-learning targets. Optimization learnability, validation generalization, semantic relevance, support, and visual observability are separate evidence dimensions; none may be collapsed into raw frequency or one transient F1 maximum.
+
+The 2024 ResNet selection has been reconstructed as a historical baseline: it intersected four top-quartile sets defined by each label's maximum train F1 and produced 40 legacy `ingredients_ok` labels. Train F1 is accepted as an intentional convergence signal for that narrow question, but the legacy rule is not reused as the final `v5` criterion and the old/new plot is not accepted as comparative evidence.
 
 ### Work-package status
 
 | Work package | Status | Next action |
 | --- | --- | --- |
-| 3.1 Preliminary frequency and quality evidence | **Done** | Use it to design the selection protocol. |
-| 3.2 Relevance criteria | **Pending** | Define semantic and support requirements. |
-| 3.3 Visual-distinguishability protocol | **Pending** | Define instance-level annotation and agreement rules. |
-| 3.4 Candidate ingredient analysis | **Pending** | Apply the criteria without using test outcomes. |
-| 3.5 Final vocabulary tiers | **Pending** | Freeze headline and exploratory vocabularies after the grouped split. |
+| 3.1 Preliminary evidence and historical reconstruction | **Done** | Retain the exact max-Q3 intersection as a read-only baseline and regression fixture. |
+| 3.2 Selection criteria and experimental protocol | **In progress** | Freeze the `v5` ResNet panel, seeds, budgets, trajectory statistics, controls, provenance, and decision gates. |
+| 3.3 Reproducible `v5` ResNet learnability study | **Pending** | Implement maintained analysis, run a bounded pilot, freeze the rule, then execute the full campaign. |
+| 3.4 Relevance and visual-observability validation | **Pending** | Combine learnability with semantic/support criteria and audited direct/contextual/not-inferable evidence. |
+| 3.5 Final vocabulary tiers and integration | **Pending** | Freeze named headline and exploratory projections, integrate them, and retire superseded scripts only after parity and retention gates pass. |
 
 ### Completed evidence
 
@@ -163,24 +165,28 @@ This macro-section selects ingredients that are scientifically relevant and suff
 - [x] Demonstrated cuisine-dependent contextual shortcuts.
 - [x] Defined the observability states `direct`, `contextual`, `not_inferable`, and `uncertain`.
 - [x] Set preliminary support requirements for reliable headline evaluation.
+- [x] Reconstructed the four historical ResNet stages, exact 40-label intersection, experiment groups, metadata projection, and evidence hierarchy.
+- [x] Resolved the historical discrepancies: train F1 is an intentional convergence signal; the maximum-only rule requires improvement; the fourth run is unweighted; augmentation reporting is inverted; and the old/new plot is not a valid comparison.
+- [x] Opened the dedicated [`recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) operational plan.
 
 ### Pending
 
-- [ ] Define what “relevant” means for the thesis question independently of frequency.
-- [ ] Define annotation instructions for visual distinguishability at recipe-label level.
-- [ ] Select an audited subset with coverage across labels, cuisines, support tiers, and image conditions.
-- [ ] Use at least two reviewers and measure agreement before adjudication.
-- [ ] Estimate direct/contextual/not-inferable proportions per candidate ingredient.
-- [ ] Combine semantic validity, support, observability, and research value into a documented selection rule.
-- [ ] Freeze headline and exploratory vocabulary tiers using training support only.
+- [ ] Freeze the global ResNet configuration panel, at least three final-campaign seeds, budgets, transforms, loss state, and per-label logging contract before inspecting selection outcomes.
+- [ ] Pilot robust train-F1 learning-dynamics statistics, including early-to-late change, a late-window level, stability, uncertainty, and an explicit absolute signal where justified.
+- [ ] Add support/prevalence, non-visual, and matched-size vocabulary controls; use like-for-like cohorts and statistics for every reduction claim.
+- [ ] Implement deterministic historical reproduction and `v5` analysis in a dedicated source package, with plots generated from validated manifests rather than notebook state.
+- [ ] Define what “relevant” means for the thesis question independently of frequency or optimization ease.
+- [ ] Define and pilot instance-level visual-observability annotation with at least two reviewers and agreement measurement.
+- [ ] Combine learnability, generalization, semantic validity, support, observability, and research value into a documented tier rule.
+- [ ] Freeze named headline and exploratory projections of the shared `v5` vocabulary without using test outcomes.
 
 ### Completion gate
 
-The final ingredient sets are versioned, justified by explicit criteria, supported by an annotation report, and frozen without test-driven selection.
+The historical rule is reproduced by maintained read-only code; the `v5` campaign and analysis are deterministic and carry complete provenance; the final ingredient tiers are versioned and justified across declared learnability, stability, generalization, support, relevance, and observability criteria; the annotation report is complete; and no test outcome influenced selection.
 
 ### Next action
 
-Write the relevance and visual-distinguishability protocol, then pilot it on a small stratified sample before large-scale annotation.
+Follow [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md): freeze the `v5` experimental contract and candidate trajectory criteria, then implement the historical regression and bounded pilot before launching the full campaign.
 
 ## 4. Model research
 
@@ -443,6 +449,8 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-06 | Benchmark methodology | Confirmed one frozen, exact-duplicate-group-aware multi-label-stratified Yummly split for all standard model comparisons. The test split remains unavailable to selection decisions; pure random splitting is not used. | Data split policy **Active** | [`research/topics/dataset_splitting/split_strategy.md`](research/topics/dataset_splitting/split_strategy.md), [`technical_details/data/yummly_benchmark_split/explaination.md`](technical_details/data/yummly_benchmark_split/explaination.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
 | 2026-08-06 | Project governance | Consolidated the cross-category documentation rules: durable storage, source-of-truth boundaries, directory responsibilities, provenance, retention, and completion checks. | Documentation organization **Done** | [`README_DOCS_ORGN.md`](README_DOCS_ORGN.md) |
 | 2026-08-06 | Project governance | Reduced the Data section to first-level work packages and moved lower-level implementation detail to the active feature plan and durable evidence documents. | Documentation organization **Done**; Data summary **Synchronized** | [`README_DOCS_ORGN.md`](README_DOCS_ORGN.md), [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
+| 2026-08-10 | Data compatibility | Reconstructed the November 2024 ResNet ingredient-selection evidence, selected the minimum retained artifact set and three executable checkpoint anchors, and resumed the read-only compatibility work. | Work package 2.1 **In progress**; retention dependency **Done** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
+| 2026-08-10 | Ingredient selection | Accepted the historical max-train-F1 Q3 intersection as a baseline, resolved its reporting discrepancies, and opened a reproducible `v5` learning-dynamics feature plan with controls and observability evidence. | Work package 3.1 **Done**; 3.2 **In progress** | [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) |
 
 ## Tracker maintenance rules
 
@@ -465,5 +473,6 @@ This table is append-only. Add one row when a macro-section or first-level work 
 - [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) records the Yummly-specific controlled-vocabulary evidence and implementation decision gate.
 - [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) contains the binding benchmark policies and readiness checklist.
 - [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) is the active implementation plan for the Data work packages summarized in this section.
+- [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) is the active implementation plan for Macro-section 3 and the maintained home of the historical discrepancy resolutions.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.
 - [`implementation_details/models.md`](implementation_details/models.md) describes the model implementations currently available.

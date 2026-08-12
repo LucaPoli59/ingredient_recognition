@@ -1,7 +1,7 @@
 # Yummly data and benchmark decisions
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-06
+**Last updated:** 2026-08-10
 **Status:** Active and binding
 
 ## Purpose
@@ -20,7 +20,7 @@ The existing 65,146-record metadata remains valid for historical experiments. It
 | D4 | How is image quality handled? | Apply automatic existence and decoding checks. Do not add a manual image-review or adjudication workflow; models must tolerate remaining noise. |
 | D5 | How are leakage groups and splits built? | Group byte-identical images by SHA-256 only, then create and freeze one reproducible 80/10/10 multi-label-stratified split balanced for cuisine and ingredient targets. Do not use pure random splitting or fuzzy recipe families. |
 | D6 | How is the vocabulary represented? | Derive it deterministically from training metadata and save its class order with each experiment or checkpoint. Do not maintain a separate dataset-level vocabulary file. |
-| D7 | How are historical experiments kept compatible? | Do not rewrite their metadata, configurations, or checkpoints. Compatibility work is deferred until the historical experiments to retain are selected; then adapt their paths and known schemas in memory when loading. |
+| D7 | How are historical experiments kept compatible? | Do not rewrite their metadata, configurations, or checkpoints. Preserve the accepted minimum November 2024 ResNet selection evidence, then adapt the selected checkpoint anchors in memory and verify them read-only before any cleanup. |
 | D8 | What happens to `<UNK>`? | Remove it from new multi-label vocabularies and outputs because it has no positive training target. Preserve saved behavior for any legacy experiment selected for retention. |
 | D9 | Which primary metrics are used? | Report macro mean average precision and micro F1 together; neither is sufficient alone. |
 | D10 | Where are thresholds and calibration selected? | Fit thresholds, calibration, and other selection-time parameters on validation data only. Keep the test split unavailable to selection decisions. |
@@ -37,7 +37,7 @@ The DataModule continues to accept a configurable `feature_label`. This is requi
 
 ## D2: controlled-vocabulary target generation
 
-The new target-generation pipeline starts from the original ingredient lines, not from `ingredients_ok`. A controlled-vocabulary investigation is in progress in [Work package 2.2c of the Data plan](../plans/data_ingredient_refactor/yummly_data_phase.md#work-package-22c--controlled-vocabulary-research); no candidate vocabulary is yet binding.
+The new target-generation pipeline starts from the original ingredient lines, not from `ingredients_ok`. Work packages 2.2c–2.2d selected and implemented the pinned FoodOn-first `v5` pipeline with retained local concepts, exact association before and after the bounded fallback, and no fuzzy recovery. `ingredients_target_v5_metadata.json` is the standard runtime generation.
 
 The most probable historical lineage is [`../../prev_attempts/attempt1/preprocessing_v2.py`](../../prev_attempts/attempt1/preprocessing_v2.py): it produces flat string labels and its split sizes match the historical files. [`../../prev_attempts/attempt2/pre_process.py`](../../prev_attempts/attempt2/pre_process.py) produces nested category/subcategory pairs and was not the generator of the current representation.
 
@@ -54,9 +54,9 @@ Fine-grained target distinctions are governed primarily by practical recognizabi
 
 The pipeline will first associate a raw line directly to a selected vocabulary concept. Only an unmatched line receives the small, explicit, phrase- or token-bounded standardization fallback; it is then associated again. If association still fails, the standardized term is retained as its own concept rather than silently removed or mapped to `<UNK>`. Recipe concepts are deduplicated and ordered deterministically before support filtering.
 
-The source-support threshold remains 500 recipes and the minimum retained target count remains three for the first revised comparison, but both are provisional. They are applied after vocabulary association to final concepts and may be relaxed or removed when the Work package 2.2c evidence shows unacceptable information loss. No per-line mapping table, manual mapping review, or runtime ontology service is required.
+The standard source-support threshold is 500 distinct train recipes and the minimum retained target count is three. Both are applied after vocabulary association to final concepts and produce the shared 165-label `v5` vocabulary. Any alternative threshold or selected ingredient subset must be a separately named experiment rather than a silent replacement default. No per-line mapping table, manual mapping review, or runtime ontology service is required.
 
-The previous 2.2b rules and `ingredients_target_v4_metadata.json` remain tested baseline evidence, not a selected new benchmark. [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md) remains the registry for those baseline custom rules until the vocabulary decision defines its successor.
+The previous 2.2b rules and `ingredients_target_v4_metadata.json` remain tested baseline evidence, not the selected runtime benchmark. [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md) remains the registry for the bounded fallback rules used by the current pipeline.
 
 ## D3: minimal persistent outputs
 
@@ -119,15 +119,16 @@ Validation and test must never expand or reorder that vocabulary. A separate `vo
 
 The repository contains multiple historical storage generations: JSON-driven experiments, light checkpoints that depend on nearby JSON configuration, current-style full checkpoints, and older DenseNet checkpoints with different DataModule key names.
 
-Compatibility, when resumed for selected retained experiments, is implemented during loading:
+The minimum retained set for the November 2024 ResNet ingredient-selection process is now selected in [Data Work package 2.1c](../plans/data_ingredient_refactor/yummly_data_phase.md#work-package-21c--historical-experiment-compatibility). It preserves the H1–H4 aggregate evidence and selected trial configurations, all three `sel_ing_2410_metadata.json` files, the analysis and launcher provenance, and bounded executable anchors for full-vocabulary and selected-vocabulary checkpoint loading.
+
+Compatibility for those selected anchors is implemented during loading:
 
 - supply `images_subdir="imgs/standard"` when an older configuration lacks it;
 - preserve explicit `feature_label="ingredients_ok"`;
-- translate known older DenseNet keys into current DataModule arguments in memory;
 - retain saved label encoders, class order, output dimensions, model state, and `<UNK>` behavior;
 - fail clearly on unknown schemas.
 
-The legacy `metadata.json` and `sel_ing_2410_metadata.json` files, saved JSON configurations, YAML files, and checkpoints are not rewritten. A read-only validation script must prove that the selected representative experiments still load after the image move. This work is deferred until those experiments are chosen.
+The legacy `metadata.json` and `sel_ing_2410_metadata.json` files, retained configurations, metrics, and checkpoints are not rewritten. A read-only manifest and validation workflow must reproduce the exact 40-label intersection, verify artifact hashes, and prove that the selected anchors still load after the image move. No deletion is authorized until that gate passes. The previously proposed old DenseNet-schema translation is outside this bounded retention set and requires a separate selection decision if needed later.
 
 ## D8: `<UNK>` is removed from new multi-label outputs
 
@@ -170,6 +171,7 @@ Earlier planning proposed per-line ingredient mappings, manual image reviews, pe
 - [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md)
 - [`problem_definition.md`](problem_definition.md)
 - [`../plans/data_ingredient_refactor/yummly_data_phase.md`](../plans/data_ingredient_refactor/yummly_data_phase.md)
+- [`../plans/recognizable_ingredient_selection.md`](../plans/recognizable_ingredient_selection.md)
 - [`../general_plan.md`](../general_plan.md)
 - [`../research/topics/dataset_splitting/split_strategy.md`](../research/topics/dataset_splitting/split_strategy.md)
 - [`../technical_details/data/yummly_benchmark_split/explaination.md`](../technical_details/data/yummly_benchmark_split/explaination.md)
