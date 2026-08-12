@@ -24,6 +24,7 @@ The existing 65,146-record metadata remains valid for historical experiments. It
 | D8 | What happens to `<UNK>`? | Remove it from new multi-label vocabularies and outputs because it has no positive training target. Preserve saved behavior for any legacy experiment selected for retention. |
 | D9 | Which primary metrics are used? | Report macro mean average precision and micro F1 together; neither is sufficient alone. |
 | D10 | Where are thresholds and calibration selected? | Fit thresholds, calibration, and other selection-time parameters on validation data only. Keep the test split unavailable to selection decisions. |
+| D11 | How are ingredient selection and model comparison coupled? | Macro-section 3 produces one shared selected vocabulary after Macro-section 4 chooses a justified reference selector. Compare model categories on common full and selected tasks; test vocabulary reduction through transferred-hyperparameter and support-matched random-vocabulary controls; keep selected-task local adaptation separate. |
 
 ## D1: target-field contract
 
@@ -144,6 +145,25 @@ Macro mean average precision exposes performance across ingredient labels, inclu
 
 Also report per-label support and per-label metrics, with explicit treatment of labels that have insufficient evaluation positives. Thresholds, calibration, early stopping, hyperparameters, target rules, and ingredient selection must use training and validation data only. The frozen test split is used for final comparison.
 
+## D11: comparative training and vocabulary-reduction methodology
+
+The project uses one shared, versioned selected vocabulary rather than a
+different learned vocabulary per model category. Macro-section 4 first chooses
+the justified reference selector; Macro-section 3 then owns the selection
+workflow and produces the shared projection. Macro-section 6 tunes every model
+category on the full v5 task, uses its unchanged full-task configuration for the
+selected-vocabulary ablation, and runs support-matched random-vocabulary
+controls with the reference selector. A small selected-task adaptation panel,
+if used, is reported separately because it changes hyperparameters as well as
+the vocabulary.
+
+The binding design, rationale, formulae, single-run resource limitation, and
+ownership boundaries are in
+[`model_comparison_methodology.md`](model_comparison_methodology.md). That
+document is authoritative for this decision; the active Macro-section 3 plan
+owns the selection implementation and the later Macro-sections 6 and 7 own
+training and final-comparison execution.
+
 ## Automatic readiness checklist
 
 A new metadata generation is ready only when:
@@ -170,6 +190,7 @@ Earlier planning proposed per-line ingredient mappings, manual image reviews, pe
 - [`ingredient_vocabulary_audit.md`](ingredient_vocabulary_audit.md)
 - [`../implementation_details/ingredient_mapping_rules.md`](../implementation_details/ingredient_mapping_rules.md)
 - [`problem_definition.md`](problem_definition.md)
+- [`model_comparison_methodology.md`](model_comparison_methodology.md)
 - [`../plans/data_ingredient_refactor/yummly_data_phase.md`](../plans/data_ingredient_refactor/yummly_data_phase.md)
 - [`../plans/recognizable_ingredient_selection.md`](../plans/recognizable_ingredient_selection.md)
 - [`../general_plan.md`](../general_plan.md)

@@ -3,8 +3,8 @@
 **Created:** 2026-08-02  
 **Last updated:** 2026-08-12
 **Overall status:** In progress  
-**Current macro-phase:** Data and Ingredient selection
-**Current focus:** Freeze the reproducible `v5` ingredient-learnability protocol for Macro-section 3 while completing the remaining runtime smoke checks for Data 2.4.
+**Current macro-phase:** Data and Model research
+**Current focus:** Complete focused Macro-section 4 research and choose the justified reference selector that gates deferred Macro-section 3 execution, while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -33,8 +33,8 @@ A macro-section may remain **In progress** while some of its work packages are *
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed with a verified manifest and anchors; finish the remaining runtime smoke tests for 2.4. |
-| 3 | Ingredient selection | **In progress** | The historical ResNet rule is reconstructed; freeze and pilot an improved learning-dynamics protocol on `v5`. |
-| 4 | Model research | **In progress** | Convert the broad discovery into focused topic records and an approved bounded shortlist. |
+| 3 | Ingredient selection | **Deferred** | The historical rule is reconstructed and the decision profile is adopted; resume after Macro-section 4 selects the justified reference selector. |
+| 4 | Model research | **In progress** | Complete focused research, choose the reference selector, and approve a bounded model shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Resume after comparable benchmark runs are complete. |
@@ -142,21 +142,21 @@ The Data macro-section is **Done** only when shared image loading, legacy compat
 
 ## 3. Ingredient selection
 
-**Status:** In progress
+**Status:** Deferred
 
-This macro-section selects ingredients that provide scientifically meaningful and reproducible image-learning targets. Optimization learnability, validation generalization, semantic relevance, support, and visual observability are separate evidence dimensions; none may be collapsed into raw frequency or one transient F1 maximum.
+This macro-section selects ingredients that provide scientifically meaningful and reproducible image-learning targets. The adopted Phase 3 profile separates train-AP optimization, validation-AP generalization, temporal/configuration sensitivity, validity/mechanism, semantic relevance, support, and visual observability; F1 is a secondary diagnostic under a fixed policy. None of these dimensions may be collapsed into raw frequency or one transient F1 maximum.
 
-The 2024 ResNet selection has been reconstructed as a historical baseline: it intersected four top-quartile sets defined by each label's maximum train F1 and produced 40 legacy `ingredients_ok` labels. Train F1 is accepted as an intentional convergence signal for that narrow question, but the legacy rule is not reused as the final `v5` criterion and the old/new plot is not accepted as comparative evidence.
+The 2024 ResNet selection has been reconstructed as a historical baseline: it intersected four top-quartile sets defined by each label's maximum train F1 and produced 40 legacy `ingredients_ok` labels. Train F1 is accepted as an intentional convergence signal for that narrow question, but the legacy rule is not reused as the final `v5` criterion and the old/new plot is not accepted as comparative evidence. Macro-section 3 retains ownership of the new shared selected vocabulary, but its execution waits for Macro-section 4 to choose the reference selector.
 
 ### Work-package status
 
 | Work package | Status | Next action |
 | --- | --- | --- |
 | 3.1 Preliminary evidence and historical reconstruction | **Done** | Retain the exact max-Q3 intersection as a read-only baseline and regression fixture. |
-| 3.2 Selection criteria and experimental protocol | **In progress** | Freeze the `v5` ResNet panel, seeds, budgets, trajectory statistics, controls, provenance, and decision gates. |
-| 3.3 Reproducible `v5` ResNet learnability study | **Pending** | Implement maintained analysis, run a bounded pilot, freeze the rule, then execute the full campaign. |
-| 3.4 Relevance and visual-observability validation | **Pending** | Combine learnability with semantic/support criteria and audited direct/contextual/not-inferable evidence. |
-| 3.5 Final vocabulary tiers and integration | **Pending** | Freeze named headline and exploratory projections, integrate them, and retire superseded scripts only after parity and retention gates pass. |
+| 3.2 Selection criteria and experimental protocol | **Deferred** | After Macro-section 4 chooses `M_ref`, freeze its `v5` panel, one declared seed per configuration, AP trajectories, fixed-policy F1 diagnostics, controls, provenance, single-run uncertainty policy, and bounded-pilot procedure for numerical decision-profile gates. |
+| 3.3 Reproducible `v5` learnability study | **Deferred** | Implement maintained analysis, run a bounded pilot, freeze the rule, then execute the `M_ref` campaign. |
+| 3.4 Relevance and visual-observability validation | **Deferred** | Combine learnability with semantic/support criteria and audited direct/contextual/not-inferable evidence. |
+| 3.5 Final vocabulary tiers and integration | **Deferred** | Freeze named headline and exploratory projections, integrate them, and retire superseded scripts only after parity and retention gates pass. |
 
 ### Completed evidence
 
@@ -168,11 +168,13 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 - [x] Reconstructed the four historical ResNet stages, exact 40-label intersection, experiment groups, metadata projection, and evidence hierarchy.
 - [x] Resolved the historical discrepancies: train F1 is an intentional convergence signal; the maximum-only rule requires improvement; the fourth run is unweighted; augmentation reporting is inverted; and the old/new plot is not a valid comparison.
 - [x] Opened the dedicated [`recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) operational plan.
+- [x] Adopted a research-informed learnability decision profile: train AP for optimization, validation AP for generalization, and separate stability, support, mechanism, and observability evidence; F1 is fixed-policy diagnostic evidence only.
+- [x] Adopted the cross-phase methodology: Macro-section 4 chooses the reference selector; Macro-section 3 produces one shared selected vocabulary; Macro-sections 6–7 separate full-task comparison, transferred vocabulary ablation, support-matched random controls, and optional local adaptation.
 
-### Pending
+### Deferred until the Macro-section 4 reference-selector decision
 
-- [ ] Freeze the global ResNet configuration panel, at least three final-campaign seeds, budgets, transforms, loss state, and per-label logging contract before inspecting selection outcomes.
-- [ ] Pilot robust train-F1 learning-dynamics statistics, including early-to-late change, a late-window level, stability, uncertainty, and an explicit absolute signal where justified.
+- [ ] Freeze the global `M_ref` configuration panel, one declared seed per configuration, budgets, transforms, loss state, single-run limitation, and per-label logging contract before inspecting selection outcomes.
+- [ ] Pilot robust train-AP learning-dynamics and validation-AP statistics, including early-to-late change, a late-window level, temporal/configuration sensitivity, finite-validation-sample uncertainty where feasible, profile gates, and a fixed-policy F1 diagnostic where relevant.
 - [ ] Add support/prevalence, non-visual, and matched-size vocabulary controls; use like-for-like cohorts and statistics for every reduction claim.
 - [ ] Implement deterministic historical reproduction and `v5` analysis in a dedicated source package, with plots generated from validated manifests rather than notebook state.
 - [ ] Define what “relevant” means for the thesis question independently of frequency or optimization ease.
@@ -182,11 +184,11 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 
 ### Completion gate
 
-The historical rule is reproduced by maintained read-only code; the `v5` campaign and analysis are deterministic and carry complete provenance; the final ingredient tiers are versioned and justified across declared learnability, stability, generalization, support, relevance, and observability criteria; the annotation report is complete; and no test outcome influenced selection.
+The historical rule is reproduced by maintained read-only code; the `v5` campaign and analysis are deterministic and carry complete provenance; the final shared ingredient tiers are versioned and justified by the frozen `M_ref` decision profile across optimization, generalization, temporal/configuration sensitivity, support, validity/mechanism, relevance, and observability criteria, with the single-run limitation stated; the annotation report is complete; and no test outcome influenced selection.
 
 ### Next action
 
-Follow [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md): freeze the `v5` experimental contract and candidate trajectory criteria, then implement the historical regression and bounded pilot before launching the full campaign.
+Complete Macro-section 4 research and choose the justified reference selector under [`model_comparison_methodology.md`](project_objective/model_comparison_methodology.md). Then resume [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) to freeze the `v5` experimental contract and candidate decision-profile measures before the bounded pilot.
 
 ## 4. Model research
 
@@ -201,8 +203,8 @@ This macro-section surveys candidate methods and turns them into testable archit
 | 4.1 Existing-model inventory | **Done** | Maintain when implementation changes. |
 | 4.2 DINOv2 deep dive | **Done** | Revisit only if its integration changes. |
 | 4.3 State-of-the-art discovery | **Done** | Refresh only when a material research update justifies a new dated snapshot. |
-| 4.4 Focused model topics | **Pending** | Open the prioritized target-processing, augmentation, representation/head, and calibration topics. |
-| 4.5 Candidate shortlist | **Pending** | Convert focused evidence into the final approved implementation shortlist. |
+| 4.4 Focused model topics | **Pending** | Open the prioritized target-processing, augmentation, representation/head, calibration, and reference-selector topics. |
+| 4.5 Candidate shortlist | **Pending** | Convert focused evidence into the final approved implementation shortlist and choose the justified reference selector for Macro-section 3. |
 
 ### Completed
 
@@ -216,16 +218,17 @@ This macro-section surveys candidate methods and turns them into testable archit
 
 - [ ] Review at least the two preceding discoveries before every new discovery when they exist.
 - [ ] Investigate the discovery's prioritized topics: ingredient parsing and standardization, food-safe preprocessing and augmentation, representation/class-query implementation, and multi-label calibration.
+- [ ] Define the criteria and choose the reference selector for learnability-based vocabulary selection before resuming Macro-section 3; it need not be the final winning model category.
 - [ ] Compare candidates on scientific fit, data requirements, compute, calibration, interpretability, and integration cost.
 - [ ] Produce a bounded shortlist with an explicit hypothesis for each proposed model.
 
 ### Completion gate
 
-The research record supports a prioritized shortlist of models, and every candidate has a falsifiable hypothesis, baseline comparison, resource estimate, and implementation plan.
+The research record supports a prioritized shortlist of models, every candidate has a falsifiable hypothesis, baseline comparison, resource estimate, and implementation plan, and one justified reference selector is frozen for Macro-section 3.
 
 ### Next action
 
-Create focused topic records from the [2026-08-02 discovery](research/discovery/2026-08-02/README.md), starting with target standardization and data preprocessing; approve the final model shortlist only after the data contract is stable.
+Create focused topic records from the [2026-08-02 discovery](research/discovery/2026-08-02/README.md), including the reference-selector decision; approve the final model shortlist and `M_ref` only after the data contract is stable.
 
 ## 5. Additional model implementation
 
@@ -269,6 +272,8 @@ No implementation action until the first model shortlist is approved.
 
 This macro-section covers baseline training, controlled model training, hyperparameter search, run selection, and reproducibility under the frozen benchmark.
 
+The binding design is in [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md): tune each model category once on the common full vocabulary, use transferred hyperparameters for the shared selected-vocabulary ablation, use support-matched random vocabulary controls with the reference selector, and keep any selected-task local adaptation separate.
+
 ### Existing historical infrastructure
 
 - [x] Lightning trainers, checkpointing, logging, and early stopping exist.
@@ -281,14 +286,16 @@ Historical runs remain useful engineering evidence but are **Superseded** for fi
 
 ### Pending after resume
 
-- [ ] Freeze seeds, budgets, stopping rules, transforms, metrics, and logging requirements.
+- [ ] Freeze one declared seed per configuration, budgets, stopping rules, transforms, metrics, logging requirements, and the single-run reporting limitation.
 - [ ] Run prevalence and cuisine-prior non-visual baselines.
 - [ ] Run a simple supervised convolutional baseline.
 - [ ] Run a frozen pretrained visual encoder with a linear multilabel head.
 - [ ] Define model-specific hyperparameter spaces before opening each study.
 - [ ] Verify Optuna study isolation, resumption behavior, and trial traceability.
-- [ ] Run tuning using validation only and fixed comparable budgets.
-- [ ] Retrain selected configurations across the required seeds.
+- [ ] Run one bounded `V_base` tuning study per approved model category using validation only and fixed comparable budgets.
+- [ ] Train the shared selected-vocabulary ablation with each category's unchanged full-task hyperparameters, then evaluate the paired full-task predictions on the same selected labels.
+- [ ] Run the reference-selector selected-versus-support-matched-random vocabulary controls under unchanged full-task hyperparameters.
+- [ ] If selected-task optimized results are required, run the same predeclared small local-adaptation panel around each category's full-task configuration; keep its results separate from the vocabulary-effect ablation.
 - [ ] Calibrate and select thresholds using validation only after model selection.
 - [ ] Preserve configurations, checkpoints, metrics, environment information, and run identifiers.
 
@@ -298,11 +305,11 @@ Resume when the benchmark, selected ingredient vocabulary, data loader, evaluati
 
 ### Completion gate
 
-Every required baseline and shortlisted model has reproducible selected runs under the same benchmark protocol, with no test-set use during selection.
+Every required baseline and shortlisted model has comparable full-task and shared selected-task runs under the frozen protocol; the reference-selector random controls and any local-adaptation results are separately identified; no test set was used during selection.
 
 ### Next action
 
-Do not launch final training or tuning on the legacy 182-label split. Small smoke tests remain allowed when clearly marked as engineering validation.
+Do not launch final training or tuning on the legacy 182-label split. Resume after Macro-sections 4 and 3 freeze `M_ref` and the shared selected vocabulary; small smoke tests remain allowed when clearly marked as engineering validation.
 
 ## 7. Results comparison
 
@@ -315,13 +322,15 @@ This macro-section covers the frozen evaluation protocol, statistical comparison
 - [x] Selected label-macro mean average precision and micro F1 as paired primary metrics.
 - [x] Defined secondary ranking, set-prediction, calibration, cardinality, and observability-slice metrics.
 - [x] Required validation-only calibration and threshold selection.
-- [x] Required multiple seeds and confidence intervals that do not treat byte-identical image groups as independent samples.
+- [x] Fixed a one-declared-seed-per-configuration resource limit and required finite-sample uncertainty reporting without treating it as seed-level stability.
 
 ### Pending implementation and analysis
 
 - [ ] Implement and unit-test the metric, calibration, threshold, aggregation, and bootstrap suite.
 - [ ] Freeze the comparison table schema before inspecting test results.
-- [ ] Compare models under identical data, vocabulary, transforms, budgets, seeds, and selection rules.
+- [ ] Compare model categories under identical data, vocabulary, transforms, budgets, declared single-run constraints, and selection rules for Q1 and Q2.
+- [ ] Report the Q3 selected-versus-random vocabulary ablation only for the reference selector and keep it distinct from model-category rankings.
+- [ ] Report any Q4 local-adaptation results as optimized selected-task results, distinct from the transferred-hyperparameter ablation.
 - [ ] Report primary and secondary metrics with uncertainty.
 - [ ] Compare direct, contextual, not-inferable, and uncertain ingredient slices.
 - [ ] Analyze performance by ingredient, support tier, cuisine, image quality, and predicted cardinality.
@@ -336,7 +345,7 @@ Resume comparative analysis after Macro-section 6 produces comparable selected r
 
 ### Completion gate
 
-The comparison is reproducible, statistically supported, includes failure analysis and resource costs, and directly answers the research questions without overstating ingredient visibility.
+The comparison has complete provenance, reports finite-sample uncertainty without overstating the single-run evidence, includes failure analysis and resource costs, keeps Q1–Q4 claims distinct, and directly answers the research questions without overstating ingredient visibility.
 
 ### Next action
 
@@ -393,18 +402,18 @@ Create the thesis outline and claim map as soon as the institutional template an
 project foundation [Done]
           |
           v
-       data [In progress] <------+
-          |                       |
-          +--> ingredient selection [In progress]
-          |                       |
-          +--> model research [In progress]
-                        |         |
-                        v         |
-          additional models [Deferred]
-                        |         |
-                        +---------+
-                        v
-        training and HTuning [Deferred]
+       data [In progress]
+          |             \
+          |              +--> model research [In progress]
+          |                         |
+          +-------------------------+--> ingredient selection [Deferred: after reference selector]
+                                      |                    |
+                                      v                    |
+                        additional models [Deferred]       |
+                                      |                    |
+                                      +--------------------+
+                                               v
+                               training and HTuning [Deferred]
                         |
                         v
           results comparison [Deferred]
@@ -452,6 +461,10 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-10 | Data compatibility | Reconstructed the November 2024 ResNet ingredient-selection evidence, selected the minimum retained artifact set and three executable checkpoint anchors, and resumed the read-only compatibility work. | Work package 2.1 **In progress**; retention dependency **Done** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
 | 2026-08-12 | Data compatibility | Closed 2.1c with a 72-entry SHA-256 retention manifest, exact four-run/40-label reproduction, shared-image metadata smoke checks, and H1/H2/H3 checkpoint-anchor loads. No legacy artifact was rewritten or deleted. | Work package 2.1 **Done**; Data 2.4 remains **In progress** | [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`../scripts/validate_legacy_experiments.py`](../scripts/validate_legacy_experiments.py) |
 | 2026-08-10 | Ingredient selection | Accepted the historical max-train-F1 Q3 intersection as a baseline, resolved its reporting discrepancies, and opened a reproducible `v5` learning-dynamics feature plan with controls and observability evidence. | Work package 3.1 **Done**; 3.2 **In progress** | [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) |
+| 2026-08-12 | Ingredient selection methodology | Adopted a research-informed decision-profile framework: train AP trajectory for optimization, validation AP for held-out generalization, fixed-policy F1 only as a diagnostic, and separate stability, support, mechanism, and observability evidence. Numerical gates remain a bounded-pilot decision. | Work package 3.2 **In progress** | [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md), [`research/topics/label_learnability/learnability_assessment.md`](research/topics/label_learnability/learnability_assessment.md) |
+| 2026-08-12 | Ingredient selection protocol | Removed repeated-seed training because the available time cannot support it. The `v5` study uses one declared seed per configuration, temporal/configuration checks, and finite-validation-sample uncertainty where feasible; it makes no seed-level stability claim. | Work package 3.2 **In progress** | [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) |
+| 2026-08-12 | Comparative methodology | Bound the shared-vocabulary design: Macro-section 4 selects the reference selector, Macro-section 3 produces the selected vocabulary, and Macro-sections 6–7 separate full-task model comparison, transferred vocabulary ablation, support-matched random controls, and optional local adaptation. | Benchmark methodology **Active** | [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
+| 2026-08-12 | Ingredient selection | Deferred new `v5` selection execution until Macro-section 4 chooses the justified reference selector. Historical reconstruction and decision-profile planning remain retained. | Macro-section 3 and work packages 3.2–3.5 **Deferred**; Model research **In progress** | [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md), [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) |
 
 ## Tracker maintenance rules
 
@@ -473,7 +486,9 @@ This table is append-only. Add one row when a macro-section or first-level work 
 - [`research/topics/ingredient_vocabularies/README.md`](research/topics/ingredient_vocabularies/README.md) indexes the reusable, dataset-independent vocabulary catalog.
 - [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) records the Yummly-specific controlled-vocabulary evidence and implementation decision gate.
 - [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) contains the binding benchmark policies and readiness checklist.
+- [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) owns the binding methodology for shared vocabulary selection, model comparison, random-reduction controls, and local adaptation.
 - [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) is the active implementation plan for the Data work packages summarized in this section.
 - [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) is the active implementation plan for Macro-section 3 and the maintained home of the historical discrepancy resolutions.
+- [`research/topics/label_learnability/learnability_assessment.md`](research/topics/label_learnability/learnability_assessment.md) provides the reusable evidence behind the Phase 3 decision-profile framework.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.
 - [`implementation_details/models.md`](implementation_details/models.md) describes the model implementations currently available.

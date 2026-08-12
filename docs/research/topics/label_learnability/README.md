@@ -26,8 +26,11 @@ model, threshold, numerical cut-off, or production vocabulary.
 ## Related work
 
 - [`../../../plans/recognizable_ingredient_selection.md`](../../../plans/recognizable_ingredient_selection.md)
-  is the project-specific plan that may adopt a version of this protocol after
-  its experimental contract is frozen.
+  is the project-specific plan that has adopted this profile and will execute it
+  after Macro-section 4 selects the reference selector.
+- [`../../../project_objective/model_comparison_methodology.md`](../../../project_objective/model_comparison_methodology.md)
+  owns the binding cross-phase methodology that fixes the reference-selector
+  dependency and the later shared-vocabulary comparisons.
 - [`../../../project_objective/problem_definition.md`](../../../project_objective/problem_definition.md)
   defines the weakly supervised multi-label image-prediction setting in which
   the ingredient use case belongs.

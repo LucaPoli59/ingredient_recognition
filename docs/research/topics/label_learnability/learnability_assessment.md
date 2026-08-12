@@ -1,6 +1,7 @@
 # Assessing label learnability in supervised classification
 
 **Research date:** 2026-08-12
+**Last updated:** 2026-08-12
 **Status:** Evidence synthesis and reusable recommendation; not a binding project decision.
 
 ## Question and boundary
@@ -216,14 +217,34 @@ project that wants to adopt it should first run a small, frozen pilot with a
 fixed configuration panel and at least three seeds. The pilot should log
 train/validation AP trajectories, support, and fixed-policy F1, then test
 whether the proposed evidence profiles are stable enough to support explicit
-criteria. Only after that pilot should the project freeze a selection contract
-and implement it as a reusable component.
+criteria. Only after that pilot should the project freeze numerical selection
+criteria and implement them as a reusable component.
 
-For the Ingredient Recognition project, this is input to the in-progress
-contract work in
+### Resource-bounded single-run variant
+
+When repeated training across seeds is infeasible, a study may deliberately use
+one declared seed per configuration as a **screening variant**. It still needs
+the fixed split, per-epoch train/validation AP, fixed-policy F1 diagnostic,
+support/prevalence, non-visual controls, and provenance above. It may add
+within-run early/late-window sensitivity, configuration sensitivity where a
+bounded panel exists, and resampling intervals over held-out scores.
+
+This variant cannot establish run-to-run or seed-level stability. A resampling
+interval quantifies finite held-out-sample uncertainty, not variation caused by
+training stochasticity. Its reports must preserve the declared seed, state the
+limitation prominently, and classify borderline labels as uncertain rather than
+claiming stable generalization. It is a resource-constrained adaptation of the
+recommended protocol, not equivalent evidence.
+
+For the Ingredient Recognition project, the general evidence profile has been
+adopted as the planning framework in
 [`recognizable_ingredient_selection.md`](../../../plans/recognizable_ingredient_selection.md).
-That plan—not this research note—will record any adopted thresholds, run panel,
-or implementation decision.
+Its execution is deferred until Macro-section 4 chooses the reference selector;
+the binding cross-phase rationale and ownership boundary are in
+[`model_comparison_methodology.md`](../../../project_objective/model_comparison_methodology.md).
+The selection plan—not this research note—will record the frozen numerical
+gates, run panel, single-run resource limit, and implementation decision after
+the bounded pilot.
 
 ## Limitations and open questions
 
