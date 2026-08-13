@@ -499,33 +499,46 @@ def _compute_images_paths(metadata: List[Dict], images_dir: str | os.PathLike, i
     if not images_root.is_dir():
         raise FileNotFoundError(f'Image directory not found: {images_root}')
 
-    image_paths = []
     errors = []
-    for index, recipe in enumerate(metadata):
-        image_ref = recipe.get(image_field)
+
+    def _validate_image_path(record_index: int, image_ref: object) -> pathlib.Path | None:
         if not isinstance(image_ref, str) or not image_ref:
-            errors.append(f'record {index} has no valid {image_field!r} value')
-            continue
+            errors.append(f'record {record_index} has no valid {image_field!r} value')
+            return None
 
         relative_path = pathlib.PurePath(image_ref)
         if relative_path.is_absolute() or '..' in relative_path.parts:
-            errors.append(f'record {index} has an unsafe image reference: {image_ref!r}')
-            continue
+            errors.append(f'record {record_index} has an unsafe image reference: {image_ref!r}')
+            return None
 
         image_path = (images_root / relative_path).resolve()
         if images_root not in image_path.parents and image_path != images_root:
-            errors.append(f'record {index} resolves outside the image directory: {image_ref!r}')
-            continue
+            errors.append(f'record {record_index} resolves outside the image directory: {image_ref!r}')
+            return None
         if not image_path.is_file():
-            errors.append(f'record {index} references a missing image: {image_ref!r}')
-            continue
-        image_paths.append(image_path)
+            errors.append(f'record {record_index} references a missing image: {image_ref!r}')
+            return None
+        return image_path
+
+    metadata_df = pd.DataFrame(metadata)
+    image_refs = metadata_df.get(
+        image_field,
+        pd.Series(index=metadata_df.index, dtype=object),
+    )
+    image_records = pd.Series(
+        zip(metadata_df.index, image_refs),
+        index=metadata_df.index,
+        dtype=object,
+    )
+    metadata_df[image_field] = image_records.apply(
+        lambda record: _validate_image_path(*record)
+    )
 
     if errors:
         preview = '; '.join(errors[:5])
         remainder = '' if len(errors) <= 5 else f' (and {len(errors) - 5} more)'
         raise FileNotFoundError(f'Invalid image references below {images_root}: {preview}{remainder}')
-    return image_paths
+    return metadata_df[image_field].tolist()
 
 
 def _preprocess_flavor(flavor_data: List[Dict[str, float]] | ndarray) -> Tuple[ndarray, List[str], ndarray]:
