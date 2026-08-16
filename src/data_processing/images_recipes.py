@@ -20,6 +20,21 @@ from src.data_processing.transformations import t_transform
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust, LabelEncoderInterface, MultiLabelBinarizer, TextIntEncoder
 
 
+def _resolve_pin_memory(pin_memory: bool | None, os_name: str | None = None) -> bool:
+    """Resolve the DataLoader pinned-memory policy for the current platform.
+
+    ``None`` keeps the setting portable: native Windows enables pinned memory,
+    while WSL and every other operating system default to disabling it.
+    """
+    if pin_memory is not None:
+        if not isinstance(pin_memory, bool):
+            raise TypeError(f"pin_memory must be a bool or None, got {type(pin_memory).__name__}")
+        return pin_memory
+
+    current_os_name = os.name if os_name is None else os_name
+    return current_os_name == "nt"
+
+
 class _ImagesRecipesDataset(Dataset):
     """Base Dataset class for the images and labels. It loads the images and recipes data and applies the
     transformations to the images."""
@@ -257,6 +272,7 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
             num_workers: int | None = None,
             transform_aug: Optional[t_transform] = None,
             transform_plain: Optional[t_transform] = None,
+            pin_memory: bool | None = None,
     ):
         super().__init__(images_stats_path, batch_size=batch_size, transform_aug=transform_aug,
                          transform_plain=transform_plain)  # Setting parameters
@@ -264,12 +280,13 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
         self.images_subdir = os.fspath(images_subdir)
         self.recipe_feature_label, self.food_categories = feature_label, food_categories
         self.batch_size, self.num_workers = batch_size, num_workers
+        self.pin_memory = pin_memory
         self.label_encoder, self.category = label_encoder, category
         self._set_def_params()
 
         register_hparams(self, ["data_dir", "metadata_filename", "images_subdir", "category", "feature_label",
                                 {"label_encoder": self.label_encoder.to_config()}, {"type": self.__class__},
-                                {"num_workers": self.num_workers}, {}],
+                                {"num_workers": self.num_workers}, {"pin_memory": self.pin_memory}, {}],
                          log=False)
 
         self._stage_data_dir = {}  # Local metadata paths for each stage
@@ -383,21 +400,25 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
             self.predict_dataset = _ImagesRecipesDataset(self._images_paths['predict'], self._label_data['predict'],
                                                          self.transform_plain)
 
+    @property
+    def _pin_memory_enabled(self) -> bool:
+        return _resolve_pin_memory(self.pin_memory)
+
     def train_dataloader(self):
         return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers,
-                          pin_memory=True, persistent_workers=self.num_workers > 0)
+                          pin_memory=self._pin_memory_enabled, persistent_workers=self.num_workers > 0)
 
     def val_dataloader(self):
         return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers,
-                          pin_memory=True, persistent_workers=self.num_workers > 0)
+                          pin_memory=self._pin_memory_enabled, persistent_workers=self.num_workers > 0)
 
     def test_dataloader(self):
         return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers,
-                          pin_memory=True, persistent_workers=self.num_workers > 0)
+                          pin_memory=self._pin_memory_enabled, persistent_workers=self.num_workers > 0)
 
     def predict_dataloader(self):
         return DataLoader(self.predict_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers,
-                          pin_memory=True, persistent_workers=self.num_workers > 0)
+                          pin_memory=self._pin_memory_enabled, persistent_workers=self.num_workers > 0)
 
     def get_num_classes(self):
         return self.label_encoder.num_classes
@@ -413,6 +434,7 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
         category = config.get('category')
         feature_label = config.get('feature_label', 'ingredients_ok')
         num_workers = config.get('num_workers')
+        pin_memory = config.get('pin_memory')
         images_subdir = config.get('images_subdir', os.path.join('imgs', 'standard'))
 
         if "label_encoder" not in config or config['label_encoder'] is None or config['label_encoder'] == {}:
@@ -422,7 +444,8 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
 
         return cls(data_dir=data_dir_path, metadata_filename=metadata_filename, category=category,
                    batch_size=batch_size, feature_label=feature_label,
-                   images_subdir=images_subdir, num_workers=num_workers, label_encoder=label_encoder,
+                   images_subdir=images_subdir, num_workers=num_workers, pin_memory=pin_memory,
+                   label_encoder=label_encoder,
                    transform_plain=transform_plain, transform_aug=transform_aug, **kwargs)
 
 

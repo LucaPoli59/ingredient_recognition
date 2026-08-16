@@ -1,7 +1,7 @@
 # Implementation details
 
 **Created:** 2026-08-06  
-**Last updated:** 2026-08-06
+**Last updated:** 2026-08-16
 
 This directory contains durable documentation of the repository's current implementation contracts. It explains what the code supports, how components integrate, which configuration defaults and invariants are relied on, and where the behavior is verified.
 
@@ -15,5 +15,6 @@ Implementation-detail documents describe verified current behavior. They must id
 
 - [`models.md`](models.md) describes the vision-model implementations available under `src/models` and their training-pipeline contracts.
 - [`ingredient_mapping_rules.md`](ingredient_mapping_rules.md) is the long-term authority for custom `ingredients` to `ingredients_target` mappings, exclusions, multi-target expansions, retained distinctions, and collision boundaries.
+- [`image_data_loading.md`](image_data_loading.md) defines the image DataModule's platform-aware pinned-memory policy, configuration persistence, and worker-setting boundaries.
 
 When a new implementation contract is added, use a focused descriptive filename, add it to this index, and link it from the relevant plan or project-objective document when it changes a tracked decision or completion gate.

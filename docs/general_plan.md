@@ -1,7 +1,7 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-16
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
 **Current focus:** Complete Work package 4.6 reference-selector research and decision, while completing the remaining runtime smoke checks for Data 2.4.
@@ -32,7 +32,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | Historical compatibility 2.1c is closed with a verified manifest and anchors; finish the remaining runtime smoke tests for 2.4. |
+| 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
 | 3 | Ingredient selection | **Deferred** | The historical rule is reconstructed and the decision profile is adopted; resume after Macro-section 4 selects the justified reference selector. |
 | 4 | Model research | **In progress** | Complete focused research, freeze the justified reference selector, and approve a bounded model shortlist. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
@@ -86,7 +86,7 @@ The entries below are intentionally limited to first-level Data work packages. L
 | 2.1 Yummly data understanding, storage, and compatibility | **Done** | Audit, shared image store, retention manifest, historical reproduction, and read-only anchor smoke checks are complete. |
 | 2.2 `ingredients_target` standardization and vocabulary | **Done** | FoodOn-first `v5` generation, exact-plus-fallback association, mapping rules, and support policy are frozen. |
 | 2.3 Deterministic metadata generation and split | **Done** | `v4` remains the baseline; `v5` also passed all automatic image, split, leakage, distribution, vocabulary, and cardinality checks. |
-| 2.4 Runtime target integration and `<UNK>` removal | **In progress** | Code and data-contract tests pass; run the remaining training, checkpoint-reload, and dashboard smoke tests after restoring a compatible Torch/NumPy/Lightning environment. |
+| 2.4 Runtime target integration and `<UNK>` removal | **In progress** | Code and data-contract tests pass; the WSL ML environment is operational with platform-aware pinned memory, and training completion, checkpoint reload, and dashboard smoke checks remain. |
 
 ### 2.1 Yummly data understanding, storage, and compatibility
 
@@ -128,13 +128,13 @@ The benchmark builder validates images automatically, groups only byte-identical
 
 **Status:** In progress
 
-The runtime defaults new experiments to `ingredients_target`, derives the vocabulary from training metadata, omits `<UNK>` from new multi-label outputs, and preserves the serialized legacy encoder contract. Code and data-contract tests pass; downstream training, checkpoint reload, and dashboard smoke validation remain pending in a compatible ML environment.
+The runtime defaults new experiments to `ingredients_target`, derives the vocabulary from training metadata, omits `<UNK>` from new multi-label outputs, and preserves the serialized legacy encoder contract. Code and data-contract tests pass. The WSL environment now starts the ResNet smoke run with pinned memory disabled automatically outside native Windows; training completion, checkpoint reload, and dashboard validation remain pending.
 
-**Evidence:** [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) and [`../tests/test_multilabel_encoder_contract.py`](../tests/test_multilabel_encoder_contract.py).
+**Evidence:** [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`implementation_details/image_data_loading.md`](implementation_details/image_data_loading.md), [`../tests/test_multilabel_encoder_contract.py`](../tests/test_multilabel_encoder_contract.py), and [`../tests/test_images_recipes_dataloader.py`](../tests/test_images_recipes_dataloader.py).
 
 **Completion gate:** New experiments use the selected target field and output contract, retained historical experiments preserve their semantics, and the remaining smoke validations pass.
 
-**Next action:** Restore a compatible Torch/NumPy/Lightning environment and execute the bounded training, checkpoint-reload, and dashboard smoke tests.
+**Next action:** Complete the active bounded WSL training run, then execute checkpoint-reload and dashboard smoke tests.
 
 ### Data macro-section completion gate
 
@@ -467,6 +467,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-12 | Comparative methodology | Bound the shared-vocabulary design: Macro-section 4 selects the reference selector, Macro-section 3 produces the selected vocabulary, and Macro-sections 6–7 separate full-task model comparison, transferred vocabulary ablation, support-matched random controls, and optional local adaptation. | Benchmark methodology **Active** | [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
 | 2026-08-12 | Ingredient selection | Deferred new `v5` selection execution until Macro-section 4 chooses the justified reference selector. Historical reconstruction and decision-profile planning remain retained. | Macro-section 3 and work packages 3.2–3.5 **Deferred**; Model research **In progress** | [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md), [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) |
 | 2026-08-12 | Model research planning | Opened Work package 4.6 and its bounded research plan to select the reference selector independently from the final model shortlist. | Work package 4.6 **Pending**; Macro-section 3 remains **Deferred** | [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
+| 2026-08-16 | Runtime integration | Restored compatible WSL ML execution and made image-loader pinned memory platform-aware. Automatic mode is enabled only on native Windows, avoiding the observed WSL pin-memory-thread OOM while retaining portable saved configurations. | Work package 2.4 **In progress**; remaining smoke checks narrowed to training completion, checkpoint reload, and dashboard | [`implementation_details/image_data_loading.md`](implementation_details/image_data_loading.md), [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) |
 
 ## Tracker maintenance rules
 

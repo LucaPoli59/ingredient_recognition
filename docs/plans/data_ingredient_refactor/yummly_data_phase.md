@@ -1,7 +1,7 @@
 # Yummly data-phase implementation plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-16
 
 This plan translates the Data macro-section of [`general_plan.md`](../../general_plan.md) into a deliberately small implementation sequence. It covers the shared-image-store prerequisite, compatibility with historical experiments, generation of `ingredients_target`, deterministic split construction, and runtime integration.
 
@@ -10,8 +10,8 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 ## Progress tracker
 
 **Overall status:** In progress  
-**Current task:** Finish the remaining Work package 2.4 runtime smoke checks in a compatible ML environment.
-**Next action:** Restore a compatible Torch/NumPy/Lightning environment, then run the bounded training, checkpoint-reload, and dashboard smoke tests; the historical 2.1c retention gate is closed.
+**Current task:** Finish the remaining Work package 2.4 runtime smoke checks in the working WSL ML environment.
+**Next action:** Complete the bounded training smoke run, then execute checkpoint-reload and dashboard smoke tests; the historical 2.1c retention gate is closed.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -25,8 +25,8 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 | P4c | Research and select a controlled ingredient vocabulary | **Done** | [`controlled_vocabulary_evaluation.md`](controlled_vocabulary_evaluation.md) selects pinned FoodOn as the primary association lexicon, retained local concepts, and no automatic hierarchy traversal. Exact association runs before local fallback standardization; bounded fuzzy recovery is rejected after empirical evaluation. The selected standard filtering policy is train support >= 500 and at least three retained targets per recipe. |
 | P4d | Implement the controlled-vocabulary target-generation pipeline | **Done** | `scripts/build_yummly_foodon_metadata.py` generated `ingredients_target_v5_metadata.json` with the pinned offline FoodOn index, exact-plus-fallback association, train-only support >= 500, and >= 3 targets per retained recipe. |
 | P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Done** | `v4` remains the validated baseline; the same validator also passed the FoodOn-first `v5` generation as 47,965/5,996/5,996 records with no exact-image leakage. |
-| P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **In progress** | Code and regression tests are complete: new configurations use `v5`, `ingredients_target`, and a strict 165-class encoder without `<UNK>`; legacy robust encoders retain `<UNK>`. Full runtime smoke tests are blocked locally by missing Lightning and a Torch/NumPy ABI mismatch. |
-| P7 | Run all data checks and freeze the first new metadata generation | **Done** | The `v5` apply run passed image decoding, SHA-256, uniqueness, ratio, distribution, vocabulary, and deterministic builder assertions. Runtime DataModule smoke testing remains part of in-progress 2.4 because the available environment lacks Lightning and has an incompatible Torch/NumPy ABI. |
+| P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **In progress** | Code and regression tests are complete: new configurations use `v5`, `ingredients_target`, and a strict 165-class encoder without `<UNK>`; legacy robust encoders retain `<UNK>`. The WSL ML environment now starts the ResNet smoke run, and the platform-aware pinned-memory policy avoids the observed pin-memory-thread OOM. Training completion, checkpoint reload, and dashboard checks remain. |
+| P7 | Run all data checks and freeze the first new metadata generation | **Done** | The `v5` apply run passed image decoding, SHA-256, uniqueness, ratio, distribution, vocabulary, and deterministic builder assertions. Runtime DataModule smoke testing remains part of in-progress 2.4; the compatible WSL run is active and still requires training completion, checkpoint reload, and dashboard validation. |
 
 ## Accepted design
 
@@ -536,7 +536,8 @@ The selected `v4` metadata files pass all automatic assertions, have no exact-im
 - Unknown labels presented to the strict encoder now fail explicitly instead of being silently assigned to the last real class.
 - `compute_img_stats.py` now defaults to the selected Yummly metadata and resolves images through `imgs/standard`; its dataset root, metadata, target field, and image subdirectory remain configurable.
 - Sixteen unit and data-contract tests pass, including full train/validation/test transformation against `v5`.
-- The full training/checkpoint/dashboard smoke test remains pending because the available Windows environment lacks `lightning` and its Torch build targets NumPy 1.x while NumPy 2.1 is installed. This is an environment verification dependency, not an unresolved target-policy decision.
+- The image DataModule now persists a portable `pin_memory` policy: automatic mode enables it only on native Windows and disables it on WSL and other systems, while explicit Boolean overrides remain supported. Five focused policy tests cover platform resolution, all loaders, overrides, validation, and configuration loading.
+- The WSL ML environment is operational and a ResNet smoke run advances after disabling pinned memory automatically. Training completion, checkpoint reload, and dashboard validation remain pending; this is no longer blocked by the previous Windows dependency mismatch.
 
 ### Completion gate
 
@@ -621,3 +622,4 @@ The plan is complete when:
 | 2026-08-10 | Selected the minimum November 2024 ResNet ingredient-selection retention set and resumed Work package 2.1c | The historical process and exact 40-label result are reconstructible from saved artifacts. Retention now covers the H1/H2/H3/H4 evidence, immutable selected metadata, analysis provenance, and three executable checkpoint anchors; no deletion is authorized before manifest, reproduction, and compatibility gates pass. |
 | 2026-08-10 | Removed old DenseNet schema translation from the 2.1c completion gate | DenseNet experiments were not part of the selected ingredient-selection evidence. Compatibility may be added later only if a separate retention decision selects a DenseNet artifact. |
 | 2026-08-12 | Closed Work package 2.1c with a maintained read-only validator and retention manifest | The validator passed artifact hashes, historical selection reproduction, shared-image metadata smoke checks, checkpoint-anchor loads, and saved H2 configuration evidence. No cleanup or legacy rewrite was performed. |
+| 2026-08-16 | Made image DataLoader pinned memory platform-aware | Automatic mode now enables pinned memory only on native Windows and disables it on WSL and other systems. This removes the observed WSL pin-memory-thread OOM while preserving explicit overrides and cross-platform configuration portability; the remaining 2.4 smoke checks continue. |

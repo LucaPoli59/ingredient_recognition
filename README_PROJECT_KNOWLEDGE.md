@@ -2,8 +2,8 @@
 
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
-**Ultimo aggiornamento:** 12 agosto 2026
-**Stato della ricognizione:** architettura e flusso principale verificati nel codice; il dataset Yummly è stato analizzato integralmente su metadata e 65.146 immagini. Il baseline riproducibile `ingredients_target_v4_metadata.json` (161 etichette, 60.354 ricette) resta disponibile per confronto, mentre la generazione FoodOn-first `ingredients_target_v5_metadata.json` è il nuovo default runtime con 165 target supportati dal train e 47.965/5.996/5.996 ricette train/val/test. Il fuzzy matching è stato valutato e scartato. Il filtro standard è supporto minimo 500 ricette train per ingrediente e almeno 3 target trattenuti per ricetta. La policy 2.4 è implementata: i nuovi output multi-label non includono `<UNK>`, mentre gli encoder legacy ne conservano indice e dimensione; restano da eseguire gli smoke test ML completi in un ambiente Torch/NumPy/Lightning compatibile. La selezione ResNet del novembre 2024 è stata ricostruita e la compatibilità 2.1c è chiusa: il risultato da 40 label è una baseline storica, il manifest read-only copre 72 artefatti e il verificatore riproduce la selezione e carica tre checkpoint anchor senza riscrivere dati. La nuova selezione sul vocabolario `v5` è governata dal feature plan della Macro-sezione 3.
+**Ultimo aggiornamento:** 16 agosto 2026
+**Stato della ricognizione:** architettura e flusso principale verificati nel codice; il dataset Yummly è stato analizzato integralmente su metadata e 65.146 immagini. Il baseline riproducibile `ingredients_target_v4_metadata.json` (161 etichette, 60.354 ricette) resta disponibile per confronto, mentre la generazione FoodOn-first `ingredients_target_v5_metadata.json` è il nuovo default runtime con 165 target supportati dal train e 47.965/5.996/5.996 ricette train/val/test. Il fuzzy matching è stato valutato e scartato. Il filtro standard è supporto minimo 500 ricette train per ingrediente e almeno 3 target trattenuti per ricetta. La policy 2.4 è implementata: i nuovi output multi-label non includono `<UNK>`, mentre gli encoder legacy ne conservano indice e dimensione. L'ambiente ML WSL è ora operativo e il DataModule disabilita automaticamente la pinned memory fuori da Windows nativo; restano da completare gli smoke test di training, checkpoint reload e dashboard. La selezione ResNet del novembre 2024 è stata ricostruita e la compatibilità 2.1c è chiusa: il risultato da 40 label è una baseline storica, il manifest read-only copre 72 artefatti e il verificatore riproduce la selezione e carica tre checkpoint anchor senza riscrivere dati. La nuova selezione sul vocabolario `v5` è governata dal feature plan della Macro-sezione 3.
 
 ## Scopo
 
@@ -51,6 +51,8 @@ Per ogni ricetta il codice si aspetta almeno il campo selezionato da `feature_la
 ### Etichette e split
 
 `ImagesRecipesBaseDataModule` carica tutti gli split, applica il filtro per cucina e adatta/usa un encoder multi-label. Per il nuovo `ingredients_target` usa il `MultiLabelBinarizer` stretto: il vocabolario viene appreso dal train, salvato nella configurazione e produce 165 output senza `<UNK>`. Un'etichetta estranea al vocabolario causa un errore esplicito. I field legacy continuano a usare `MultiLabelBinarizerRobust`, e le configurazioni storiche ricostruiscono il loro `<UNK>` e la dimensione di output salvata. I pesi di classe sono calcolati dalle frequenze dello split train e possono essere usati dalla loss.
+
+I quattro DataLoader immagini condividono una policy `pin_memory` portabile. Il valore predefinito `None` abilita la pinned memory soltanto su Windows nativo e la disabilita su WSL, Linux, macOS e piattaforme non riconosciute; `True` e `False` restano override espliciti. La configurazione serializza la policy non risolta, così lo stesso esperimento si adatta al sistema operativo quando viene ricaricato. `num_workers`, worker persistenti e prefetch restano impostazioni indipendenti. Il contratto completo è in `docs/implementation_details/image_data_loading.md`.
 
 Sono presenti dataset/encoder ulteriori per one-vs-all, classificazione multi-classe, sequenze di ingredienti con token speciali, masking e flavour: sono secondari rispetto alla pipeline immagini → ingredienti.
 
@@ -146,11 +148,13 @@ Lo stack è Python con PyTorch 2.8, torchvision 0.23, Lightning 2.6, Optuna, sci
 
 ### Ambiente locale e WSL verificato
 
+> **Nota operativa:** il workspace predefinito del progetto è la copia interna al filesystem Linux di WSL, in `/root/projects/ingredient_recognition`. Salvo indicazione esplicita diversa, lettura e modifica del codice, comandi Git, test, training, launcher, documentazione e configurazioni PyCharm devono riferirsi a questa copia. Le copie sulle unità Windows o raggiunte da WSL tramite `/mnt/<unità>/...` non sono il workspace operativo predefinito, perché l'accesso attraverso il filesystem montato introduce l'overhead I/O osservato e aumenta il rischio di divergenza tra le copie.
+
 Le run configuration PyCharm condivisibili sono raccolte in `pycharm_run_config/` (non necessariamente tracciate da Git). Sono parte del flusso operativo del progetto e definiscono directory di lavoro e interprete per i comandi comuni.
 
 | Configurazione | Script | SDK/interprete |
 | --- | --- | --- |
-| `one_shot_exp` | `src/training/one_shot_exp.py` | SDK di progetto `image_pytorch` |
+| `one_shot_exp` | `src/training/one_shot_exp.py` | `wsl_image_pytorch` |
 | `app` | `src/dashboards/dash/app.py` | `image_pytorch` |
 | `start_optuna` | `src/dashboards/start_optuna.py` | `image_pytorch` |
 | `start_tensorboard` | `src/dashboards/start_tensorboard.py` | `image_pytorch` |
@@ -170,8 +174,8 @@ Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi
 
 ## Punti da approfondire o verificare
 
-- Eseguire una prova end-to-end su un piccolo subset per confermare i comandi di lancio e le versioni correnti delle dipendenze.
-- Completare la fase Data residua definita in `docs/plans/data_ingredient_refactor/yummly_data_phase.md`: gli anchor legacy 2.1c sono già verificati; restano gli smoke test ML di training, checkpoint reload e dashboard richiesti dalla 2.4.
+- Completare la prova end-to-end WSL avviata con la policy `pin_memory` automatica e registrare l'esito del training minimo.
+- Completare la fase Data residua definita in `docs/plans/data_ingredient_refactor/yummly_data_phase.md`: gli anchor legacy 2.1c sono già verificati; restano il completamento del training e gli smoke test di checkpoint reload e dashboard richiesti dalla 2.4.
 - Congelare il contratto sperimentale e i criteri sulle dinamiche di apprendimento del piano `docs/plans/recognizable_ingredient_selection.md` prima di implementare o lanciare la nuova selezione `v5`.
 - Verificare e, se necessario, uniformare alcuni import che dipendono dalla directory di avvio (`config`, `models`, `data_processing` vs `settings.config`, `src.*`).
 - Verificare la gestione di ripresa dello studio Optuna, che condivide un journal globale configurato in `experiments/journal.log`.
