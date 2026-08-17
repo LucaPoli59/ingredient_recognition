@@ -1,3 +1,4 @@
+import os
 from settings.config import EXPERIMENTS_PATH
 import subprocess
 
@@ -5,7 +6,10 @@ from _commons import TENSORBOARD_PORT
 
 
 def start_tensorboard(new_console: bool = True):
-    if new_console:
+    # CREATE_NEW_CONSOLE is only available on Windows. WSL runs the Python
+    # process as POSIX/Linux, where the child can simply inherit the current
+    # terminal instead.
+    if new_console and os.name == "nt":
         creationflags = subprocess.CREATE_NEW_CONSOLE
     else:
         creationflags = 0

@@ -11,7 +11,10 @@ def start_optuna(path: str | os.PathLike | None = None, new_console: bool = True
     if path is None:
         path = OPTUNA_JOURNAL_PATH
         # path = OPTUNA_JOURNAL_TRASH_PATH
-    if new_console:
+    # CREATE_NEW_CONSOLE is only available on Windows. WSL runs the Python
+    # process as POSIX/Linux, where the child can simply inherit the current
+    # terminal instead.
+    if new_console and os.name == "nt":
         creationflags = subprocess.CREATE_NEW_CONSOLE
     else:
         creationflags = 0
