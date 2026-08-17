@@ -34,8 +34,9 @@ class WarmStartReduceOnPlateau(ReduceLROnPlateau):
         :param warm_patience: The number of epochs to wait before starting the warm-up phase
         :param warm_duration: The number of epochs to warm-up the learning rate
         :param warm_type: The type of warm-up to apply. Either "linear" or "smooth"
+        :param verbose: Whether to print custom warm-up transition messages
 
-        The others parameters are the same as ReduceLROnPlateau
+        The other parameters are the same as ReduceLROnPlateau.
 
         """
         assert warm_type in ("linear", "smooth")
@@ -61,6 +62,9 @@ class WarmStartReduceOnPlateau(ReduceLROnPlateau):
             min_lr=min_lr,
             eps=eps,
         )
+        # PyTorch 2.8 removed ``verbose`` from ReduceLROnPlateau. Keep the
+        # project-level option explicit because the custom step logic uses it.
+        self.verbose = verbose
 
     def step(self, metrics, epoch=None):
         current = float(metrics)
@@ -128,7 +132,8 @@ class ConstantStartReduceOnPlateau(ReduceLROnPlateau):
                  threshold=1e-4,
                  threshold_mode='rel',
                  min_lr=0,
-                 eps=1e-8):
+                 eps=1e-8,
+                 verbose=False):
         """
         Workaround class as SequentialLR with ReduceLROnPlateau is not working in pytorch lightning currently.
         Otherwise, simply use Costant LR together with any of the other pytorch schedulers.
@@ -138,8 +143,9 @@ class ConstantStartReduceOnPlateau(ReduceLROnPlateau):
         :param warm_patience: The number of epochs to wait before starting the warm-up phase
         :param warm_duration: The number of epochs to warm-up the learning rate
         :param warm_type: The type of warm-up to apply. Either "linear" or "smooth"
+        :param verbose: Whether to print the custom transition message
 
-        The others parameters are the same as ReduceLROnPlateau
+        The other parameters are the same as ReduceLROnPlateau.
 
         """
         assert warm_type in ("linear", "smooth")
@@ -164,6 +170,8 @@ class ConstantStartReduceOnPlateau(ReduceLROnPlateau):
             min_lr=min_lr,
             eps=eps,
         )
+        # Do not rely on ReduceLROnPlateau exposing this legacy attribute.
+        self.verbose = verbose
 
     def step(self, metrics, epoch=None):
         current = float(metrics)

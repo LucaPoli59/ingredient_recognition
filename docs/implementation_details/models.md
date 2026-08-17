@@ -1,5 +1,8 @@
 # Vision models
 
+**Created:** 2026-08-02
+**Last updated:** 2026-08-17
+
 This page describes the implementation of the models available in `src/models` and their contract with the training pipeline. The problem remains a multi-label classification task: each model outputs a vector of `num_classes` **logits**, with no final sigmoid. Converting logits to probabilities and applying `BCEWithLogitsLoss` are responsibilities of the Lightning module.
 
 The documentation focuses on the integration aspects and architectural decisions of the repository; it does not repeat the introductory theory of CNN, residual connection or transformer. Sections marked *to be expanded* are intentionally an initial outline only.
@@ -83,7 +86,9 @@ DINOv2 uses dedicated builders (`transform_*_dino`). If an augmentation function
 
 ## Schedulers present in `src/models`
 
-*To be expanded.* `WarmStartReduceOnPlateau` and `ConstantStartReduceOnPlateau` derive from `ReduceLROnPlateau` and work around the historical incompatibility between `SequentialLR` and Lightning. The first interpolates the learning rate from `warm_start` to `warm_stop` (linear or with `tanh`) before delegating to the plateau logic; the second keeps the initial LR in the waiting phase.
+`WarmStartReduceOnPlateau` and `ConstantStartReduceOnPlateau` derive from `ReduceLROnPlateau` and work around the historical incompatibility between `SequentialLR` and Lightning. The first interpolates the learning rate from `warm_start` to `warm_stop` (linear or with `tanh`) before delegating to the plateau logic; the second keeps the initial LR during the waiting phase.
+
+Both schedulers own their optional `verbose` flag instead of relying on an attribute of the PyTorch parent class. This is required by PyTorch 2.8, whose `ReduceLROnPlateau` no longer creates that legacy attribute. Existing scheduler states and Lightning checkpoints that predate this field remain loadable: the constructor establishes the default before the stored scheduler fields are restored. The reduction path and this compatibility case are covered by [`tests/test_custom_schedulers.py`](../../tests/test_custom_schedulers.py).
 
 ## Code references
 
