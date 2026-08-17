@@ -220,6 +220,32 @@ class BaseTrainer(TrainerInterface):
     def _get_profiler(self) -> SimpleProfiler:
         return SimpleProfiler(dirpath=self._save_dir, filename="profiler")
 
+    @staticmethod
+    def _select_final_checkpoint_path(checkpoint_callback: callbacks.ModelCheckpoint,
+                                      save_dir: str | os.PathLike) -> str:
+        """Select the checkpoint whose weights must be restored after training."""
+        last_model_path = os.path.join(save_dir, "checkpoints", "last.ckpt")
+        best_model_path = checkpoint_callback.best_model_path
+        best_model_score = checkpoint_callback.best_model_score
+        current_score = checkpoint_callback.current_score
+
+        best_model_is_valid = (
+            best_model_path is not None
+            and best_model_path != ""
+            and os.path.exists(best_model_path)
+            and best_model_score is not None
+        )
+        if not best_model_is_valid:
+            return last_model_path
+
+        # ``current_score`` may remain None when no post-resume validation
+        # result enters the callback's top-k. In that case the restored best
+        # checkpoint is still valid and must not be dereferenced as a tensor.
+        if current_score is not None and best_model_score.item() == current_score.item():
+            return last_model_path
+
+        return best_model_path
+
     def fit(self, model: BaseLGNM, train_dataloaders=None, val_dataloaders=None, datamodule=None,
             ckpt_path=None, wandb_notes=None, wandb_log_config=None) -> lgn.LightningModule:
         """Slightingly overrided fit method that return the best model"""
@@ -244,13 +270,7 @@ class BaseTrainer(TrainerInterface):
             if not self._debug:
                 # Find the best model and load it, otherwise leave the last one
                 ckpt_c = self.checkpoint_callback
-                best_model_path = ckpt_c.best_model_path if ckpt_c is not None else None
-                # IF the path exist and is not the last one
-                if (best_model_path is None or best_model_path == ""
-                        or not os.path.exists(best_model_path) or ckpt_c.best_model_score is None
-                        or ckpt_c.best_model_score.item() == ckpt_c.current_score.item()):
-                    # if the best model path is not correct we take the last one
-                    best_model_path = os.path.join(self._save_dir, "checkpoints", "last.ckpt")
+                best_model_path = self._select_final_checkpoint_path(ckpt_c, self._save_dir)
 
                 model.load_weights_from_checkpoint(best_model_path)
                 os.rename(best_model_path, os.path.join(self._save_dir, "best_model.ckpt"))

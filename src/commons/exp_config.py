@@ -327,6 +327,28 @@ class HTunerExpConfig(ExpConfig):
         return self._config["htuner_hyper_parameters"]
 
 
+def _normalize_restored_trial_params(trial_params: dict, canonical_param_names: set[str]) -> dict:
+    """Restore parameter names accidentally prefixed by an older resume implementation."""
+    normalized_params = {
+        key: value for key, value in trial_params.items() if key in canonical_param_names
+    }
+
+    for key, value in trial_params.items():
+        if key in canonical_param_names:
+            continue
+
+        matching_names = [
+            name for name in canonical_param_names
+            if key.endswith(f"_{name}") and name not in normalized_params
+        ]
+        if len(matching_names) == 1:
+            normalized_params[matching_names[0]] = value
+        else:
+            normalized_params[key] = value
+
+    return normalized_params
+
+
 # TODO CAPIRE COME GESTIRE DISTRIBUZIONI INNESTATE
 class HGeneratorConfig(ExpConfig):
     """
@@ -433,7 +455,10 @@ class HGeneratorConfig(ExpConfig):
                 if hp_name != dist_name and hp_id != dist_name:
                     raise ValueError(f"Expected hp_name {hp_name} (found in config file) to be equal to dist_name {dist_name} (found in distributions)")
 
-                config_update_kwargs[hp_id]['dist'] = cls._convert_dist2lambda(hp_id, dist)
+                # Preserve the Optuna parameter name used by the original
+                # study. The config key may include a routing prefix (for
+                # example ``hp_lr``), while the sampled parameter is ``lr``.
+                config_update_kwargs[hp_id]['dist'] = cls._convert_dist2lambda(dist_name, dist)
 
             exp_config.update_config(**config_update_kwargs)
             return exp_config

@@ -12,19 +12,23 @@ import optuna
 import torch
 from tornado.gen import sleep
 
-from config import HTUNING_TRIAL_CONFIG_FILE, HGEN_CONFIG_FILE
 from src.lightning.lgn_models import BaseLGNM
 from src.dashboards.start_optuna import start_optuna
 
 from src.commons.utils import extract_name_trial_dir
-from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, OPTUNA_JOURNAL_FILENAME, HTUNER_CONFIG_FILE,
-                             OPTUNA_JOURNAL_PATH, HTUNING_TRIAL_CONFIG_FILE)
+from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, HGEN_CONFIG_FILE, OPTUNA_JOURNAL_FILENAME,
+                             HTUNER_CONFIG_FILE, OPTUNA_JOURNAL_PATH, HTUNING_TRIAL_CONFIG_FILE)
 from src.training.commons import set_torch_constants, model_training, init_optuna_storage, load_datamodule
 
 from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
 from src.lightning.lgn_trainers import TrainerInterface, OptunaTrainer
 from src.models.dummy import DummyModel
-from src.commons.exp_config import ExpConfig, HGeneratorConfig, HTunerExpConfig
+from src.commons.exp_config import (
+    ExpConfig,
+    HGeneratorConfig,
+    HTunerExpConfig,
+    _normalize_restored_trial_params,
+)
 
 
 def silence_optuna_warnings():
@@ -101,13 +105,21 @@ def _restore_study(study_name: str, storage: optuna.storages.BaseStorage,
     invalid ones re-enqueued."""
     old_study = optuna.load_study(study_name=study_name, storage=storage)
     old_trials = old_study.get_trials(deepcopy=True)
+    canonical_param_names = {
+        param_name
+        for trial in old_trials
+        if trial.state not in states_error
+        for param_name in trial.distributions
+    }
     optuna.delete_study(study_name=study_name, storage=storage)
 
     new_study = optuna.create_study(study_name=study_name, storage=storage, **study_kwargs)
     trials_completed = 0
     for trial in old_trials:
         if trial.state in states_error:
-            new_study.enqueue_trial(trial.params)
+            new_study.enqueue_trial(
+                _normalize_restored_trial_params(trial.params, canonical_param_names)
+            )
         else:
             new_study.add_trial(trial)
             trials_completed += 1
@@ -275,4 +287,3 @@ if __name__ == "__main__":
     make_htuning_exp(exp_name, hgen_config, experiment_dir=exp_dir, max_epochs=3, debug=debug,
                      torch_model_type=DummyModel, tr_type=OptunaTrainer, dm_category="mexican", hp_lr=None,
                      tr_limit_train_batches=25, ht_n_trials=3)
-
