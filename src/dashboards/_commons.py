@@ -1,5 +1,7 @@
 import base64
 import os
+import shutil
+import signal
 from typing import Optional, List
 import subprocess
 import dash
@@ -79,3 +81,73 @@ def img_from_ndarray(img: np.ndarray, ext="jpg") -> str:
 def dash_get_asset_url(path):
     path = os.path.normpath(dash.get_asset_url(os.path.relpath(path, PROJECT_PATH)))
     return path
+
+
+def _kill_process_on_port(port: int, tmux_session: Optional[str] = None) -> bool:
+    killed = False
+
+    if os.name == "nt":
+        try:
+            result = subprocess.run(
+                ["netstat", "-ano", "-p", "tcp"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        except FileNotFoundError:
+            result = None
+
+        if result is not None:
+            pids = set()
+            for line in result.stdout.splitlines():
+                fields = line.split()
+                if len(fields) < 5 or fields[0].upper() != "TCP":
+                    continue
+                if fields[3].upper() == "LISTENING" and fields[1].rsplit(":", 1)[-1] == str(port):
+                    pids.add(fields[4])
+            for pid in pids:
+                taskkill = subprocess.run(
+                    ["taskkill", "/PID", pid, "/F"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                killed = killed or taskkill.returncode == 0
+    else:
+        fuser = shutil.which("fuser")
+        if fuser is not None:
+            result = subprocess.run(
+                [fuser, "-k", f"{port}/tcp"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            killed = result.returncode == 0
+        else:
+            lsof = shutil.which("lsof")
+            if lsof is not None:
+                result = subprocess.run(
+                    [lsof, "-tiTCP:" + str(port), "-sTCP:LISTEN"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                for pid in result.stdout.split():
+                    try:
+                        os.kill(int(pid), signal.SIGKILL)
+                        killed = True
+                    except (ProcessLookupError, PermissionError, ValueError):
+                        pass
+
+    if tmux_session is not None:
+        tmux = shutil.which("tmux")
+        if tmux is not None:
+            result = subprocess.run(
+                [tmux, "kill-session", "-t", tmux_session],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            killed = killed or result.returncode == 0
+
+    return killed
