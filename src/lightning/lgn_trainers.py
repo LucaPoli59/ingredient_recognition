@@ -362,9 +362,9 @@ class OptunaTrainer(BaseTrainer):
         if kwargs is None:
             kwargs = {}
 
-        if trial is None:
-            kwargs["trial"] = config.get('trial', None)
-        if kwargs["trial"] is None:
+        resolved_trial = trial if trial is not None else config.get('trial', None)
+        if resolved_trial is None:
             raise ValueError("Trial must be provided through the config or the argument")
+        kwargs["trial"] = resolved_trial
 
         return super().load_from_config(config, **kwargs)

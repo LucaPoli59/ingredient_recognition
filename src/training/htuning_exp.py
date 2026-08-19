@@ -162,7 +162,7 @@ def _resume_exp(save_dir: str | os.PathLike) -> Tuple[lgn.Trainer, lgn.Lightning
         n_trials=htuner_config["n_trials"] - trials_completed
     )
 
-    return save_best_trial(study, exp_config.trainer["save_dir"], exp_config=exp_config)
+    return save_best_trial(study, exp_config.trainer["save_dir"])
 
 
 def _prepare_trial_dir(trial_path: str | os.PathLike, check_for_resume: bool) -> str | os.PathLike | None:
@@ -218,24 +218,28 @@ def _run_new_exp(exp_config: HTunerExpConfig, exp_gen_config: HGeneratorConfig
         n_trials=htuner_config["n_trials"]
     )
 
-    return save_best_trial(study, exp_config.trainer["save_dir"], exp_config=exp_config)
+    return save_best_trial(study, exp_config.trainer["save_dir"])
 
 
-def save_best_trial(study: optuna.study.Study, save_dir: str | os.PathLike, exp_config: Optional[HTunerExpConfig],
+def save_best_trial(study: optuna.study.Study, save_dir: str | os.PathLike
                     ) -> Tuple[TrainerInterface, lgn.LightningModule]:
     best_trial_path_in = os.path.join(save_dir, f"trial_{study.best_trial.number}")
     best_trial_path_out = os.path.join(save_dir, "trial_best")
-    shutil.copytree(best_trial_path_in, best_trial_path_out)
+    shutil.copytree(best_trial_path_in, best_trial_path_out, dirs_exist_ok=True)
 
-    if exp_config is None:
-        exp_config = HTunerExpConfig.load_from_file(
-            file_path=os.path.join(best_trial_path_out, HTUNER_CONFIG_FILE))  # Questa parte andrà solo dopo il resume
+    best_trial_config = HTunerExpConfig.load_from_file(
+        os.path.join(best_trial_path_out, HTUNING_TRIAL_CONFIG_FILE)
+    )
+    model: BaseLGNM = best_trial_config.lgn_model["lgn_model_type"].load_from_config(
+        best_trial_config.lgn_model
+    )
+    trainer = best_trial_config.trainer["type"].load_from_config(
+        best_trial_config.trainer,
+        grad_accum=model.grad_accum,
+        trial=study.best_trial,
+    )
 
-    model: BaseLGNM = exp_config.lgn_model["lgn_model_type"].load_from_config(exp_config.lgn_model)
-    trainer = exp_config.trainer["type"].load_from_config(exp_config.trainer, grad_accum=model.grad_accum,
-                                                          trial=study.best_trial)
-
-    model = model.load_weights_from_checkpoint(os.path.join(best_trial_path_out, "best_model.ckpt"))
+    model.load_weights_from_checkpoint(os.path.join(best_trial_path_out, "best_model.ckpt"))
     return trainer, model
 
 

@@ -4,7 +4,7 @@ import subprocess
 import sys
 import warnings
 
-from config import OPTUNA_JOURNAL_TRASH_FILENAME, OPTUNA_JOURNAL_TRASH_PATH
+from settings.config import OPTUNA_JOURNAL_TRASH_FILENAME, OPTUNA_JOURNAL_TRASH_PATH
 from settings.config import OPTUNA_JOURNAL_PATH
 from src.dashboards._commons import OPTUNA_PORT, _kill_process_on_port
 
@@ -87,4 +87,3 @@ def start_optuna(path: str | os.PathLike | None = None, new_console: bool = True
 
 if __name__ == "__main__":
     start_optuna()
-
