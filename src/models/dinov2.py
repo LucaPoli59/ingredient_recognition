@@ -18,7 +18,7 @@ from src.models.commons import BaseModel
 
 class _BaseDinoV2(BaseModel, ABC):
     PRETTY_NAME = "BaseDinoV2"
-    MAX_ALLOWED_BATCH_SIZE = 32
+    MAX_ALLOWED_BATCH_SIZE = None
 
     trns_bld_form = Callable[[Optional[torch.tensor], Tuple[int, int]], List[v2.Transform]]
     DEF_TRNS_BLD_AUG = transform_aug_dino
