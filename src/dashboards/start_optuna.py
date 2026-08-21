@@ -71,9 +71,13 @@ def start_optuna(path: str | os.PathLike | None = None, new_console: bool = True
         if new_console and os.name == "nt"
         else 0
     )
+    popen_kwargs = {"creationflags": creationflags}
+    if new_console and is_wsl and not tmux_fallback:
+        popen_kwargs["cwd"] = "/mnt/c/Windows"
+
 
     try:
-        process = subprocess.Popen(command, creationflags=creationflags)
+        process = subprocess.Popen(command, **popen_kwargs)
         print(f"Optuna Dashboard available at http://localhost:{OPTUNA_DASHBOARD_PORT}")
         if new_console and tmux_fallback:
             print("Logs: tmux attach -t optuna-dashboard (detach with Ctrl+B, then D)")
