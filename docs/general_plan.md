@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-22
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Complete Work package 4.6 reference-selector research and decision, while completing the remaining runtime smoke checks for Data 2.4.
+**Current focus:** Freeze the Work package 4.6 R1 selector eligibility gates and qualitative rubric, while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -205,7 +205,7 @@ This macro-section surveys candidate methods and turns them into testable archit
 | 4.3 State-of-the-art discovery | **Done** | Refresh only when a material research update justifies a new dated snapshot. |
 | 4.4 Focused model topics | **Pending** | Open the prioritized target-processing, augmentation, representation/head, and calibration topics. |
 | 4.5 Candidate shortlist | **Pending** | Convert the non-selector focused evidence into the final approved implementation shortlist. |
-| 4.6 Reference-selector decision | **Pending** | Research, compare, and freeze the justified M_ref selection instrument before Macro-section 3 resumes. |
+| 4.6 Reference-selector decision | **In progress** | Freeze the R1 gates and rubric from the completed discovery/integration inventory, then research, compare, and freeze the justified M_ref selection instrument before Macro-section 3 resumes. |
 
 ### Completed
 
@@ -214,6 +214,8 @@ This macro-section surveys candidate methods and turns them into testable archit
 - [x] Defined the repository structure for dated discovery and topic-focused research.
 - [x] Formalized model-relevant challenges: partial observability, correlated labels, long-tail support, contextual shortcuts, calibration, and interpretability.
 - [x] Completed a dated broad state-of-the-art discovery grounded in the repaired-benchmark objective and 8 GB compute constraint.
+- [x] Completed a reference-selector-specific candidate discovery spanning supervised, visual self-supervised, vision-language, food-domain, and structured multi-label families, with explicit pretraining and interpretation boundaries.
+- [x] Completed the R0.2 repository inventory: the `v5` interface and candidate intake tiers are mapped, the shared per-label instrumentation/provenance gap is explicit, and deferred paths have named re-entry conditions.
 
 ### Pending
 
@@ -229,7 +231,7 @@ The research record supports a prioritized shortlist of models, every candidate 
 
 ### Next action
 
-Start [`reference_selector_research.md`](plans/reference_selector_research.md): register the eligible candidates and freeze its research rubric before reviewing focused evidence. Approve M_ref only after the data contract is stable; keep the broader model shortlist in Work package 4.5.
+Execute R1 in [`reference_selector_research.md`](plans/reference_selector_research.md): freeze the hard gates, qualitative evidence labels, tie rule, common selector-artifact contract, supervised-representative rule, conditional-candidate deadline, maximum integration effort, and measured 8 GB smoke contract before candidate-specific evaluation. Use the completed [R0.2 inventory](research/discovery/2026-08-22/candidate_integration_inventory.md); do not select `M_ref` from implementation availability alone, and keep the broader final-model shortlist in Work package 4.5.
 
 ## 5. Additional model implementation
 
@@ -467,6 +469,9 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-12 | Comparative methodology | Bound the shared-vocabulary design: Macro-section 4 selects the reference selector, Macro-section 3 produces the selected vocabulary, and Macro-sections 6–7 separate full-task model comparison, transferred vocabulary ablation, support-matched random controls, and optional local adaptation. | Benchmark methodology **Active** | [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md), [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) |
 | 2026-08-12 | Ingredient selection | Deferred new `v5` selection execution until Macro-section 4 chooses the justified reference selector. Historical reconstruction and decision-profile planning remain retained. | Macro-section 3 and work packages 3.2–3.5 **Deferred**; Model research **In progress** | [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md), [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) |
 | 2026-08-12 | Model research planning | Opened Work package 4.6 and its bounded research plan to select the reference selector independently from the final model shortlist. | Work package 4.6 **Pending**; Macro-section 3 remains **Deferred** | [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
+| 2026-08-22 | Reference-selector research | Started R0 with an explicit broad candidate-landscape discovery, including supervised, self-supervised, contrastive, and domain-pretrained options; existing ResNet, DenseNet, and DINO paths are not an exhaustive candidate set. | Work package 4.6 **In progress**; Macro-section 3 remains **Deferred** | [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
+| 2026-08-22 | Reference-selector research | Completed R0.1 with a source-catalogued, non-ranked selector landscape and explicit boundaries for pretraining, adaptation, downstream label text, and structured heads. | Work package 4.6 **In progress**; R0.2 inventory is next; Macro-section 3 remains **Deferred** | [`research/discovery/2026-08-22/README.md`](research/discovery/2026-08-22/README.md), [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
+| 2026-08-22 | Reference-selector research | Completed R0.2 with a repository-backed candidate/instrumentation matrix, verified and conditional intake tiers, explicit re-entry conditions, and a shared observability/provenance prerequisite; no selector was chosen. | Work package 4.6 **In progress**; R1 rubric is next; Macro-section 3 remains **Deferred** | [`research/discovery/2026-08-22/candidate_integration_inventory.md`](research/discovery/2026-08-22/candidate_integration_inventory.md), [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 
 ## Tracker maintenance rules
 

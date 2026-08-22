@@ -1,5 +1,8 @@
 # Vision models
 
+**Created:** 2026-08-02
+**Last updated:** 2026-08-22
+
 This page describes the implementation of the models available in `src/models` and their contract with the training pipeline. The problem remains a multi-label classification task: each model outputs a vector of `num_classes` **logits**, with no final sigmoid. Converting logits to probabilities and applying `BCEWithLogitsLoss` are responsibilities of the Lightning module.
 
 The documentation focuses on the integration aspects and architectural decisions of the repository; it does not repeat the introductory theory of CNN, residual connection or transformer. Sections marked *to be expanded* are intentionally an initial outline only.
@@ -76,6 +79,14 @@ DINOv2 uses dedicated builders (`transform_*_dino`). If an augmentation function
 ## DenseNet torchvision wrapper
 
 *To be expanded.* `Densenet121` and `Densenet201` replace the torchvision classifier after the DenseNet feature extractor. The interpretability targets are the last module of `model.features` and the linear classifier. This section will be extended with the implications of constructor variants and pretrained transformations.
+
+The wrappers are not currently usable through the normal model-owned transform
+contract: both constructors keep the torchvision weight enum in a local
+`weights` variable, while `_BaseDensenet.transform_aug` and
+`transform_plain` read `self.tr_weights`, which is never initialized. Accessing
+either transform therefore raises `AttributeError`. This must be fixed and
+smoke-tested before a torchvision DenseNet is treated as a maintained training
+or reference-selector path.
 
 ## Dummy models
 

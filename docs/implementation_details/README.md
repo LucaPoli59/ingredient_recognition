@@ -1,7 +1,7 @@
 # Implementation details
 
 **Created:** 2026-08-06  
-**Last updated:** 2026-08-06
+**Last updated:** 2026-08-22
 
 This directory contains durable documentation of the repository's current implementation contracts. It explains what the code supports, how components integrate, which configuration defaults and invariants are relied on, and where the behavior is verified.
 

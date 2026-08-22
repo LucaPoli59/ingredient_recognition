@@ -2,7 +2,7 @@
 
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
-**Ultimo aggiornamento:** 12 agosto 2026
+**Ultimo aggiornamento:** 22 agosto 2026
 **Stato della ricognizione:** architettura e flusso principale verificati nel codice; il dataset Yummly è stato analizzato integralmente su metadata e 65.146 immagini. Il baseline riproducibile `ingredients_target_v4_metadata.json` (161 etichette, 60.354 ricette) resta disponibile per confronto, mentre la generazione FoodOn-first `ingredients_target_v5_metadata.json` è il nuovo default runtime con 165 target supportati dal train e 47.965/5.996/5.996 ricette train/val/test. Il fuzzy matching è stato valutato e scartato. Il filtro standard è supporto minimo 500 ricette train per ingrediente e almeno 3 target trattenuti per ricetta. La policy 2.4 è implementata: i nuovi output multi-label non includono `<UNK>`, mentre gli encoder legacy ne conservano indice e dimensione; restano da eseguire gli smoke test ML completi in un ambiente Torch/NumPy/Lightning compatibile. La selezione ResNet del novembre 2024 è stata ricostruita e la compatibilità 2.1c è chiusa: il risultato da 40 label è una baseline storica, il manifest read-only copre 72 artefatti e il verificatore riproduce la selezione e carica tre checkpoint anchor senza riscrivere dati. La nuova selezione sul vocabolario `v5` è governata dal feature plan della Macro-sezione 3.
 
 ## Scopo
@@ -59,7 +59,7 @@ Sono presenti dataset/encoder ulteriori per one-vs-all, classificazione multi-cl
 Tutti i modelli di visione discendono da `BaseModel`, che centralizza configurazione, serializzazione e definizione delle trasformazioni train/validation.
 
 - `src/models/resnet.py`: ResNet custom simili a ResNet-18/50 e wrapper torchvision per ResNet18 e ResNet50, con teste adattate al numero di ingredienti.
-- `src/models/densenet.py`: DenseNet custom e wrapper torchvision DenseNet121/DenseNet201.
+- `src/models/densenet.py`: DenseNet custom e wrapper torchvision DenseNet121/DenseNet201; i wrapper torchvision hanno attualmente un difetto verificato nel contratto delle trasformazioni (`self.tr_weights` non inizializzato) e non sono un percorso di training mantenuto finché non viene corretto e sottoposto a smoke test.
 - `src/models/dinov2.py`: DINOv2 ViT-B/14 con head lineare sostituita; usa `torch.hub` per caricare `facebookresearch/dinov2` e può congelare il backbone (default).
 - `src/models/dummy.py`: modelli minimi per test.
 

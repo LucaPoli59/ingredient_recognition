@@ -1,7 +1,7 @@
 # Discovery research
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-02
+**Last updated:** 2026-08-22
 
 Use this directory for broad research snapshots of the state of the art, such as recent methods, benchmarks, tools, and emerging directions relevant to the project.
 
@@ -20,4 +20,8 @@ Before creating a new discovery, review at least the two most recent existing di
 
 ## Discovery index
 
+- [`2026-08-22/`](2026-08-22/README.md) — reference-selector
+  candidate landscape across supervised, visual self-supervised,
+  vision-language, food-domain, and structured multi-label families, with
+  explicit pretraining and interpretation boundaries.
 - [`2026-08-02/`](2026-08-02/README.md) — broad state-of-the-art discovery covering food ingredient inference, multi-label models, representation learning, data and ontology processing, augmentation, leakage control, calibration, interpretability, and a compute-aware research program.
