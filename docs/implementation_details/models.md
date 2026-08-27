@@ -1,7 +1,7 @@
 # Vision models
 
 **Created:** 2026-08-02
-**Last updated:** 2026-08-17
+**Last updated:** 2026-08-27
 
 This page describes the implementation of the models available in `src/models` and their contract with the training pipeline. The problem remains a multi-label classification task: each model outputs a vector of `num_classes` **logits**, with no final sigmoid. Converting logits to probabilities and applying `BCEWithLogitsLoss` are responsibilities of the Lightning module.
 
@@ -64,7 +64,7 @@ The use of concatenation preserves features from all previous layers, but increa
 
 ### Freezing and fine-tuning
 
-By default `freeze_backbone=True`: `freeze_backbone()` sets `requires_grad=False` on the backbone parameters, leaving the new linear head trainable. `unfreeze_backbone()` enables full fine-tuning later. The declared batch limit is 32 via `max_allowed_batch_size`, useful for the pipeline to avoid configurations that are too large for the GPU.
+By default `freeze_backbone=True`: `freeze_backbone()` sets `requires_grad=False` on the backbone parameters, leaving the new linear head trainable. `unfreeze_backbone()` enables full fine-tuning later. `max_allowed_batch_size` currently returns `None`, so this wrapper does not enforce a model-level physical batch cap; feasible batch size must be established by the measured resource smoke test for the concrete protocol.
 
 The `pretrained` parameter is preserved in the configuration, but the current implementation still calls `torch.hub.load(...)` without using it to choose weights or architecture: the backbone loading is therefore always the one defined by torch.hub. This is an important detail if you want a true start from random weights.
 
@@ -79,6 +79,14 @@ DINOv2 uses dedicated builders (`transform_*_dino`). If an augmentation function
 ## DenseNet torchvision wrapper
 
 *To be expanded.* `Densenet121` and `Densenet201` replace the torchvision classifier after the DenseNet feature extractor. The interpretability targets are the last module of `model.features` and the linear classifier. This section will be extended with the implications of constructor variants and pretrained transformations.
+
+The wrappers are not currently usable through the normal model-owned transform
+contract: both constructors keep the torchvision weight enum in a local
+`weights` variable, while `_BaseDensenet.transform_aug` and
+`transform_plain` read `self.tr_weights`, which is never initialized. Accessing
+either transform therefore raises `AttributeError`. This must be fixed and
+smoke-tested before a torchvision DenseNet is treated as a maintained training
+or reference-selector path.
 
 ## Dummy models
 

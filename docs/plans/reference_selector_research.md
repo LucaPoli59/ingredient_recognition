@@ -1,9 +1,9 @@
 # Reference-selector research and decision plan
 
 **Created:** 2026-08-12  
-**Last updated:** 2026-08-12  
+**Last updated:** 2026-08-22
 **Linked macro-section and work package:** [Macro-section 4, Work package 4.6](../general_plan.md#4-model-research)  
-**Overall status:** Pending
+**Overall status:** In progress
 
 ## Objective
 
@@ -22,7 +22,8 @@ compared, justified, and handed off.
 This work package will:
 
 - establish which current or research-backed model categories are eligible to
-  act as the selector;
+  act as the selector through a broad candidate-landscape discovery, not only
+  through the models already implemented in this repository;
 - freeze an evidence protocol and decision rubric before candidate-specific
   analysis;
 - research each eligible candidate's scientific fit, per-label diagnostic
@@ -45,17 +46,25 @@ This work package does not:
 - claim seed-level stability. The project has budgeted one declared seed per
   selection configuration.
 
+Existing ResNet, DenseNet, and DINO-related paths are starting evidence, not a
+closed candidate list. A candidate is not adopted merely because it appears in
+the broad discovery.
+
 ## Progress tracker
 
-**Overall status:** Pending  
-**Current task:** Not started  
-**Next action:** Complete R0 and R1: register the available candidate families,
-their current instrumentation status, and the frozen decision rubric before
-candidate-specific research begins.
+**Overall status:** In progress
+**Current task:** R1 — freeze the eligibility gates, evidence labels, and tie
+rule before candidate-specific evaluation.
+**Next action:** Predeclare the R1 hard gates and qualitative rubric, including
+the shared instrumentation gate, supervised-representative rule, conditional-
+candidate deadline, maximum integration effort, and measured 8 GB smoke
+contract.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
-| R0 | Map the frozen v5 data contract, current model inventory, available logging, and eligible candidate families. | **Pending** | — |
+| R0 | Complete the broad candidate discovery and map the frozen v5 data contract, current model inventory, available logging, and eligible candidate families. | **Done** | The dated [discovery and integration inventory](../research/discovery/2026-08-22/README.md) retain the broad landscape and the repository-backed reduction. No candidate is recommended. |
+| R0.1 | Conduct a broad, catalog-only discovery of architecture, training, and pretraining families that could act as an ingredient-learnability selector. | **Done** | [2026-08-22 discovery](../research/discovery/2026-08-22/README.md) catalogs supervised CNN/transformer, visual SSL, generic VLM, food-domain, and multi-label-head families with explicit claim boundaries. |
+| R0.2 | Map candidates with a credible path to the current v5 task and record their instrumentation and integration state. | **Done** | The [candidate and instrumentation inventory](../research/discovery/2026-08-22/candidate_integration_inventory.md) records the common observability gaps, dependency/checkpoint/licence paths, measured-versus-unverified compute evidence, intake tiers, and explicit re-entry conditions. |
 | R1 | Freeze the hard eligibility gates, evidence sources, and qualitative decision rubric. | **Pending** | — |
 | R2 | Create source-backed candidate evidence records and inspect their current integration paths. | **Pending** | — |
 | R3 | Compare eligible candidates against the frozen rubric and record trade-offs, exclusions, and residual risks. | **Pending** | — |
@@ -74,9 +83,52 @@ candidate-specific research begins.
 
 ## Research protocol
 
-### R0. Candidate and instrumentation inventory
+### R0. Candidate landscape and instrumentation inventory
 
-Record each realistically available candidate family before external comparison:
+#### R0.1 Broad candidate-landscape discovery
+
+Conduct an extensive, catalog-only external discovery before constraining the
+selector to the repository's current implementations. The discovery must cover
+candidate families relevant to imbalanced multi-label ingredient recognition
+under partial visual observability, including where justified:
+
+- supervised convolutional baselines and modern convolutional families;
+- vision transformers and hybrid convolutional-transformer architectures;
+- self-supervised or masked-image vision foundation models;
+- contrastive vision-language foundation models that can be adapted to the
+  canonical image-to-multi-label task;
+- food- or ingredient-domain pretraining, when its sources, licence, and
+  transfer boundary are traceable; and
+- multi-label or label-query heads that may materially improve per-label
+  evidence without changing the frozen vocabulary or split.
+
+The purpose is to make the candidate set explicit, not to select a model from a
+single performance claim. Each discovery entry must distinguish a reported
+architecture or checkpoint from a credible candidate for this repository under
+the available compute and implementation constraints. Follow the project
+discovery rule: inspect the two preceding discovery records when they exist,
+then retain the source catalogue and broad findings in a new dated
+`docs/research/discovery/<date>/` record.
+
+Treat pretraining as a declared part of a possible M_ref protocol, not as an
+automatic advantage. For every relevant pretraining family, record:
+
+1. the source data and training objective;
+2. whether the selector would be frozen, linearly probed, or fine-tuned;
+3. the information it may contribute beyond the v5 labels and images; and
+4. the consequent interpretation boundary: a label would be judged learnable
+   relative to the declared pretrained selector, rather than demonstrably
+   learnable from scratch.
+
+The later decision must weigh whether prior visual or vision-language knowledge
+helps reveal a visually recognizable ingredient against the risk that it turns
+the selector into a measure of transferred semantic knowledge. It must state
+that trade-off explicitly and must not infer data leakage without evidence.
+
+#### R0.2 Candidate and instrumentation inventory
+
+After R0.1 and before candidate-specific evaluation, map each candidate family
+with a credible project path:
 
 - its implementation status, checkpoint/pretraining dependencies, licence or
   access constraints, and expected compute;
@@ -88,9 +140,34 @@ Record each realistically available candidate family before external comparison:
 - any missing engineering work that would make its use as a selector
   disproportionate or non-reproducible.
 
-The initial inventory may include existing ResNet and DINO-related paths, but
-it must not presume that either is selected. A new family is eligible only when
-the research record and a credible maintained integration path are available.
+The inventory may include existing ResNet, DenseNet, and DINO-related paths,
+but it must not presume that any is selected. A newly discovered family becomes
+eligible for R2 only when the broad research record and a credible maintained
+integration path are available.
+
+**Completed result.** The dated
+[candidate and instrumentation inventory](../research/discovery/2026-08-22/candidate_integration_inventory.md)
+found that the shared training path is the first material gate: it does not yet
+persist per-label train/validation AP trajectories, bounded raw scores, an
+explicit label manifest, a declared reproducible seed, code/environment
+identity, or exact external-checkpoint provenance. No current wrapper can pass
+the intended evidence gate without this common layer.
+
+R1 receives:
+
+- verified intake paths for torchvision ResNet-50, frozen DINOv2 B/14-register
+  after bounded reproducibility repair, and a maintained-library pool of
+  ConvNeXt Tiny v1, EfficientNetV2-S, and Swin V2 Tiny;
+- conditional intake paths for compact DINOv3 and SigLIP 2 Base FixRes 224,
+  subject to access/dependency/checkpoint and measured 8 GB gates; and
+- deferred paths with explicit re-entry conditions for the currently broken or
+  redundant DenseNet wrapper, exact ConvNeXt V2/FCMAE, other masked-image and
+  food-domain checkpoints, structured/dependency heads, and generative food
+  VLMs.
+
+This is an integration-credibility reduction, not a model ranking. R1 must
+decide the representative count and evidence rules before R2 inspects
+candidate-specific performance evidence.
 
 ### R1. Hard eligibility gates and comparison rubric
 
@@ -139,12 +216,8 @@ For every eligible candidate, collect and cite:
 4. research evidence about practical failure modes that could make a label
    appear non-learnable only because of the selector's limitations.
 
-Before starting a new model-discovery source, review the two preceding
-discoveries when they exist, following the project research governance. Store
-reusable source-backed findings under
+Store reusable source-backed candidate findings under
 docs/research/topics/reference_selector/ and link the resulting records here.
-Use a dated discovery only if the candidate set must be expanded beyond the
-existing model-research evidence.
 
 ### R3. Candidate comparison and bounded engineering checks
 
@@ -206,3 +279,6 @@ This plan is complete only when:
 | Date | Change | Rationale |
 | --- | --- | --- |
 | 2026-08-12 | Created Work package 4.6 plan. | Macro-section 3 is deferred until a research-supported reference selector is frozen independently from the final model shortlist. |
+| 2026-08-22 | Opened R0.1 broad candidate-landscape discovery and R0.2 technical inventory. | The selector search must not be limited to existing ResNet, DenseNet, and DINO implementations; pretraining is evaluated as an explicit part of the selector protocol and its interpretation boundary. |
+| 2026-08-22 | Completed R0.1 and started R0.2. | The dated discovery found no universal selector: architecture, pretraining, adaptation, downstream label text, and head structure define different measurements. The non-ranked handoff set now requires repository and compute verification before R1. |
+| 2026-08-22 | Completed R0.2 and handed the intake tiers to R1. | Static code, artifact, dependency, official-source, and workstation inspection identified a shared instrumentation/provenance prerequisite; retained only credible or explicitly conditional paths and gave every deferred family a re-entry condition without choosing `M_ref`. |
