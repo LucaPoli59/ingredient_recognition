@@ -1,11 +1,11 @@
 # Reference-selector candidate discovery — 2026-08-22
 
 **Created:** 2026-08-22
-**Last updated:** 2026-08-22
+**Last updated:** 2026-08-27
 
 ## Context and purpose
 
-This discovery supports Work package 4.6 in the
+This discovery supports Subphase 4B in the
 [general project plan](../../../general_plan.md). Its purpose is to map the
 architecture, pretraining, adaptation, and multi-label-head families that could
 act as the reference selector `M_ref` for the later ingredient-learnability
@@ -16,6 +16,12 @@ the frozen `v5` vocabulary can be learned under one declared visual-learning
 protocol. It is not automatically the final benchmark winner. This discovery
 therefore asks what each candidate would measure, not which paper reports the
 largest score on an unrelated dataset.
+
+## Evidence reuse across Subphases 4A and 4B
+
+This discovery retains a selector-oriented research question, so its measurement interpretations, intake tiers, and `M_ref` dispositions belong to Subphase 4B.
+
+Its model-family landscape, primary-source catalog, pretraining boundaries, checkpoint/licence facts, and reusable integration or resource findings may also support Subphase 4A. Subphase 4A must apply its own experiment-comparison questions and shortlist criteria; a 4B exclusion is not a 4A exclusion.
 
 ## Relationship to the preceding discovery
 
@@ -128,7 +134,7 @@ candidate currently has the complete per-label AP, raw-score, seed, environment,
 and checkpoint-provenance path required by Phase 3. That is a shared
 instrumentation prerequisite rather than an architecture-specific failure.
 
-R1 receives verified intake paths for torchvision ResNet-50, the repairable
+Subphase 4B R1 receives verified intake paths for torchvision ResNet-50, the repairable
 frozen DINOv2 B/14-register wrapper, and a maintained-library pool of ConvNeXt
 Tiny v1, EfficientNetV2-S, and Swin V2 Tiny. Compact DINOv3 and SigLIP 2 Base
 FixRes 224 remain conditional on explicit access/dependency/checkpoint and 8 GB

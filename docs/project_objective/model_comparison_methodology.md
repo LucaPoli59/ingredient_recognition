@@ -1,8 +1,8 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-08-12
-**Status:** Active and binding design; execution is deferred until Macro-section 4 selects the reference selector.
+**Last updated:** 2026-08-27
+**Status:** Active and binding design; Macro-section 3 execution is deferred until Subphase 4B selects the reference selector, while the later benchmark also requires the independent Subphase 4A model shortlist.
 
 ## Purpose and scope
 
@@ -15,7 +15,7 @@ between:
    reduction in output labels; and
 3. obtaining a well-adapted model for the reduced task.
 
-It applies to Macro-sections 3, 4, 6, and 7 of
+It applies to Macro-section 3, Subphases 4A and 4B, and Macro-sections 6 and 7 of
 [general_plan.md](../general_plan.md). The selection workflow remains owned by
 Macro-section 3 and its operational plan. Training implementation, hyperparameter
 optimization (HPO), and final result production remain owned by Macro-sections 6
@@ -44,7 +44,7 @@ vocabulary selection.
 | Term | Meaning |
 | --- | --- |
 | V_base | The frozen 165-label FoodOn-first v5 vocabulary derived from ingredients_target. It is the common full task. |
-| M_ref | The reference selector architecture and protocol selected by Macro-section 4 before Macro-section 3 resumes. It is a selection instrument, not the automatically preferred final model. |
+| M_ref | The reference selector architecture and protocol selected by Subphase 4B before Macro-section 3 resumes. It is a selection instrument, not the automatically preferred final model. |
 | V_selected | A versioned, shared projection of V_base produced by Macro-section 3 with M_ref, the learnability decision profile, semantic evidence, and observability review. |
 | V_random^(r) | One deterministic random projection of V_base with the same cardinality as V_selected and support strata matched to it; r identifies the draw. |
 | H_base(m) | Hyperparameters selected for model category m on V_base using validation only and the predeclared Phase 6 budget. |
@@ -55,11 +55,17 @@ Every selected or random vocabulary is an explicit experimental projection. It
 never replaces the default ingredients_target vocabulary, and validation or test
 labels never expand or reorder its saved class order.
 
+## Model-research evidence and decision boundary
+
+Subphases 4A and 4B share reusable evidence: broad discoveries, primary-source catalogs, architecture and pretraining descriptions, current integration audits, licence/checkpoint facts, and measured resource constraints. The same evidence may be cited by both without being duplicated.
+
+They own different decisions. Subphase 4A chooses model categories for the experiment; Subphase 4B chooses the single learnability measurement instrument `M_ref`. Eligibility, exclusion, or ranking in one subphase does not transfer automatically to the other, even when the same architecture appears in both.
+
 ## Binding design
 
-### 1. Select the reference selector before vocabulary selection
+### 1. Select the reference selector in Subphase 4B before vocabulary selection
 
-Macro-section 4 must choose M_ref before new v5 ingredient-selection training
+Subphase 4B must choose M_ref before new v5 ingredient-selection training
 begins. The decision is based on focused model research and a declared selection
 protocol: scientific fit to multi-label visual learnability, availability of
 per-label score trajectories, representativeness, compute cost, and integration
@@ -72,7 +78,7 @@ shared V_selected plus the associated evidence and provenance. A different
 selected vocabulary for each model category is rejected for the primary study,
 because it would make a model comparison a comparison of different tasks.
 
-Macro-section 4 may still select several model categories for the benchmark.
+Subphase 4A independently selects the model categories for the benchmark.
 M_ref is not thereby declared the winning category; it only fixes the operational
 meaning of “learnable” for the vocabulary-selection study.
 
@@ -178,7 +184,7 @@ vocabulary decisions as uncertain.
 
 | Design | Why it is not the primary methodology |
 | --- | --- |
-| Freeze one selected vocabulary using an arbitrary model without Macro-section 4 review | The learnability conclusion is model-conditional; the selector must be explicitly justified and frozen first. |
+| Freeze one selected vocabulary using an arbitrary model without Subphase 4B review | The learnability conclusion is model-conditional; the selector must be explicitly justified and frozen first. |
 | Select a different vocabulary for each model category after full-vocabulary tuning | It changes the prediction task by category, so model rankings cannot be interpreted as a like-for-like comparison. |
 | Aggregate model-specific selected vocabularies after every category has trained, then use the aggregate as the primary benchmark | It delays the shared task until after model outcomes influence it and doubles the campaign before a comparable benchmark exists. It may be a separately labelled exploratory study later. |
 | Perform a full second HPO on every selected and random vocabulary | It is too costly for the thesis schedule and confounds the primary vocabulary-effect ablation. |
@@ -199,7 +205,8 @@ vocabulary decisions as uncertain.
 
 | Owner | Required decision or artifact | Status |
 | --- | --- | --- |
-| Macro-section 4 | Choose and justify M_ref; define the model categories to compare. | Pending; [`reference_selector_research.md`](../plans/reference_selector_research.md) is the resume-gate plan for Macro-section 3. |
+| Subphase 4A | Define and justify the model categories to compare. | Pending; its dedicated feature plan has not yet been created. |
+| Subphase 4B | Choose and justify M_ref. | In progress; [`reference_selector_research.md`](../plans/reference_selector_research.md) is the resume-gate plan for Macro-section 3. |
 | Macro-section 3 | Freeze the M_ref learnability protocol and produce versioned V_selected evidence. | Deferred until M_ref is selected. |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |

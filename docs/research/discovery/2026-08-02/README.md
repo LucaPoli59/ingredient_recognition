@@ -1,11 +1,11 @@
 # Broad State-of-the-Art Discovery — 2026-08-02
 
-Created: 2026-08-02  
-Updated: 2026-08-02
+**Created:** 2026-08-02
+**Last updated:** 2026-08-27
 
 ## Context
 
-This discovery supports the thesis benchmark defined in the [project objective](../../../project_objective/README.md) and the current [general project plan](../../../general_plan.md). The target is **closed-vocabulary, recipe-level multi-label ingredient inference from one RGB image of a finished dish**. It is not ingredient-instance detection, segmentation, open-ended captioning, or full recipe generation.
+This discovery supports the thesis benchmark defined in the [project objective](../../../project_objective/README.md) and the current [general project plan](../../../general_plan.md). It is the primary broad evidence base for Subphase 4A experimental-model research; its reusable model-family, source, and technical findings may also inform Subphase 4B without transferring either subphase's decisions. The target is **closed-vocabulary, recipe-level multi-label ingredient inference from one RGB image of a finished dish**. It is not ingredient-instance detection, segmentation, open-ended captioning, or full recipe generation.
 
 The local evidence changes how external research should be interpreted:
 
@@ -89,4 +89,4 @@ Validation-only threshold selection, label-macro average precision, global-thres
 
 ## Immediate consequence for project scope
 
-This discovery completes the broad-discovery work package. It does **not** approve a final model stack and does not unblock training against the legacy labels. The next research step is to turn the highest-value uncertainties into focused topic investigations, then approve a bounded shortlist after the benchmark and ingredient protocol are stable.
+This discovery completes the broad evidence base inherited by Subphase 4A. It does **not** approve a final experiment-model stack or choose the Subphase 4B reference selector. The next 4A step is to create its dedicated plan, turn only the highest-value remaining uncertainties into focused investigations, and then approve a bounded experiment shortlist. The later binding one-declared-seed policy supersedes this snapshot's older multi-seed recommendation.

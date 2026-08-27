@@ -1,20 +1,20 @@
 # Recognizable ingredient selection plan
 
 **Created:** 2026-08-10
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-27
 
-This plan is the operational source of truth for Macro-section 3, **Ingredient selection**, in [`general_plan.md`](../general_plan.md). It preserves the November 2024 ResNet selection as a historical baseline and replaces its exploratory workflow with a reproducible, research-informed decision-profile study over the frozen FoodOn-first `v5` vocabulary. Macro-section 3 owns the resulting selected vocabulary, but its new execution is deferred until Macro-section 4 chooses the justified reference selector.
+This plan is the operational source of truth for Macro-section 3, **Ingredient selection**, in [`general_plan.md`](../general_plan.md). It preserves the November 2024 ResNet selection as a historical baseline and replaces its exploratory workflow with a reproducible, research-informed decision-profile study over the frozen FoodOn-first `v5` vocabulary. Macro-section 3 owns the resulting selected vocabulary, but its new execution is deferred until Subphase 4B chooses the justified reference selector. The independent Subphase 4A experiment-model shortlist is not a Phase 3 gate.
 
 ## Progress tracker
 
 **Overall status:** Deferred
-**Current task:** Await the Macro-section 4 decision that identifies the reference selector (`M_ref`) and the comparison model categories.
+**Current task:** Await the Subphase 4B decision that identifies and freezes the reference selector (`M_ref`).
 **Next action:** After `M_ref` is approved, freeze its `v5` configuration panel, one declared seed per configuration, budgets, AP trajectories, fixed-policy F1 diagnostics, controls, profile criteria, and output manifest before implementing or launching new experiments.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | P0 | Reconstruct the historical 2024 selection process and resolve its discrepancies | **Done** | Saved configurations, metrics, metadata, checkpoints, notebooks, launchers, journals, and the external communication archive establish the four historical stages and the exact 40-label rule. The accepted resolutions are recorded in this plan. |
-| P1 | Freeze the new selection question and experimental contract | **Deferred** | The plan adopts a profile that separates optimization, held-out generalization, and validity/mechanism evidence. Macro-section 4 must first identify `M_ref`; P1 then freezes its panel and fixed F1 policy before the pilot. P3 will use the bounded pilot to freeze numerical promotion gates. |
+| P1 | Freeze the new selection question and experimental contract | **Deferred** | The plan adopts a profile that separates optimization, held-out generalization, and validity/mechanism evidence. Subphase 4B must first identify `M_ref`; P1 then freezes its panel and fixed F1 policy before the pilot. P3 will use the bounded pilot to freeze numerical promotion gates. |
 | P2 | Implement deterministic historical reproduction and reusable analysis | **Deferred** | Create a dedicated source package and command-line entry points after P1; notebooks become optional views, not execution state. |
 | P3 | Run and validate a bounded `v5` pilot | **Deferred** | Compare candidate learning-dynamics criteria and controls without test access; use the pilot to freeze the final rule. |
 | P4 | Run the full `v5` reference-selector learnability campaign | **Deferred** | Execute each frozen `M_ref` configuration once with its declared seed, preserve a complete provenance manifest, and report the resulting single-run limitation. |
@@ -24,14 +24,14 @@ This plan is the operational source of truth for Macro-section 3, **Ingredient s
 
 ## Objective
 
-Determine which ingredients in the standard `ingredients_target_v5_metadata.json` vocabulary provide a meaningful and reproducible learning target for image-based models. After Macro-section 4 selects `M_ref`, the workflow must identify labels whose signal it learns, separate that evidence from validation generalization and human visual observability, and produce named experimental projections without creating a second implicit default vocabulary.
+Determine which ingredients in the standard `ingredients_target_v5_metadata.json` vocabulary provide a meaningful and reproducible learning target for image-based models. After Subphase 4B selects `M_ref`, the workflow must identify labels whose signal it learns, separate that evidence from validation generalization and human visual observability, and produce named experimental projections without creating a second implicit default vocabulary.
 
 The result is not a claim that every retained ingredient is literally visible. A label may be directly visible, inferable from dish context, or learnable mainly through dataset priors. Those cases must remain distinguishable in the evidence and final tiers.
 
 ## Scope
 
 - Reproduce the historical 40-label selection exactly from retained aggregate artifacts as a read-only regression baseline.
-- Design and implement a reusable, configuration-driven per-label training analysis for the 165-label `v5` target space using the Macro-section 4-approved `M_ref`.
+- Design and implement a reusable, configuration-driven per-label training analysis for the 165-label `v5` target space using the Subphase 4B-approved `M_ref`.
 - Use per-label train AP trajectories as the optimization-learnability signal and validation AP as the primary held-out generalization evidence. Retain fixed-policy F1 only as a secondary diagnostic.
 - Evaluate sustained optimization, held-out ranking quality, support effects, within-run temporal stability, configuration sensitivity where the bounded panel is run, and plausible signal mechanism. Repeated seeds for an identical configuration are out of scope; conclusions must not claim seed-level stability.
 - Add controls that can test whether label-space reduction, visual input, or prevalence explains an observed result.
@@ -45,7 +45,7 @@ The result is not a claim that every retained ingredient is literally visible. A
 - Selecting model hyperparameters, thresholds, or ingredients from the test split.
 - Training one independently tuned model per ingredient by default.
 - Repeating an identical configuration across several random seeds to estimate run-to-run stability. The study has a declared single-seed-per-configuration resource limit.
-- Selecting the new vocabulary with an arbitrary historical ResNet before Macro-section 4 reviews and freezes `M_ref`.
+- Selecting the new vocabulary with an arbitrary historical ResNet before Subphase 4B reviews and freezes `M_ref`.
 - Making weighted loss, augmentation, or any other ablation a selection requirement before the pilot justifies it.
 - Rewriting legacy metadata, configurations, checkpoints, or exported results.
 - Deleting historical experiments or scripts before the retention manifest, compatibility smoke tests, and replacement parity checks are complete.
@@ -78,7 +78,7 @@ The minimum retained historical artifacts and the compatibility anchors are owne
 ## Adopted decision-profile framework
 
 **Status:** Adopted for Phase 3 planning on 2026-08-12. Its execution is
-deferred until Macro-section 4 selects `M_ref`. P1 must then freeze the exact
+deferred until Subphase 4B selects `M_ref`. P1 must then freeze the exact
 configuration panel and measurement policy; P3 will freeze numerical promotion
 gates from the bounded pilot.
 
@@ -254,7 +254,8 @@ This plan is complete only when:
 | 2026-08-10 | Made saved run artifacts the primary evidence for 2024 and strengthened future provenance | The exact 2024 code snapshot was never committed; future manifests must remove this ambiguity. |
 | 2026-08-12 | Adopted a research-informed learnability decision profile for Phase 3 | The selection must separately assess train-AP optimization trajectories, validation-AP generalization, and validity/mechanism evidence. F1 is retained only under a P1-predeclared fixed policy as a secondary diagnostic; P3 must still freeze numerical gates from a bounded pilot. |
 | 2026-08-12 | Removed repeated-seed training from the `v5` selection protocol | Available time does not permit multiple runs with identical hyperparameters. Each configuration will use one declared seed; the analysis substitutes temporal/configuration checks and finite-validation-sample uncertainty where feasible, and does not claim seed-level stability. |
-| 2026-08-12 | Deferred new vocabulary-selection execution until Macro-section 4 chooses `M_ref` | Learnability is conditional on the selector. The historical ResNet remains a baseline, not an automatic selector; Phase 3 retains ownership of producing the shared selected vocabulary after the model-research decision. |
+| 2026-08-12 | Deferred new vocabulary-selection execution until the then-undivided Macro-section 4 chose `M_ref` (now owned by Subphase 4B) | Learnability is conditional on the selector. The historical ResNet remains a baseline, not an automatic selector; Phase 3 retains ownership of producing the shared selected vocabulary after the model-research decision. |
+| 2026-08-27 | Narrowed the resume dependency to Subphase 4B | Macro-section 4 now separates experiment-model research (4A) from reference-selector research (4B). Phase 3 needs the frozen `M_ref`, not completion of the independent experiment-model shortlist. |
 
 ## Related documentation
 

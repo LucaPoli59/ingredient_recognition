@@ -4,7 +4,7 @@
 **Last updated:** 2026-08-27
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Reduce the completed Work package 4.6 research to at most three reference-selector finalists, then choose `M_ref` with only decision-relevant checks, while completing the remaining runtime smoke checks for Data 2.4.
+**Current focus:** Define the dedicated Subphase 4A experimental-model research plan and its focused evidence sequence; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -33,8 +33,8 @@ A macro-section may remain **In progress** while some of its work packages are *
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
-| 3 | Ingredient selection | **Deferred** | The historical rule is reconstructed and the decision profile is adopted; resume after Macro-section 4 selects the justified reference selector. |
-| 4 | Model research | **In progress** | Complete focused research, freeze the justified reference selector, and approve a bounded model shortlist. |
+| 3 | Ingredient selection | **Deferred** | The historical rule is reconstructed and the decision profile is adopted; resume after Subphase 4B selects the justified reference selector. |
+| 4 | Model research | **In progress** | Run the primary 4A experimental-model research and the independent 4B reference-selector decision from a shared evidence base. |
 | 5 | Additional model implementation | **Deferred** | Resume after the research shortlist and model hypotheses are approved. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Resume after comparable benchmark runs are complete. |
@@ -146,14 +146,14 @@ The Data macro-section is **Done** only when shared image loading, legacy compat
 
 This macro-section selects ingredients that provide scientifically meaningful and reproducible image-learning targets. The adopted Phase 3 profile separates train-AP optimization, validation-AP generalization, temporal/configuration sensitivity, validity/mechanism, semantic relevance, support, and visual observability; F1 is a secondary diagnostic under a fixed policy. None of these dimensions may be collapsed into raw frequency or one transient F1 maximum.
 
-The 2024 ResNet selection has been reconstructed as a historical baseline: it intersected four top-quartile sets defined by each label's maximum train F1 and produced 40 legacy `ingredients_ok` labels. Train F1 is accepted as an intentional convergence signal for that narrow question, but the legacy rule is not reused as the final `v5` criterion and the old/new plot is not accepted as comparative evidence. Macro-section 3 retains ownership of the new shared selected vocabulary, but its execution waits for Macro-section 4 to choose the reference selector.
+The 2024 ResNet selection has been reconstructed as a historical baseline: it intersected four top-quartile sets defined by each label's maximum train F1 and produced 40 legacy `ingredients_ok` labels. Train F1 is accepted as an intentional convergence signal for that narrow question, but the legacy rule is not reused as the final `v5` criterion and the old/new plot is not accepted as comparative evidence. Macro-section 3 retains ownership of the new shared selected vocabulary, but its execution waits only for Subphase 4B to choose the reference selector; the Subphase 4A experiment-model shortlist is a separate decision.
 
 ### Work-package status
 
 | Work package | Status | Next action |
 | --- | --- | --- |
 | 3.1 Preliminary evidence and historical reconstruction | **Done** | Retain the exact max-Q3 intersection as a read-only baseline and regression fixture. |
-| 3.2 Selection criteria and experimental protocol | **Deferred** | After Macro-section 4 chooses `M_ref`, freeze its `v5` panel, one declared seed per configuration, AP trajectories, fixed-policy F1 diagnostics, controls, provenance, single-run uncertainty policy, and bounded-pilot procedure for numerical decision-profile gates. |
+| 3.2 Selection criteria and experimental protocol | **Deferred** | After Subphase 4B chooses `M_ref`, freeze its `v5` panel, one declared seed per configuration, AP trajectories, fixed-policy F1 diagnostics, controls, provenance, single-run uncertainty policy, and bounded-pilot procedure for numerical decision-profile gates. |
 | 3.3 Reproducible `v5` learnability study | **Deferred** | Implement maintained analysis, run a bounded pilot, freeze the rule, then execute the `M_ref` campaign. |
 | 3.4 Relevance and visual-observability validation | **Deferred** | Combine learnability with semantic/support criteria and audited direct/contextual/not-inferable evidence. |
 | 3.5 Final vocabulary tiers and integration | **Deferred** | Freeze named headline and exploratory projections, integrate them, and retire superseded scripts only after parity and retention gates pass. |
@@ -169,9 +169,9 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 - [x] Resolved the historical discrepancies: train F1 is an intentional convergence signal; the maximum-only rule requires improvement; the fourth run is unweighted; augmentation reporting is inverted; and the old/new plot is not a valid comparison.
 - [x] Opened the dedicated [`recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) operational plan.
 - [x] Adopted a research-informed learnability decision profile: train AP for optimization, validation AP for generalization, and separate stability, support, mechanism, and observability evidence; F1 is fixed-policy diagnostic evidence only.
-- [x] Adopted the cross-phase methodology: Macro-section 4 chooses the reference selector; Macro-section 3 produces one shared selected vocabulary; Macro-sections 6–7 separate full-task comparison, transferred vocabulary ablation, support-matched random controls, and optional local adaptation.
+- [x] Adopted the cross-phase methodology: Subphase 4A chooses the experiment model categories, Subphase 4B chooses the reference selector, Macro-section 3 produces one shared selected vocabulary, and Macro-sections 6–7 separate full-task comparison, transferred vocabulary ablation, support-matched random controls, and optional local adaptation.
 
-### Deferred until the Macro-section 4 reference-selector decision
+### Deferred until the Subphase 4B reference-selector decision
 
 - [ ] Freeze the global `M_ref` configuration panel, one declared seed per configuration, budgets, transforms, loss state, single-run limitation, and per-label logging contract before inspecting selection outcomes.
 - [ ] Pilot robust train-AP learning-dynamics and validation-AP statistics, including early-to-late change, a late-window level, temporal/configuration sensitivity, finite-validation-sample uncertainty where feasible, profile gates, and a fixed-policy F1 diagnostic where relevant.
@@ -188,56 +188,71 @@ The historical rule is reproduced by maintained read-only code; the `v5` campaig
 
 ### Next action
 
-Complete Macro-section 4 research and choose the justified reference selector under [`model_comparison_methodology.md`](project_objective/model_comparison_methodology.md). Then resume [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) to freeze the `v5` experimental contract and candidate decision-profile measures before the bounded pilot.
+Complete the Subphase 4B decision and freeze the justified reference selector under [`model_comparison_methodology.md`](project_objective/model_comparison_methodology.md). Then resume [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) to freeze the `v5` experimental contract and candidate decision-profile measures before the bounded pilot. Completion of the separate Subphase 4A shortlist is not a Phase 3 gate.
 
 ## 4. Model research
 
 **Status:** In progress
 
-This macro-section surveys candidate methods and turns them into testable architectural hypotheses for this specific dataset and objective.
+This macro-section has two coordinated but decision-independent subphases. Subphase 4A is the primary model-research stream and chooses the model categories to implement, tune, and compare in the thesis experiments. Subphase 4B chooses only the reference selector `M_ref` used by Macro-section 3 to generate the shared selected ingredient vocabulary.
 
-### Work-package status
+Broad discoveries, primary-source catalogs, implementation audits, and resource evidence may support both subphases. Their decisions remain separate: selection or exclusion as `M_ref` does not include or exclude a model from the experiment shortlist, and inclusion in the experiment shortlist does not make a model the selector. Each subphase records its own criteria, rationale, status, and output.
 
-| Work package | Status | Next action |
-| --- | --- | --- |
-| 4.1 Existing-model inventory | **Done** | Maintain when implementation changes. |
-| 4.2 DINOv2 deep dive | **Done** | Revisit only if its integration changes. |
-| 4.3 State-of-the-art discovery | **Done** | Refresh only when a material research update justifies a new dated snapshot. |
-| 4.4 Focused model topics | **Pending** | Open the prioritized target-processing, augmentation, representation/head, and calibration topics. |
-| 4.5 Candidate shortlist | **Pending** | Convert the non-selector focused evidence into the final approved implementation shortlist. |
-| 4.6 Reference-selector decision | **In progress** | Use the completed discovery to shortlist at most three distinct protocols, verify only decision-relevant uncertainties, choose `M_ref`, and hand it to Macro-section 3. |
+### Subphase status
 
-### Completed
+| Subphase | Status | Owned outcome | Next action |
+| --- | --- | --- | --- |
+| 4A Experimental-model research | **In progress** | A bounded, hypothesis-driven shortlist of model categories for Macro-sections 5–7. | Create its dedicated feature plan, map the completed shared evidence into its own research questions, and sequence the remaining focused topics. |
+| 4B Reference-selector research | **In progress** | One frozen and justified `M_ref` protocol that releases Macro-section 3. | Execute R1 in the existing [`reference_selector_research.md`](plans/reference_selector_research.md) plan, then complete its bounded R2–R3 choice and handoff. |
+
+### 4A. Experimental-model research
+
+**Status:** In progress
+
+This is the principal stream of Macro-section 4. It asks which representation, architecture, head, and adaptation hypotheses deserve controlled comparison on the frozen benchmark. It owns the experiment-model shortlist and the research questions that later drive implementation, tuning, and final comparison.
+
+#### Completed evidence
 
 - [x] Documented existing ResNet, DenseNet, DINOv2, and dummy-model implementations.
 - [x] Produced a technical deep dive for DINOv2 ViT-B/14.
 - [x] Defined the repository structure for dated discovery and topic-focused research.
 - [x] Formalized model-relevant challenges: partial observability, correlated labels, long-tail support, contextual shortcuts, calibration, and interpretability.
 - [x] Completed a dated broad state-of-the-art discovery grounded in the repaired-benchmark objective and 8 GB compute constraint.
-- [x] Completed a reference-selector-specific candidate discovery spanning supervised, visual self-supervised, vision-language, food-domain, and structured multi-label families, with explicit pretraining and interpretation boundaries.
-- [x] Completed the R0.2 repository inventory: the `v5` interface and candidate intake tiers are mapped, the shared per-label instrumentation/provenance gap is explicit, and deferred paths have named re-entry conditions.
+- [x] Retained the architecture, pretraining, source, implementation, and resource evidence from the 2026-08-22 selector-oriented discovery as reusable input where its transfer boundary matches a 4A research question; its selector dispositions are not an experiment shortlist.
 
-### Pending
+#### Pending
 
 - [ ] Review at least the two preceding discoveries before every new discovery when they exist.
 - [ ] Investigate the discovery's prioritized topics: ingredient parsing and standardization, food-safe preprocessing and augmentation, representation/class-query implementation, and multi-label calibration.
-- [ ] Execute the simplified reference-selector decision before resuming Macro-section 3; `M_ref` need not be the final winning model category.
-- [ ] Compare at most three scientifically distinct finalists on task meaning, per-label evidence path, reproducibility, 8 GB feasibility, and integration cost; do not run a candidate performance tournament.
 - [ ] Produce a bounded shortlist with an explicit hypothesis for each proposed model.
+- [ ] Create the dedicated 4A feature plan before opening further focused research.
 
-### Completion gate
+#### Completion gate
 
-The research record supports a bounded model shortlist, each shortlisted model has a falsifiable hypothesis plus a credible resource and implementation path, and one justified reference selector is frozen for Macro-section 3.
+The dedicated 4A plan is complete, the focused evidence supports a bounded experiment-model shortlist, and every shortlisted category has a falsifiable benchmark hypothesis plus a credible resource and implementation path.
 
-### Next action
+#### Next action
 
-Execute R1 in [`reference_selector_research.md`](plans/reference_selector_research.md): apply the four mandatory gates to the completed [R0.2 inventory](research/discovery/2026-08-22/candidate_integration_inventory.md), retain at most three distinct protocols, and state the decision priority. R2 then uses one concise comparison and only necessary current-source or resource smoke checks to choose `M_ref`; the broader final-model shortlist remains in Work package 4.5.
+Create a dedicated 4A feature plan that starts from the [2026-08-02 broad discovery](research/discovery/2026-08-02/README.md), explicitly identifies which [2026-08-22 evidence](research/discovery/2026-08-22/README.md) is reusable, and defines the minimum remaining research needed to freeze the experiment shortlist.
+
+### 4B. Reference-selector research
+
+**Status:** In progress
+
+This subphase asks which single model protocol is a sufficiently sensitive, interpretable, reproducible, and affordable measurement instrument for Phase 3 label learnability. It does not choose the final experiment winner and does not own the broader model shortlist.
+
+- **Completed evidence:** R0.1 provides the selector-oriented landscape across supervised, visual self-supervised, vision-language, food-domain, and structured multi-label families. R0.2 maps credible paths to the `v5` interface, 8 GB boundary, and shared instrumentation/provenance gap.
+- **Pending:** Retain at most three scientifically distinct selector protocols; inspect only decision-relevant technical or resource uncertainties without comparative candidate training or tuning; choose `M_ref`, freeze its exact protocol and interpretation boundary, and hand it to Macro-section 3.
+- **Completion gate:** One justified `M_ref` passes the declared selector gates, its exact reproducible protocol and limitations are frozen, and Macro-section 3 receives the instrumentation and execution handoff.
+- **Next action:** Execute R1 in [`reference_selector_research.md`](plans/reference_selector_research.md): apply the mandatory gates to the completed [R0.2 inventory](research/discovery/2026-08-22/candidate_integration_inventory.md), retain at most three distinct protocols, and state the decision priority.
+
+**Model-research macro-section completion gate:** Macro-section 4 is **Done** only when both 4A and 4B pass their separate completion gates. Subphase 4B may release Macro-section 3 as soon as its own gate passes; it does not need to wait for completion of the independent 4A shortlist.
 
 ## 5. Additional model implementation
 
 **Status:** Deferred
 
-This macro-section covers architectures selected by Model research that are not already implemented in the repository.
+This macro-section covers architectures selected by Subphase 4A that are not already implemented in the repository.
 
 ### Existing foundation
 
@@ -259,7 +274,7 @@ Existing models are historical baselines, not evidence that the additional-model
 
 ### Resume gate
 
-Resume when Macro-section 4 approves at least one additional model and the DataModule contract needed by that model is stable.
+Resume when Subphase 4A approves at least one additional model and the DataModule contract needed by that model is stable.
 
 ### Completion gate
 
@@ -312,7 +327,7 @@ Every required baseline and shortlisted model has comparable full-task and share
 
 ### Next action
 
-Do not launch final training or tuning on the legacy 182-label split. Resume after Macro-sections 4 and 3 freeze `M_ref` and the shared selected vocabulary; small smoke tests remain allowed when clearly marked as engineering validation.
+Do not launch final training or tuning on the legacy 182-label split. Resume after Subphase 4A freezes the experiment-model shortlist and Subphase 4B plus Macro-section 3 freeze `M_ref` and the shared selected vocabulary; small smoke tests remain allowed when clearly marked as engineering validation.
 
 ## 7. Results comparison
 
@@ -402,27 +417,11 @@ Create the thesis outline and claim map as soon as the institutional template an
 ## Cross-phase dependency flow
 
 ```text
-project foundation [Done]
-          |
-          v
-       data [In progress]
-          |             \
-          |              +--> model research [In progress]
-          |                         |
-          +-------------------------+--> ingredient selection [Deferred: after reference selector]
-                                      |                    |
-                                      v                    |
-                        additional models [Deferred]       |
-                                      |                    |
-                                      +--------------------+
-                                               v
-                               training and HTuning [Deferred]
-                        |
-                        v
-          results comparison [Deferred]
-                        |
-                        v
-              thesis completion
+project foundation [Done] -> data [In progress]
+data -> 4A experimental-model research [In progress] -> additional models [Deferred]
+data -> 4B reference-selector research [In progress] -> ingredient selection [Deferred]
+4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
+additional models + ingredient selection -> training and HTuning [Deferred] -> results comparison [Deferred] -> thesis completion
 
 Thesis outline and stable chapters may progress in parallel.
 ```
@@ -474,6 +473,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-22 | Reference-selector research | Completed R0.1 with a source-catalogued, non-ranked selector landscape and explicit boundaries for pretraining, adaptation, downstream label text, and structured heads. | Work package 4.6 **In progress**; R0.2 inventory is next; Macro-section 3 remains **Deferred** | [`research/discovery/2026-08-22/README.md`](research/discovery/2026-08-22/README.md), [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 | 2026-08-22 | Reference-selector research | Completed R0.2 with a repository-backed candidate/instrumentation matrix, verified and conditional intake tiers, explicit re-entry conditions, and a shared observability/provenance prerequisite; no selector was chosen. | Work package 4.6 **In progress**; R1 rubric is next; Macro-section 3 remains **Deferred** | [`research/discovery/2026-08-22/candidate_integration_inventory.md`](research/discovery/2026-08-22/candidate_integration_inventory.md), [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 | 2026-08-27 | Reference-selector planning | Simplified the remaining decision from five research/administrative stages to three outcome-driven stages: bounded shortlist, decision-relevant verification and choice, then freeze and handoff. Exhaustive candidate dossiers, numeric scoring, and comparative candidate training are no longer required. | Work package 4.6 **In progress**; R1 bounded shortlist is next; Macro-section 3 remains **Deferred** | [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
+| 2026-08-27 | Model research planning | Split Macro-section 4 into primary Subphase 4A for experiment-model research and Subphase 4B for the reference-selector decision. Discoveries, source catalogs, and technical audits may feed both, but their criteria and decisions remain independently owned. | 4A and 4B **In progress**; the 4A plan is next and 4B continues at R1; Macro-section 3 depends only on 4B | [`research/discovery/2026-08-02/README.md`](research/discovery/2026-08-02/README.md), [`research/discovery/2026-08-22/README.md`](research/discovery/2026-08-22/README.md), [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 
 ## Tracker maintenance rules
 
@@ -498,7 +498,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 - [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) owns the binding methodology for shared vocabulary selection, model comparison, random-reduction controls, and local adaptation.
 - [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) is the active implementation plan for the Data work packages summarized in this section.
 - [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) is the active implementation plan for Macro-section 3 and the maintained home of the historical discrepancy resolutions.
-- [`plans/reference_selector_research.md`](plans/reference_selector_research.md) is the operational research and decision plan for Work package 4.6.
+- [`plans/reference_selector_research.md`](plans/reference_selector_research.md) is the operational research and decision plan for Subphase 4B; the separate Subphase 4A plan has not yet been created.
 - [`research/topics/label_learnability/learnability_assessment.md`](research/topics/label_learnability/learnability_assessment.md) provides the reusable evidence behind the Phase 3 decision-profile framework.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.
 - [`implementation_details/models.md`](implementation_details/models.md) describes the model implementations currently available.

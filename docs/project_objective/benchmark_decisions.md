@@ -1,7 +1,7 @@
 # Yummly data and benchmark decisions
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-27
 **Status:** Active and binding
 
 ## Purpose
@@ -24,7 +24,7 @@ The existing 65,146-record metadata remains valid for historical experiments. It
 | D8 | What happens to `<UNK>`? | Remove it from new multi-label vocabularies and outputs because it has no positive training target. Preserve saved behavior for any legacy experiment selected for retention. |
 | D9 | Which primary metrics are used? | Report macro mean average precision and micro F1 together; neither is sufficient alone. |
 | D10 | Where are thresholds and calibration selected? | Fit thresholds, calibration, and other selection-time parameters on validation data only. Keep the test split unavailable to selection decisions. |
-| D11 | How are ingredient selection and model comparison coupled? | Macro-section 3 produces one shared selected vocabulary after Macro-section 4 chooses a justified reference selector. Compare model categories on common full and selected tasks; test vocabulary reduction through transferred-hyperparameter and support-matched random-vocabulary controls; keep selected-task local adaptation separate. |
+| D11 | How are ingredient selection and model comparison coupled? | Subphase 4A chooses the experiment model categories, Subphase 4B independently chooses the reference selector, and Macro-section 3 then produces one shared selected vocabulary. Compare model categories on common full and selected tasks; test vocabulary reduction through transferred-hyperparameter and support-matched random-vocabulary controls; keep selected-task local adaptation separate. |
 
 ## D1: target-field contract
 
@@ -148,8 +148,9 @@ Also report per-label support and per-label metrics, with explicit treatment of 
 ## D11: comparative training and vocabulary-reduction methodology
 
 The project uses one shared, versioned selected vocabulary rather than a
-different learned vocabulary per model category. Macro-section 4 first chooses
-the justified reference selector; Macro-section 3 then owns the selection
+different learned vocabulary per model category. Subphase 4B first chooses
+the justified reference selector, while Subphase 4A independently chooses the
+experiment model categories; Macro-section 3 then owns the selection
 workflow and produces the shared projection. Macro-section 6 tunes every model
 category on the full v5 task, uses its unchanged full-task configuration for the
 selected-vocabulary ablation, and runs support-matched random-vocabulary

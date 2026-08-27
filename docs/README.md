@@ -1,7 +1,7 @@
 # Project documentation
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-06
+**Last updated:** 2026-08-27
 
 This directory contains the durable technical documentation for the Ingredient Recognition project. It complements the repository-level [`README_PROJECT_KNOWLEDGE.md`](../README_PROJECT_KNOWLEDGE.md), which provides a concise map of the project and its current state. The cross-category storage and organization rules are consolidated in [`README_DOCS_ORGN.md`](README_DOCS_ORGN.md).
 
@@ -76,7 +76,7 @@ Use this directory for research records that support future project decisions. T
 
 ## Project roadmap
 
-[`general_plan.md`](general_plan.md) is the permanent progress tracker for the whole thesis project. It is organized into macro-sections for project foundation, data, ingredient selection, model research, additional model implementation, training and hyperparameter tuning, result comparison, and thesis writing. It preserves completed and superseded work in an append-only history log and must be updated whenever tracked work changes state. Detailed plans for concrete implementations belong in [`plans/`](plans/README.md).
+[`general_plan.md`](general_plan.md) is the permanent progress tracker for the whole thesis project. It is organized into macro-sections for project foundation, data, ingredient selection, model research, additional model implementation, training and hyperparameter tuning, result comparison, and thesis writing. Model research is explicitly split into Subphase 4A for experiment-model research and Subphase 4B for the reference-selector decision; they may share evidence but own separate outcomes. The tracker preserves completed and superseded work in an append-only history log and must be updated whenever tracked work changes state. Detailed plans for concrete implementations belong in [`plans/`](plans/README.md).
 
 ## Writing methodology
 

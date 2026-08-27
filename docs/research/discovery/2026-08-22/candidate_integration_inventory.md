@@ -10,7 +10,7 @@
 > Its environment observations and code-state statements are retained below as
 > snapshot evidence. They are not the current WSL runtime contract: the WSL ML
 > environment is operational and the merged DINOv2 wrapper no longer enforces
-> the historical physical batch cap of 32. R1 must use the current source and
+> the historical physical batch cap of 32. Subphase 4B R1 must use the current source and
 > repeat its bounded environment/resource smoke checks; the current model
 > contract remains authoritative in
 > [`implementation_details/models.md`](../../../implementation_details/models.md).
@@ -22,16 +22,18 @@ on 2026-08-22. It answers whether a candidate has a credible route to the
 frozen `v5` multi-label task, the Phase 3 evidence profile, and the available
 8 GB development GPU.
 
-It does **not** select `M_ref`, freeze the R1 rubric, or claim that a model is
+It does **not** select `M_ref`, freeze the Subphase 4B decision priority, or claim that a model is
 feasible because a paper reports a compact parameter count. The dispositions
 below determine which paths are sufficiently concrete to enter the next
 eligibility discussion. Candidate comparison remains downstream of the
-predeclared R1 gates.
+predeclared Subphase 4B R1 gates.
 
 Current behavior is authoritative in the source code and in the
 [model implementation contract](../../../implementation_details/models.md).
 This dated document is an inventory snapshot and should not be silently
 updated to describe later implementations.
+
+Reusable repository-snapshot, dependency, checkpoint, integration, and resource evidence may inform Subphase 4A after current-source revalidation. The intake tiers, selector interpretations, and R1 handoff below belong only to Subphase 4B and do not constitute the experiment-model shortlist.
 
 ## Verification method
 
@@ -267,7 +269,7 @@ that web language supervision is present even when downstream label text is
 not used. CLIP remains a continuity lead, but carrying both generic P2 families
 is not justified without a separate question.
 
-## Paths deferred before R2
+## Paths deferred before Subphase 4B R2
 
 The following families remain relevant research evidence but lack a
 proportionate, maintained selector path under the current task and budget.
@@ -285,9 +287,9 @@ from `src/models`.
 | C-Tran, graph, and set decoders | Label dependency can predict hidden ingredients from co-occurrence and changes the measurement more than a backbone swap. | Supplemental protocol with image-free/shuffled-image and label-prior controls; never the sole selector. |
 | Food-R1 and other generative food VLMs | Large generative interface does not natively expose comparable epoch-level 165-label trajectories and is disproportionate on 8 GB. | Use as a separately governed diagnostic/teacher, not primary `M_ref`, unless the output and compute contract materially changes. |
 
-## R0.2 handoff to R1
+## R0.2 handoff to Subphase 4B R1
 
-R1 starts with three evidence tiers rather than a selected model:
+Subphase 4B R1 starts with three evidence tiers rather than a selected model:
 
 1. **Verified intake:** torchvision ResNet-50; frozen DINOv2 B/14-register after
    bounded reproducibility repair; and the maintained-library pool containing
@@ -300,7 +302,7 @@ R1 starts with three evidence tiers rather than a selected model:
    structured/dependency heads, and generative food VLMs until their explicit
    re-entry conditions are met.
 
-Before inspecting candidate-specific evidence, R1 must:
+Before inspecting candidate-specific evidence, Subphase 4B R1 must:
 
 - freeze hard gates and a qualitative scale/tie rule;
 - decide whether the target measurement favors direct visual-prior neutrality
@@ -357,6 +359,6 @@ selection criteria by themselves.
 - Official parameter counts and FLOPs are inference metadata, not training
   memory or elapsed-time measurements.
 - Access, model cards, licences, package APIs, and default weight aliases can
-  change. R2 must recheck them when a concrete candidate record is created.
+  change. Subphase 4B R2 must recheck them when the finalist comparison is created.
 - R0.2 classifies integration credibility. It does not assess candidate quality
-  against the still-unfrozen R1 rubric.
+  against the still-unfrozen Subphase 4B R1 decision protocol.

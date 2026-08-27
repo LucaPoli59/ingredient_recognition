@@ -1,15 +1,17 @@
 # Implementation plans
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-27
 
 This directory contains the execution plans for concrete project implementations. These plans translate work packages from the project-wide [`general_plan.md`](../general_plan.md) into bounded technical tasks, verification steps, dependencies, and completion criteria.
 
 ## Active plans
 
 - [`data_ingredient_refactor/`](data_ingredient_refactor/README.md) contains the active Yummly Data plan and its controlled-vocabulary evaluation for Work packages 2.1b–2.4.
-- [`reference_selector_research.md`](reference_selector_research.md) is the active Work package 4.6 plan for researching and freezing the reference selector that gates Macro-section 3.
+- [`reference_selector_research.md`](reference_selector_research.md) is the active Subphase 4B plan for researching and freezing the reference selector that gates Macro-section 3.
 - [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the deferred Macro-section 3 plan for historical reproduction, v5 learnability analysis, visual-observability evidence, and final named ingredient tiers.
+
+No Subphase 4A plan exists yet. Its next project-level action is to create a separate experimental-model research plan; experiment-shortlist work must not be added to the Subphase 4B selector plan.
 
 ## Scope
 

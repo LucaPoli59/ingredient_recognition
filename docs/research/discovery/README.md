@@ -1,7 +1,7 @@
 # Discovery research
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-22
+**Last updated:** 2026-08-27
 
 Use this directory for broad research snapshots of the state of the art, such as recent methods, benchmarks, tools, and emerging directions relevant to the project.
 
@@ -23,5 +23,7 @@ Before creating a new discovery, review at least the two most recent existing di
 - [`2026-08-22/`](2026-08-22/README.md) — reference-selector
   candidate landscape across supervised, visual self-supervised,
   vision-language, food-domain, and structured multi-label families, with
-  explicit pretraining and interpretation boundaries.
-- [`2026-08-02/`](2026-08-02/README.md) — broad state-of-the-art discovery covering food ingredient inference, multi-label models, representation learning, data and ontology processing, augmentation, leakage control, calibration, interpretability, and a compute-aware research program.
+  explicit pretraining and interpretation boundaries. Its family, source, and
+  technical evidence may also inform Subphase 4A, while selector intake tiers
+  and dispositions remain specific to Subphase 4B.
+- [`2026-08-02/`](2026-08-02/README.md) — primary broad evidence base for Subphase 4A, covering food ingredient inference, multi-label models, representation learning, data and ontology processing, augmentation, leakage control, calibration, interpretability, and a compute-aware research program; reusable evidence may also inform Subphase 4B.

@@ -2,7 +2,7 @@
 
 **Created:** 2026-08-12
 **Last updated:** 2026-08-27
-**Linked macro-section and work package:** [Macro-section 4, Work package 4.6](../general_plan.md#4-model-research)
+**Linked macro-section and subphase:** [Subphase 4B, Reference-selector research](../general_plan.md#4b-reference-selector-research)
 **Overall status:** In progress
 
 ## Objective
@@ -14,7 +14,13 @@ not the automatically preferred final benchmark model.
 
 The binding cross-phase design remains in
 [model_comparison_methodology.md](../project_objective/model_comparison_methodology.md).
-This plan owns only the bounded decision needed to release Macro-section 3.
+This plan owns only Subphase 4B and the bounded decision needed to release Macro-section 3.
+
+## Relationship to Subphase 4A
+
+Subphases 4A and 4B may cite the same broad discoveries, primary sources, model-family descriptions, implementation audits, and resource evidence. Reusable evidence remains in the research records rather than being copied into both plans.
+
+This plan applies selector-specific criteria only. A 4B exclusion does not remove a model from the 4A experiment shortlist, a 4A shortlist decision does not select `M_ref`, and the final outputs remain independently justified.
 
 ## Why the remaining work is intentionally small
 
@@ -31,7 +37,7 @@ the decision record with the handoff.
 
 ## Scope
 
-This work package will:
+This subphase will:
 
 - reduce the completed R0 inventory to at most three meaningfully different
   finalist protocols;
@@ -44,7 +50,7 @@ This work package will:
 
 ## Non-goals
 
-This work package does not:
+This subphase does not:
 
 - reopen broad model discovery unless every credible R0 path fails a mandatory
   gate;
@@ -52,7 +58,7 @@ This work package does not:
   family considered in R0;
 - train or tune candidates as a performance tournament;
 - run the `v5` learnability campaign or generate `V_selected`;
-- choose the final benchmark winner or replace Work package 4.5;
+- choose the final benchmark winner or replace Subphase 4A;
 - implement a new architecture solely to keep it in the selector comparison;
 - access the test split or use selected-vocabulary outcomes to choose
   `M_ref`; or
@@ -82,7 +88,7 @@ training.
 | --- | --- | --- |
 | FoodOn-first `v5` vocabulary and split | Available | Every finalist targets the same 165-label task and class order. |
 | Phase 3 decision profile | Available | `M_ref` must be able to provide named-label train and validation AP evidence after the shared instrumentation is added. |
-| One declared seed per configuration | Binding | The later campaign cannot claim seed-level stability. This does not require candidate training during Work package 4.6. |
+| One declared seed per configuration | Binding | The later campaign cannot claim seed-level stability. This does not require candidate training during Subphase 4B. |
 | Test isolation | Binding | No test result, selected-vocabulary size, or downstream ranking may influence the choice. |
 | 8 GB development GPU and thesis schedule | Binding | A protocol that requires disproportionate integration or campaign cost is not eligible. |
 | Final benchmark shortlist | Independent and pending | Selecting `M_ref` does not declare the final model winner. |
@@ -212,8 +218,9 @@ This plan is complete only when:
 
 | Date | Change | Rationale |
 | --- | --- | --- |
-| 2026-08-12 | Created Work package 4.6 plan. | Macro-section 3 is deferred until a research-supported reference selector is frozen independently from the final model shortlist. |
+| 2026-08-12 | Created the plan as former Work package 4.6, now Subphase 4B. | Macro-section 3 is deferred until a research-supported reference selector is frozen independently from the final model shortlist. |
 | 2026-08-22 | Opened R0.1 broad discovery and R0.2 technical inventory. | The selector search must not be limited to existing ResNet, DenseNet, and DINO implementations; pretraining is part of the selector protocol and changes its interpretation. |
 | 2026-08-22 | Completed R0.1. | The discovery found no universal selector; architecture, pretraining, adaptation, downstream label text, and head structure define different measurements. |
 | 2026-08-22 | Completed R0.2 and handed intake tiers to the decision stage. | The inventory identified credible and conditional paths, deferred disproportionate ones, and isolated a shared instrumentation/provenance gap without selecting `M_ref`. |
 | 2026-08-27 | Compressed the remaining R1–R5 sequence into R1–R3. | R0 already provides broad evidence. The decision only needs a bounded shortlist, decision-relevant verification, one frozen selector, and its Phase 3 handoff; exhaustive candidate dossiers, a numeric rubric, and separate decision/synchronization stages do not advance the objective. |
+| 2026-08-27 | Reclassified the plan as Subphase 4B and separated it from Subphase 4A. | Shared discoveries and technical evidence may support both streams, but this plan owns only the selector criteria, `M_ref` decision, and Phase 3 handoff. |
