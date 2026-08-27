@@ -1,284 +1,219 @@
 # Reference-selector research and decision plan
 
-**Created:** 2026-08-12  
-**Last updated:** 2026-08-22
-**Linked macro-section and work package:** [Macro-section 4, Work package 4.6](../general_plan.md#4-model-research)  
+**Created:** 2026-08-12
+**Last updated:** 2026-08-27
+**Linked macro-section and work package:** [Macro-section 4, Work package 4.6](../general_plan.md#4-model-research)
 **Overall status:** In progress
 
 ## Objective
 
-Choose and freeze the reference selector, M_ref, used to define the
-model-conditional meaning of an image-learnable ingredient before Macro-section
-3 starts the new v5 selection study. M_ref is a measurement instrument for
-vocabulary selection, not the automatically preferred final model category.
+Choose and freeze one reference selector, `M_ref`, before Macro-section 3
+starts the new `v5` ingredient-selection study. The selector defines the
+model-conditional meaning of “image-learnable”; it is a measurement instrument,
+not the automatically preferred final benchmark model.
 
 The binding cross-phase design remains in
 [model_comparison_methodology.md](../project_objective/model_comparison_methodology.md).
-This plan records how the prerequisite M_ref decision will be researched,
-compared, justified, and handed off.
+This plan owns only the bounded decision needed to release Macro-section 3.
+
+## Why the remaining work is intentionally small
+
+R0 already surveyed the relevant model and pretraining families and mapped them
+to the repository, the frozen data contract, and the 8 GB constraint. Repeating
+that survey as one dossier per candidate would add work without changing the
+decision.
+
+The remaining question is narrower: which credible protocol is sufficiently
+sensitive, interpretable, reproducible, and affordable to act as the common
+selector? The plan therefore limits the decision to at most three finalist
+protocols, checks only uncertainties that can change the choice, and combines
+the decision record with the handoff.
 
 ## Scope
 
 This work package will:
 
-- establish which current or research-backed model categories are eligible to
-  act as the selector through a broad candidate-landscape discovery, not only
-  through the models already implemented in this repository;
-- freeze an evidence protocol and decision rubric before candidate-specific
-  analysis;
-- research each eligible candidate's scientific fit, per-label diagnostic
-  capability, representativeness, resource cost, and integration risk;
-- inspect the current code and configuration path needed to produce comparable
-  multi-label per-label trajectories; and
-- record the decision and its limits in the project objectives, then release
-  Macro-section 3 to freeze its selector-specific protocol.
+- reduce the completed R0 inventory to at most three meaningfully different
+  finalist protocols;
+- compare those finalists using a short set of mandatory gates and an explicit
+  decision priority;
+- run only bounded technical checks needed to confirm the selected protocol on
+  the current WSL environment and 8 GB GPU; and
+- freeze the exact `M_ref` protocol, its interpretation boundary, and the
+  requirements handed to Macro-section 3.
 
 ## Non-goals
 
 This work package does not:
 
-- tune a candidate, run the v5 learnability campaign, or generate V_selected;
-- choose the final benchmark winner or replace Work package 4.5's broader
-  model-shortlist decision;
-- compare test-set outcomes, access the test split, or use downstream
-  selected-vocabulary results to choose M_ref;
-- add model implementations solely to make them selector candidates; or
-- claim seed-level stability. The project has budgeted one declared seed per
-  selection configuration.
-
-Existing ResNet, DenseNet, and DINO-related paths are starting evidence, not a
-closed candidate list. A candidate is not adopted merely because it appears in
-the broad discovery.
+- reopen broad model discovery unless every credible R0 path fails a mandatory
+  gate;
+- produce a systematic review or a separate research document for every model
+  family considered in R0;
+- train or tune candidates as a performance tournament;
+- run the `v5` learnability campaign or generate `V_selected`;
+- choose the final benchmark winner or replace Work package 4.5;
+- implement a new architecture solely to keep it in the selector comparison;
+- access the test split or use selected-vocabulary outcomes to choose
+  `M_ref`; or
+- claim seed-level stability.
 
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** R1 — freeze the eligibility gates, evidence labels, and tie
-rule before candidate-specific evaluation.
-**Next action:** Predeclare the R1 hard gates and qualitative rubric, including
-the shared instrumentation gate, supervised-representative rule, conditional-
-candidate deadline, maximum integration effort, and measured 8 GB smoke
-contract.
+**Current task:** R1 — reduce the completed R0 inventory to a bounded shortlist
+and state the selector decision priority.
+**Next action:** Retain at most three scientifically distinct protocols that
+pass the mandatory gates; do not create candidate dossiers or run comparative
+training.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
-| R0 | Complete the broad candidate discovery and map the frozen v5 data contract, current model inventory, available logging, and eligible candidate families. | **Done** | The dated [discovery and integration inventory](../research/discovery/2026-08-22/README.md) retain the broad landscape and the repository-backed reduction. No candidate is recommended. |
-| R0.1 | Conduct a broad, catalog-only discovery of architecture, training, and pretraining families that could act as an ingredient-learnability selector. | **Done** | [2026-08-22 discovery](../research/discovery/2026-08-22/README.md) catalogs supervised CNN/transformer, visual SSL, generic VLM, food-domain, and multi-label-head families with explicit claim boundaries. |
-| R0.2 | Map candidates with a credible path to the current v5 task and record their instrumentation and integration state. | **Done** | The [candidate and instrumentation inventory](../research/discovery/2026-08-22/candidate_integration_inventory.md) records the common observability gaps, dependency/checkpoint/licence paths, measured-versus-unverified compute evidence, intake tiers, and explicit re-entry conditions. |
-| R1 | Freeze the hard eligibility gates, evidence sources, and qualitative decision rubric. | **Pending** | — |
-| R2 | Create source-backed candidate evidence records and inspect their current integration paths. | **Pending** | — |
-| R3 | Compare eligible candidates against the frozen rubric and record trade-offs, exclusions, and residual risks. | **Pending** | — |
-| R4 | Freeze and document M_ref, including its role, limitations, and handoff requirements. | **Pending** | — |
-| R5 | Synchronize the decision with Macro-section 3 and release its deferred protocol work. | **Pending** | — |
+| R0 | Discover candidate families and map them to the frozen `v5` task, repository, instrumentation needs, and compute boundary. | **Done** | The dated [discovery and integration inventory](../research/discovery/2026-08-22/README.md) retain the broad landscape and repository-backed intake tiers. No selector was chosen. |
+| R0.1 | Conduct the broad candidate-landscape discovery. | **Done** | The [2026-08-22 discovery](../research/discovery/2026-08-22/README.md) covers supervised, visual self-supervised, vision-language, food-domain, and structured multi-label families with explicit interpretation boundaries. |
+| R0.2 | Map credible candidates to the current `v5` task and integration path. | **Done** | The [candidate and instrumentation inventory](../research/discovery/2026-08-22/candidate_integration_inventory.md) records verified, conditional, and deferred paths plus the common observability gap. |
+| R1 | Freeze a shortlist of at most three distinct protocols and the decision priority. | **Pending** | Use the existing R0 evidence; group exclusions by reason instead of producing one dossier per rejected candidate. |
+| R2 | Verify the finalists only as needed, compare them, and choose `M_ref`. | **Pending** | Produce one concise comparison table. Use current-source inspection and a bounded load/forward/resource smoke where an uncertainty can change the decision; do not run comparative training. |
+| R3 | Freeze the selected protocol and hand it to Macro-section 3. | **Pending** | Record the exact model, weights/pretraining, trainability, transforms, head, resource boundary, limitations, and Phase 3 instrumentation requirements; synchronize the binding methodology and plans. |
 
-## Dependencies and assumptions
+## Dependencies and fixed constraints
 
-| Dependency or assumption | Status | Consequence |
+| Dependency or constraint | Status | Consequence |
 | --- | --- | --- |
-| The FoodOn-first v5 base vocabulary and split contract are frozen. | Available | Candidates are assessed for the same multi-label task, not for different vocabularies. |
-| Macro-section 3's learnability decision profile is retained. | Available | The selector must support train-AP and validation-AP per-label trajectories, fixed-policy F1 diagnostics, and complete provenance. |
-| The final benchmark model shortlist is not yet frozen. | Pending | M_ref can be selected without declaring a final model winner; Work package 4.5 remains separate. |
-| Selection training has one declared seed per configuration. | Binding constraint | The decision must favor protocol observability and reproducibility, while Macro-section 3 reports temporal/configuration sensitivity rather than seed-level stability. |
-| Test outcomes remain unavailable. | Binding constraint | No test metric, threshold, or downstream ranking may influence M_ref. |
+| FoodOn-first `v5` vocabulary and split | Available | Every finalist targets the same 165-label task and class order. |
+| Phase 3 decision profile | Available | `M_ref` must be able to provide named-label train and validation AP evidence after the shared instrumentation is added. |
+| One declared seed per configuration | Binding | The later campaign cannot claim seed-level stability. This does not require candidate training during Work package 4.6. |
+| Test isolation | Binding | No test result, selected-vocabulary size, or downstream ranking may influence the choice. |
+| 8 GB development GPU and thesis schedule | Binding | A protocol that requires disproportionate integration or campaign cost is not eligible. |
+| Final benchmark shortlist | Independent and pending | Selecting `M_ref` does not declare the final model winner. |
 
-## Research protocol
+## Simplified decision protocol
 
-### R0. Candidate landscape and instrumentation inventory
+### R0. Completed evidence base
 
-#### R0.1 Broad candidate-landscape discovery
+R0 established three useful intake groups:
 
-Conduct an extensive, catalog-only external discovery before constraining the
-selector to the repository's current implementations. The discovery must cover
-candidate families relevant to imbalanced multi-label ingredient recognition
-under partial visual observability, including where justified:
+- verified paths: torchvision ResNet-50, repairable frozen DINOv2 B/14-register,
+  and a maintained-library pool containing ConvNeXt Tiny, EfficientNetV2-S,
+  and Swin V2 Tiny;
+- conditional paths: compact DINOv3 and SigLIP 2, only if their access,
+  dependency, checkpoint, interpretation, and 8 GB issues are resolved without
+  a one-off pipeline; and
+- deferred paths: broken or redundant DenseNet, unavailable food-domain
+  checkpoints, structured/dependency heads, and disproportionate generative
+  models.
 
-- supervised convolutional baselines and modern convolutional families;
-- vision transformers and hybrid convolutional-transformer architectures;
-- self-supervised or masked-image vision foundation models;
-- contrastive vision-language foundation models that can be adapted to the
-  canonical image-to-multi-label task;
-- food- or ingredient-domain pretraining, when its sources, licence, and
-  transfer boundary are traceable; and
-- multi-label or label-query heads that may materially improve per-label
-  evidence without changing the frozen vocabulary or split.
+These groups are retained as discovery evidence, not carried forward as a
+requirement to compare every entry.
 
-The purpose is to make the candidate set explicit, not to select a model from a
-single performance claim. Each discovery entry must distinguish a reported
-architecture or checkpoint from a credible candidate for this repository under
-the available compute and implementation constraints. Follow the project
-discovery rule: inspect the two preceding discovery records when they exist,
-then retain the source catalogue and broad findings in a new dated
-`docs/research/discovery/<date>/` record.
+### R1. Bounded shortlist and decision priority
 
-Treat pretraining as a declared part of a possible M_ref protocol, not as an
-automatic advantage. For every relevant pretraining family, record:
+A finalist must pass all of these mandatory gates:
 
-1. the source data and training objective;
-2. whether the selector would be frozen, linearly probed, or fine-tuned;
-3. the information it may contribute beyond the v5 labels and images; and
-4. the consequent interpretation boundary: a label would be judged learnable
-   relative to the declared pretrained selector, rather than demonstrably
-   learnable from scratch.
+1. **Task fit:** consume the canonical `v5` images and produce 165 independent
+   continuous label scores without changing the split or using downstream
+   label-text prompts or dependency reasoning.
+2. **Evidence path:** have a credible maintained route to named-label train and
+   validation AP, reproducible configuration, and run provenance. The common
+   instrumentation may be implemented once in Macro-section 3; it need not be
+   duplicated for each finalist now.
+3. **Operational fit:** fit the 8 GB GPU and available schedule using one
+   declared configuration and seed.
+4. **Reproducibility:** use traceable weights, transforms, dependencies, and
+   trainability state, with no test access or downstream selected-vocabulary
+   feedback.
 
-The later decision must weigh whether prior visual or vision-language knowledge
-helps reveal a visually recognizable ingredient against the risk that it turns
-the selector into a measure of transferred semantic knowledge. It must state
-that trade-off explicitly and must not infer data leakage without evidence.
+Retain at most three protocols that represent genuinely different measurement
+choices, for example supervised continuity, a modern supervised visual model,
+and a visually self-supervised pretrained representation. A conditional
+candidate enters only if it removes a clear limitation of the verified paths
+and its prerequisites can be satisfied proportionately.
 
-#### R0.2 Candidate and instrumentation inventory
+Compare finalists in this priority order:
 
-After R0.1 and before candidate-specific evaluation, map each candidate family
-with a credible project path:
+1. scientific meaning for image-based ingredient learnability;
+2. capacity to expose useful per-label visual signal under the declared
+   protocol;
+3. reproducibility and interpretability of pretraining and limitations; and
+4. campaign cost and integration risk.
 
-- its implementation status, checkpoint/pretraining dependencies, licence or
-  access constraints, and expected compute;
-- its canonical input, output logits or scores, and multi-label loss path;
-- whether the maintained training path can log label order, train and
-  validation AP trajectories, fixed-policy F1 diagnostics, raw scores, and the
-  configuration/provenance needed by Macro-section 3;
-- how it connects to the frozen v5 DataModule and transforms; and
-- any missing engineering work that would make its use as a selector
-  disproportionate or non-reproducible.
+Do not invent a numeric score. If two finalists remain effectively equivalent,
+prefer the maintained, lower-cost, easier-to-audit protocol instead of opening
+another experiment campaign solely to break the tie.
 
-The inventory may include existing ResNet, DenseNet, and DINO-related paths,
-but it must not presume that any is selected. A newly discovered family becomes
-eligible for R2 only when the broad research record and a credible maintained
-integration path are available.
+### R2. Decision-relevant verification and selection
 
-**Completed result.** The dated
-[candidate and instrumentation inventory](../research/discovery/2026-08-22/candidate_integration_inventory.md)
-found that the shared training path is the first material gate: it does not yet
-persist per-label train/validation AP trajectories, bounded raw scores, an
-explicit label manifest, a declared reproducible seed, code/environment
-identity, or exact external-checkpoint provenance. No current wrapper can pass
-the intended evidence gate without this common layer.
+Create one concise table for the finalists containing:
 
-R1 receives:
+- exact architecture and initialization/pretraining;
+- frozen, partially trained, or fully trained backbone policy;
+- input transform and independent multi-label head;
+- what “learnable” would mean under that protocol;
+- current integration and provenance gaps;
+- licence/checkpoint constraints; and
+- current 8 GB evidence.
 
-- verified intake paths for torchvision ResNet-50, frozen DINOv2 B/14-register
-  after bounded reproducibility repair, and a maintained-library pool of
-  ConvNeXt Tiny v1, EfficientNetV2-S, and Swin V2 Tiny;
-- conditional intake paths for compact DINOv3 and SigLIP 2 Base FixRes 224,
-  subject to access/dependency/checkpoint and measured 8 GB gates; and
-- deferred paths with explicit re-entry conditions for the currently broken or
-  redundant DenseNet wrapper, exact ConvNeXt V2/FCMAE, other masked-image and
-  food-domain checkpoints, structured/dependency heads, and generative food
-  VLMs.
+Inspect current source for every finalist. Run a bounded technical smoke only
+where code inspection or existing evidence cannot settle a decision-relevant
+question. A smoke may confirm loading, forward/backward compatibility, output
+shape, and peak resource use; it is not comparative accuracy evidence.
 
-This is an integration-credibility reduction, not a model ranking. R1 must
-decide the representative count and evidence rules before R2 inspects
-candidate-specific performance evidence.
+Choose one `M_ref` from this table. Briefly group excluded alternatives by the
+gate or trade-off that mattered. If no finalist passes, reopen only the failed
+gate or intake category rather than repeating the broad discovery.
 
-### R1. Hard eligibility gates and comparison rubric
+### R3. Freeze and hand off
 
-Freeze the following gates before writing a candidate recommendation. A
-candidate must:
+Record the selected protocol with enough precision for Macro-section 3 to use
+it without reinterpretation:
 
-1. train end-to-end on the canonical v5 multi-label image task without changing
-   the vocabulary or split;
-2. expose per-label continuous scores and support epoch-level train and
-   validation AP trajectories, with the declared label order and full run
-   provenance;
-3. fit the available compute and schedule for a bounded, single-seed
-   selector campaign;
-4. have a credible maintained configuration, loss, transform, checkpoint, and
-   logging path; and
-5. make the decision without test-set access or implicit tuning on
-   selected-vocabulary outcomes.
+- model variant and exact weight/checkpoint identity;
+- pretraining source and the resulting claim boundary;
+- trainability policy, input resolution/transforms, independent output head,
+  loss family, and resource boundary;
+- known biases and limitations; and
+- the shared per-label AP, label-manifest, score-audit, seed, configuration,
+  code/environment, and data-provenance artifacts that Phase 3 must implement.
 
-For candidates that pass the gates, predeclare how the following dimensions
-are judged. The rubric must make trade-offs visible rather than reduce an
-unjustified decision to one accuracy number:
+Update
+[model_comparison_methodology.md](../project_objective/model_comparison_methodology.md),
+[benchmark_decisions.md](../project_objective/benchmark_decisions.md),
+[recognizable_ingredient_selection.md](recognizable_ingredient_selection.md),
+and the [general plan](../general_plan.md) at this completion checkpoint.
+Macro-section 3 then resumes and owns instrumentation, the bounded pilot,
+selection thresholds, campaign execution, and `V_selected`.
 
-| Dimension | Research question |
-| --- | --- |
-| Scientific fit | Does the architecture and pretraining/fine-tuning regime plausibly measure visual learnability of imbalanced multi-label ingredients rather than an unrelated proxy? |
-| Evidence fidelity | Can the maintained path deliver the per-label optimization, generalization, threshold-diagnostic, support, and provenance evidence required by the Phase 3 profile? |
-| Representativeness | Is it a defensible reference instrument for the later model portfolio without being treated as the final winner? |
-| Resource robustness | Can its expected training, storage, and diagnostic costs be completed within the declared single-seed budget? |
-| Integration maturity | Are data contract, loss weighting, transforms, checkpoints, and experiment tracking sufficiently understood and maintainable? |
-| Interpretability of limitations | Can likely architecture, pretraining, or resolution biases be stated so that M_ref-conditional vocabulary decisions are not overstated? |
+## Expected artifacts
 
-R1 must also predeclare the scoring scale or qualitative evidence labels and
-the rule for handling a tie. It may not alter those rules after a candidate's
-evidence has been inspected.
+- this plan with the R1 shortlist rationale and R2 finalist comparison;
+- bounded smoke evidence only when required for the choice;
+- one binding `M_ref` decision with an explicit interpretation boundary; and
+- a synchronized Macro-section 3 handoff.
 
-### R2. Focused evidence to collect
-
-For every eligible candidate, collect and cite:
-
-1. primary architecture and, where relevant, pretraining sources;
-2. primary or authoritative evidence relevant to multi-label visual
-   classification, transfer/fine-tuning, calibration, resolution, and
-   class-imbalance behavior;
-3. current repository evidence for the actual data, loss, metrics, logging,
-   configuration, checkpoint, and compute path; and
-4. research evidence about practical failure modes that could make a label
-   appear non-learnable only because of the selector's limitations.
-
-Store reusable source-backed candidate findings under
-docs/research/topics/reference_selector/ and link the resulting records here.
-
-### R3. Candidate comparison and bounded engineering checks
-
-Create a candidate matrix containing the frozen rubric, source links,
-repository evidence, expected resources, exclusions, and unresolved risks.
-Separate facts from inferences.
-
-An engineering smoke check is allowed only when it resolves a concrete
-integration uncertainty that sources and code inspection cannot resolve. It
-must use the canonical data contract, preserve a reproducible configuration,
-avoid the test split, and be reported as engineering evidence rather than
-comparative performance evidence. No candidate is selected from an untracked
-single chart or a downstream selected-vocabulary result.
-
-### R4. Decision record
-
-The recommendation must name one M_ref and document:
-
-- why it passed every hard gate and why the chosen trade-offs fit the
-  selection objective;
-- candidates excluded or deferred, including the evidence and limitation that
-  drove the exclusion;
-- the selector's architecture, initialization/pretraining state, maintained
-  training path, and assumptions that Macro-section 3 must freeze; and
-- the boundary of the claim: V_selected will be learnable relative to this
-  declared M_ref protocol and not universally learnable for every architecture.
-
-Record the binding result in
-[model_comparison_methodology.md](../project_objective/model_comparison_methodology.md)
-and [benchmark_decisions.md](../project_objective/benchmark_decisions.md). Keep
-the full research rationale in the topic records and this plan.
-
-### R5. Handoff to Macro-section 3
-
-After R4, update the project plan and
-[recognizable_ingredient_selection.md](recognizable_ingredient_selection.md)
-to replace the M_ref dependency with the chosen selector. Macro-section 3 can
-then freeze its configuration panel, logging contract, one-seed protocol,
-bounded pilot, and decision-profile thresholds before training begins.
-
-The broader model shortlist remains in Work package 4.5. It may include M_ref,
-but it must record a separate final-model hypothesis and must not retroactively
-change the frozen selector.
+New topic-research documents are created only when R1 or R2 produces a reusable
+finding not already owned by the R0 discovery. They are not mandatory
+per-candidate paperwork.
 
 ## Validation and completion criteria
 
 This plan is complete only when:
 
-- the candidate inventory and frozen rubric are retained;
-- every considered candidate has source-backed and repository-backed evidence,
-  with exclusions explained;
-- one M_ref passes all gates, has an explicit limitation statement, and is
-  recorded in the binding methodology and benchmark decision record;
-- the M_ref handoff requirements are linked from the Macro-section 3 plan; and
-- no test outcome or selected-vocabulary result was used for the decision.
+- the completed R0 discovery and inventory remain linked as the evidence base;
+- no more than three scientifically distinct finalists were carried into R2;
+- the chosen protocol passes every mandatory gate and any decision-relevant
+  technical uncertainty has been checked on the current environment;
+- the exact `M_ref` protocol and its model-conditional limitation are recorded
+  in the binding methodology;
+- Macro-section 3 receives the instrumentation and execution handoff; and
+- no test outcome, selected-vocabulary result, or comparative candidate-tuning
+  campaign influenced the choice.
 
 ## Decision and change log
 
 | Date | Change | Rationale |
 | --- | --- | --- |
 | 2026-08-12 | Created Work package 4.6 plan. | Macro-section 3 is deferred until a research-supported reference selector is frozen independently from the final model shortlist. |
-| 2026-08-22 | Opened R0.1 broad candidate-landscape discovery and R0.2 technical inventory. | The selector search must not be limited to existing ResNet, DenseNet, and DINO implementations; pretraining is evaluated as an explicit part of the selector protocol and its interpretation boundary. |
-| 2026-08-22 | Completed R0.1 and started R0.2. | The dated discovery found no universal selector: architecture, pretraining, adaptation, downstream label text, and head structure define different measurements. The non-ranked handoff set now requires repository and compute verification before R1. |
-| 2026-08-22 | Completed R0.2 and handed the intake tiers to R1. | Static code, artifact, dependency, official-source, and workstation inspection identified a shared instrumentation/provenance prerequisite; retained only credible or explicitly conditional paths and gave every deferred family a re-entry condition without choosing `M_ref`. |
+| 2026-08-22 | Opened R0.1 broad discovery and R0.2 technical inventory. | The selector search must not be limited to existing ResNet, DenseNet, and DINO implementations; pretraining is part of the selector protocol and changes its interpretation. |
+| 2026-08-22 | Completed R0.1. | The discovery found no universal selector; architecture, pretraining, adaptation, downstream label text, and head structure define different measurements. |
+| 2026-08-22 | Completed R0.2 and handed intake tiers to the decision stage. | The inventory identified credible and conditional paths, deferred disproportionate ones, and isolated a shared instrumentation/provenance gap without selecting `M_ref`. |
+| 2026-08-27 | Compressed the remaining R1–R5 sequence into R1–R3. | R0 already provides broad evidence. The decision only needs a bounded shortlist, decision-relevant verification, one frozen selector, and its Phase 3 handoff; exhaustive candidate dossiers, a numeric rubric, and separate decision/synchronization stages do not advance the objective. |

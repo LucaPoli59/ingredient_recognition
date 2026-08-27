@@ -4,7 +4,7 @@
 **Last updated:** 2026-08-27
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Freeze the Work package 4.6 R1 selector eligibility gates and qualitative rubric, while completing the remaining runtime smoke checks for Data 2.4.
+**Current focus:** Reduce the completed Work package 4.6 research to at most three reference-selector finalists, then choose `M_ref` with only decision-relevant checks, while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -205,7 +205,7 @@ This macro-section surveys candidate methods and turns them into testable archit
 | 4.3 State-of-the-art discovery | **Done** | Refresh only when a material research update justifies a new dated snapshot. |
 | 4.4 Focused model topics | **Pending** | Open the prioritized target-processing, augmentation, representation/head, and calibration topics. |
 | 4.5 Candidate shortlist | **Pending** | Convert the non-selector focused evidence into the final approved implementation shortlist. |
-| 4.6 Reference-selector decision | **In progress** | Freeze the R1 gates and rubric from the completed discovery/integration inventory, then research, compare, and freeze the justified M_ref selection instrument before Macro-section 3 resumes. |
+| 4.6 Reference-selector decision | **In progress** | Use the completed discovery to shortlist at most three distinct protocols, verify only decision-relevant uncertainties, choose `M_ref`, and hand it to Macro-section 3. |
 
 ### Completed
 
@@ -221,17 +221,17 @@ This macro-section surveys candidate methods and turns them into testable archit
 
 - [ ] Review at least the two preceding discoveries before every new discovery when they exist.
 - [ ] Investigate the discovery's prioritized topics: ingredient parsing and standardization, food-safe preprocessing and augmentation, representation/class-query implementation, and multi-label calibration.
-- [ ] Execute the bounded reference-selector research and decision protocol before resuming Macro-section 3; M_ref need not be the final winning model category.
-- [ ] Compare candidates on scientific fit, data requirements, compute, calibration, interpretability, and integration cost.
+- [ ] Execute the simplified reference-selector decision before resuming Macro-section 3; `M_ref` need not be the final winning model category.
+- [ ] Compare at most three scientifically distinct finalists on task meaning, per-label evidence path, reproducibility, 8 GB feasibility, and integration cost; do not run a candidate performance tournament.
 - [ ] Produce a bounded shortlist with an explicit hypothesis for each proposed model.
 
 ### Completion gate
 
-The research record supports a prioritized shortlist of models, every candidate has a falsifiable hypothesis, baseline comparison, resource estimate, and implementation plan, and one justified reference selector is frozen for Macro-section 3.
+The research record supports a bounded model shortlist, each shortlisted model has a falsifiable hypothesis plus a credible resource and implementation path, and one justified reference selector is frozen for Macro-section 3.
 
 ### Next action
 
-Execute R1 in [`reference_selector_research.md`](plans/reference_selector_research.md): freeze the hard gates, qualitative evidence labels, tie rule, common selector-artifact contract, supervised-representative rule, conditional-candidate deadline, maximum integration effort, and measured 8 GB smoke contract before candidate-specific evaluation. Use the completed [R0.2 inventory](research/discovery/2026-08-22/candidate_integration_inventory.md); do not select `M_ref` from implementation availability alone, and keep the broader final-model shortlist in Work package 4.5.
+Execute R1 in [`reference_selector_research.md`](plans/reference_selector_research.md): apply the four mandatory gates to the completed [R0.2 inventory](research/discovery/2026-08-22/candidate_integration_inventory.md), retain at most three distinct protocols, and state the decision priority. R2 then uses one concise comparison and only necessary current-source or resource smoke checks to choose `M_ref`; the broader final-model shortlist remains in Work package 4.5.
 
 ## 5. Additional model implementation
 
@@ -473,6 +473,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-22 | Reference-selector research | Started R0 with an explicit broad candidate-landscape discovery, including supervised, self-supervised, contrastive, and domain-pretrained options; existing ResNet, DenseNet, and DINO paths are not an exhaustive candidate set. | Work package 4.6 **In progress**; Macro-section 3 remains **Deferred** | [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 | 2026-08-22 | Reference-selector research | Completed R0.1 with a source-catalogued, non-ranked selector landscape and explicit boundaries for pretraining, adaptation, downstream label text, and structured heads. | Work package 4.6 **In progress**; R0.2 inventory is next; Macro-section 3 remains **Deferred** | [`research/discovery/2026-08-22/README.md`](research/discovery/2026-08-22/README.md), [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 | 2026-08-22 | Reference-selector research | Completed R0.2 with a repository-backed candidate/instrumentation matrix, verified and conditional intake tiers, explicit re-entry conditions, and a shared observability/provenance prerequisite; no selector was chosen. | Work package 4.6 **In progress**; R1 rubric is next; Macro-section 3 remains **Deferred** | [`research/discovery/2026-08-22/candidate_integration_inventory.md`](research/discovery/2026-08-22/candidate_integration_inventory.md), [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
+| 2026-08-27 | Reference-selector planning | Simplified the remaining decision from five research/administrative stages to three outcome-driven stages: bounded shortlist, decision-relevant verification and choice, then freeze and handoff. Exhaustive candidate dossiers, numeric scoring, and comparative candidate training are no longer required. | Work package 4.6 **In progress**; R1 bounded shortlist is next; Macro-section 3 remains **Deferred** | [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 
 ## Tracker maintenance rules
 
