@@ -44,16 +44,16 @@ the experiment portfolio.
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** 4A.2 — candidate deep research
-**Next action:** Create one normalized dossier per retained 4A.1 candidate and
-verify the open access, provenance, resource, and transfer questions before any
-shortlist decision.
+**Current task:** 4A.3 — established-family selection
+**Next action:** Apply the hard eligibility gates and qualitative comparison to
+the completed 4A.2 dossiers, then record exactly two complementary families in
+a binding project-objective decision record.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | 4A.1 | Broad model discovery and three-to-five-family handoff | **Done** | The 2026-08-28 discovery records the input revisions, requirements matrix, five new retained family/protocol candidates, the already-used ResNet/DINOv2 baseline anchors, grouped exclusions, and the formal 4A.1 → 4A.2 handoff. |
-| 4A.2 | Deep research for every retained family | **In progress** | Produce one normalized dossier per retained family in a dedicated research-topic collection; no implementation or training is part of this stage. |
-| 4A.3 | Select two established model families | **Pending** | Apply hard eligibility gates and a qualitative comparative synthesis; record the adopted shortlist as a binding project decision. |
+| 4A.2 | Deep research for every retained family | **Done** | Five normalized dossiers and a common comparative synthesis are recorded in [`research/topics/experimental_model_candidates/README.md`](../research/topics/experimental_model_candidates/README.md); no implementation or training was part of this stage. |
+| 4A.3 | Select two established model families | **In progress** | Apply hard eligibility gates and the dossier-linked qualitative synthesis; record the adopted shortlist as a binding project decision. |
 | 4A.4 | Research and select the custom attention model | **Pending** | Create and execute a separate feature plan; produce three topology-level proposals with S/M/L scales and select one for implementation. |
 
 ## Mandatory input and re-reading gate
@@ -401,6 +401,39 @@ same schema, all material claims link to primary or official evidence, open
 questions are explicit, and the 4A.2 → 4A.3 handoff permits a like-for-like
 qualitative comparison.
 
+### 4A.2 completion checkpoint — 2026-08-28
+
+**Status:** Done.
+
+The indexed topic collection
+[`experimental_model_candidates`](../research/topics/experimental_model_candidates/README.md)
+contains one common-schema dossier for each retained new candidate:
+
+- C1 EfficientNetV2;
+- C2 Swin Transformer V2;
+- C3 SigLIP2 image-only adapter, with text-conditioned variants explicitly
+  separated;
+- C4 structured query/set head, treated as a head protocol paired with a
+  declared backbone; and
+- C5 MaxViT.
+
+The collection also records a qualitative comparison and the formal 4A.2 →
+4A.3 handoff. Each dossier includes primary architecture evidence, an official
+or maintained implementation path, the direct/adjacent/mechanistic transfer
+boundary, project-fit judgments, resource metadata, open questions, and one
+falsifiable local hypothesis. The direct food-ingredient comparison evidence
+from the 2025 Recipe1M study is retained only in its source context and is not
+used to rank candidates on Yummly.
+
+No model was trained, tuned, measured for local accuracy, or evaluated on the
+test split. Peak memory, exact aspect-preserving transforms, checkpoint hashes,
+and dependency compatibility remain Phase 5 verification items.
+
+**Next stage:** 4A.3 established-family selection. Use the comparative
+[synthesis](../research/topics/experimental_model_candidates/comparative_synthesis.md)
+to apply the hard gates and choose exactly two complementary families without
+reopening an unbounded discovery search.
+
 ## 4A.3 — Established-family selection
 
 ### Selection question
@@ -571,3 +604,4 @@ Subphase 4A is complete only when:
 | --- | --- | --- |
 | 2026-08-28 | Created the dedicated Subphase 4A plan with four research stages. | Separate primary experiment-model research from Subphase 4B, preserve an extensive source/evidence flow, select two established families from three to five candidates, and govern the larger custom attention-model research through its own feature plan. |
 | 2026-08-28 | Completed 4A.1 and opened 4A.2. | The problem-to-model matrix and primary-source discovery now retain five new family/protocol candidates; ResNet and DINOv2 are explicitly preserved as already-used baseline anchors and excluded from the selection count. The next work is normalized dossier verification, not broader unbounded searching or training. |
+| 2026-08-28 | Completed 4A.2 and opened 4A.3. | Five common-schema candidate dossiers and a qualitative handoff now cover architecture mechanisms, transfer limits, access/provenance, resources, and falsifiable hypotheses. The next decision is exactly two complementary established families; no local training or test outcome was used. |

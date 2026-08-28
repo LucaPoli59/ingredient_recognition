@@ -4,7 +4,7 @@
 **Last updated:** 2026-08-28
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Execute 4A.2 candidate deep research under the dedicated experimental-model plan; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
+**Current focus:** Execute 4A.3 established-family selection from the completed 4A.2 dossiers; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -202,7 +202,7 @@ Broad discoveries, primary-source catalogs, implementation audits, and resource 
 
 | Subphase | Status | Owned outcome | Next action |
 | --- | --- | --- | --- |
-| 4A Experimental-model research | **In progress** | Two literature-derived model families plus one selected custom attention architecture for Macro-sections 5–7. | Execute 4A.2: create one normalized deep-research dossier per retained 4A.1 candidate and verify evidence, access, provenance, and resource boundaries. |
+| 4A Experimental-model research | **In progress** | Two literature-derived model families plus one selected custom attention architecture for Macro-sections 5–7. | Execute 4A.3: apply the hard gates and qualitative comparison to the completed 4A.2 dossiers, then record the two-family shortlist. |
 | 4B Reference-selector research | **In progress** | One frozen and justified `M_ref` protocol that releases Macro-section 3. | Execute R1 in the existing [`reference_selector_research.md`](plans/reference_selector_research.md) plan, then complete its bounded R2–R3 choice and handoff. |
 
 ### 4A. Experimental-model research
@@ -226,7 +226,8 @@ This is the principal stream of Macro-section 4. It asks which representation, a
 
 - [x] Review at least the two preceding discoveries before the 4A.1 discovery.
 - [x] Execute 4A.1 and retain three to five scientifically distinct, accessible family-level candidates after mapping the current problem constraints.
-- [ ] Complete one normalized deep-research dossier per candidate and select exactly two established families with explicit, falsifiable benchmark hypotheses.
+- [x] Complete one normalized deep-research dossier per candidate with explicit transfer boundaries, resource metadata, and falsifiable benchmark hypotheses; the 4A.3 family selection remains open.
+- [ ] Select exactly two established families through the 4A.3 qualitative gate and record the binding shortlist.
 - [ ] Create and complete the dedicated custom attention-model feature plan, compare three topology-level proposals with S/M/L scales, and select one for implementation.
 
 #### Completion gate
@@ -235,7 +236,7 @@ The dedicated 4A plan is complete; a primary-source evidence chain supports exac
 
 #### Next action
 
-Execute 4A.2 in [`experimental_model_research.md`](plans/experimental_model_research.md): create one normalized dossier for each retained 4A.1 candidate, verify the open access/provenance/resource questions, and prepare a like-for-like evidence handoff to 4A.3.
+Execute 4A.3 in [`experimental_model_research.md`](plans/experimental_model_research.md): apply the hard eligibility gates and dossier-linked qualitative synthesis, then record exactly two complementary families in a binding decision record.
 
 ### 4B. Reference-selector research
 
@@ -479,6 +480,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-28 | Experimental-model research planning | Created the dedicated 4A plan. It now selects two established families from a three-to-five-family research set and one custom attention topology from three proposals, while preserving primary-source evidence and explicit stage handoffs. | Subphase 4A **In progress**; 4A.1 broad family discovery is next | [`plans/experimental_model_research.md`](plans/experimental_model_research.md), [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) |
 | 2026-08-28 | Experimental-model research | Completed 4A.1 with the problem-to-model requirements matrix, five retained family/protocol candidates, grouped exclusions, primary-source catalog, and the formal handoff to 4A.2. | Subphase 4A **In progress**; 4A.2 deep research is next | [`research/discovery/2026-08-28/README.md`](research/discovery/2026-08-28/README.md), [`plans/experimental_model_research.md`](plans/experimental_model_research.md) |
 | 2026-08-28 | Experimental-model research | Refined the 4A.1 candidate count: ResNet and DINOv2 are already-used baseline anchors (their papers remain retained evidence), while the five selection candidates are now EfficientNetV2, Swin V2, SigLIP2, a structured query/set head, and MaxViT. | Subphase 4A **In progress**; 4A.2 deep research is next | [`research/discovery/2026-08-28/candidate_landscape.md`](research/discovery/2026-08-28/candidate_landscape.md), [`plans/experimental_model_research.md`](plans/experimental_model_research.md) |
+| 2026-08-28 | Experimental-model research | Completed 4A.2 with five normalized candidate dossiers and a qualitative 4A.2 → 4A.3 synthesis. Architecture, evidence transfer limits, provenance/access, resource assumptions, and falsifiable hypotheses are recorded; no local training or test outcome influenced the handoff. | Subphase 4A **In progress**; 4A.3 established-family selection is next | [`research/topics/experimental_model_candidates/README.md`](research/topics/experimental_model_candidates/README.md), [`research/topics/experimental_model_candidates/comparative_synthesis.md`](research/topics/experimental_model_candidates/comparative_synthesis.md), [`plans/experimental_model_research.md`](plans/experimental_model_research.md) |
 
 ## Tracker maintenance rules
 
