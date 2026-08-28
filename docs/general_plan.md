@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-27
+**Last updated:** 2026-08-28
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Define the dedicated Subphase 4A experimental-model research plan and its focused evidence sequence; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
+**Current focus:** Execute 4A.1 broad family discovery under the dedicated experimental-model plan; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -202,7 +202,7 @@ Broad discoveries, primary-source catalogs, implementation audits, and resource 
 
 | Subphase | Status | Owned outcome | Next action |
 | --- | --- | --- | --- |
-| 4A Experimental-model research | **In progress** | A bounded, hypothesis-driven shortlist of model categories for Macro-sections 5–7. | Create its dedicated feature plan, map the completed shared evidence into its own research questions, and sequence the remaining focused topics. |
+| 4A Experimental-model research | **In progress** | Two literature-derived model families plus one selected custom attention architecture for Macro-sections 5–7. | Execute 4A.1: re-read the mandatory problem inputs, freeze the problem-to-model requirements matrix, and discover three to five family-level candidates. |
 | 4B Reference-selector research | **In progress** | One frozen and justified `M_ref` protocol that releases Macro-section 3. | Execute R1 in the existing [`reference_selector_research.md`](plans/reference_selector_research.md) plan, then complete its bounded R2–R3 choice and handoff. |
 
 ### 4A. Experimental-model research
@@ -219,21 +219,22 @@ This is the principal stream of Macro-section 4. It asks which representation, a
 - [x] Formalized model-relevant challenges: partial observability, correlated labels, long-tail support, contextual shortcuts, calibration, and interpretability.
 - [x] Completed a dated broad state-of-the-art discovery grounded in the repaired-benchmark objective and 8 GB compute constraint.
 - [x] Retained the architecture, pretraining, source, implementation, and resource evidence from the 2026-08-22 selector-oriented discovery as reusable input where its transfer boundary matches a 4A research question; its selector dispositions are not an experiment shortlist.
+- [x] Created the dedicated [`experimental_model_research.md`](plans/experimental_model_research.md) plan with an extensive evidence flow and four stages: broad discovery, candidate deep research, two-family selection, and separately planned custom attention-model research.
 
 #### Pending
 
 - [ ] Review at least the two preceding discoveries before every new discovery when they exist.
-- [ ] Investigate the discovery's prioritized topics: ingredient parsing and standardization, food-safe preprocessing and augmentation, representation/class-query implementation, and multi-label calibration.
-- [ ] Produce a bounded shortlist with an explicit hypothesis for each proposed model.
-- [ ] Create the dedicated 4A feature plan before opening further focused research.
+- [ ] Execute 4A.1 and retain three to five scientifically distinct, accessible family-level candidates after mapping the current problem constraints.
+- [ ] Complete one normalized deep-research dossier per candidate and select exactly two established families with explicit, falsifiable benchmark hypotheses.
+- [ ] Create and complete the dedicated custom attention-model feature plan, compare three topology-level proposals with S/M/L scales, and select one for implementation.
 
 #### Completion gate
 
-The dedicated 4A plan is complete, the focused evidence supports a bounded experiment-model shortlist, and every shortlisted category has a falsifiable benchmark hypothesis plus a credible resource and implementation path.
+The dedicated 4A plan is complete; a primary-source evidence chain supports exactly two established model families and one selected custom attention topology; all three categories have falsifiable benchmark hypotheses and credible resource and implementation paths; the custom research preserves three reviewed topology proposals with S/M/L scaling rules; and no candidate training, HPO, or test outcome influenced selection.
 
 #### Next action
 
-Create a dedicated 4A feature plan that starts from the [2026-08-02 broad discovery](research/discovery/2026-08-02/README.md), explicitly identifies which [2026-08-22 evidence](research/discovery/2026-08-22/README.md) is reusable, and defines the minimum remaining research needed to freeze the experiment shortlist.
+Execute 4A.1 in [`experimental_model_research.md`](plans/experimental_model_research.md): re-read the mandatory project-objective inputs, record their revisions in a problem-to-model requirements matrix, review the [2026-08-02](research/discovery/2026-08-02/README.md) and [2026-08-22](research/discovery/2026-08-22/README.md) evidence, and open a new dated discovery that retains three to five family-level candidates.
 
 ### 4B. Reference-selector research
 
@@ -474,6 +475,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-22 | Reference-selector research | Completed R0.2 with a repository-backed candidate/instrumentation matrix, verified and conditional intake tiers, explicit re-entry conditions, and a shared observability/provenance prerequisite; no selector was chosen. | Work package 4.6 **In progress**; R1 rubric is next; Macro-section 3 remains **Deferred** | [`research/discovery/2026-08-22/candidate_integration_inventory.md`](research/discovery/2026-08-22/candidate_integration_inventory.md), [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 | 2026-08-27 | Reference-selector planning | Simplified the remaining decision from five research/administrative stages to three outcome-driven stages: bounded shortlist, decision-relevant verification and choice, then freeze and handoff. Exhaustive candidate dossiers, numeric scoring, and comparative candidate training are no longer required. | Work package 4.6 **In progress**; R1 bounded shortlist is next; Macro-section 3 remains **Deferred** | [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 | 2026-08-27 | Model research planning | Split Macro-section 4 into primary Subphase 4A for experiment-model research and Subphase 4B for the reference-selector decision. Discoveries, source catalogs, and technical audits may feed both, but their criteria and decisions remain independently owned. | 4A and 4B **In progress**; the 4A plan is next and 4B continues at R1; Macro-section 3 depends only on 4B | [`research/discovery/2026-08-02/README.md`](research/discovery/2026-08-02/README.md), [`research/discovery/2026-08-22/README.md`](research/discovery/2026-08-22/README.md), [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
+| 2026-08-28 | Experimental-model research planning | Created the dedicated 4A plan. It now selects two established families from a three-to-five-family research set and one custom attention topology from three proposals, while preserving primary-source evidence and explicit stage handoffs. | Subphase 4A **In progress**; 4A.1 broad family discovery is next | [`plans/experimental_model_research.md`](plans/experimental_model_research.md), [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) |
 
 ## Tracker maintenance rules
 
@@ -498,7 +500,8 @@ This table is append-only. Add one row when a macro-section or first-level work 
 - [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) owns the binding methodology for shared vocabulary selection, model comparison, random-reduction controls, and local adaptation.
 - [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) is the active implementation plan for the Data work packages summarized in this section.
 - [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) is the active implementation plan for Macro-section 3 and the maintained home of the historical discrepancy resolutions.
-- [`plans/reference_selector_research.md`](plans/reference_selector_research.md) is the operational research and decision plan for Subphase 4B; the separate Subphase 4A plan has not yet been created.
+- [`plans/experimental_model_research.md`](plans/experimental_model_research.md) is the operational plan for Subphase 4A broad discovery, candidate deep research, selection of two established families, and the separately planned custom attention-model research.
+- [`plans/reference_selector_research.md`](plans/reference_selector_research.md) is the operational research and decision plan for Subphase 4B.
 - [`research/topics/label_learnability/learnability_assessment.md`](research/topics/label_learnability/learnability_assessment.md) provides the reusable evidence behind the Phase 3 decision-profile framework.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.
 - [`implementation_details/models.md`](implementation_details/models.md) describes the model implementations currently available.

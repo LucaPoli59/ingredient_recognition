@@ -1,7 +1,7 @@
 # Broad State-of-the-Art Discovery — 2026-08-02
 
 **Created:** 2026-08-02
-**Last updated:** 2026-08-27
+**Last updated:** 2026-08-28
 
 ## Context
 
@@ -89,4 +89,4 @@ Validation-only threshold selection, label-macro average precision, global-thres
 
 ## Immediate consequence for project scope
 
-This discovery completes the broad evidence base inherited by Subphase 4A. It does **not** approve a final experiment-model stack or choose the Subphase 4B reference selector. The next 4A step is to create its dedicated plan, turn only the highest-value remaining uncertainties into focused investigations, and then approve a bounded experiment shortlist. The later binding one-declared-seed policy supersedes this snapshot's older multi-seed recommendation.
+This discovery is inherited by the dedicated [Subphase 4A plan](../../../plans/experimental_model_research.md). It does **not** approve a final experiment-model stack or choose the Subphase 4B reference selector. Subphase 4A now revalidates this evidence against the current problem, opens a distinct dated family discovery, investigates three to five retained candidates under one schema, selects two established families, and then conducts the separately planned custom attention-model research. The later binding one-declared-seed policy supersedes this snapshot's older multi-seed recommendation.

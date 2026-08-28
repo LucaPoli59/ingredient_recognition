@@ -1,8 +1,8 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-08-27
-**Status:** Active and binding design; Macro-section 3 execution is deferred until Subphase 4B selects the reference selector, while the later benchmark also requires the independent Subphase 4A model shortlist.
+**Last updated:** 2026-08-28
+**Status:** Active and binding design; Macro-section 3 execution is deferred until Subphase 4B selects the reference selector, while the later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
 
@@ -60,6 +60,31 @@ labels never expand or reorder its saved class order.
 Subphases 4A and 4B share reusable evidence: broad discoveries, primary-source catalogs, architecture and pretraining descriptions, current integration audits, licence/checkpoint facts, and measured resource constraints. The same evidence may be cited by both without being duplicated.
 
 They own different decisions. Subphase 4A chooses model categories for the experiment; Subphase 4B chooses the single learnability measurement instrument `M_ref`. Eligibility, exclusion, or ranking in one subphase does not transfer automatically to the other, even when the same architecture appears in both.
+
+### Subphase 4A experiment-portfolio design
+
+Subphase 4A follows the dedicated
+[experimental-model research plan](../plans/experimental_model_research.md).
+It first discovers three to five family-level candidates, treating close depth,
+width, checkpoint, and size variants as one candidate. It then completes the
+same deep-research evidence schema for every retained family and selects exactly
+two established families through hard eligibility gates and a qualitative,
+source-linked comparison.
+
+The third intended experiment category is one project-specific attention model.
+Its larger research stream receives a separate feature plan, re-synthesizes the
+problem and the established-family evidence, studies reusable attention
+components, proposes three coherent network topologies with small/medium/large
+scales, and selects one topology for implementation. Scale variants do not count
+as separate candidates or architectures.
+
+This design yields two literature-derived families plus one custom family for
+Macro-sections 5–7. Required non-visual and simple visual baselines remain
+benchmark controls and are not automatically counted among those three
+categories. The portfolio is selected without candidate training, HPO, or test
+access; concrete implementations and resource smoke measurements belong to
+Macro-section 5, while tuning and comparative performance belong to
+Macro-sections 6–7.
 
 ## Binding design
 
@@ -205,7 +230,7 @@ vocabulary decisions as uncertain.
 
 | Owner | Required decision or artifact | Status |
 | --- | --- | --- |
-| Subphase 4A | Define and justify the model categories to compare. | Pending; its dedicated feature plan has not yet been created. |
+| Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | In progress under [`experimental_model_research.md`](../plans/experimental_model_research.md); 4A.1 broad discovery is next. |
 | Subphase 4B | Choose and justify M_ref. | In progress; [`reference_selector_research.md`](../plans/reference_selector_research.md) is the resume-gate plan for Macro-section 3. |
 | Macro-section 3 | Freeze the M_ref learnability protocol and produce versioned V_selected evidence. | Deferred until M_ref is selected. |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
@@ -216,6 +241,7 @@ vocabulary decisions as uncertain.
 - [problem_definition.md](problem_definition.md)
 - [benchmark_decisions.md](benchmark_decisions.md)
 - [general_plan.md](../general_plan.md)
+- [experimental_model_research.md](../plans/experimental_model_research.md)
 - [reference_selector_research.md](../plans/reference_selector_research.md)
 - [recognizable_ingredient_selection.md](../plans/recognizable_ingredient_selection.md)
 - [label_learnability/README.md](../research/topics/label_learnability/README.md)
