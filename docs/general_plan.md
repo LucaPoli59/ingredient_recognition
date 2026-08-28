@@ -4,7 +4,7 @@
 **Last updated:** 2026-08-28
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Execute 4A.1 broad family discovery under the dedicated experimental-model plan; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
+**Current focus:** Execute 4A.2 candidate deep research under the dedicated experimental-model plan; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -202,7 +202,7 @@ Broad discoveries, primary-source catalogs, implementation audits, and resource 
 
 | Subphase | Status | Owned outcome | Next action |
 | --- | --- | --- | --- |
-| 4A Experimental-model research | **In progress** | Two literature-derived model families plus one selected custom attention architecture for Macro-sections 5–7. | Execute 4A.1: re-read the mandatory problem inputs, freeze the problem-to-model requirements matrix, and discover three to five family-level candidates. |
+| 4A Experimental-model research | **In progress** | Two literature-derived model families plus one selected custom attention architecture for Macro-sections 5–7. | Execute 4A.2: create one normalized deep-research dossier per retained 4A.1 candidate and verify evidence, access, provenance, and resource boundaries. |
 | 4B Reference-selector research | **In progress** | One frozen and justified `M_ref` protocol that releases Macro-section 3. | Execute R1 in the existing [`reference_selector_research.md`](plans/reference_selector_research.md) plan, then complete its bounded R2–R3 choice and handoff. |
 
 ### 4A. Experimental-model research
@@ -220,11 +220,12 @@ This is the principal stream of Macro-section 4. It asks which representation, a
 - [x] Completed a dated broad state-of-the-art discovery grounded in the repaired-benchmark objective and 8 GB compute constraint.
 - [x] Retained the architecture, pretraining, source, implementation, and resource evidence from the 2026-08-22 selector-oriented discovery as reusable input where its transfer boundary matches a 4A research question; its selector dispositions are not an experiment shortlist.
 - [x] Created the dedicated [`experimental_model_research.md`](plans/experimental_model_research.md) plan with an extensive evidence flow and four stages: broad discovery, candidate deep research, two-family selection, and separately planned custom attention-model research.
+- [x] Completed 4A.1 with a problem-to-model requirements matrix, five **new** retained family/protocol candidates, grouped exclusions, a primary-source catalog, and a formal handoff to 4A.2; ResNet and DINOv2 are retained as already-used baseline anchors and excluded from the new-candidate count.
 
 #### Pending
 
-- [ ] Review at least the two preceding discoveries before every new discovery when they exist.
-- [ ] Execute 4A.1 and retain three to five scientifically distinct, accessible family-level candidates after mapping the current problem constraints.
+- [x] Review at least the two preceding discoveries before the 4A.1 discovery.
+- [x] Execute 4A.1 and retain three to five scientifically distinct, accessible family-level candidates after mapping the current problem constraints.
 - [ ] Complete one normalized deep-research dossier per candidate and select exactly two established families with explicit, falsifiable benchmark hypotheses.
 - [ ] Create and complete the dedicated custom attention-model feature plan, compare three topology-level proposals with S/M/L scales, and select one for implementation.
 
@@ -234,7 +235,7 @@ The dedicated 4A plan is complete; a primary-source evidence chain supports exac
 
 #### Next action
 
-Execute 4A.1 in [`experimental_model_research.md`](plans/experimental_model_research.md): re-read the mandatory project-objective inputs, record their revisions in a problem-to-model requirements matrix, review the [2026-08-02](research/discovery/2026-08-02/README.md) and [2026-08-22](research/discovery/2026-08-22/README.md) evidence, and open a new dated discovery that retains three to five family-level candidates.
+Execute 4A.2 in [`experimental_model_research.md`](plans/experimental_model_research.md): create one normalized dossier for each retained 4A.1 candidate, verify the open access/provenance/resource questions, and prepare a like-for-like evidence handoff to 4A.3.
 
 ### 4B. Reference-selector research
 
@@ -476,6 +477,8 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-27 | Reference-selector planning | Simplified the remaining decision from five research/administrative stages to three outcome-driven stages: bounded shortlist, decision-relevant verification and choice, then freeze and handoff. Exhaustive candidate dossiers, numeric scoring, and comparative candidate training are no longer required. | Work package 4.6 **In progress**; R1 bounded shortlist is next; Macro-section 3 remains **Deferred** | [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 | 2026-08-27 | Model research planning | Split Macro-section 4 into primary Subphase 4A for experiment-model research and Subphase 4B for the reference-selector decision. Discoveries, source catalogs, and technical audits may feed both, but their criteria and decisions remain independently owned. | 4A and 4B **In progress**; the 4A plan is next and 4B continues at R1; Macro-section 3 depends only on 4B | [`research/discovery/2026-08-02/README.md`](research/discovery/2026-08-02/README.md), [`research/discovery/2026-08-22/README.md`](research/discovery/2026-08-22/README.md), [`plans/reference_selector_research.md`](plans/reference_selector_research.md) |
 | 2026-08-28 | Experimental-model research planning | Created the dedicated 4A plan. It now selects two established families from a three-to-five-family research set and one custom attention topology from three proposals, while preserving primary-source evidence and explicit stage handoffs. | Subphase 4A **In progress**; 4A.1 broad family discovery is next | [`plans/experimental_model_research.md`](plans/experimental_model_research.md), [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) |
+| 2026-08-28 | Experimental-model research | Completed 4A.1 with the problem-to-model requirements matrix, five retained family/protocol candidates, grouped exclusions, primary-source catalog, and the formal handoff to 4A.2. | Subphase 4A **In progress**; 4A.2 deep research is next | [`research/discovery/2026-08-28/README.md`](research/discovery/2026-08-28/README.md), [`plans/experimental_model_research.md`](plans/experimental_model_research.md) |
+| 2026-08-28 | Experimental-model research | Refined the 4A.1 candidate count: ResNet and DINOv2 are already-used baseline anchors (their papers remain retained evidence), while the five selection candidates are now EfficientNetV2, Swin V2, SigLIP2, a structured query/set head, and MaxViT. | Subphase 4A **In progress**; 4A.2 deep research is next | [`research/discovery/2026-08-28/candidate_landscape.md`](research/discovery/2026-08-28/candidate_landscape.md), [`plans/experimental_model_research.md`](plans/experimental_model_research.md) |
 
 ## Tracker maintenance rules
 

@@ -44,15 +44,15 @@ the experiment portfolio.
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** 4A.1 — broad model discovery
-**Next action:** Re-read the mandatory problem inputs, freeze the problem-to-model
-requirements matrix, then open a new dated discovery that retains three to five
-family-level candidates.
+**Current task:** 4A.2 — candidate deep research
+**Next action:** Create one normalized dossier per retained 4A.1 candidate and
+verify the open access, provenance, resource, and transfer questions before any
+shortlist decision.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
-| 4A.1 | Broad model discovery and three-to-five-family handoff | **Pending** | Must start from the mandatory input set and the two existing discoveries; newer work is preferred when it also passes the evidence, access, and feasibility gates. |
-| 4A.2 | Deep research for every retained family | **Pending** | Produce one normalized dossier per family in a dedicated research-topic collection. |
+| 4A.1 | Broad model discovery and three-to-five-family handoff | **Done** | The 2026-08-28 discovery records the input revisions, requirements matrix, five new retained family/protocol candidates, the already-used ResNet/DINOv2 baseline anchors, grouped exclusions, and the formal 4A.1 → 4A.2 handoff. |
+| 4A.2 | Deep research for every retained family | **In progress** | Produce one normalized dossier per retained family in a dedicated research-topic collection; no implementation or training is part of this stage. |
 | 4A.3 | Select two established model families | **Pending** | Apply hard eligibility gates and a qualitative comparative synthesis; record the adopted shortlist as a binding project decision. |
 | 4A.4 | Research and select the custom attention model | **Pending** | Create and execute a separate feature plan; produce three topology-level proposals with S/M/L scales and select one for implementation. |
 
@@ -317,6 +317,46 @@ Stop broadening once three to five families pass every gate and the major
 scientific strata have been considered. Do not continue collecting candidates
 that answer the same hypothesis.
 
+### 4A.1 completion checkpoint — 2026-08-28
+
+**Status:** Done.
+
+Evidence is recorded in the new
+[2026-08-28 discovery](../research/discovery/2026-08-28/README.md):
+
+- the mandatory problem and benchmark revisions are listed in the
+  [requirements matrix](../research/discovery/2026-08-28/problem_model_requirements.md);
+- the candidate landscape covers supervised CNN, hierarchical transformer,
+  visual self-supervision, vision-language pretraining, and structured
+  multi-label readout strata;
+- five **new** family/protocol candidates pass the broad intake gates:
+  EfficientNetV2, Swin V2, SigLIP2, a structured query/set head, and MaxViT,
+  with hypotheses, evidence tiers, access paths, grouped variants, exclusions,
+  and uncertainties;
+- the already-used ResNet and DINOv2 models are recorded as baseline anchors,
+  with their papers and implementation evidence retained but excluded from the
+  new-candidate selection count;
+- the primary-source and official-implementation links are catalogued in the
+  [4A.1 source catalog](../research/discovery/2026-08-28/source_catalog.md); and
+- the formal 4A.1 → 4A.2 handoff is complete without selecting an experiment
+  family, freezing hyperparameters, running a model, or using test outcomes.
+
+The handoff deliberately retains the structured query/set head as a protocol
+candidate paired with a declared backbone. This keeps the head hypothesis
+visible without pretending that it is a sixth independent backbone family. The
+same handoff treats ResNet and DINOv2 as already-used anchors rather than
+selection candidates, avoiding a false impression of five new alternatives.
+
+**Newly discovered work for 4A.2:** verify one concrete representative and
+checkpoint path per candidate; resolve licence, dependency, provenance/overlap,
+native-aspect transform, and useful-resolution questions; and decide which
+within-stratum alternatives (if any) deserve dossier-level treatment. A broad
+lead may be demoted only with a recorded evidence, access, resource, or
+interpretation reason.
+
+**Next stage:** 4A.2 candidate deep research, using one normalized dossier
+schema for C1–C5 and producing an evidence-comparable handoff to 4A.3.
+
 ## 4A.2 — Candidate deep research
 
 ### Research question
@@ -530,3 +570,4 @@ Subphase 4A is complete only when:
 | Date | Change | Rationale |
 | --- | --- | --- |
 | 2026-08-28 | Created the dedicated Subphase 4A plan with four research stages. | Separate primary experiment-model research from Subphase 4B, preserve an extensive source/evidence flow, select two established families from three to five candidates, and govern the larger custom attention-model research through its own feature plan. |
+| 2026-08-28 | Completed 4A.1 and opened 4A.2. | The problem-to-model matrix and primary-source discovery now retain five new family/protocol candidates; ResNet and DINOv2 are explicitly preserved as already-used baseline anchors and excluded from the selection count. The next work is normalized dossier verification, not broader unbounded searching or training. |

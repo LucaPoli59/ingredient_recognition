@@ -1,7 +1,7 @@
 # Discovery research
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-27
+**Last updated:** 2026-08-28
 
 Use this directory for broad research snapshots of the state of the art, such as recent methods, benchmarks, tools, and emerging directions relevant to the project.
 
@@ -20,6 +20,10 @@ Before creating a new discovery, review at least the two most recent existing di
 
 ## Discovery index
 
+- [`2026-08-28/`](2026-08-28/README.md) — Subphase 4A.1 experimental-model
+  broad discovery: problem-to-model requirements, five new family/protocol
+  candidates, already-used ResNet/DINOv2 baseline anchors, grouped exclusions,
+  and the formal handoff to 4A.2.
 - [`2026-08-22/`](2026-08-22/README.md) — reference-selector
   candidate landscape across supervised, visual self-supervised,
   vision-language, food-domain, and structured multi-label families, with
