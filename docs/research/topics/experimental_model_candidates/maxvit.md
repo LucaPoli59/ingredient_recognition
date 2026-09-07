@@ -1,9 +1,15 @@
 # C5 — MaxViT candidate dossier
 
 **Created:** 2026-08-28
-**Last updated:** 2026-08-28
+**Last updated:** 2026-09-07
 **Candidate:** C5 — Hybrid multi-axis attention network
 **Status:** Research dossier; no local training performed
+
+**Subsequent decision:** The [2026-09-07 portfolio](../../../project_objective/experimental_model_portfolio.md)
+adopts C5 and explicitly replaces the complete stock classifier with a common
+pooling/linear head. This supersedes the retained-projection recommendation
+below for the primary experiment. Source clarifications are in the
+[dated synthesis addendum](comparative_synthesis.md#bounded-source-review--2026-09-07).
 
 ## Research question and boundary
 

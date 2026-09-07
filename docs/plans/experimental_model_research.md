@@ -1,7 +1,7 @@
 # Experimental-model research plan
 
 **Created:** 2026-08-28
-**Last updated:** 2026-08-28
+**Last updated:** 2026-09-07
 **Linked macro-section and subphase:** [Subphase 4A, Experimental-model research](../general_plan.md#4a-experimental-model-research)
 **Overall status:** In progress
 
@@ -44,16 +44,16 @@ the experiment portfolio.
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** 4A.3 — established-family selection
-**Next action:** Apply the hard eligibility gates and qualitative comparison to
-the completed 4A.2 dossiers, then record exactly two complementary families in
-a binding project-objective decision record.
+**Current task:** 4A.4 — dedicated custom-model plan pending
+**Next action:** Create the dedicated custom attention-model plan from the
+[adopted portfolio handoff](../project_objective/experimental_model_portfolio.md#handoff-to-custom-research-and-implementation),
+then re-read the problem and accumulated evidence before component research.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | 4A.1 | Broad model discovery and three-to-five-family handoff | **Done** | The 2026-08-28 discovery records the input revisions, requirements matrix, five new retained family/protocol candidates, the already-used ResNet/DINOv2 baseline anchors, grouped exclusions, and the formal 4A.1 → 4A.2 handoff. |
 | 4A.2 | Deep research for every retained family | **Done** | Five normalized dossiers and a common comparative synthesis are recorded in [`research/topics/experimental_model_candidates/README.md`](../research/topics/experimental_model_candidates/README.md); no implementation or training was part of this stage. |
-| 4A.3 | Select two established model families | **In progress** | Apply hard eligibility gates and the dossier-linked qualitative synthesis; record the adopted shortlist as a binding project decision. |
+| 4A.3 | Select two established model families | **Done** | [4A-D1](../project_objective/experimental_model_portfolio.md) adopts EfficientNetV2-S and MaxViT-T with common input/readout starting protocols, explicit fallbacks, candidate dispositions, hypotheses, and 4A.4/Phase 5 handoffs. |
 | 4A.4 | Research and select the custom attention model | **Pending** | Create and execute a separate feature plan; produce three topology-level proposals with S/M/L scales and select one for implementation. |
 
 ## Mandatory input and re-reading gate
@@ -183,7 +183,7 @@ families requires an explicit continuity or ablation rationale.
 | 4A execution status, stage sequence, gates, and next action | This plan |
 | Broad search, candidate landscape, problem-to-model matrix, and source catalog | A new date-stamped folder under [`research/discovery/`](../research/discovery/README.md) |
 | Candidate deep-research dossiers and reusable comparative synthesis | A new indexed topic collection under [`research/topics/`](../research/topics/README.md) |
-| Adopted two-family shortlist and, later, the selected custom design | A dedicated binding decision record under [`project_objective/`](../project_objective/README.md), created only when the first decision exists |
+| Adopted two-family shortlist and, later, the selected custom design | [`experimental_model_portfolio.md`](../project_objective/experimental_model_portfolio.md), created at the 4A.3 decision checkpoint; custom topology remains pending |
 | Detailed custom-model execution sequence | A future dedicated plan under [`plans/`](README.md) |
 | Attention-component and custom-design evidence | A future indexed topic collection under [`research/topics/`](../research/topics/README.md), named by the custom plan |
 | Temporary search notes, extracted tables, scripts, or unreviewed outputs | [`src_scratches/`](../../src_scratches/) or an appropriate experiment workspace, never as the final durable claim owner |
@@ -480,10 +480,41 @@ Select exactly two established families. Record:
 - which uncertainties are deferred to implementation smoke tests rather than
   hidden.
 
-The evidence remains in the research topic. The adopted shortlist belongs in a
-new binding project-objective decision record and must be linked from the
+The evidence remains in the research topic. The adopted shortlist belongs in
+the binding project-objective decision record and must be linked from the
 project-objective index, this plan, and the general plan. No test outcome or
 local candidate accuracy run may influence the selection.
+
+### 4A.3 completion checkpoint — 2026-09-07
+
+**Status:** Done.
+
+The [experimental portfolio](../project_objective/experimental_model_portfolio.md)
+records 4A-D1, selecting EfficientNetV2-S and MaxViT-T as the two established
+families. It includes the eligibility outcomes, a common qualitative matrix,
+preferred checkpoint/adaptation/input/readout protocols, one within-family
+fallback each, reasons for not selecting C2–C4, falsifiable comparisons, and
+the handoff to 4A.4 and Phase 5. ResNet and DINOv2 remain existing anchors;
+`M_ref` remains the independent 4B decision.
+
+The bounded [source-review addendum](../research/topics/experimental_model_candidates/comparative_synthesis.md#bounded-source-review--2026-09-07)
+clarifies the MaxViT pretrained input restriction, classifier boundary and
+BatchNorm checkpoint note, EfficientNet's native transform difference, and
+the local square-input interface. These checks were read-only; no models were
+constructed, weights downloaded, or candidate training/test evaluation run.
+
+**Newly specified implementation work:** implement and serialize the common
+aspect-preserving square transform and pooled linear readout; pin exact weight
+artifacts and normalization policy; measure full-training memory and throughput;
+exercise a declared fallback only if needed; and preserve the distinction
+between a model-protocol comparison and an isolated architecture claim.
+Existing research recommendations remain historical evidence where 4A-D1
+adopts a different concrete protocol.
+
+**Next stage:** create the dedicated 4A.4 feature plan. Use the portfolio's
+component/gap handoff to structure problem synthesis, attention-component
+research, compatibility analysis, three topology proposals with S/M/L scales,
+and one final custom-model decision. 4A as a whole remains In progress.
 
 ## 4A.4 — Custom attention-model research
 
@@ -574,6 +605,7 @@ reopening the topology decision.
 | One declared seed per configuration | Binding | Candidate research must not promise seed-level comparisons or require repeated-seed promotion. |
 | Current 8 GB development GPU | Binding | Literature and implementation paths must remain plausible within this boundary. |
 | Exact HPO spaces and budgets | Deferred to Macro-section 6 | 4A defines model hypotheses and feasible protocols, not tuning values. |
+| Established-family implementation handoff | Available in [4A-D1](../project_objective/experimental_model_portfolio.md) | Phase 5 still needs data readiness, artifact/interface checks, and measured resource validation. |
 | Exact S/M/L parameter bands for custom proposals | Open until 4A.4 | The child plan must define them relative to selected baselines and measured Phase 5 feasibility. |
 
 ## Validation and completion criteria
@@ -605,3 +637,4 @@ Subphase 4A is complete only when:
 | 2026-08-28 | Created the dedicated Subphase 4A plan with four research stages. | Separate primary experiment-model research from Subphase 4B, preserve an extensive source/evidence flow, select two established families from three to five candidates, and govern the larger custom attention-model research through its own feature plan. |
 | 2026-08-28 | Completed 4A.1 and opened 4A.2. | The problem-to-model matrix and primary-source discovery now retain five new family/protocol candidates; ResNet and DINOv2 are explicitly preserved as already-used baseline anchors and excluded from the selection count. The next work is normalized dossier verification, not broader unbounded searching or training. |
 | 2026-08-28 | Completed 4A.2 and opened 4A.3. | Five common-schema candidate dossiers and a qualitative handoff now cover architecture mechanisms, transfer limits, access/provenance, resources, and falsifiable hypotheses. The next decision is exactly two complementary established families; no local training or test outcome was used. |
+| 2026-09-07 | Completed 4A.3; dedicated 4A.4 planning is next. | 4A-D1 adopts EfficientNetV2-S and MaxViT-T with explicit common-protocol choices, fallbacks and limitations; research evidence is retained, and custom topology, measured feasibility, and the independent selector remain undecided. |

@@ -1,8 +1,8 @@
 # Experimental model candidate dossiers
 
 **Created:** 2026-08-28
-**Last updated:** 2026-08-28
-**Status:** Complete for Subphase 4A.2; handoff to 4A.3 is open
+**Last updated:** 2026-09-07
+**Status:** Complete for Subphase 4A.2; subsequent 4A.3 decision linked
 
 ## Purpose and scope
 
@@ -55,7 +55,8 @@ Every candidate file follows the same order:
   query/set readout protocol paired with a declared backbone.
 - [`maxvit.md`](maxvit.md) — C5, hybrid multi-axis attention family.
 - [`comparative_synthesis.md`](comparative_synthesis.md) — common qualitative
-  comparison and the 4A.2 → 4A.3 handoff.
+  comparison, the historical 4A.2 → 4A.3 handoff, and the bounded 2026-09-07
+  source-review addendum.
 
 ## Working rules and limitations
 
@@ -73,11 +74,15 @@ Every candidate file follows the same order:
   library facts. Peak memory, throughput, exact aspect-preserving transforms,
   checkpoint hashes, and dependency compatibility require the Macro-section 5
   implementation gate.
-- The collection is a research owner. The adopted two-family shortlist belongs
-  in a later binding record under `docs/project_objective/` after 4A.3 review.
+- The collection is a research owner. The adopted shortlist, protocols, and
+  subsequent handoff are owned by the
+  [experimental portfolio](../../../project_objective/experimental_model_portfolio.md).
+  Dossier recommendations retain their pre-decision meaning; they do not
+  override that decision.
 
 ## Related documentation
 
+- [Adopted experimental portfolio](../../../project_objective/experimental_model_portfolio.md)
 - [4A experimental-model plan](../../../plans/experimental_model_research.md)
 - [2026-08-28 broad discovery](../../discovery/2026-08-28/README.md)
 - [Problem-to-model requirements matrix](../../discovery/2026-08-28/problem_model_requirements.md)

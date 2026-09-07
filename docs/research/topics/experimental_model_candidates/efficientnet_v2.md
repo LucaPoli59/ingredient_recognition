@@ -1,9 +1,14 @@
 # C1 — EfficientNetV2 candidate dossier
 
 **Created:** 2026-08-28
-**Last updated:** 2026-08-28
+**Last updated:** 2026-09-07
 **Candidate:** C1 — Efficient convolutional network
 **Status:** Research dossier; no local training performed
+
+**Subsequent decision:** The [2026-09-07 portfolio](../../../project_objective/experimental_model_portfolio.md)
+adopts C1 with a common pooling/linear head and shared 224-square,
+aspect-preserving input as the Phase 5 starting protocol. The alternatives
+below remain the original 4A.2 research, not the active protocol authority.
 
 ## Research question and boundary
 

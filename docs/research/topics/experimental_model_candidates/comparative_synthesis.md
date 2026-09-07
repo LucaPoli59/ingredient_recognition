@@ -1,17 +1,18 @@
 # 4A.2 comparative synthesis and handoff
 
 **Created:** 2026-08-28
-**Last updated:** 2026-08-28
+**Last updated:** 2026-09-07
 **Scope:** Handoff from Subphase 4A.2 to 4A.3
-**Status:** Evidence synthesis; no final family selected
+**Status:** Evidence synthesis; 4A.3 decision recorded separately
 
 ## Purpose and boundary
 
 This record puts the five candidate dossiers on one qualitative comparison
 frame. It is not a numerical leaderboard and does not adopt an experiment
-family. The next stage, 4A.3, must apply the hard eligibility gates and choose
-exactly two complementary established families through a binding
-`project_objective/` decision record.
+family. The original 4A.2 handoff below is retained as evidence. The subsequent
+4A.3 choice is owned by the binding
+[experimental portfolio](../../../project_objective/experimental_model_portfolio.md);
+its dispositions must not be inferred from this historical intake matrix.
 
 All candidates are evaluated against the frozen image-only Yummly task:
 `ingredients_target_v5`, one RGB image, 165 recipe-level labels, common split,
@@ -108,8 +109,40 @@ source-linked, and independent of local test outcomes.
 - One declared seed per configuration means no candidate can claim local
   seed-level stability from this research stage.
 
+## Bounded source review — 2026-09-07
+
+This addendum rechecks decision-relevant implementation facts against
+TorchVision `v0.23.0` source, including the installed source files, without
+constructing models or loading weights. It does not reopen broad discovery.
+
+| Verified source fact | Consequence; not a measured result |
+| --- | --- |
+| [MaxViT constructor and weights](https://github.com/pytorch/vision/blob/v0.23.0/torchvision/models/maxvit.py) enforce the pretrained `input_size=(224,224)`; block grids must be divisible by the partition size. | Arbitrary-resolution complexity in the paper does not guarantee arbitrary input in this constructor. An aspect-preserving image can be padded to its required square canvas. |
+| MaxViT's stock classifier includes pooling, LayerNorm, a projection, Tanh, and a final output layer. | Replacing only the output preserves a different readout from a simple GAP/linear CNN. The comparison must declare the head boundary. |
+| The MaxViT weight metadata records training BatchNorm momentum 0.99 instead of 0.01. | Retain this checkpoint-specific fact and verify fine-tuning normalization; do not silently repair saved statistics. |
+| [EfficientNetV2-S source](https://github.com/pytorch/vision/blob/v0.23.0/torchvision/models/efficientnet.py) exposes adaptive pooling and a dropout/linear classifier; its released weight transform is 384-square. | A shared smaller canvas is an explicit transfer intervention; metadata FLOPs at 384 cannot rank it against a 224-input model. |
+| [Local BaseModel](../../../../src/models/commons.py) rejects non-square input shapes and supports configurable transform builders. | A square canvas with aspect-preserving content has an integration path without first requiring rectangular model interfaces. Actual preprocessing and serialization remain Phase 5 checks. |
+
+The [Recipe1M primary article](https://doi.org/10.3390/foods14244269) remains
+the existing direct-task precedent. Indexed primary text was available, but
+live full-text retrieval was rate-limited; no new quantitative findings were
+extracted. Its pooled-head ingredient formulation supports a clean readout
+comparison, without transferring its loss, threshold, or scores to Yummly.
+
+The [SigLIP2 model card](https://huggingface.co/google/siglip2-base-patch16-224)
+was revisited. Total checkpoint size is not the isolated vision-tower count;
+the dossier's accounting uncertainty remains open and cannot establish an
+8 GB failure. More generally, published size/operation counts are not local
+training-memory measurements.
+
+The adopted family pair, exact starting protocols, exclusions, and 4A.4/Phase 5
+handoff are in the [portfolio decision](../../../project_objective/experimental_model_portfolio.md).
+The five dossiers and the original 4A.2 recommendations remain retained as
+pre-decision evidence.
+
 ## Related documentation
 
+- [Adopted experimental portfolio](../../../project_objective/experimental_model_portfolio.md)
 - [C1 dossier](efficientnet_v2.md)
 - [C2 dossier](swin_v2.md)
 - [C3 dossier](siglip2.md)

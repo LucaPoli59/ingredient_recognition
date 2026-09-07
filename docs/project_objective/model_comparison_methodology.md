@@ -1,7 +1,7 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-08-28
+**Last updated:** 2026-09-07
 **Status:** Active and binding design; Macro-section 3 execution is deferred until Subphase 4B selects the reference selector, while the later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
@@ -70,6 +70,11 @@ width, checkpoint, and size variants as one candidate. It then completes the
 same deep-research evidence schema for every retained family and selects exactly
 two established families through hard eligibility gates and a qualitative,
 source-linked comparison.
+
+The adopted families and their protocol/interpretation boundaries are owned by
+the [experimental portfolio](experimental_model_portfolio.md). That decision
+also records the handoff to custom research; it does not change Q1–Q4 or select
+`M_ref`.
 
 The third intended experiment category is one project-specific attention model.
 Its larger research stream receives a separate feature plan, re-synthesizes the
@@ -230,7 +235,7 @@ vocabulary decisions as uncertain.
 
 | Owner | Required decision or artifact | Status |
 | --- | --- | --- |
-| Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | In progress under [`experimental_model_research.md`](../plans/experimental_model_research.md); 4A.1 broad discovery is next. |
+| Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Established pair adopted in the [portfolio](experimental_model_portfolio.md); custom research remains pending under [`experimental_model_research.md`](../plans/experimental_model_research.md). |
 | Subphase 4B | Choose and justify M_ref. | In progress; [`reference_selector_research.md`](../plans/reference_selector_research.md) is the resume-gate plan for Macro-section 3. |
 | Macro-section 3 | Freeze the M_ref learnability protocol and produce versioned V_selected evidence. | Deferred until M_ref is selected. |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
@@ -238,6 +243,7 @@ vocabulary decisions as uncertain.
 
 ## Related documentation
 
+- [experimental_model_portfolio.md](experimental_model_portfolio.md)
 - [problem_definition.md](problem_definition.md)
 - [benchmark_decisions.md](benchmark_decisions.md)
 - [general_plan.md](../general_plan.md)
