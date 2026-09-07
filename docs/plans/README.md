@@ -1,7 +1,7 @@
 # Implementation plans
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-28
+**Last updated:** 2026-09-07
 
 This directory contains the execution plans for concrete project implementations. These plans translate work packages from the project-wide [`general_plan.md`](../general_plan.md) into bounded technical tasks, verification steps, dependencies, and completion criteria.
 
@@ -9,6 +9,7 @@ This directory contains the execution plans for concrete project implementations
 
 - [`data_ingredient_refactor/`](data_ingredient_refactor/README.md) contains the active Yummly Data plan and its controlled-vocabulary evaluation for Work packages 2.1b–2.4.
 - [`experimental_model_research.md`](experimental_model_research.md) is the active Subphase 4A plan for broad family discovery, candidate deep research, selection of two established experiment families, and the separately planned custom attention-model research.
+- [`custom_attention_model.md`](custom_attention_model.md) is the active 4A.4 feature plan. It contains the four custom-model research subphases: problem/evidence synthesis, component research, compatibility synthesis, and the three-proposal selection.
 - [`reference_selector_research.md`](reference_selector_research.md) is the active Subphase 4B plan for researching and freezing the reference selector that gates Macro-section 3.
 - [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the deferred Macro-section 3 plan for historical reproduction, v5 learnability analysis, visual-observability evidence, and final named ingredient tiers.
 
@@ -28,6 +29,7 @@ Use one descriptive Markdown file per bounded implementation:
 docs/plans/
 ├── README.md
 ├── experimental_model_research.md
+├── custom_attention_model.md
 ├── reference_selector_research.md
 ├── recognizable_ingredient_selection.md
 └── <implementation_name>.md

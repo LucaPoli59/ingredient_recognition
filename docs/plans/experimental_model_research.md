@@ -44,17 +44,18 @@ the experiment portfolio.
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** 4A.4 — dedicated custom-model plan pending
-**Next action:** Create the dedicated custom attention-model plan from the
-[adopted portfolio handoff](../project_objective/experimental_model_portfolio.md#handoff-to-custom-research-and-implementation),
-then re-read the problem and accumulated evidence before component research.
+**Current task:** 4A.4 — custom attention-model research
+**Next action:** Execute 4A.4.1 in the dedicated
+[custom attention-model feature plan](custom_attention_model.md): re-read the
+problem and accumulated evidence, then create the bounded design brief before
+component research.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | 4A.1 | Broad model discovery and three-to-five-family handoff | **Done** | The 2026-08-28 discovery records the input revisions, requirements matrix, five new retained family/protocol candidates, the already-used ResNet/DINOv2 baseline anchors, grouped exclusions, and the formal 4A.1 → 4A.2 handoff. |
 | 4A.2 | Deep research for every retained family | **Done** | Five normalized dossiers and a common comparative synthesis are recorded in [`research/topics/experimental_model_candidates/README.md`](../research/topics/experimental_model_candidates/README.md); no implementation or training was part of this stage. |
 | 4A.3 | Select two established model families | **Done** | [4A-D1](../project_objective/experimental_model_portfolio.md) adopts EfficientNetV2-S and MaxViT-T with common input/readout starting protocols, explicit fallbacks, candidate dispositions, hypotheses, and 4A.4/Phase 5 handoffs. |
-| 4A.4 | Research and select the custom attention model | **Pending** | Create and execute a separate feature plan; produce three topology-level proposals with S/M/L scales and select one for implementation. |
+| 4A.4 | Research and select the custom attention model | **In progress** | The [dedicated feature plan](custom_attention_model.md) separates problem/evidence synthesis, component research, compatibility synthesis, and three topology proposals before one binding selection. |
 
 ## Mandatory input and re-reading gate
 
@@ -184,8 +185,8 @@ families requires an explicit continuity or ablation rationale.
 | Broad search, candidate landscape, problem-to-model matrix, and source catalog | A new date-stamped folder under [`research/discovery/`](../research/discovery/README.md) |
 | Candidate deep-research dossiers and reusable comparative synthesis | A new indexed topic collection under [`research/topics/`](../research/topics/README.md) |
 | Adopted two-family shortlist and, later, the selected custom design | [`experimental_model_portfolio.md`](../project_objective/experimental_model_portfolio.md), created at the 4A.3 decision checkpoint; custom topology remains pending |
-| Detailed custom-model execution sequence | A future dedicated plan under [`plans/`](README.md) |
-| Attention-component and custom-design evidence | A future indexed topic collection under [`research/topics/`](../research/topics/README.md), named by the custom plan |
+| Detailed custom-model execution sequence | [`custom_attention_model.md`](custom_attention_model.md) |
+| Attention-component and custom-design evidence | The indexed `research/topics/custom_attention_model_design/` collection created by 4A.4.1 under the [custom feature plan](custom_attention_model.md) |
 | Temporary search notes, extracted tables, scripts, or unreviewed outputs | [`src_scratches/`](../../src_scratches/) or an appropriate experiment workspace, never as the final durable claim owner |
 | Verified model contract after implementation | [`implementation_details/`](../implementation_details/README.md) and, where appropriate, [`models_deepdive/`](../models_deepdive/README.md) |
 
@@ -511,10 +512,11 @@ between a model-protocol comparison and an isolated architecture claim.
 Existing research recommendations remain historical evidence where 4A-D1
 adopts a different concrete protocol.
 
-**Next stage:** create the dedicated 4A.4 feature plan. Use the portfolio's
-component/gap handoff to structure problem synthesis, attention-component
-research, compatibility analysis, three topology proposals with S/M/L scales,
-and one final custom-model decision. 4A as a whole remains In progress.
+**Next stage:** execute 4A.4.1 in the dedicated
+[custom attention-model feature plan](custom_attention_model.md). Use the
+portfolio's component/gap handoff to produce a bounded problem and evidence
+synthesis before attention-component research. 4A as a whole remains In
+progress.
 
 ## 4A.4 — Custom attention-model research
 
@@ -638,3 +640,4 @@ Subphase 4A is complete only when:
 | 2026-08-28 | Completed 4A.1 and opened 4A.2. | The problem-to-model matrix and primary-source discovery now retain five new family/protocol candidates; ResNet and DINOv2 are explicitly preserved as already-used baseline anchors and excluded from the selection count. The next work is normalized dossier verification, not broader unbounded searching or training. |
 | 2026-08-28 | Completed 4A.2 and opened 4A.3. | Five common-schema candidate dossiers and a qualitative handoff now cover architecture mechanisms, transfer limits, access/provenance, resources, and falsifiable hypotheses. The next decision is exactly two complementary established families; no local training or test outcome was used. |
 | 2026-09-07 | Completed 4A.3; dedicated 4A.4 planning is next. | 4A-D1 adopts EfficientNetV2-S and MaxViT-T with explicit common-protocol choices, fallbacks and limitations; research evidence is retained, and custom topology, measured feasibility, and the independent selector remain undecided. |
+| 2026-09-07 | Opened the dedicated 4A.4 feature plan. | The child plan has four explicit research subphases--problem/evidence synthesis, component research, compatibility synthesis, and three topology proposals--so custom design is not treated as one undifferentiated literature review. |

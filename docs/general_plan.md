@@ -4,7 +4,7 @@
 **Last updated:** 2026-09-07
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Prepare the dedicated 4A custom attention-model plan from the adopted established-family portfolio; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
+**Current focus:** Execute 4A.4.1 problem and evidence synthesis in the dedicated custom attention-model feature plan; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -202,7 +202,7 @@ Broad discoveries, primary-source catalogs, implementation audits, and resource 
 
 | Subphase | Status | Owned outcome | Next action |
 | --- | --- | --- | --- |
-| 4A Experimental-model research | **In progress** | Two literature-derived model families plus one selected custom attention architecture for Macro-sections 5–7. | Established pair adopted in the [portfolio](project_objective/experimental_model_portfolio.md); create the dedicated custom attention-model plan. |
+| 4A Experimental-model research | **In progress** | Two literature-derived model families plus one selected custom attention architecture for Macro-sections 5–7. | Execute 4A.4.1 in the [custom attention-model feature plan](plans/custom_attention_model.md); the established pair remains adopted in the [portfolio](project_objective/experimental_model_portfolio.md). |
 | 4B Reference-selector research | **In progress** | One frozen and justified `M_ref` protocol that releases Macro-section 3. | Execute R1 in the existing [`reference_selector_research.md`](plans/reference_selector_research.md) plan, then complete its bounded R2–R3 choice and handoff. |
 
 ### 4A. Experimental-model research
@@ -229,7 +229,8 @@ This is the principal stream of Macro-section 4. It asks which representation, a
 - [x] Execute 4A.1 and retain three to five scientifically distinct, accessible family-level candidates after mapping the current problem constraints.
 - [x] Complete one normalized deep-research dossier per candidate with explicit transfer boundaries, resource metadata, and falsifiable benchmark hypotheses.
 - [x] Select exactly two established families through the 4A.3 qualitative gate and record the binding shortlist.
-- [ ] Create and complete the dedicated custom attention-model feature plan, compare three topology-level proposals with S/M/L scales, and select one for implementation.
+- [x] Created the dedicated [`custom_attention_model.md`](plans/custom_attention_model.md) feature plan with four research subphases: problem/evidence synthesis, component research, compatibility synthesis, and three topology proposals.
+- [ ] Complete the four 4A.4 research subphases, compare three topology-level proposals with S/M/L scales, and select one for implementation.
 
 #### Completion gate
 
@@ -237,7 +238,7 @@ The dedicated 4A plan is complete; a primary-source evidence chain supports exac
 
 #### Next action
 
-Create the dedicated custom attention-model feature plan required by [`experimental_model_research.md`](plans/experimental_model_research.md), using the [portfolio handoff](project_objective/experimental_model_portfolio.md#handoff-to-custom-research-and-implementation). The established-family decision is complete; custom topology and local feasibility remain open.
+Execute 4A.4.1 in [`plans/custom_attention_model.md`](plans/custom_attention_model.md), using the [portfolio handoff](project_objective/experimental_model_portfolio.md#handoff-to-custom-research-and-implementation). The established-family decision is complete; custom topology and local feasibility remain open.
 
 ### 4B. Reference-selector research
 
@@ -485,6 +486,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-28 | Experimental-model research | Refined the 4A.1 candidate count: ResNet and DINOv2 are already-used baseline anchors (their papers remain retained evidence), while the five selection candidates are now EfficientNetV2, Swin V2, SigLIP2, a structured query/set head, and MaxViT. | Subphase 4A **In progress**; 4A.2 deep research is next | [`research/discovery/2026-08-28/candidate_landscape.md`](research/discovery/2026-08-28/candidate_landscape.md), [`plans/experimental_model_research.md`](plans/experimental_model_research.md) |
 | 2026-08-28 | Experimental-model research | Completed 4A.2 with five normalized candidate dossiers and a qualitative 4A.2 → 4A.3 synthesis. Architecture, evidence transfer limits, provenance/access, resource assumptions, and falsifiable hypotheses are recorded; no local training or test outcome influenced the handoff. | Subphase 4A **In progress**; 4A.3 established-family selection is next | [`research/topics/experimental_model_candidates/README.md`](research/topics/experimental_model_candidates/README.md), [`research/topics/experimental_model_candidates/comparative_synthesis.md`](research/topics/experimental_model_candidates/comparative_synthesis.md), [`plans/experimental_model_research.md`](plans/experimental_model_research.md) |
 | 2026-09-07 | Experimental-model portfolio | Adopted two established experiment families with common-protocol starting choices, explicit fallbacks, exclusions and custom-research/implementation handoffs. No local model training or test outcome informed the decision. | Subphase 4A **In progress**; custom-model planning is next; first Phase 5 research handoff available, data readiness still pending | [`project_objective/experimental_model_portfolio.md`](project_objective/experimental_model_portfolio.md), [`plans/experimental_model_research.md`](plans/experimental_model_research.md) |
+| 2026-09-07 | Custom attention-model planning | Opened the 4A.4 feature plan with four staged research subphases and a source-to-decision flow; no custom topology or implementation is selected. | Subphase 4A **In progress**; 4A.4.1 problem/evidence synthesis is next | [`plans/custom_attention_model.md`](plans/custom_attention_model.md), [`project_objective/experimental_model_portfolio.md`](project_objective/experimental_model_portfolio.md) |
 
 ## Tracker maintenance rules
 
@@ -511,6 +513,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 - [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) is the active implementation plan for the Data work packages summarized in this section.
 - [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) is the active implementation plan for Macro-section 3 and the maintained home of the historical discrepancy resolutions.
 - [`plans/experimental_model_research.md`](plans/experimental_model_research.md) is the operational plan for Subphase 4A broad discovery, candidate deep research, selection of two established families, and the separately planned custom attention-model research.
+- [`plans/custom_attention_model.md`](plans/custom_attention_model.md) is the active 4A.4 plan with its four custom-model research subphases and the implementation handoff gate.
 - [`plans/reference_selector_research.md`](plans/reference_selector_research.md) is the operational research and decision plan for Subphase 4B.
 - [`research/topics/label_learnability/learnability_assessment.md`](research/topics/label_learnability/learnability_assessment.md) provides the reusable evidence behind the Phase 3 decision-profile framework.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.
