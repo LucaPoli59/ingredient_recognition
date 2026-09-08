@@ -26,9 +26,12 @@ The collection does not establish local model accuracy or resource feasibility.
    evidence, counterevidence, implementation observations, provisional component
    dispositions, and the handoff to tensor-level synthesis. Its source register
    provides stable identifiers for later reuse.
+3. [Architecture compatibility and scaling](architecture_compatibility_synthesis.md):
+   complete residual/query routes, feature taps, padding/position and weight
+   reuse contracts, scalar S/M/L estimates, exclusions, and integration risks.
 
-The compatibility synthesis and three topology proposals will be added by
-4A.4.3 and 4A.4.4, respectively. They do not exist yet.
+The three topology proposals will be added by 4A.4.4; they do not exist yet.
+The compatible routes are inputs to those proposals, not an adopted model.
 
 ## Method and evidence flow
 

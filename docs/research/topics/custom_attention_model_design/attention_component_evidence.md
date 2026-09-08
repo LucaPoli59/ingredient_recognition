@@ -454,16 +454,18 @@ optimization, calibration, GPU feasibility or ingredient-visibility questions.
 
 ### Component reuse register
 
-No final topology proposal exists yet. The next stages must add backward links
-here when they use, alter or reject an entry.
+The [compatibility synthesis](architecture_compatibility_synthesis.md) now
+consumes these entries. No final topology proposal exists yet; 4A.4.4 must add
+its backward links when it uses, alters or rejects them. The synthesis narrows
+the earlier provisional options without changing their source evidence.
 
-| Entry | Expected consumer | Proposal link |
+| Entry | Compatibility consumer | Proposal link |
 | --- | --- | --- |
-| C1 representation; C2 spatial interaction | 4A.4.3 tensor and initialization routes | Pending 4A.4.4 |
-| C3 fusion/position/padding | 4A.4.3 alignment and valid-content policy | Pending 4A.4.4 |
-| C4 readout | 4A.4.3 logits/query contracts and simpler controls | Pending 4A.4.4 |
-| C5 supporting layers; C6 cost | 4A.4.3 scaling and resource estimates | Pending 4A.4.4 |
-| C7 interpretation | 4A.4.4 hypotheses, controls and limits | Pending 4A.4.4 |
+| C1 representation; C2 spatial interaction | [Source-derived taps](architecture_compatibility_synthesis.md#source-derived-feature-interfaces), [optional late mixer](architecture_compatibility_synthesis.md#optional-late-spatial-interaction) | Pending 4A.4.4 |
+| C3 fusion/position/padding | [All-canvas contract](architecture_compatibility_synthesis.md#shared-tensor-contract), [aligned fusion](architecture_compatibility_synthesis.md#compatible-route-r-fused-residual-spatial-readout) | Pending 4A.4.4 |
+| C4 readout | [Residual route](architecture_compatibility_synthesis.md#compatible-route-r-fused-residual-spatial-readout), [query route](architecture_compatibility_synthesis.md#compatible-route-q-class-queries-with-a-pooled-context-path), [label identity](architecture_compatibility_synthesis.md#label-identity-and-vocabulary-projection) | Pending 4A.4.4 |
+| C5 supporting layers; C6 cost | [Initialization](architecture_compatibility_synthesis.md#initialization-trainability-and-reproducibility), [scaling estimates](architecture_compatibility_synthesis.md#topology-preserving-sml-envelope) | Pending 4A.4.4 |
+| C7 interpretation | [Interface/diagnostic limits](architecture_compatibility_synthesis.md#integration-obligations-discovered-not-implemented), [proposal handoff](architecture_compatibility_synthesis.md#handoff-to-4a44) | Pending 4A.4.4 |
 
 ## Primary-source register
 
