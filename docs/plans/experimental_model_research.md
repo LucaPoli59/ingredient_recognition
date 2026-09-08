@@ -1,7 +1,7 @@
 # Experimental-model research plan
 
 **Created:** 2026-08-28
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-08
 **Linked macro-section and subphase:** [Subphase 4A, Experimental-model research](../general_plan.md#4a-experimental-model-research)
 **Overall status:** In progress
 
@@ -45,17 +45,17 @@ the experiment portfolio.
 
 **Overall status:** In progress
 **Current task:** 4A.4 — custom attention-model research
-**Next action:** Execute 4A.4.1 in the dedicated
-[custom attention-model feature plan](custom_attention_model.md): re-read the
-problem and accumulated evidence, then create the bounded design brief before
-component research.
+**Next action:** Execute 4A.4.3 in the dedicated
+[custom attention-model feature plan](custom_attention_model.md), using the
+completed [problem brief and component research](../research/topics/custom_attention_model_design/README.md)
+to specify compatible tensor/initialization routes and estimate S/M/L scales.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | 4A.1 | Broad model discovery and three-to-five-family handoff | **Done** | The 2026-08-28 discovery records the input revisions, requirements matrix, five new retained family/protocol candidates, the already-used ResNet/DINOv2 baseline anchors, grouped exclusions, and the formal 4A.1 → 4A.2 handoff. |
 | 4A.2 | Deep research for every retained family | **Done** | Five normalized dossiers and a common comparative synthesis are recorded in [`research/topics/experimental_model_candidates/README.md`](../research/topics/experimental_model_candidates/README.md); no implementation or training was part of this stage. |
 | 4A.3 | Select two established model families | **Done** | [4A-D1](../project_objective/experimental_model_portfolio.md) adopts EfficientNetV2-S and MaxViT-T with common input/readout starting protocols, explicit fallbacks, candidate dispositions, hypotheses, and 4A.4/Phase 5 handoffs. |
-| 4A.4 | Research and select the custom attention model | **In progress** | The [dedicated feature plan](custom_attention_model.md) separates problem/evidence synthesis, component research, compatibility synthesis, and three topology proposals before one binding selection. |
+| 4A.4 | Research and select the custom attention model | **In progress** | The [dedicated feature plan](custom_attention_model.md) records completed problem synthesis and component research; compatibility synthesis and three topology proposals remain Pending. |
 
 ## Mandatory input and re-reading gate
 
@@ -186,7 +186,7 @@ families requires an explicit continuity or ablation rationale.
 | Candidate deep-research dossiers and reusable comparative synthesis | A new indexed topic collection under [`research/topics/`](../research/topics/README.md) |
 | Adopted two-family shortlist and, later, the selected custom design | [`experimental_model_portfolio.md`](../project_objective/experimental_model_portfolio.md), created at the 4A.3 decision checkpoint; custom topology remains pending |
 | Detailed custom-model execution sequence | [`custom_attention_model.md`](custom_attention_model.md) |
-| Attention-component and custom-design evidence | The indexed `research/topics/custom_attention_model_design/` collection created by 4A.4.1 under the [custom feature plan](custom_attention_model.md) |
+| Attention-component and custom-design evidence | The indexed [custom-design collection](../research/topics/custom_attention_model_design/README.md), governed by the [custom feature plan](custom_attention_model.md) |
 | Temporary search notes, extracted tables, scripts, or unreviewed outputs | [`src_scratches/`](../../src_scratches/) or an appropriate experiment workspace, never as the final durable claim owner |
 | Verified model contract after implementation | [`implementation_details/`](../implementation_details/README.md) and, where appropriate, [`models_deepdive/`](../models_deepdive/README.md) |
 
@@ -520,10 +520,14 @@ progress.
 
 ## 4A.4 — Custom attention-model research
 
-This stage is intentionally larger and must receive its own feature plan before
-research begins. The child plan must preserve the evidence and handoff rules in
-this document while defining its more detailed stages, tracker, source strategy,
-and completion gates.
+This stage is governed by the dedicated [custom-model feature plan](custom_attention_model.md),
+created before research began. The child plan preserves the evidence and
+handoff rules below and owns detailed subphase status and completion gates.
+
+As of 2026-09-08, its problem synthesis and component investigation are complete
+in the [research collection](../research/topics/custom_attention_model_design/README.md).
+The next step is compatibility synthesis. The research retains negative food
+decoder evidence and provisional alternatives; no custom topology is adopted.
 
 At minimum, the custom plan must cover:
 
@@ -641,3 +645,4 @@ Subphase 4A is complete only when:
 | 2026-08-28 | Completed 4A.2 and opened 4A.3. | Five common-schema candidate dossiers and a qualitative handoff now cover architecture mechanisms, transfer limits, access/provenance, resources, and falsifiable hypotheses. The next decision is exactly two complementary established families; no local training or test outcome was used. |
 | 2026-09-07 | Completed 4A.3; dedicated 4A.4 planning is next. | 4A-D1 adopts EfficientNetV2-S and MaxViT-T with explicit common-protocol choices, fallbacks and limitations; research evidence is retained, and custom topology, measured feasibility, and the independent selector remain undecided. |
 | 2026-09-07 | Opened the dedicated 4A.4 feature plan. | The child plan has four explicit research subphases--problem/evidence synthesis, component research, compatibility synthesis, and three topology proposals--so custom design is not treated as one undifferentiated literature review. |
+| 2026-09-08 | Completed the first two custom-research subphases; compatibility synthesis is next. | The child plan links a problem-grounded design brief and primary-source component evidence, including counterevidence and implementation caveats. Custom topology selection and Phase 5 remain separate gates. |

@@ -1,9 +1,15 @@
 # C4 — Structured multi-label query/set head dossier
 
 **Created:** 2026-08-28
-**Last updated:** 2026-08-28
+**Last updated:** 2026-09-08
 **Candidate:** C4 — Structured multi-label readout protocol
 **Status:** Research dossier; no local training performed
+
+**Subsequent source review:** The [4A.4.2 component record](../custom_attention_model_design/attention_component_evidence.md)
+qualifies the original favorable intake below: direct food evidence includes
+negative decoder outcomes, and standard ML-Decoder uses fixed random queries.
+The original recommendation to audit it first is not a binding preference for
+the custom model.
 
 ## Research question and boundary
 
@@ -13,7 +19,8 @@ with independent logits? C4 is a head/protocol candidate, not a sixth
 backbone family. It must be paired with one declared visual backbone and
 compared against the same backbone with a simple independent head.
 
-The canonical C4 claim uses learned query embeddings and image features only.
+The canonical C4 claim uses query embeddings and image features only; query
+trainability is representative-specific.
 Ingredient names, recipe text, external ontologies, autoregressive generation,
 and graph statistics derived from validation/test labels are not implicit parts
 of the protocol.
@@ -26,7 +33,7 @@ of the protocol.
 | Representatives | One of ML-Decoder or Query2Label after implementation/access inspection |
 | Backbone | Declared in 4A.3; the same backbone must receive an independent GAP-head control |
 | Representation | A spatial feature map or patch-token sequence from the backbone |
-| Readout mechanism | Learned class queries cross-attend to visual features; ML-Decoder can group classes to reduce decoder cost |
+| Readout mechanism | Class/group queries cross-attend to visual features; Query2Label learns queries, while standard ML-Decoder fixes random queries and can group classes |
 | Adaptation | Train the head from scratch; backbone frozen/partial/full tuning is a separate axis |
 | Output | One logit per of the 165 labels, interpreted independently after sigmoid for metrics |
 
@@ -60,7 +67,7 @@ dependencies must be paired with image-shuffle and non-visual baselines.
 | [Official Query2Label repository](https://github.com/SlongLiu/query2labels) | Official implementation path | Provides a concrete reference implementation and MIT licence for inspection. | The code's dependency age, tensor interface, and memory behaviour must be audited before reuse. |
 | [ML-Decoder, Ridnik et al., WACV 2023](https://openaccess.thecvf.com/content/WACV2023/html/Ridnik_ML-Decoder_Scalable_and_Versatile_Classification_Head_WACV_2023_paper.html) | Primary efficient-head evidence | Query-based classification and group decoding improve spatial use and scale to thousands of labels; the paper reports generic multi-label and single-label results. | Reported MS-COCO/ImageNet scores are not food evidence and group counts are not chosen here. |
 | [Official ML-Decoder repository](https://github.com/Alibaba-MIIL/ML_Decoder) | Official implementation/licence path | Public MIT-licensed code and examples provide a maintained-enough reference for an adapter audit. | Repository/API revision and integration with the current Lightning contract remain open. |
-| [Food Ingredients Recognition through Multi-label Learning](https://arxiv.org/abs/2210.14147) | Direct food multi-label evidence | A Nutrition5K study compares global-pooling and attention decoders over several visual encoders. | It uses a different dataset, labels, and training details; it supports the attention-readout hypothesis, not a particular C4 implementation. |
+| [Food Ingredients Recognition through Multi-label Learning](https://arxiv.org/abs/2210.14147) | Direct food multi-label evidence, including negative results | A Nutrition5K study compares global-pooling and ML-Decoder; the [subsequent full-text review](../custom_attention_model_design/attention_component_evidence.md#task-relevant-empirical-evidence) qualifies the original positive interpretation. | Different dataset, resolution, metric aggregation and training; precedent for testing the question, not evidence of a reliable decoder advantage. |
 | [Inverse Cooking, Salvador et al., CVPR 2019](https://openaccess.thecvf.com/content_CVPR_2019/papers/Salvador_Inverse_Cooking_Recipe_Generation_From_Food_Images_CVPR_2019_paper.pdf) | Direct food set-structure evidence | Ingredient prediction is treated as an unordered set within a food-image/recipe system. | The system is generative and uses recipe targets; it is evidence for set structure, not a drop-in classifier. |
 
 ## Project fit and transfer limits
@@ -85,7 +92,8 @@ The recommended C4 protocol is:
 
 1. choose one representative head after the 4A.3 feasibility audit;
 2. pair it with a declared backbone and expose a spatial feature map;
-3. initialise learned queries without ingredient-name embeddings;
+3. initialize queries without ingredient-name embeddings and declare whether
+   they are learned or fixed under the chosen representative;
 4. emit 165 logits with no autoregressive decoding; and
 5. compare against the same backbone plus a simple pooling/linear head.
 
@@ -119,9 +127,9 @@ large label sets. Exact memory depends on the paired backbone feature
 resolution, number of layers, mixed precision, and implementation; no 8 GB
 claim is made here.
 
-The head has no required external checkpoint. Learned query and projection
-weights are random-initialised in the canonical protocol, which keeps the
-comparison focused on the readout mechanism. A larger decoder, label-text
+The head has no required external checkpoint. Query and projection weights are
+random-initialized in the canonical protocol; standard ML-Decoder freezes the
+query embeddings while learning projections. A larger decoder, label-text
 initialisation, or graph prior would change both resource and scientific
 interpretation.
 

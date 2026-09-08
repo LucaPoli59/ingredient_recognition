@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-08
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Execute 4A.4.1 problem and evidence synthesis in the dedicated custom attention-model feature plan; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
+**Current focus:** Turn the completed custom-model problem brief and component research into compatible design routes in the dedicated feature plan; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
 
 ## Purpose
 
@@ -34,7 +34,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
 | 3 | Ingredient selection | **Deferred** | The historical rule is reconstructed and the decision profile is adopted; resume after Subphase 4B selects the justified reference selector. |
-| 4 | Model research | **In progress** | Established experiment families are selected; prepare custom-model research in 4A and continue the independent 4B selector decision. |
+| 4 | Model research | **In progress** | Established families are selected and custom component research is available; proceed to custom design compatibility in 4A and continue the independent 4B selector decision. |
 | 5 | Additional model implementation | **Deferred** | The established-family handoff is available; prepare its implementation plan after the remaining DataModule readiness checks. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Resume after comparable benchmark runs are complete. |
@@ -202,7 +202,7 @@ Broad discoveries, primary-source catalogs, implementation audits, and resource 
 
 | Subphase | Status | Owned outcome | Next action |
 | --- | --- | --- | --- |
-| 4A Experimental-model research | **In progress** | Two literature-derived model families plus one selected custom attention architecture for Macro-sections 5–7. | Execute 4A.4.1 in the [custom attention-model feature plan](plans/custom_attention_model.md); the established pair remains adopted in the [portfolio](project_objective/experimental_model_portfolio.md). |
+| 4A Experimental-model research | **In progress** | Two literature-derived model families plus one selected custom attention architecture for Macro-sections 5–7. | Use the completed [custom research](research/topics/custom_attention_model_design/README.md) for compatibility synthesis under the [feature plan](plans/custom_attention_model.md); the established pair remains adopted in the [portfolio](project_objective/experimental_model_portfolio.md). |
 | 4B Reference-selector research | **In progress** | One frozen and justified `M_ref` protocol that releases Macro-section 3. | Execute R1 in the existing [`reference_selector_research.md`](plans/reference_selector_research.md) plan, then complete its bounded R2–R3 choice and handoff. |
 
 ### 4A. Experimental-model research
@@ -222,6 +222,7 @@ This is the principal stream of Macro-section 4. It asks which representation, a
 - [x] Created the dedicated [`experimental_model_research.md`](plans/experimental_model_research.md) plan with an extensive evidence flow and four stages: broad discovery, candidate deep research, two-family selection, and separately planned custom attention-model research.
 - [x] Completed 4A.1 with a problem-to-model requirements matrix, five **new** retained family/protocol candidates, grouped exclusions, a primary-source catalog, and a formal handoff to 4A.2; ResNet and DINOv2 are retained as already-used baseline anchors and excluded from the new-candidate count.
 - [x] Adopted the established-family [experimental portfolio](project_objective/experimental_model_portfolio.md), with source-linked rationale, preferred protocols, resource fallbacks, and a handoff to custom research and implementation.
+- [x] Recorded the [custom-model problem brief and component evidence](research/topics/custom_attention_model_design/README.md), with primary sources, negative evidence, provisional component routes and implementation limitations.
 
 #### Pending
 
@@ -238,7 +239,7 @@ The dedicated 4A plan is complete; a primary-source evidence chain supports exac
 
 #### Next action
 
-Execute 4A.4.1 in [`plans/custom_attention_model.md`](plans/custom_attention_model.md), using the [portfolio handoff](project_objective/experimental_model_portfolio.md#handoff-to-custom-research-and-implementation). The established-family decision is complete; custom topology and local feasibility remain open.
+Proceed to compatibility synthesis in [`plans/custom_attention_model.md`](plans/custom_attention_model.md), using the [completed research handoff](research/topics/custom_attention_model_design/attention_component_evidence.md#handoff-to-4a43). Define tensor, initialization and scaling routes before the three custom proposals. The established-family decision is complete; custom topology and local feasibility remain open.
 
 ### 4B. Reference-selector research
 
@@ -487,6 +488,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-08-28 | Experimental-model research | Completed 4A.2 with five normalized candidate dossiers and a qualitative 4A.2 → 4A.3 synthesis. Architecture, evidence transfer limits, provenance/access, resource assumptions, and falsifiable hypotheses are recorded; no local training or test outcome influenced the handoff. | Subphase 4A **In progress**; 4A.3 established-family selection is next | [`research/topics/experimental_model_candidates/README.md`](research/topics/experimental_model_candidates/README.md), [`research/topics/experimental_model_candidates/comparative_synthesis.md`](research/topics/experimental_model_candidates/comparative_synthesis.md), [`plans/experimental_model_research.md`](plans/experimental_model_research.md) |
 | 2026-09-07 | Experimental-model portfolio | Adopted two established experiment families with common-protocol starting choices, explicit fallbacks, exclusions and custom-research/implementation handoffs. No local model training or test outcome informed the decision. | Subphase 4A **In progress**; custom-model planning is next; first Phase 5 research handoff available, data readiness still pending | [`project_objective/experimental_model_portfolio.md`](project_objective/experimental_model_portfolio.md), [`plans/experimental_model_research.md`](plans/experimental_model_research.md) |
 | 2026-09-07 | Custom attention-model planning | Opened the 4A.4 feature plan with four staged research subphases and a source-to-decision flow; no custom topology or implementation is selected. | Subphase 4A **In progress**; 4A.4.1 problem/evidence synthesis is next | [`plans/custom_attention_model.md`](plans/custom_attention_model.md), [`project_objective/experimental_model_portfolio.md`](project_objective/experimental_model_portfolio.md) |
+| 2026-09-08 | Custom attention-model research | Completed the problem brief and component evidence collection, including source corrections and negative evidence; the next project action is compatible design synthesis. | Subphase 4A **In progress**; custom topology and implementation remain open | [Research collection](research/topics/custom_attention_model_design/README.md), [custom feature plan](plans/custom_attention_model.md) |
 
 ## Tracker maintenance rules
 

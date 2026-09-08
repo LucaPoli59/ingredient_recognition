@@ -1,7 +1,7 @@
 # Custom attention-model feature plan
 
 **Created:** 2026-09-07
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-08
 **Linked macro-section and subphase:** [Subphase 4A, Experimental-model research](../general_plan.md#4a-experimental-model-research), Stage 4A.4
 **Overall status:** In progress
 
@@ -25,14 +25,15 @@ performance to choose a design.
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** 4A.4.1 — problem and evidence synthesis
-**Next action:** Re-read the mandatory project inputs and create the indexed
-custom-design research collection with a bounded problem/design brief.
+**Current task:** 4A.4.3 — component compatibility and architecture synthesis (ready to start)
+**Next action:** Use the completed [component handoff](../research/topics/custom_attention_model_design/attention_component_evidence.md#handoff-to-4a43)
+to specify compatible tensor, initialization, padding and readout routes, then
+estimate topology-preserving S/M/L scales. Component choices remain provisional.
 
 | # | Subphase | Status | Evidence or result |
 | --- | --- | --- | --- |
-| 4A.4.1 | Problem and evidence synthesis | **In progress** | Re-read the current problem, benchmark, comparison method, portfolio, candidate evidence, and model contract; create the bounded design brief and research collection. |
-| 4A.4.2 | Intensive attention-network component research | **Pending** | Build a source-backed component record around only the functions needed by the design brief. |
+| 4A.4.1 | Problem and evidence synthesis | **Done** | [Design brief](../research/topics/custom_attention_model_design/problem_evidence_synthesis.md): reviewed revisions, historical/current reconciliation, R1--R11 mapping, one primary objective, two secondary constraints, failure conditions and Q1--Q7 handoff. |
+| 4A.4.2 | Intensive attention-network component research | **Done** | [Component evidence](../research/topics/custom_attention_model_design/attention_component_evidence.md): 32 primary references, eight implementation entries, counterevidence, provisional alternatives, compatibility limits and 4A.4.3 handoff. |
 | 4A.4.3 | Component compatibility and architecture synthesis | **Pending** | Turn compatible evidence into explicit tensor/interface contracts and a credible S/M/L design envelope. |
 | 4A.4.4 | Three topology proposals and binding decision | **Pending** | Compare exactly three coherent topologies, then adopt one custom design and its initial scale for Macro-section 5. |
 
@@ -78,11 +79,10 @@ may establish local loading, gradient, peak-memory or throughput facts.
 ## Evidence flow and durable artifacts
 
 The feature plan is the operational source of truth for stage status. Evidence
-will be retained in the future indexed topic collection
-`docs/research/topics/custom_attention_model_design/`, rather than copied into
-this plan. Subphase 4A.4.1 creates its `README.md` and
-`problem_evidence_synthesis.md`; later subphases add the following files to the
-same collection and update its index:
+is retained in the indexed [custom-design research collection](../research/topics/custom_attention_model_design/README.md),
+rather than copied into this plan. Subphases 4A.4.1--4A.4.2 created its index,
+design brief and component record. Later subphases add their files to the same
+collection and update its index:
 
 | Research artifact | Produced by | Owns |
 | --- | --- | --- |
@@ -133,6 +133,17 @@ is warranted, identifies the minimum functions the architecture must supply,
 and records questions that the component research must answer. It must not
 choose components, widths, depths, a loss, or a topology.
 
+### Completion checkpoint — 2026-09-08
+
+**Status:** Done. The [brief](../research/topics/custom_attention_model_design/problem_evidence_synthesis.md)
+records the mandatory input revisions at `e0cddbe`, reconciles historical audit
+counts with the active `v5` contract, and maps the remaining portfolio question
+to R1--R11. Its primary objective is ingredient-specific aggregation of spatial
+evidence while retaining dish context; computation and traceable information
+use are the two secondary constraints. A same-trunk pooled control and failure
+conditions make the hypothesis testable without scheduling another campaign.
+Q1--Q7 were passed to component research. No topology or loss was selected.
+
 ## 4A.4.2 — Intensive attention-network component research
 
 ### Question
@@ -173,6 +184,31 @@ candidate dossier for each layer type.
 known incompatibilities, distinguish verified mechanism facts from the local
 recommendation, and state the questions that only tensor-level synthesis can
 resolve. Component choice remains provisional until the next subphase.
+
+### Completion checkpoint — 2026-09-08
+
+**Status:** Done. The [component record](../research/topics/custom_attention_model_design/attention_component_evidence.md)
+covers a complete functional route: spatial convolutional/hybrid features,
+optional bounded spatial interaction or fusion, residual/class-query readout,
+supporting layers and raw logits. It preserves simpler alternatives and
+exclusions, primary-source reading depth and transfer limits, inspected
+implementation revisions, and arithmetic memory examples distinct from GPU
+measurements.
+
+The original Nutrition5K comparison supplies negative evidence against assuming
+ML-Decoder improves every encoder. The source audit also distinguishes learned
+Query2Label embeddings from fixed random standard ML-Decoder queries. These
+findings are linked back from the existing C4 research; they do not change the
+adopted established-family portfolio.
+
+**Work discovered for 4A.4.3:** resolve feature scales/projections, context and
+position paths, mask transport or all-canvas processing, exact query/group
+semantics across vocabulary sizes, and honest weight reuse/normalization.
+The CSRA code-reuse provenance remains conditional. Reference decoder mask/API
+behavior and actual peak memory belong to Phase 5 if the relevant route is
+selected. No candidate was executed, no weights downloaded and no validation
+or test outcomes used. The [handoff](../research/topics/custom_attention_model_design/attention_component_evidence.md#handoff-to-4a43)
+is ready; 4A.4.3 and 4A.4.4 remain Pending.
 
 ## 4A.4.3 — Component compatibility and architecture synthesis
 
@@ -293,3 +329,4 @@ This plan is complete only when:
 | Date | Change | Rationale |
 | --- | --- | --- |
 | 2026-09-07 | Created the dedicated 4A.4 feature plan with four research subphases. | The parent 4A plan requires a staged problem synthesis, component investigation, compatibility analysis, and three-proposal decision rather than one undifferentiated custom-model search. |
+| 2026-09-08 | Completed 4A.4.1 and 4A.4.2; compatibility synthesis is ready to start. | The indexed brief and component evidence now carry an explicit objective, source/counterevidence trail, provisional routes and open interface questions. Negative food results and query-initialization corrections prevent inherited optimism from becoming a design assumption. |

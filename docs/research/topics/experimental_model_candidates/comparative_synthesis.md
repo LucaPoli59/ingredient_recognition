@@ -1,7 +1,7 @@
 # 4A.2 comparative synthesis and handoff
 
 **Created:** 2026-08-28
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-08
 **Scope:** Handoff from Subphase 4A.2 to 4A.3
 **Status:** Evidence synthesis; 4A.3 decision recorded separately
 
@@ -139,6 +139,14 @@ The adopted family pair, exact starting protocols, exclusions, and 4A.4/Phase 5
 handoff are in the [portfolio decision](../../../project_objective/experimental_model_portfolio.md).
 The five dossiers and the original 4A.2 recommendations remain retained as
 pre-decision evidence.
+
+### Subsequent C4 evidence qualification — 2026-09-08
+
+The [custom component review](../custom_attention_model_design/attention_component_evidence.md#task-relevant-empirical-evidence)
+adds negative food-task evidence and a query-initialization correction to the
+[C4 dossier](structured_multilabel_head.md). The historical intake matrix above
+must not be interpreted as a verified attention-head advantage. This update
+does not reopen the adopted C1/C5 pair or select a custom readout.
 
 ## Related documentation
 

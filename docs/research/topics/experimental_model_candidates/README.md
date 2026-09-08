@@ -1,7 +1,7 @@
 # Experimental model candidate dossiers
 
 **Created:** 2026-08-28
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-08
 **Status:** Complete for Subphase 4A.2; subsequent 4A.3 decision linked
 
 ## Purpose and scope
@@ -52,7 +52,8 @@ Every candidate file follows the same order:
 - [`swin_v2.md`](swin_v2.md) — C2, hierarchical/windowed transformer.
 - [`siglip2.md`](siglip2.md) — C3, vision-language visual encoder.
 - [`structured_multilabel_head.md`](structured_multilabel_head.md) — C4,
-  query/set readout protocol paired with a declared backbone.
+  query/set readout protocol paired with a declared backbone; includes the
+  2026-09-08 source correction linked to the custom component research.
 - [`maxvit.md`](maxvit.md) — C5, hybrid multi-axis attention family.
 - [`comparative_synthesis.md`](comparative_synthesis.md) — common qualitative
   comparison, the historical 4A.2 → 4A.3 handoff, and the bounded 2026-09-07
