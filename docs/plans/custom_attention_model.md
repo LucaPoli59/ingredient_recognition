@@ -3,7 +3,7 @@
 **Created:** 2026-09-07
 **Last updated:** 2026-09-08
 **Linked macro-section and subphase:** [Subphase 4A, Experimental-model research](../general_plan.md#4a-experimental-model-research), Stage 4A.4
-**Overall status:** In progress
+**Overall status:** Done
 
 ## Objective and boundary
 
@@ -24,18 +24,18 @@ performance to choose a design.
 
 ## Progress tracker
 
-**Overall status:** In progress
-**Current task:** 4A.4.4 — three topology proposals and binding decision (ready to start)
-**Next action:** Use the completed [compatibility handoff](../research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md#handoff-to-4a44)
-to formulate exactly three distinct topology proposals, then select one and its
-initial/fallback scale in the portfolio. No custom topology is adopted yet.
+**Overall status:** Done
+**Current task:** Research complete; implementation handoff available
+**Next action:** After the remaining Data 2.4 readiness checks, prepare the
+Phase 5 implementation plan from [4A-D2](../project_objective/experimental_model_portfolio.md#4a-d2--custom-attention-topology)
+and its shape, artifact, diagnostic and resource gates. No model is implemented.
 
 | # | Subphase | Status | Evidence or result |
 | --- | --- | --- | --- |
 | 4A.4.1 | Problem and evidence synthesis | **Done** | [Design brief](../research/topics/custom_attention_model_design/problem_evidence_synthesis.md): reviewed revisions, historical/current reconciliation, R1--R11 mapping, one primary objective, two secondary constraints, failure conditions and Q1--Q7 handoff. |
 | 4A.4.2 | Intensive attention-network component research | **Done** | [Component evidence](../research/topics/custom_attention_model_design/attention_component_evidence.md): 32 primary references, eight implementation entries, counterevidence, provisional alternatives, compatibility limits and 4A.4.3 handoff. |
 | 4A.4.3 | Component compatibility and architecture synthesis | **Done** | [Compatibility synthesis](../research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md): residual/query routes, explicit feature and label contracts, intact-weight reuse, S/M/L scalar estimates, exclusions and diagnostic integration obligations. |
-| 4A.4.4 | Three topology proposals and binding decision | **Pending** | Compare exactly three coherent topologies, then adopt one custom design and its initial scale for Macro-section 5. |
+| 4A.4.4 | Three topology proposals and binding decision | **Done** | [Three proposals](../research/topics/custom_attention_model_design/topology_proposals.md) compare residual, query/context and spatial-mixer/query topologies; [4A-D2](../project_objective/experimental_model_portfolio.md#4a-d2--custom-attention-topology) adopts P2-S, its initialization, same-S frozen fallback and Phase 5 gates. |
 
 ## Fixed inputs and design boundaries
 
@@ -322,6 +322,36 @@ initial and fallback scale, exact interfaces, initialization, dependencies,
 required shape/gradient/preprocessing/checkpoint/resource smoke tests, and
 remaining engineering risks.
 
+### Completion checkpoint — 2026-09-08
+
+**Status:** Done. [P1/P2/P3](../research/topics/custom_attention_model_design/topology_proposals.md)
+each have a distinct graph/hypothesis, complete image-to-logit specification,
+source-linked retained/rejected components, S/M/L axes, initial/fallback,
+resource estimates, failure conditions and the narrowest later control.
+The qualitative six-gate comparison supports **P2-S**, a dual-scale learned
+ingredient-query readout plus pooled context, adopted in 4A-D2. Its intact
+EfficientNetV2-S trunk and new modules have distinct initialization provenance.
+The fallback remains S with frozen-encoder adaptation; it is not a smaller
+scale or equivalent full-tuning experiment. M/L are optional capacity designs,
+not an extra campaign.
+
+**Verification:** bounded recheck of decisive primary papers and official
+source/API documentation; rerun of the scalar calculator, without models,
+tensors, data, weights or GPU access; documentation/link and diff checks.
+All custom-plan, proposal, portfolio and index links resolve. The scan also
+retains three unrelated, pre-existing broken references in the general plan's
+Data entries (two image-loading-document links and one DataModule test link),
+confirmed present at `993a166`; no new unresolved link was introduced.
+The input brief's benchmark and methodology contracts remain unchanged.
+No model-performance or seed-stability conclusion is drawn.
+
+**Engineering handoff:** exact transform realization, artifact/initialization
+and configuration round trip, shape/gradient/label-order tests, normalization
+and attention-backend checks, full-step memory/timing, and capability-aware
+visualization integration. The custom selection does not release 4B/Phase 3
+or satisfy Data 2.4. All four research subphases and this feature plan are
+complete; the parent 4A plan and general tracker are synchronized.
+
 ## Dependencies, assumptions and open decisions
 
 | Item | Status | Consequence |
@@ -329,8 +359,8 @@ remaining engineering risks.
 | 4A-D1 established-family portfolio | Available | Supplies components, gaps, comparison controls and the common input/output starting boundary. |
 | Data Work package 2.4 runtime smoke completion | In progress | Does not block theory; blocks standard benchmark-model execution. |
 | Subphase 4B and Macro-section 3 | Independent/in progress | Neither selects the custom topology; their future shared vocabulary changes the later ablation, not this design brief. |
-| Exact custom initialization policy | Provisional routes specified | 4A.4.3 records compatible intact-weight reuse and new-module initialization; 4A.4.4 must adopt the selected topology's exact policy. |
-| Exact S/M/L parameter bands | Estimated; not adopted | 4A.4.3 provides topology-preserving axes and scalar counts relative to the established pair; 4A.4.4 selects a route/initial size and Phase 5 verifies feasibility. |
+| Exact custom initialization policy | Adopted in 4A-D2 | Intact pretrained feature weights plus explicitly new query/context modules; Phase 5 verifies artifact loading and initialization without overwriting reused weights. |
+| Exact S/M/L parameter bands | Specified; scalar estimates only | P2-S is initial; frozen S is the bounded adaptation fallback, M/L are capacity options. Phase 5 verifies counts and measures feasibility. |
 | Local feasibility, optimization stability and calibration | Unverified | Cannot be inferred from literature or estimates and cannot decide the research selection through unrun performance. |
 
 ## Validation and completion criteria
@@ -357,3 +387,4 @@ This plan is complete only when:
 | 2026-09-07 | Created the dedicated 4A.4 feature plan with four research subphases. | The parent 4A plan requires a staged problem synthesis, component investigation, compatibility analysis, and three-proposal decision rather than one undifferentiated custom-model search. |
 | 2026-09-08 | Completed 4A.4.1 and 4A.4.2; compatibility synthesis is ready to start. | The indexed brief and component evidence now carry an explicit objective, source/counterevidence trail, provisional routes and open interface questions. Negative food results and query-initialization corrections prevent inherited optimism from becoming a design assumption. |
 | 2026-09-08 | Completed 4A.4.3; three-proposal comparison is ready to start. | Complete tensor/initialization routes and reproducible scalar estimates replace unresolved component combinations. Padding/grouping are explicit, and the visualization compatibility limitation is handed to Phase 5 without implementing a model or choosing a topology. |
+| 2026-09-08 | Completed 4A.4.4 and this feature plan; adopted P2-S in 4A-D2. | Exactly three source-linked topologies, topology-preserving scales and explicit controls support the decision; implementation/resource validation remains Phase 5 work, and no extra training campaign or selector decision is implied. |

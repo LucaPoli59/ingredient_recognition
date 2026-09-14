@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-08
+**Last updated:** 2026-09-14
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Compare three custom-model topology proposals using the completed compatibility and scaling synthesis; continue the bounded Subphase 4B `M_ref` decision independently, while completing the remaining runtime smoke checks for Data 2.4.
+**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and the independent Subphase 4B `M_ref` decision. Subphase 4A research is complete; its established-pair and custom-model handoffs are ready for Phase 5 planning after data readiness.
 
 ## Purpose
 
@@ -34,8 +34,8 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
 | 3 | Ingredient selection | **Deferred** | The historical rule is reconstructed and the decision profile is adopted; resume after Subphase 4B selects the justified reference selector. |
-| 4 | Model research | **In progress** | Established families are selected and compatible custom design routes are documented; proceed to the custom topology comparison in 4A and continue the independent 4B selector decision. |
-| 5 | Additional model implementation | **Deferred** | The established-family handoff is available; prepare its implementation plan after the remaining DataModule readiness checks. |
+| 4 | Model research | **In progress** | 4A is complete with two established families and one selected custom topology; continue the independent 4B selector decision. |
+| 5 | Additional model implementation | **Deferred** | All three 4A research handoffs are available; prepare their implementation plan after the remaining DataModule readiness checks. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
@@ -202,12 +202,12 @@ Broad discoveries, primary-source catalogs, implementation audits, and resource 
 
 | Subphase | Status | Owned outcome | Next action |
 | --- | --- | --- | --- |
-| 4A Experimental-model research | **In progress** | Two literature-derived model families plus one selected custom attention architecture for Macro-sections 5–7. | Use the [compatibility synthesis](research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md) for the three-topology comparison under the [feature plan](plans/custom_attention_model.md); the established pair remains adopted in the [portfolio](project_objective/experimental_model_portfolio.md). |
+| 4A Experimental-model research | **Done** | EfficientNetV2-S and MaxViT-T plus P2-S dual-scale ingredient-query readout with pooled context, with source-linked hypotheses and implementation gates. | Use [4A-D1/4A-D2](project_objective/experimental_model_portfolio.md) and the [completed plans](plans/README.md#completed-plans) for the Phase 5 handoff after data readiness. |
 | 4B Reference-selector research | **In progress** | One frozen and justified `M_ref` protocol that releases Macro-section 3. | Execute R1 in the existing [`reference_selector_research.md`](plans/reference_selector_research.md) plan, then complete its bounded R2–R3 choice and handoff. |
 
 ### 4A. Experimental-model research
 
-**Status:** In progress
+**Status:** Done
 
 This is the principal stream of Macro-section 4. It asks which representation, architecture, head, and adaptation hypotheses deserve controlled comparison on the frozen benchmark. It owns the experiment-model shortlist and the research questions that later drive implementation, tuning, and final comparison.
 
@@ -224,23 +224,26 @@ This is the principal stream of Macro-section 4. It asks which representation, a
 - [x] Adopted the established-family [experimental portfolio](project_objective/experimental_model_portfolio.md), with source-linked rationale, preferred protocols, resource fallbacks, and a handoff to custom research and implementation.
 - [x] Recorded the [custom-model problem brief and component evidence](research/topics/custom_attention_model_design/README.md), with primary sources, negative evidence, provisional component routes and implementation limitations.
 - [x] Defined [compatible custom design routes and a bounded scaling envelope](research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md), with reproducible scalar estimates and explicit initialization, vocabulary and diagnostic integration limits.
+- [x] Compared [three custom topologies](research/topics/custom_attention_model_design/topology_proposals.md) and adopted P2-S in [4A-D2](project_objective/experimental_model_portfolio.md#4a-d2--custom-attention-topology), completing the custom and parent 4A plans without model execution.
 
-#### Pending
+#### Planned scope and completion
 
 - [x] Review at least the two preceding discoveries before the 4A.1 discovery.
 - [x] Execute 4A.1 and retain three to five scientifically distinct, accessible family-level candidates after mapping the current problem constraints.
 - [x] Complete one normalized deep-research dossier per candidate with explicit transfer boundaries, resource metadata, and falsifiable benchmark hypotheses.
 - [x] Select exactly two established families through the 4A.3 qualitative gate and record the binding shortlist.
 - [x] Created the dedicated [`custom_attention_model.md`](plans/custom_attention_model.md) feature plan with four research subphases: problem/evidence synthesis, component research, compatibility synthesis, and three topology proposals.
-- [ ] Complete the four 4A.4 research subphases, compare three topology-level proposals with S/M/L scales, and select one for implementation.
+- [x] Complete the four 4A.4 research subphases, compare three topology-level proposals with S/M/L scales, and select one for implementation.
 
 #### Completion gate
 
 The dedicated 4A plan is complete; a primary-source evidence chain supports exactly two established model families and one selected custom attention topology; all three categories have falsifiable benchmark hypotheses and credible resource and implementation paths; the custom research preserves three reviewed topology proposals with S/M/L scaling rules; and no candidate training, HPO, or test outcome influenced selection.
 
+This research gate is satisfied. Actual loading, training stability, resource feasibility and comparative effectiveness are not established.
+
 #### Next action
 
-Compare exactly three custom topology proposals in [`plans/custom_attention_model.md`](plans/custom_attention_model.md), using the [compatibility handoff](research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md#handoff-to-4a44). Adopt one topology, initial size and fallback in the portfolio before custom implementation. The established-family decision is complete; the custom decision and local feasibility remain open.
+Maintain the source-to-decision record and carry the three-category [portfolio](project_objective/experimental_model_portfolio.md) into Phase 5 planning after Data 2.4 readiness. The selected custom starts at S with a same-S frozen-encoder adaptation fallback; larger scales and extra ablations are not mandatory campaigns. Subphase 4B remains independent and in progress.
 
 ### 4B. Reference-selector research
 
@@ -261,7 +264,7 @@ This subphase asks which single model protocol is a sufficiently sensitive, inte
 
 This macro-section covers architectures selected by Subphase 4A that are not already implemented in the repository.
 
-The [established-family portfolio](project_objective/experimental_model_portfolio.md) now provides the first research handoff. Its models are selected but not integrated; the custom-model handoff remains pending.
+The [experimental portfolio](project_objective/experimental_model_portfolio.md) now provides research handoffs for the established pair and P2-S custom design. All are selected but not integrated; the custom handoff includes explicit visualization-capability and measured-resource gates.
 
 ### Existing foundation
 
@@ -291,7 +294,7 @@ Every selected model passes its tests, integrates with the canonical training pa
 
 ### Next action
 
-Complete the remaining DataModule readiness checks and prepare an implementation plan for the adopted established pair. Their implementation does not require waiting for the custom topology, but final training remains gated by the benchmark protocol.
+Complete the remaining DataModule readiness checks and prepare an implementation plan for the adopted established pair and custom topology. Research selection is complete; implementation, resource smoke tests and final training remain subject to their own gates.
 
 ## 6. Training and hyperparameter tuning
 
@@ -343,6 +346,8 @@ Do not launch final training or tuning on the legacy 182-label split. Resume aft
 **Status:** Deferred
 
 This macro-section covers the frozen evaluation protocol, statistical comparison, qualitative analysis, and final interpretation of model behavior.
+
+A preparatory [artifact and observability audit](implementation_details/experiment_artifacts.md) was completed on 2026-09-14 for the existing target-v5 ResNet and DINOv2 campaigns. It confirms local JSON/HTML analysis feasibility and records mixed loss objectives, pruning, restart conflicts, sparse checkpoint selection and AMP-scaled gradient limitations. The comparison application and final benchmark analysis remain unimplemented/deferred; this audit does not establish final model rankings or satisfy the resume gate.
 
 ### Methodological decisions already completed
 
@@ -427,7 +432,7 @@ Create the thesis outline and claim map as soon as the institutional template an
 
 ```text
 project foundation [Done] -> data [In progress]
-data -> 4A experimental-model research [In progress] -> additional models [Deferred]
+data -> 4A experimental-model research [Done] -> additional models [Deferred: Data 2.4 readiness]
 data -> 4B reference-selector research [In progress] -> ingredient selection [Deferred]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
 additional models + ingredient selection -> training and HTuning [Deferred] -> results comparison [Deferred] -> thesis completion
@@ -491,6 +496,9 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-09-07 | Custom attention-model planning | Opened the 4A.4 feature plan with four staged research subphases and a source-to-decision flow; no custom topology or implementation is selected. | Subphase 4A **In progress**; 4A.4.1 problem/evidence synthesis is next | [`plans/custom_attention_model.md`](plans/custom_attention_model.md), [`project_objective/experimental_model_portfolio.md`](project_objective/experimental_model_portfolio.md) |
 | 2026-09-08 | Custom attention-model research | Completed the problem brief and component evidence collection, including source corrections and negative evidence; the next project action is compatible design synthesis. | Subphase 4A **In progress**; custom topology and implementation remain open | [Research collection](research/topics/custom_attention_model_design/README.md), [custom feature plan](plans/custom_attention_model.md) |
 | 2026-09-08 | Custom attention-model design synthesis | Recorded compatible tensor/initialization routes, a bounded scaling envelope and reproducible scalar resource estimates; final topology comparison is now the next action. | Subphase 4A **In progress**; no custom topology selected or model executed | [Compatibility synthesis](research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md), [custom feature plan](plans/custom_attention_model.md) |
+| 2026-09-08 | Experimental-model research completion | Completed the three-topology comparison and adopted the custom P2-S design alongside the established pair; all three research handoffs include explicit implementation/resource gates. | Subphase 4A **Done**; Macro-section 4 **In progress** for independent 4B; Phase 5 remains **Deferred** for Data readiness | [Portfolio](project_objective/experimental_model_portfolio.md), [three proposals](research/topics/custom_attention_model_design/topology_proposals.md), [completed 4A plan](plans/experimental_model_research.md) |
+
+| 2026-09-14 | Results-comparison preparation | Audited all 200 target-v5 trial configurations, CSV/TensorBoard inventories and relevant Optuna studies; demonstrated local W&B histogram extraction for one session per family and inspected selected checkpoints. Recorded persistence semantics and analysis limits without training or final evaluation. | Preparatory feasibility audit **Done**; Macro-section 7 final comparison remains **Deferred** | [Artifact contract and audit](implementation_details/experiment_artifacts.md), [reproducible probe](../src_scratches/experiment_comparison_audit/README.md) |
 
 ## Tracker maintenance rules
 
@@ -513,11 +521,11 @@ This table is append-only. Add one row when a macro-section or first-level work 
 - [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) records the Yummly-specific controlled-vocabulary evidence and implementation decision gate.
 - [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) contains the binding benchmark policies and readiness checklist.
 - [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) owns the binding methodology for shared vocabulary selection, model comparison, random-reduction controls, and local adaptation.
-- [`project_objective/experimental_model_portfolio.md`](project_objective/experimental_model_portfolio.md) owns the selected experiment families, protocol choices, rationale, and handoffs; custom-model selection remains pending.
+- [`project_objective/experimental_model_portfolio.md`](project_objective/experimental_model_portfolio.md) owns the selected established pair and custom topology, protocol choices, rationale, and unverified implementation gates.
 - [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md) is the active implementation plan for the Data work packages summarized in this section.
 - [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) is the active implementation plan for Macro-section 3 and the maintained home of the historical discrepancy resolutions.
 - [`plans/experimental_model_research.md`](plans/experimental_model_research.md) is the operational plan for Subphase 4A broad discovery, candidate deep research, selection of two established families, and the separately planned custom attention-model research.
-- [`plans/custom_attention_model.md`](plans/custom_attention_model.md) is the active 4A.4 plan with its four custom-model research subphases and the implementation handoff gate.
+- [`plans/custom_attention_model.md`](plans/custom_attention_model.md) retains the completed 4A.4 research subphases, three-proposal decision and custom implementation handoff.
 - [`plans/reference_selector_research.md`](plans/reference_selector_research.md) is the operational research and decision plan for Subphase 4B.
 - [`research/topics/label_learnability/learnability_assessment.md`](research/topics/label_learnability/learnability_assessment.md) provides the reusable evidence behind the Phase 3 decision-profile framework.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.

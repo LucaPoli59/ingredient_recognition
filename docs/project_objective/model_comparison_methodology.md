@@ -1,7 +1,7 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-07
+**Last updated:** 2026-09-08
 **Status:** Active and binding design; Macro-section 3 execution is deferred until Subphase 4B selects the reference selector, while the later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
@@ -235,7 +235,7 @@ vocabulary decisions as uncertain.
 
 | Owner | Required decision or artifact | Status |
 | --- | --- | --- |
-| Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Established pair adopted in the [portfolio](experimental_model_portfolio.md); custom research remains pending under [`experimental_model_research.md`](../plans/experimental_model_research.md). |
+| Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Done: established pair and custom P2-S adopted in the [portfolio](experimental_model_portfolio.md); the [completed 4A plan](../plans/experimental_model_research.md) hands implementation gates to Phase 5. Q1–Q4 are unchanged. |
 | Subphase 4B | Choose and justify M_ref. | In progress; [`reference_selector_research.md`](../plans/reference_selector_research.md) is the resume-gate plan for Macro-section 3. |
 | Macro-section 3 | Freeze the M_ref learnability protocol and produce versioned V_selected evidence. | Deferred until M_ref is selected. |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |

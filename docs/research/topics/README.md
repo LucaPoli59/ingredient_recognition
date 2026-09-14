@@ -20,4 +20,4 @@ Use a lowercase, descriptive directory name for `<topic>`. Its `README.md` must 
 - [`dataset_splitting/`](dataset_splitting/README.md) records the evidence and methodology for the frozen Yummly benchmark split.
 - [`label_learnability/`](label_learnability/README.md) records a reusable method for assessing whether a supervised classification label is learnable under a declared experimental protocol.
 - [`experimental_model_candidates/`](experimental_model_candidates/README.md) records the normalized 4A.2 dossiers and qualitative handoff for the five new experiment-model candidates.
-- [`custom_attention_model_design/`](custom_attention_model_design/README.md) records the custom-model problem brief, reusable attention-component evidence, counterevidence and subsequent design handoffs.
+- [`custom_attention_model_design/`](custom_attention_model_design/README.md) records the custom-model brief, reusable component evidence and counterevidence, compatibility/scaling synthesis, and three topology proposals supporting the portfolio's custom decision.

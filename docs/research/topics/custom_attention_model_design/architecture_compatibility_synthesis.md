@@ -4,6 +4,12 @@
 **Last updated:** 2026-09-08
 **Scope:** 4A.4.3 theoretical handoff; no selected topology or implemented model
 
+**Subsequent decision:** this dated compatibility handoff is now consumed by
+the [three proposals](topology_proposals.md) and the portfolio's
+[4A-D2](../../../project_objective/experimental_model_portfolio.md#4a-d2--custom-attention-topology).
+References below to provisional routes or the next subphase describe the
+4A.4.3 handoff; they do not override the later P2-S adoption.
+
 ## Outcome and boundary
 
 Two readout routes can satisfy the [design objective O1](problem_evidence_synthesis.md#bounded-design-objective)

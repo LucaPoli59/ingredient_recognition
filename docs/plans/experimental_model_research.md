@@ -3,7 +3,7 @@
 **Created:** 2026-08-28
 **Last updated:** 2026-09-08
 **Linked macro-section and subphase:** [Subphase 4A, Experimental-model research](../general_plan.md#4a-experimental-model-research)
-**Overall status:** In progress
+**Overall status:** Done
 
 ## Objective
 
@@ -43,19 +43,19 @@ the experiment portfolio.
 
 ## Progress tracker
 
-**Overall status:** In progress
-**Current task:** 4A.4 — custom attention-model research
-**Next action:** Execute 4A.4.4 in the dedicated
-[custom attention-model feature plan](custom_attention_model.md), using the
-completed [compatibility synthesis](../research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md)
-to compare exactly three topology proposals and adopt one custom design.
+**Overall status:** Done
+**Current task:** 4A research complete; three-category implementation handoff available
+**Next action:** Prepare the Phase 5 implementation plan from
+[4A-D1 and 4A-D2](../project_objective/experimental_model_portfolio.md) after
+the remaining Data 2.4 readiness checks. Continue the independent 4B selector
+decision in its own plan; completing 4A does not complete Macro-section 4.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | 4A.1 | Broad model discovery and three-to-five-family handoff | **Done** | The 2026-08-28 discovery records the input revisions, requirements matrix, five new retained family/protocol candidates, the already-used ResNet/DINOv2 baseline anchors, grouped exclusions, and the formal 4A.1 → 4A.2 handoff. |
 | 4A.2 | Deep research for every retained family | **Done** | Five normalized dossiers and a common comparative synthesis are recorded in [`research/topics/experimental_model_candidates/README.md`](../research/topics/experimental_model_candidates/README.md); no implementation or training was part of this stage. |
 | 4A.3 | Select two established model families | **Done** | [4A-D1](../project_objective/experimental_model_portfolio.md) adopts EfficientNetV2-S and MaxViT-T with common input/readout starting protocols, explicit fallbacks, candidate dispositions, hypotheses, and 4A.4/Phase 5 handoffs. |
-| 4A.4 | Research and select the custom attention model | **In progress** | The [dedicated feature plan](custom_attention_model.md) records completed problem, component and compatibility synthesis; the three-proposal comparison and binding custom decision remain Pending. |
+| 4A.4 | Research and select the custom attention model | **Done** | The [completed child plan](custom_attention_model.md) preserves all four research subphases and [three topology proposals](../research/topics/custom_attention_model_design/topology_proposals.md); 4A-D2 adopts P2-S with an intact EfficientNetV2-S trunk, query/context readout and explicit Phase 5 gates. |
 
 ## Mandatory input and re-reading gate
 
@@ -184,7 +184,7 @@ families requires an explicit continuity or ablation rationale.
 | 4A execution status, stage sequence, gates, and next action | This plan |
 | Broad search, candidate landscape, problem-to-model matrix, and source catalog | A new date-stamped folder under [`research/discovery/`](../research/discovery/README.md) |
 | Candidate deep-research dossiers and reusable comparative synthesis | A new indexed topic collection under [`research/topics/`](../research/topics/README.md) |
-| Adopted two-family shortlist and, later, the selected custom design | [`experimental_model_portfolio.md`](../project_objective/experimental_model_portfolio.md), created at the 4A.3 decision checkpoint; custom topology remains pending |
+| Adopted two-family shortlist and selected custom design | [`experimental_model_portfolio.md`](../project_objective/experimental_model_portfolio.md), with established-family 4A-D1 and custom-topology 4A-D2 decisions |
 | Detailed custom-model execution sequence | [`custom_attention_model.md`](custom_attention_model.md) |
 | Attention-component and custom-design evidence | The indexed [custom-design collection](../research/topics/custom_attention_model_design/README.md), governed by the [custom feature plan](custom_attention_model.md) |
 | Temporary search notes, extracted tables, scripts, or unreviewed outputs | [`src_scratches/`](../../src_scratches/) or an appropriate experiment workspace, never as the final durable claim owner |
@@ -524,13 +524,13 @@ This stage is governed by the dedicated [custom-model feature plan](custom_atten
 created before research began. The child plan preserves the evidence and
 handoff rules below and owns detailed subphase status and completion gates.
 
-As of 2026-09-08, problem synthesis, component investigation and tensor-level
-compatibility synthesis are complete in the
+As of 2026-09-08, all four child subphases are complete in the
 [research collection](../research/topics/custom_attention_model_design/README.md).
-The next step is the three-proposal comparison and decision. Explicit
-residual/query routes, scalar S/M/L estimates and integration limits are
-available; negative food-decoder evidence remains retained. No custom topology
-is adopted.
+The three-proposal comparison supports [4A-D2](../project_objective/experimental_model_portfolio.md#4a-d2--custom-attention-topology):
+P2-S dual-scale ingredient-query readout with pooled context. Source evidence,
+negative food-decoder results, exact interfaces, S/M/L scalar estimates and
+integration limits are retained. Adoption is theoretical, not implementation
+or evidence of better accuracy.
 
 At minimum, the custom plan must cover:
 
@@ -604,6 +604,23 @@ level, and which initial scale should be implemented first. Phase 5 may move to
 the declared fallback scale after measured resource smoke tests without
 reopening the topology decision.
 
+### Completion checkpoint — 2026-09-08
+
+**Status:** Done. The [child plan](custom_attention_model.md) completed the
+problem brief, component research, compatibility synthesis and exactly three
+topology proposals. Each proposal has a mechanism hypothesis, source trace,
+complete interfaces, S/M/L scaling and falsification conditions. 4A-D2 selects
+P2-S, with a same-S frozen-encoder adaptation fallback, not a smaller hidden
+topology. 4A-D1 still owns the unchanged established pair.
+
+The proposal review rechecked decisive primary sources and reran only scalar
+arithmetic. Documentation checks verify evidence links and synchronized owners;
+no candidate model, HPO, data/test inspection or new training was used.
+The research selection and all mandatory tasks of this parent plan are complete.
+Phase 5 receives all three categories with explicit artifact, input/output,
+initialization, diagnostic and measured-resource gates. Its Data 2.4 dependency
+and the separate 4B/Phase 3 sequence remain open.
+
 ## Dependencies, assumptions, and open decisions
 
 | Item | Status | Consequence |
@@ -615,7 +632,7 @@ reopening the topology decision.
 | Current 8 GB development GPU | Binding | Literature and implementation paths must remain plausible within this boundary. |
 | Exact HPO spaces and budgets | Deferred to Macro-section 6 | 4A defines model hypotheses and feasible protocols, not tuning values. |
 | Established-family implementation handoff | Available in [4A-D1](../project_objective/experimental_model_portfolio.md) | Phase 5 still needs data readiness, artifact/interface checks, and measured resource validation. |
-| Exact S/M/L parameter bands for custom proposals | Provisional envelope available | The child plan links scalar estimates relative to the selected pair; 4A.4.4 adopts proposal-specific sizes and Phase 5 measures feasibility. |
+| Custom topology and S/M/L handoff | Available in [4A-D2](../project_objective/experimental_model_portfolio.md#4a-d2--custom-attention-topology) | P2-S and same-S frozen fallback are adopted; all three proposals retain scaling/resource estimates. Phase 5 must verify the planned interfaces and actual feasibility. |
 
 ## Validation and completion criteria
 
@@ -650,3 +667,4 @@ Subphase 4A is complete only when:
 | 2026-09-07 | Opened the dedicated 4A.4 feature plan. | The child plan has four explicit research subphases--problem/evidence synthesis, component research, compatibility synthesis, and three topology proposals--so custom design is not treated as one undifferentiated literature review. |
 | 2026-09-08 | Completed the first two custom-research subphases; compatibility synthesis is next. | The child plan links a problem-grounded design brief and primary-source component evidence, including counterevidence and implementation caveats. Custom topology selection and Phase 5 remain separate gates. |
 | 2026-09-08 | Completed custom architecture compatibility synthesis; three-proposal comparison is next. | Source-derived tensor routes, initialization and vocabulary semantics, reproducible scalar S/M/L estimates and explicit diagnostic limitations now support the final research decision without candidate execution. |
+| 2026-09-08 | Completed custom topology selection and the whole 4A feature plan. | 4A-D2 adopts P2-S after the three-proposal qualitative comparison. The two established families and one custom design now have implementation handoffs; runtime feasibility, 4B and Data readiness remain separate gates. |

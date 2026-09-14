@@ -454,18 +454,19 @@ optimization, calibration, GPU feasibility or ingredient-visibility questions.
 
 ### Component reuse register
 
-The [compatibility synthesis](architecture_compatibility_synthesis.md) now
-consumes these entries. No final topology proposal exists yet; 4A.4.4 must add
-its backward links when it uses, alters or rejects them. The synthesis narrows
-the earlier provisional options without changing their source evidence.
+The [compatibility synthesis](architecture_compatibility_synthesis.md) and
+completed [three-proposal comparison](topology_proposals.md) consume these
+entries. The links below preserve the source-to-proposal trail without
+changing the earlier component evidence. The portfolio, not this research
+register, owns the adopted P2-S decision.
 
 | Entry | Compatibility consumer | Proposal link |
 | --- | --- | --- |
-| C1 representation; C2 spatial interaction | [Source-derived taps](architecture_compatibility_synthesis.md#source-derived-feature-interfaces), [optional late mixer](architecture_compatibility_synthesis.md#optional-late-spatial-interaction) | Pending 4A.4.4 |
-| C3 fusion/position/padding | [All-canvas contract](architecture_compatibility_synthesis.md#shared-tensor-contract), [aligned fusion](architecture_compatibility_synthesis.md#compatible-route-r-fused-residual-spatial-readout) | Pending 4A.4.4 |
-| C4 readout | [Residual route](architecture_compatibility_synthesis.md#compatible-route-r-fused-residual-spatial-readout), [query route](architecture_compatibility_synthesis.md#compatible-route-q-class-queries-with-a-pooled-context-path), [label identity](architecture_compatibility_synthesis.md#label-identity-and-vocabulary-projection) | Pending 4A.4.4 |
-| C5 supporting layers; C6 cost | [Initialization](architecture_compatibility_synthesis.md#initialization-trainability-and-reproducibility), [scaling estimates](architecture_compatibility_synthesis.md#topology-preserving-sml-envelope) | Pending 4A.4.4 |
-| C7 interpretation | [Interface/diagnostic limits](architecture_compatibility_synthesis.md#integration-obligations-discovered-not-implemented), [proposal handoff](architecture_compatibility_synthesis.md#handoff-to-4a44) | Pending 4A.4.4 |
+| C1 representation; C2 spatial interaction | [Source-derived taps](architecture_compatibility_synthesis.md#source-derived-feature-interfaces), [optional late mixer](architecture_compatibility_synthesis.md#optional-late-spatial-interaction) | [Common encoder](topology_proposals.md#common-specification-for-all-three-proposals); [P3 retains late mixing](topology_proposals.md#p3--late-spatial-interaction-before-ingredient-query-readout), P1/P2 omit it. |
+| C3 fusion/position/padding | [All-canvas contract](architecture_compatibility_synthesis.md#shared-tensor-contract), [aligned fusion](architecture_compatibility_synthesis.md#compatible-route-r-fused-residual-spatial-readout) | [P1 aligned fusion](topology_proposals.md#p1--fused-residual-spatial-readout); [P2 scale-separated memory](topology_proposals.md#p2--dual-scale-ingredient-query-readout-with-pooled-context); P3 adds specified positions. |
+| C4 readout | [Residual route](architecture_compatibility_synthesis.md#compatible-route-r-fused-residual-spatial-readout), [query route](architecture_compatibility_synthesis.md#compatible-route-q-class-queries-with-a-pooled-context-path), [label identity](architecture_compatibility_synthesis.md#label-identity-and-vocabulary-projection) | [P1 residual](topology_proposals.md#p1--fused-residual-spatial-readout), [P2/P3 learned queries](topology_proposals.md#p2--dual-scale-ingredient-query-readout-with-pooled-context); grouping/text/query self-attention excluded. |
+| C5 supporting layers; C6 cost | [Initialization](architecture_compatibility_synthesis.md#initialization-trainability-and-reproducibility), [scaling estimates](architecture_compatibility_synthesis.md#topology-preserving-sml-envelope) | [Shared conventions](topology_proposals.md#common-specification-for-all-three-proposals), [nine size estimates](topology_proposals.md#scale-and-resource-comparison); only P2-S adopted, no size campaign. |
+| C7 interpretation | [Interface/diagnostic limits](architecture_compatibility_synthesis.md#integration-obligations-discovered-not-implemented), [proposal handoff](architecture_compatibility_synthesis.md#handoff-to-4a44) | [Qualitative gates](topology_proposals.md#qualitative-gates-and-selection-rationale) and [implementation/comparison obligations](topology_proposals.md#implementation-and-comparison-handoff); no visibility or isolated attention-effect claim. |
 
 ## Primary-source register
 

@@ -1,9 +1,9 @@
 # Experimental model portfolio
 
 **Created:** 2026-09-07
-**Last updated:** 2026-09-07
-**Status:** Active and binding family selection; implementation unverified
-**Decision:** 4A-D1 — established families
+**Last updated:** 2026-09-08
+**Status:** Active and binding portfolio selection; implementation unverified
+**Decisions:** 4A-D1 — established families; 4A-D2 — custom attention topology
 
 ## Decision and scope
 
@@ -14,8 +14,10 @@ respectively. Their expected value is a research hypothesis, not a prediction
 of which model will win on Yummly.
 
 ResNet and DINOv2 remain the already-used comparison anchors. The third new
-category, a custom attention architecture, remains to be designed and selected
-in 4A.4. Swin V2 is the first alternative to reconsider if MaxViT fails its
+category is **P2-S, dual-scale ingredient-query readout with pooled context**,
+using an intact EfficientNetV2-S encoder under [4A-D2](#4a-d2--custom-attention-topology).
+It is a custom readout composition, not a newly pretrained backbone or a claim
+of scientific novelty. Swin V2 is the first alternative to reconsider if MaxViT fails its
 implementation gate; it is not a third selected family or an automatic swap.
 This decision does not choose the reference selector `M_ref` or the ingredient
 subset, which retain their separate 4B and Phase 3 owners.
@@ -24,9 +26,10 @@ This document owns portfolio decisions. The
 [benchmark](benchmark_decisions.md) and
 [comparative methodology](model_comparison_methodology.md) still govern data,
 metrics, HPO, vocabulary controls, and final evaluation. Detailed literature
-evidence remains in the [candidate collection](../research/topics/experimental_model_candidates/README.md).
+evidence remains in the [candidate collection](../research/topics/experimental_model_candidates/README.md)
+and [custom-design collection](../research/topics/custom_attention_model_design/README.md).
 
-## Evidence and decision method
+## Established-family evidence and decision method
 
 The decision uses the five dossiers and their
 [comparative synthesis](../research/topics/experimental_model_candidates/comparative_synthesis.md),
@@ -169,7 +172,104 @@ common frozen mode for the pair or revise the claim explicitly to a comparison
 of different adaptation protocols. Do not call that an isolated architecture
 effect. Neither fallback has yet been measured locally.
 
-## Falsifiable comparisons and interpretation
+## 4A-D2 — Custom attention topology
+
+**Adopted:** 2026-09-08. Select **P2-S, dual-scale ingredient-query readout
+with pooled context**, from the [three topology proposals](../research/topics/custom_attention_model_design/topology_proposals.md).
+P1's fused residual weighting and P3's additional late spatial mixer remain
+retained research alternatives, not extra models to implement or automatic
+fallbacks. The selection uses the O1 brief, C1--C7 evidence and compatibility
+analysis at `993a166`, plus the proposal's dated primary-source recheck. No
+candidate execution, HPO or validation/test outcome influenced it.
+
+### Rationale and falsifiable claim
+
+The question is whether ingredient-specific access to intermediate and coarse
+features adds useful ranking information beyond the same trunk's pooled
+readout. P2 retains separate scales and independently learned selection/value
+projections plus a direct pooled context path. P1 is simpler but couples
+selection to its class score on an already fused map; P3 adds an unestablished
+spatial-interaction benefit and a further control. The
+[qualitative comparison](../research/topics/custom_attention_model_design/topology_proposals.md#qualitative-gates-and-selection-rationale)
+records why P2 is preferred without claiming it will outperform either one.
+
+**H-C:** P2's complete readout can improve the ranking/resource trade-off over
+the same pretrained EfficientNetV2-S with GAP/linear output under matched
+data, transform, adaptation, loss and training policy. No useful benefit would
+weaken this hypothesis; gains confined to prevalent/contextual labels would
+not support its narrower local-evidence interpretation. Direct food decoder
+counterevidence remains relevant, not overridden by the design choice.
+
+The established EfficientNet run supplies a portfolio comparator. It is a
+matched head control only if the relevant policies are actually matched;
+independent HPO does not guarantee that. The comparison tests the **whole
+head**, including added capacity and scales, not attention in isolation.
+An attention-specific claim needs a separately budgeted operator-level control.
+No extra control campaign or P1/P3 training is mandated by this decision.
+
+### Adopted construction and scale contract
+
+The exact tensor equations are the [route-Q specification](../research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md#compatible-route-q-class-queries-with-a-pooled-context-path),
+instantiated by [P2](../research/topics/custom_attention_model_design/topology_proposals.md#p2--dual-scale-ingredient-query-readout-with-pooled-context)
+and the values below. These references specify planned behavior, not current
+implementation facts.
+
+| Field | Binding starting choice |
+| --- | --- |
+| Encoder/pretraining | Intact TorchVision EfficientNetV2-S `features`, `EfficientNet_V2_S_Weights.IMAGENET1K_V1`, all original buffers; no stock classifier or pretrained custom head. |
+| Input/padding | Same 224×224 aspect-preserving fit/center-pad and ImageNet normalization as 4A-D1; process the full canvas without a content mask. Shared exact transform realization is Phase 5 work. |
+| Feature interface | Original stages executed once; `features[5]` F16 `(B,160,14,14)` and `features[7]` F32 `(B,1280,7,7)` as side outputs. |
+| Memory | Separate bias-free 1×1 projections to D, row-major flattening, affine token LayerNorm (`eps=1e-5`), two learned scale embeddings; concatenate 196+49 tokens. No new coordinate positions or late spatial mixer. |
+| Label readout | One learned query per ordered label, `G(L)=L`; pre-norm cross-attention/ratio-four GELU FFN blocks, final LayerNorm and class-wise biased linear logits. No query self-attention, grouping, text embeddings or label graph. |
+| Context and output | F32 GAP plus newly initialized biased `Linear(1280,L)`; add context and query logits with fixed coefficients one; return only `(B,L)` raw logits. No probability mixture or visibility decomposition is implied. |
+| S / M / L | `(D,h,Tq)=(128,4,1)/(256,8,2)/(384,12,3)`; fixed head width 32, taps, paths and FFN ratio. Only width/heads/repeated query blocks scale. |
+| Initial scale and adaptation | **S**, full encoder and readout fine-tuning. M/L are documented capacity options, not required training runs or an automatic HPO sweep. |
+| Resource fallback | **S**, same checkpoint/topology with frozen encoder in eval mode and all new modules trainable. There is no smaller declared scale; this changes adaptation, not model size. |
+| New-module initialization | Xavier-uniform gain-one conv/linear weights, zero biases; initialize Q/K/V as separate projections even if later packed; LayerNorm weight one/bias zero; learned query/scale embeddings independent normal `std=0.02`. Never reinitialize loaded feature weights. Save seed and initialization order. |
+| Regularization boundary | Zero added dropout in the reference custom modules; retain original backbone operations. Any later dropout locations/rates must be a recorded protocol change, not an implicit library default. Loss/LR/decay/augmentation remain Phase 6 choices. |
+| Implementation route | Public PyTorch/TorchVision operators with attributed Query2Label-inspired composition, not wholesale research launchers/private helpers; pin versions, source notices and actual weight artifact in Phase 5. |
+
+At `L=165`, scalar deductions give S/M/L totals of
+20,814,874 / 22,423,706 / 26,395,162 parameters. S includes 637,386 new
+parameters and about 0.058 G dominant head MACs/image, in addition to the
+unchanged trunk. These are not measured memory, speed or effectiveness.
+The [resource evidence](../research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md#dominant-compute-and-activation-pressure)
+supports a plausible route, not an 8 GB guarantee.
+
+### Fallback, implementation gate and interpretation
+
+Phase 5 begins with S resource smoke checks and may use frozen S if full
+tuning is infeasible under the declared physical-batch/precision policy. Hold
+normalization and stochastic encoder state fixed in that mode. Match adaptation
+in any mechanism comparison or explicitly report different protocols. Do not
+freeze a randomly initialized substitute trunk, remove a path, change feature
+taps or switch to P1/P3 under the name of a size fallback. If frozen S also
+fails its useful execution gate, reopen 4A-D2 with evidence. Promoting M/L
+requires a recorded pre-comparative protocol revision, not searching sizes
+until performance improves.
+
+The [Phase 5 handoff checklist](../research/topics/custom_attention_model_design/topology_proposals.md#implementation-and-comparison-handoff)
+is required: artifact/licence pinning, offline config/checkpoint reconstruction,
+B1 and L=1/50/165 shapes, both-path gradients and label-order invariants,
+transform/state checks, numerical attention checks, actual full-step memory
+and timing. Configuration save/load must include the custom fields rather
+than relying on BaseModel's common-key whitelist.
+
+Grad-CAM hooks must refer to actual forward-path modules and preserve input
+gradients even with a frozen encoder. Existing feature factorization assumes
+standalone concept vectors and is not compatible with query-conditioned
+classification by default. Require a capability-aware dashboard path or an
+explicitly qualified diagnostic adapter; do not expose an unrelated linear
+layer as if it were the model's full classifier. Attention maps do not prove
+ingredient presence or localization.
+
+The one-seed and Q1--Q4 methodology is unchanged. A reduced-vocabulary run
+rebuilds label-indexed tensors and trains anew with transferred full-task
+hyperparameters; it is not a sliced checkpoint. `M_ref` and ingredient
+selection remain outside 4A-D2. Completing this design does not pass Data 2.4
+or the Phase 5 gates.
+
+## Established-family comparisons and interpretation
 
 | Hypothesis | Minimal later comparison | Result that weakens or fails to support it |
 | --- | --- | --- |
@@ -198,9 +298,9 @@ separate Q1–Q4 rules in the comparative methodology.
 
 | Recipient | Reusable evidence or gap | Required next outcome |
 | --- | --- | --- |
-| 4A.4 problem/evidence synthesis | Both chosen models ultimately pool away spatial locations; weak labels and cuisine priors remain unresolved | A bounded custom objective that names what changes and what stays controlled |
-| 4A.4 component research | C1 efficient convolution/SE; C5 local/grid attention; C2 shifted windows; C4 query/group decoding; C3 pretraining/geometry lessons | Source-backed component choices and incompatibilities; no obligation to combine all of them |
-| 4A.4 design comparison | Class-specific readout or multi-scale evidence may be useful, but small images and co-occurrence limit interpretation | Three distinct topology proposals with S/M/L scaling, then one selected topology and necessary ablations |
+| 4A.4 problem/evidence synthesis (completed) | Both chosen models ultimately pool away spatial locations; weak labels and cuisine priors remain unresolved | [O1 brief](../research/topics/custom_attention_model_design/problem_evidence_synthesis.md) retains the bounded custom objective. |
+| 4A.4 component research (completed) | C1 efficient convolution/SE; C5 local/grid attention; C2 shifted windows; C4 query/group decoding; C3 pretraining/geometry lessons | [Component record](../research/topics/custom_attention_model_design/attention_component_evidence.md) and [compatibility synthesis](../research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md) retain evidence, counterevidence and interfaces. |
+| 4A.4 design comparison (completed) | Class-specific readout or multi-scale evidence may be useful, but small images and co-occurrence limit interpretation | [Three proposals](../research/topics/custom_attention_model_design/topology_proposals.md) support 4A-D2 and its custom implementation/diagnostic gates. |
 | Phase 5 artifact gate | Explicit weight enums and maintained constructors | Pinned package/source version, exact weight URL/hash, licence notices, offline load and checkpoint round trip |
 | Phase 5 interface gate | Common logits/readout/input contract | Shape and gradient checks, preprocessing verification on representative train images, saved normalization state, working visualization hooks |
 | Phase 5 resource gate | 8 GB, initial full tuning, bounded frozen fallback | Peak allocated/reserved memory and step time including loss, optimizer state and backward; feasible physical batch, precision and normalization policy |
@@ -215,8 +315,9 @@ saved running statistics is implied by this decision.
 If either family has no useful executable route after its fallback, reopen
 4A-D1 with the failed gate and its evidence. Reconsider Swin first for MaxViT's
 spatial slot; any replacement remains a recorded two-family decision. Phase 5
-engineering work may begin for these families when its DataModule prerequisite
-passes; the custom-model decision and overall 4A completion remain pending.
+engineering work may begin when its DataModule prerequisite passes. Research
+handoffs for the established pair and the selected custom topology are now
+available; none of their implementation/resource gates has been passed here.
 
 ## Source verification and limitations
 
@@ -237,13 +338,16 @@ Its indexed primary text was available during this review; direct full-text
 retrieval was rate-limited. The review does not add new quantitative claims from
 it. Existing papers and rejected candidates remain retained research evidence.
 
-No weights were downloaded or models run. Hashes, resource measurements,
-training stability, and Yummly effectiveness remain unverified. Completing
-4A.3 means that the portfolio decision and handoff are explicit, not that
-4A.4, Phase 5, or the benchmark have been completed.
+The 2026-09-08 custom decision additionally uses the
+[dated proposal verification](../research/topics/custom_attention_model_design/topology_proposals.md#inputs-evidence-and-decision-method)
+and reproducible scalar arithmetic. No weights were downloaded or models run.
+Hashes, resource measurements, training stability, and Yummly effectiveness
+remain unverified. The completed 4A research establishes an explicit portfolio
+and handoff, not a completed Phase 5 or benchmark.
 
 ## Decision history
 
 | Date | Decision | Basis |
 | --- | --- | --- |
 | 2026-09-07 | Adopted 4A-D1: EfficientNetV2-S and MaxViT-T, shared readout/input starting contract, explicit within-family fallback; retained Swin as first spatial reserve | Completed five-candidate research, current problem constraints, bounded official-source inspection, and portfolio complementarity |
+| 2026-09-08 | Adopted 4A-D2: P2-S dual-scale ingredient-query readout with pooled context, intact EfficientNetV2-S initialization and same-S frozen-encoder fallback; retained P1/P3 as research alternatives | Completed brief/component/compatibility evidence and exactly three topology proposals; qualitative O1 fit, bounded cost, explicit falsification and engineering handoff; no candidate performance used |
