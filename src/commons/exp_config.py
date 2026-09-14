@@ -45,6 +45,7 @@ DEF_EXP_CONFIG = {
         "momentum": None,
         "weight_decay": None,
         "use_swa": False,
+        "log_per_ingredient_metrics": False,
         "lr_scheduler": None,  #  this works only with BaeWithSchedulerLGNM
         "lr_scheduler_params": {
         },

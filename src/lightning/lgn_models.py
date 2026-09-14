@@ -4,6 +4,7 @@ import lightning as lgn
 from lightning.pytorch.utilities.types import OptimizerLRScheduler
 import torch
 from torchmetrics import Metric, MetricCollection
+from torchmetrics.classification import MultilabelF1Score, MultilabelPrecision, MultilabelRecall
 import inspect
 import math
 
@@ -20,7 +21,8 @@ class BaseLGNM(lgn.LightningModule):
                  weight_decay: Optional[float] = None, use_swa: bool = False,
                  metrics: Optional[Type[Metric] | Dict[str, Type[Metric] | Dict[str, Dict[str, Any] | Type[Metric]]]
                                    ] = None,
-                 hparams_to_register: Optional[List[str]] = None):
+                 hparams_to_register: Optional[List[str]] = None,
+                 log_per_ingredient_metrics: bool = False):
         """
         Initialize the BaseLGNM class
         :param model: underlying model (torch model instance)
@@ -50,6 +52,7 @@ class BaseLGNM(lgn.LightningModule):
         self.momentum_val = momentum
         self.weight_decay_val = weight_decay
         self.use_swa = use_swa
+        self.log_per_ingredient_metrics = log_per_ingredient_metrics
         self.metrics_config = self._parse_metrics_config(metrics)  # dict to metrics class pointer and their parameters
         self.model_name = model.PRETTY_NAME
 
@@ -62,10 +65,16 @@ class BaseLGNM(lgn.LightningModule):
                     {"loss_fn": self.loss_fn}, {"weighted_loss": self.weighted_loss}, {"lgn_model_type": self.__class__},
                     {"use_swa": self.use_swa},
                     {"torch_model": self._model.to_config()}, {"metrics": self.metrics_config},
-                    {"num_classes": self.num_classes}]
+                    {"num_classes": self.num_classes},
+                    {"log_per_ingredient_metrics": self.log_per_ingredient_metrics}]
 
         if hparams_to_register is not None:
-            hparams = [hparam for hparam in hparams if list(hparam.keys())[0] in hparams_to_register]
+            always_persist = {"log_per_ingredient_metrics"}
+            hparams = [
+                hparam for hparam in hparams
+                if list(hparam.keys())[0] in hparams_to_register
+                or list(hparam.keys())[0] in always_persist
+            ]
 
         register_hparams(self, hparams)
         self._init_effective_batch_size()
@@ -74,6 +83,16 @@ class BaseLGNM(lgn.LightningModule):
         self.train_metrics = metrics.clone(prefix="train_")
         self.val_metrics = metrics.clone(prefix="val_")
         self.test_metrics = metrics.clone(prefix="test_")
+
+        per_ingredient_metrics = self._init_per_ingredient_metrics()
+        if per_ingredient_metrics is None:
+            self.train_per_ingredient_metrics = None
+            self.val_per_ingredient_metrics = None
+            self.test_per_ingredient_metrics = None
+        else:
+            self.train_per_ingredient_metrics = per_ingredient_metrics.clone()
+            self.val_per_ingredient_metrics = per_ingredient_metrics.clone()
+            self.test_per_ingredient_metrics = per_ingredient_metrics.clone()
 
     def startup_model(self, datamodule: BaseDataModule):
         if not self.prepared:
@@ -115,6 +134,45 @@ class BaseLGNM(lgn.LightningModule):
             metrics[metric_name] = metric_conf['type'](**metric_conf['init_params'])
             # metrics[metric_name].persistent(True)
         return metrics
+
+    def _init_per_ingredient_metrics(self) -> Optional[MetricCollection]:
+        if not self.log_per_ingredient_metrics:
+            return None
+
+        common_params = {
+            "num_labels": self.num_classes,
+            "threshold": 0.5,
+            "average": "none",
+        }
+        return MetricCollection({
+            "precision": MultilabelPrecision(**common_params),
+            "recall": MultilabelRecall(**common_params),
+            "f1": MultilabelF1Score(**common_params),
+        })
+
+    @staticmethod
+    def _update_per_ingredient_metrics(metrics: Optional[MetricCollection], y_pred: torch.Tensor,
+                                       y: torch.Tensor) -> None:
+        if metrics is not None:
+            metrics.update(y_pred, y.int())
+
+    def _log_per_ingredient_metrics(self, split: str, metrics: Optional[MetricCollection]) -> None:
+        if metrics is None:
+            return
+        if not any(getattr(metric, "_update_count", 0) for metric in metrics.values()):
+            return
+
+        for metric_name, metric_values in metrics.compute().items():
+            for label_index, value in enumerate(metric_values):
+                self.log(
+                    f"{split}_per_ingredient/{metric_name}/{label_index}",
+                    value,
+                    on_step=False,
+                    on_epoch=True,
+                    prog_bar=False,
+                    logger=True,
+                )
+        metrics.reset()
 
     def _init_effective_batch_size(self):
         max_bs = self.model.max_allowed_batch_size
@@ -182,33 +240,44 @@ class BaseLGNM(lgn.LightningModule):
             else:
                 raise ValueError(f"Loss type {self.loss_fn} not recognized")
 
-    def _base_step(self, batch, metrics) -> Tuple[float, Dict[str, torch.Tensor]]:
+    def _base_step(self, batch, metrics, per_ingredient_metrics: Optional[MetricCollection] = None
+                   ) -> Tuple[float, Dict[str, torch.Tensor]]:
         X, y = batch
         y_pred = self.model(X)
         loss = self.loss_fn(y_pred, y)
         metrics_out = metrics(y_pred, y)
+        self._update_per_ingredient_metrics(per_ingredient_metrics, y_pred, y)
 
         return loss, metrics_out
 
     def training_step(self, batch, batch_idx):
-        loss, metrics_out = self._base_step(batch, self.train_metrics)
+        loss, metrics_out = self._base_step(batch, self.train_metrics, self.train_per_ingredient_metrics)
 
         self.log("train_loss", loss, prog_bar=True, on_epoch=True, on_step=True)
         self._log_metric_collections(metrics_out, self.train_metrics.prefix)
         return loss
 
     def validation_step(self, batch, batch_idx):
-        loss, metrics_out = self._base_step(batch, self.val_metrics)
+        loss, metrics_out = self._base_step(batch, self.val_metrics, self.val_per_ingredient_metrics)
 
         self.log("val_loss", loss, prog_bar=True, on_epoch=True, on_step=False)
         self._log_metric_collections(metrics_out, self.val_metrics.prefix)
         return loss
 
     def test_step(self, batch, batch_idx):
-        loss, metrics_out = self._base_step(batch, self.test_metrics)
+        loss, metrics_out = self._base_step(batch, self.test_metrics, self.test_per_ingredient_metrics)
         self.log("test_loss", loss, prog_bar=True, on_epoch=True, on_step=False)
         self._log_metric_collections(metrics_out, self.test_metrics.prefix)
         return loss
+
+    def on_train_epoch_end(self) -> None:
+        self._log_per_ingredient_metrics("train", self.train_per_ingredient_metrics)
+
+    def on_validation_epoch_end(self) -> None:
+        self._log_per_ingredient_metrics("val", self.val_per_ingredient_metrics)
+
+    def on_test_epoch_end(self) -> None:
+        self._log_per_ingredient_metrics("test", self.test_per_ingredient_metrics)
 
     def predict_step(self, batch, batch_idx) -> Any:
         X, y = batch
@@ -270,13 +339,14 @@ class BaseLGNM(lgn.LightningModule):
         weighted_loss = config.get('weighted_loss', None)
         if weighted_loss is None:
             weighted_loss = config.get('weight_loss', False) # for compatibility with old configs
-
+        log_per_ingredient_metrics = config.get('log_per_ingredient_metrics', False)
 
         torch_model_config = config['torch_model']
         torch_model = torch_model_config['type'].load_from_config(torch_model_config)
 
         lgn_model = cls(torch_model, lr, batch_size, optimizer, loss_fn, momentum=momentum, weighted_loss=weighted_loss,
-                        weight_decay=weight_decay, use_swa=use_swa, metrics=metrics, **lgn_model_kwargs)
+                        weight_decay=weight_decay, use_swa=use_swa, metrics=metrics,
+                        log_per_ingredient_metrics=log_per_ingredient_metrics, **lgn_model_kwargs)
         return lgn_model
 
     def load_weights_from_checkpoint(self, checkpoint_path: str, weights_only: bool = True,
@@ -295,11 +365,14 @@ class BaseWithSchedulerLGNM(BaseLGNM):
                  lr_scheduler_params: Optional[Dict[str, Any]] = None, use_swa: bool = False,
                  metrics: Optional[Type[Metric] | Dict[str, Type[Metric] | Dict[str, Dict[str, Any] | Type[Metric]]]
                                    ] = None,
-                 hparams_to_register: Optional[List[str]] = None):
+                 hparams_to_register: Optional[List[str]] = None,
+                 log_per_ingredient_metrics: bool = False):
 
         # by using a scheduler we can increase the starting LR
-        super().__init__(model, lr, batch_size, optimizer, loss_fn, weighted_loss, momentum, weight_decay, use_swa,
-                         metrics, hparams_to_register)
+        super().__init__(model, lr, batch_size, optimizer, loss_fn, weighted_loss=weighted_loss, momentum=momentum,
+                         weight_decay=weight_decay, use_swa=use_swa, metrics=metrics,
+                         hparams_to_register=hparams_to_register,
+                         log_per_ingredient_metrics=log_per_ingredient_metrics)
 
         if lr_scheduler_params is None:
             lr_scheduler_params = {}

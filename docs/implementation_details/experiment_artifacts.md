@@ -95,7 +95,7 @@ Consequences:
 
 ### Verified extraction
 
-Both sampled local files were fully decoded as protobuf record streams. W&B stores histograms as counts and bin edges, sometimes as separate nested-key history entries rather than one JSON object. This is consistent with its documented [histogram representation and display](https://docs.wandb.ai/models/track/log/media#histograms).
+Both sampled local files were fully decoded as protobuf record streams. A separate [parameter export probe](../../src_scratches/experiment_comparison_audit/export_parameter_example.py) preserves the original bins and counts for all 168 logged observations of ResNet trial 72's `model.layer4.1.conv2.weight`, with recorded history coordinates and approximate derived moments; its [JSON example](../../src_scratches/experiment_comparison_audit/parameter_histogram_example.json) verifies that the plotted distributions are available numerically, without accessing the remote website. W&B stores histograms as counts and bin edges, sometimes as separate nested-key history entries rather than one JSON object. This is consistent with its documented [histogram representation and display](https://docs.wandb.ai/models/track/log/media#histograms).
 
 | Sample | Parameter tensors | Gradient tensors | Samples per parameter / gradient series |
 | --- | --- | --- | --- |
@@ -127,6 +127,10 @@ Useful descriptive outcomes include distribution widening/narrowing, weight-scal
 
 The audited trainer selects `16-mixed`. In Lightning 2.6.1, `MixedPrecision.pre_backward` scales the loss, while `optimizer_step` unscales gradients after the closure/backward. W&B 0.28.0's `TorchHistory._hook_variable_gradient_stats` uses `parameter.register_hook` during backward. Thus these gradient histograms capture scaled backward gradients, before optimizer-time unscaling and any clipping.
 
+The scale issue is independent of histogram information loss. For finite vectors and a positive scalar `s_t`, the logged backward gradient is `g_logged(t) = s_t * g(t)`: its mean, RMS and norm scale by `s_t`, and its variance by `s_t**2`. Dynamic scale changes therefore confound absolute gradient magnitudes over time, fixed near-zero/explosion thresholds, cross-run gradient magnitudes, and gradient-to-weight ratios. The scaler does not directly multiply the model weights or the ordinary logged loss.
+
+A positive global rescaling does not change a finite vector's direction: cosine similarity would remain invariant if the coordinate-aligned vectors had been retained. Similarly, ratios between layer gradient norms cancel a common scale only when their capture stage and scale actually match. AMP with correctly unscaled optimizer gradients is normal training behavior; recording gradients at the wrong stage is an observability limitation, not evidence that training is broken.
+
 Both inspected checkpoints contain `MixedPrecision.scale=4194304`. No scale history is present among the scalar keys of either sampled W&B session. A scale stored at one checkpoint cannot be applied to the entire earlier gradient trajectory. The observed expansion of histogram magnitudes must not by itself be diagnosed as exploding gradients.
 
 With gradient accumulation, a backward hook can also describe a microbatch contribution rather than the final accumulated optimizer gradient. W&B's histogram code removes non-finite values and skips tensors without finite values, so a missing histogram or finite histogram does not establish absence of numerical failures.
@@ -135,14 +139,16 @@ A future exact diagnostic stream should record gradients after unscaling and acc
 
 ### What cannot be reconstructed
 
-Histograms discard coordinate identity. They cannot recover exact per-weight trajectories, coordinate-wise update vectors, gradient cosines across steps, exact gradient/weight alignment, or update-to-weight ratios. A permutation can preserve the histogram while changing every coordinate.
+Histograms discard coordinate identity. They cannot recover exact per-weight trajectories, coordinate-wise update vectors, gradient cosines across steps, exact gradient/weight alignment, or update-to-weight ratios. A permutation can preserve the histogram while changing every coordinate. For example, `g1 = [1, -1]` and `g2 = [-1, 1]` have identical exact histograms but cosine similarity -1; comparing `g1` with itself gives the same pair of histograms and cosine +1. This ambiguity remains even without AMP and even with perfectly precise bins.
+
+For future runs, exact scalar diagnostics can be computed before discarding coordinate identity and then logged without writing every tensor to disk. Gradient norms require the unscaled accumulated gradient; actual update norms require before/after weight values; successive-gradient cosines require a previous compatible gradient vector in memory. Their selected layers, cadence, memory cost and optimizer-stage semantics must be explicit.
 
 Exact tensor differences can be computed only between retained, compatible checkpoints. The sparse, performance-selected snapshot set cannot reconstruct every update or the distance from initialization when the initial state is absent.
 
 ## Feasibility conclusion and implementation boundary
 
-An offline JSON plus interactive HTML comparison is feasible from local artifacts. Scalar analysis can cover all trials now; W&B distribution analysis is demonstrated for both families and needs robust multi-session ingestion before general use. Exact optimizer dynamics and newly computed prediction metrics require separate instrumentation or evaluation.
+An offline JSON plus interactive HTML comparison is feasible from local artifacts. The maintained [experiment comparison command](experiment_comparison.md) now covers all scalar trials and read-only W&B distribution trajectories with explicit multi-session reconciliation. Exact optimizer dynamics and newly computed prediction metrics still require separate instrumentation or evaluation.
 
 The implementation should declare what each result measures, its unit/granularity, source coverage, comparison cohort, and whether it is recorded, estimated, unavailable or reconstructed. Aggregate curves must show the number of contributing trials at each point and separate completion/pruning cohorts. Common-budget comparisons and full-trajectory comparisons answer different questions.
 
-The [scratch feasibility handoff](../../src_scratches/experiment_comparison_audit/README.md) contains the proposed module layout and a staged implementation boundary. The [general plan](../general_plan.md#7-results-comparison) retains the final benchmark gate; this preparatory audit does not release final comparison. Binding evaluation choices remain in [model_comparison_methodology.md](../project_objective/model_comparison_methodology.md) and [benchmark_decisions.md](../project_objective/benchmark_decisions.md).
+The [operational feature plan](../plans/experiment_comparison.md) owns the optional Lightning-model ingredient-logging requirement, proposed module layout, implementation sequence and completion criteria. The [scratch audit directory](../../src_scratches/experiment_comparison_audit/README.md) retains the reproducible probes and generated evidence. The [general plan](../general_plan.md#7-results-comparison) retains the final benchmark gate; this preparatory audit does not release final comparison. Binding evaluation choices remain in [model_comparison_methodology.md](../project_objective/model_comparison_methodology.md) and [benchmark_decisions.md](../project_objective/benchmark_decisions.md).

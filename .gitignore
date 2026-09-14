@@ -168,6 +168,7 @@ experiments/
 .idea/
 _cache/
 lightning_logs/
+analysis_outputs/
 fit-profiler.txt
 study.pkl
 

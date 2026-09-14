@@ -37,7 +37,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 4 | Model research | **In progress** | 4A is complete with two established families and one selected custom topology; continue the independent 4B selector decision. |
 | 5 | Additional model implementation | **Deferred** | All three 4A research handoffs are available; prepare their implementation plan after the remaining DataModule readiness checks. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
-| 7 | Results comparison | **Deferred** | Resume after comparable benchmark runs are complete. |
+| 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
 
 ## 1. Project foundation
@@ -347,7 +347,21 @@ Do not launch final training or tuning on the legacy 182-label split. Resume aft
 
 This macro-section covers the frozen evaluation protocol, statistical comparison, qualitative analysis, and final interpretation of model behavior.
 
-A preparatory [artifact and observability audit](implementation_details/experiment_artifacts.md) was completed on 2026-09-14 for the existing target-v5 ResNet and DINOv2 campaigns. It confirms local JSON/HTML analysis feasibility and records mixed loss objectives, pruning, restart conflicts, sparse checkpoint selection and AMP-scaled gradient limitations. The comparison application and final benchmark analysis remain unimplemented/deferred; this audit does not establish final model rankings or satisfy the resume gate.
+A preparatory [artifact and observability audit](implementation_details/experiment_artifacts.md) was completed on 2026-09-14 for the existing target-v5 ResNet and DINOv2 campaigns. It records mixed loss objectives, pruning, restart conflicts, sparse checkpoint selection and AMP-scaled gradient limitations. The [comparison application](implementation_details/experiment_comparison.md) is implemented and validated on those campaigns; final benchmark analysis remains deferred, and the exploratory report does not establish final model rankings or satisfy the resume gate.
+
+### 7.1 Experiment observability and comparison tooling
+
+**Status:** Done
+
+Optional per-ingredient logging is implemented in the Lightning model, defaulting to false, together with an offline N-experiment comparison command that generates strict JSON and self-contained HTML. The tool reconciles current CSV, TensorBoard, Optuna, W&B and checkpoint evidence, separates objective cohorts and retains audited limitations.
+
+**Dependencies:** Existing artifact formats and the canonical Lightning configuration/logging path. The implementation remains independent of final test-set access and does not release the benchmark resume gate.
+
+**Operational plan:** [`plans/experiment_comparison.md`](plans/experiment_comparison.md). The maintained runtime contract is [`implementation_details/experiment_comparison.md`](implementation_details/experiment_comparison.md).
+
+**Completion gate:** Met on 2026-09-14 through focused unit/integration tests, a bounded Lightning fit, and an end-to-end run over both 100-trial target-v5 campaigns with selected W&B/checkpoint evidence.
+
+**Next action:** Use the tool for exploratory and future benchmark-ready artifact inspection; resume final comparison only after Macro-section 6 produces comparable selected runs.
 
 ### Methodological decisions already completed
 
@@ -381,7 +395,7 @@ The comparison has complete provenance, reports finite-sample uncertainty withou
 
 ### Next action
 
-Implement metric-level tests with small hand-verifiable multilabel examples while the data benchmark is being built.
+Use the completed [comparison tooling](implementation_details/experiment_comparison.md) for artifact inspection while retaining the final-comparison resume gate. Once Macro-section 6 produces comparable selected runs, freeze the final table schema before test evaluation.
 
 ## 8. Thesis writing
 
@@ -499,6 +513,9 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-09-08 | Experimental-model research completion | Completed the three-topology comparison and adopted the custom P2-S design alongside the established pair; all three research handoffs include explicit implementation/resource gates. | Subphase 4A **Done**; Macro-section 4 **In progress** for independent 4B; Phase 5 remains **Deferred** for Data readiness | [Portfolio](project_objective/experimental_model_portfolio.md), [three proposals](research/topics/custom_attention_model_design/topology_proposals.md), [completed 4A plan](plans/experimental_model_research.md) |
 
 | 2026-09-14 | Results-comparison preparation | Audited all 200 target-v5 trial configurations, CSV/TensorBoard inventories and relevant Optuna studies; demonstrated local W&B histogram extraction for one session per family and inspected selected checkpoints. Recorded persistence semantics and analysis limits without training or final evaluation. | Preparatory feasibility audit **Done**; Macro-section 7 final comparison remains **Deferred** | [Artifact contract and audit](implementation_details/experiment_artifacts.md), [reproducible probe](../src_scratches/experiment_comparison_audit/README.md) |
+
+| 2026-09-14 | Results-comparison planning | Opened the operational plan for optional Lightning-model ingredient logging and local N-experiment JSON/HTML analysis, using recorded parameter histograms and preserving audited comparison limits. | Work package 7.1 **Pending**; final comparison remains **Deferred** | [Feature plan](plans/experiment_comparison.md) |
+| 2026-09-14 | Experiment observability and comparison tooling | Implemented optional epoch-level ingredient precision/recall/F1 in the Lightning model and the local N-experiment comparator; validated all 200 target-v5 trials, resumed TensorBoard histories, selected W&B parameter trajectories and checkpoint metadata. | Work package 7.1 **Done**; final comparison remains **Deferred** | [Implementation contract](implementation_details/experiment_comparison.md), [completed plan](plans/experiment_comparison.md) |
 
 ## Tracker maintenance rules
 

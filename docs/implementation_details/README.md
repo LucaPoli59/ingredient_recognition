@@ -16,6 +16,7 @@ Implementation-detail documents describe verified current behavior. They must id
 - [`models.md`](models.md) describes the vision-model implementations available under `src/models` and their training-pipeline contracts.
 - [`ingredient_mapping_rules.md`](ingredient_mapping_rules.md) is the long-term authority for custom `ingredients` to `ingredients_target` mappings, exclusions, multi-target expansions, retained distinctions, and collision boundaries.
 - [`experiment_artifacts.md`](experiment_artifacts.md) records the audited target-v5 experiment artifacts, scalar/histogram semantics, restart and checkpoint-selection behavior, and offline analysis limits.
+- [`experiment_comparison.md`](experiment_comparison.md) defines the optional Lightning-model per-ingredient logging contract and the maintained local N-experiment JSON/HTML comparison command.
 - [`image_data_loading.md`](image_data_loading.md) defines the image DataModule's platform-aware pinned-memory policy, configuration persistence, and worker-setting boundaries.
 
 When a new implementation contract is added, use a focused descriptive filename, add it to this index, and link it from the relevant plan or project-objective document when it changes a tracked decision or completion gate.

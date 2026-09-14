@@ -1,7 +1,7 @@
 # Implementation plans
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-08
+**Last updated:** 2026-09-14
 
 This directory contains the execution plans for concrete project implementations. These plans translate work packages from the project-wide [`general_plan.md`](../general_plan.md) into bounded technical tasks, verification steps, dependencies, and completion criteria.
 
@@ -15,6 +15,7 @@ The 4A and 4B plans may cite shared research evidence, but their criteria, decis
 
 ## Completed plans
 
+- [`experiment_comparison.md`](experiment_comparison.md) is the completed Work package 7.1 plan for optional Lightning-model ingredient logging and offline intra/inter-experiment comparison with JSON/HTML reports.
 - [`experimental_model_research.md`](experimental_model_research.md) retains the completed 4A discovery, five-candidate research, established-pair selection and custom-design decision. The portfolio hands three categories to Phase 5; 4B remains independent.
 - [`custom_attention_model.md`](custom_attention_model.md) retains all four completed 4A.4 research subphases, the three-topology comparison and the selected P2-S implementation handoff. Completion does not certify runtime feasibility.
 

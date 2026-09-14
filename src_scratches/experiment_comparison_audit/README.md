@@ -7,6 +7,8 @@ This directory retains a bounded exploratory audit requested before implementing
 
 - `audit.py`: reads all 200 target-v5 configurations/CSV/TensorBoard inventories, replays relevant Optuna studies from a disposable journal copy, decodes one full local W&B session per family, and opens one selected checkpoint per family on CPU with `weights_only=True`.
 - `inventory.json`: generated evidence, including source hashes, trial coverage, Optuna states/distributions, per-file TensorBoard validation values, sampled histogram summaries and checkpoint metadata.
+- [`export_parameter_example.py`](export_parameter_example.py): exports the full logged histogram trajectory for `model.layer4.1.conv2.weight` from the audited ResNet trial 72, preserving original bin edges/counts and computing explicitly approximate moments.
+- [`parameter_histogram_example.json`](parameter_histogram_example.json): 168 observations across epochs 0–39, each with 64 bins accounting for 2,359,296 parameter elements; includes source SHA-256, enclosing history coordinates and quantile-bin intervals.
 - Reviewed current behavior and limitations belong to [experiment_artifacts.md](../../docs/implementation_details/experiment_artifacts.md).
 
 Run from the repository root with the project's existing ML environment:
@@ -17,57 +19,21 @@ python src_scratches/experiment_comparison_audit/audit.py
 
 The probe never initializes a training model, accesses the dataset images, calls W&B's remote API, synchronizes runs, or edits experiment data. It writes only its generated inventory. It uses W&B internal reader details verified against 0.28.0 and makes explicit assumptions about the two current campaigns, including a validation/checkpoint cadence of two epochs. It is intended for reproducibility of this audit, not arbitrary input validation. The source journal is copied before Optuna opens it.
 
-## Proposed production structure — not implemented
+The parameter example can be reproduced separately:
 
-Honor the requested `scripts/analise_exp/<name>/` convention, for example:
-
-```text
-scripts/analise_exp/compare_experiments/
-    __main__.py
-    cli.py
-    schema.py
-    discovery.py
-    readers/
-        config.py
-        csv_metrics.py
-        tensorboard.py
-        optuna.py
-        wandb_local.py
-        checkpoints.py
-    normalization.py
-    comparability.py
-    analysis/
-        curves.py
-        hyperparameters.py
-        distributions.py
-        aggregation.py
-    reporting/
-        json_report.py
-        html_report.py
-        templates/
+```bash
+python src_scratches/experiment_comparison_audit/export_parameter_example.py
 ```
 
-There is already a differently named `scripts/analize_exps/` collection of exploratory notebooks. Treat these as historical references; do not execute notebooks that mutate/rebuild Optuna studies, or rename them as part of this work.
+Its source SHA-256 is checked before and after extraction. The exported bins are the original logged values; mean, standard deviation and RMS use bin midpoints, and quantiles are represented by containing-bin intervals. The example deliberately covers one parameter and one session; it does not merge restarted runs or recover individual tensor coordinates. Existing parameter histograms provide a usable storage/analysis tradeoff for the initial comparison feature.
 
-The intended CLI accepts N experiment paths, an optional explicit W&B root and Optuna journal, an output directory, the comparison metric/direction and any declared cohort filters. With the current layout, discover sibling shared logs by default and allow overrides for exported/moved campaigns. If only an experiment folder is supplied without its shared logs, still generate a scalar report and explicitly mark absent W&B/Optuna evidence.
+## Planning handoff
 
-## Proposed data and output contract
+**Status:** Superseded as an implementation-planning source on 2026-09-14.
 
-Represent `experiment -> numbered trial -> session -> observations`, with aliases and source files recorded separately. Retain original and canonical model/layer keys; split epoch, optimizer step, W&B history step and timestamp into different fields. Carry metric definition, loss weighting, model family, frozen/trainable status, data/vocabulary identity and provenance.
+The requirements, module layout, CLI proposal, logging contract and staged implementation scope previously collected here were consolidated into [the operational comparison plan](../../docs/plans/experiment_comparison.md). That completed plan retains the execution history; the maintained runtime contract is [the experiment comparison implementation detail](../../docs/implementation_details/experiment_comparison.md). It retains the decision history, including the move of the optional logging flag from the internal torch model to the Lightning model, with default false.
 
-Proposed JSON sections: `schema_version`, `inputs`, `provenance`, `coverage`, `comparability_groups`, `experiments`, `intra_experiment`, `inter_experiment`, and `limitations`. Statistics carry their method, units, observation count, approximation status and missing-data reason. Emit strict JSON with null plus a reason for undefined values, not NaN or fabricated zeroes.
-
-Generate HTML exclusively from that JSON, with experiment/trial/layer filters, sortable tables, scalar curves, distribution evolution, and visible coverage/limitations. A self-contained Plotly-based HTML is a plausible option using the existing Python plotting stack; no server is intrinsically required. Full raw W&B history should not be embedded by default. Keep numerical calculations on full observations; any display downsampling must be identified and must not affect statistics.
-
-## Staged scope
-
-1. **Reliable input normalization:** data-only configuration decoding, trial alias exclusion, study mapping, multi-file TensorBoard recovery, session conflict detection, CSV reconciliation, W&B internal-format adapter and explicit coverage. Use the actual restart/pruning cases as integration fixtures.
-2. **Scalar and hyperparameter comparison:** observed/checkpoint/last selection semantics; best epoch, early-to-late change, common-interval learning-curve area, late-window level/slope/variability, descriptive train/validation gap, observed target-crossing time, conditional hyperparameter associations and distributions across trials. Declare windows, direction, budget and censoring. Target not reached is censored/unknown, not a late success.
-3. **Distribution analysis:** streamed approximate moments, quantile bands, near-zero/tail bounds, common-support distribution distances and temporal summaries. Preserve original histogram counts/edges when needed in a sidecar; compare corresponding tensors only within compatible architectures. Use normalized block/role summaries for cross-family questions, separating frozen parameters and trainable gradients.
-4. **JSON/HTML integration:** render the same validated results, with structured limitations and cohort sizes. Cache by input identity, reader version and analysis settings.
-5. **Optional additional training instrumentation/evaluation:** exact unscaled accumulated gradients, AMP scale/non-finite counters, coordinate-wise updates at a selected cadence, initialization/snapshot identity, prediction-level metrics and per-label trajectories. These require producer changes or checkpoint inference and are outside the initial feasibility request.
-
-No single unqualified best-model score should combine losses with different weighting, metrics with different definitions, different target spaces, or unequal search/epoch budgets. Trials sample hyperparameters; they are not repeated-seed replicates. Report temporal and configuration sensitivity without presenting it as seed-level statistical confidence.
+This directory remains the reproducibility home for the exploratory audit scripts, raw histogram example and generated evidence. The production feature is still pending; the audit probes are not its CLI.
 
 ## Verification boundaries
 
