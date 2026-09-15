@@ -1,8 +1,8 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-08
-**Status:** Active and binding design; Macro-section 3 execution is deferred until Subphase 4B selects the reference selector, while the later benchmark also requires the independent Subphase 4A model portfolio.
+**Last updated:** 2026-09-15
+**Status:** Active and binding design; Subphase 4B has frozen the EfficientNetV2-S reference-selector protocol, Macro-section 3 is released to P1, and the later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
 
@@ -19,7 +19,8 @@ It applies to Macro-section 3, Subphases 4A and 4B, and Macro-sections 6 and 7 o
 [general_plan.md](../general_plan.md). The selection workflow remains owned by
 Macro-section 3 and its operational plan. Training implementation, hyperparameter
 optimization (HPO), and final result production remain owned by Macro-sections 6
-and 7. This document does not prescribe a particular model, numeric threshold,
+and 7. It now prescribes the model-side `M_ref` protocol under 4B-D1, but does
+not prescribe the P1 optimizer panel, numerical ingredient threshold, Phase 6
 HPO budget, or final selected vocabulary.
 
 ## Research questions
@@ -44,7 +45,7 @@ vocabulary selection.
 | Term | Meaning |
 | --- | --- |
 | V_base | The frozen 165-label FoodOn-first v5 vocabulary derived from ingredients_target. It is the common full task. |
-| M_ref | The reference selector architecture and protocol selected by Subphase 4B before Macro-section 3 resumes. It is a selection instrument, not the automatically preferred final model. |
+| M_ref | The 4B-D1 reference selector: Torchvision EfficientNetV2-S with the exact supervised ImageNet initialization, full-backbone adaptation, full-frame 384-pixel transform, independent 165-logit pooled head, and weighted BCE boundary frozen below. It is a selection instrument, not the automatically preferred final model. |
 | V_selected | A versioned, shared projection of V_base produced by Macro-section 3 with M_ref, the learnability decision profile, semantic evidence, and observability review. |
 | V_random^(r) | One deterministic random projection of V_base with the same cardinality as V_selected and support strata matched to it; r identifies the draw. |
 | H_base(m) | Hyperparameters selected for model category m on V_base using validation only and the predeclared Phase 6 budget. |
@@ -93,24 +94,68 @@ Macro-sections 6–7.
 
 ## Binding design
 
-### 1. Select the reference selector in Subphase 4B before vocabulary selection
+### 1. Freeze the reference selector in Subphase 4B before vocabulary selection
 
-Subphase 4B must choose M_ref before new v5 ingredient-selection training
-begins. The decision is based on focused model research and a declared selection
+Subphase 4B chose and froze M_ref before new v5 ingredient-selection training
+begins. The decision used focused model research and a declared selection
 protocol: scientific fit to multi-label visual learnability, availability of
 per-label score trajectories, representativeness, compute cost, and integration
-feasibility. It must not be chosen because it later produces the most favourable
-final test result or the largest selected vocabulary.
+feasibility. It was not chosen from a candidate training tournament, test
+result, or selected-vocabulary outcome.
 
-Macro-section 3 then owns the execution: it freezes the M_ref configuration,
-runs the learnability profile without test access, and produces exactly one
-shared V_selected plus the associated evidence and provenance. A different
+Macro-section 3 then owns the execution: it freezes the remaining campaign
+configuration around the binding model-side protocol, runs the learnability
+profile without test access, and produces exactly one shared V_selected plus
+the associated evidence and provenance. A different
 selected vocabulary for each model category is rejected for the primary study,
 because it would make a model comparison a comparison of different tasks.
 
 Subphase 4A independently selects the model categories for the benchmark.
 M_ref is not thereby declared the winning category; it only fixes the operational
 meaning of “learnable” for the vocabulary-selection study.
+
+#### 4B-D1 — Frozen reference-selector protocol
+
+**Adopted:** 2026-09-15. The model-side selector identity is frozen below.
+Macro-section 3 P1 owns the remaining campaign-side configuration: optimizer,
+learning rate, scheduler, fixed epoch budget, evaluation cadence, and any
+optional bounded configuration-sensitivity panel. Those choices must be
+declared before label outcomes are inspected and cannot silently revise 4B-D1.
+
+| Field | Binding choice | Consequence or implementation requirement |
+| --- | --- | --- |
+| Task and outputs | Frozen FoodOn-first `v5` train/validation split, ordered 165-label encoder, raw independent logits. Test data is unavailable. | Validation and test cannot add or reorder labels. The exact encoder classes and their hash travel with every run and checkpoint. |
+| Constructor and weights | Torchvision [`efficientnet_v2_s(weights=EfficientNet_V2_S_Weights.IMAGENET1K_V1)`](https://docs.pytorch.org/vision/0.23/models/generated/torchvision.models.efficientnet_v2_s.html) under Torchvision `0.23.0+cu129`. The official artifact URL ends in `efficientnet_v2_s-dd5fe13b.pth`; the verified file is 86,721,253 bytes with SHA-256 `dd5fe13b1d60ec15317ccc8ca158186e134d3366c3dde9cb9a4e301f2dc66c74`. | Use the exact enum, not `DEFAULT`. Preserve the URL, size, hash, Torch/Torchvision versions, [BSD notice](https://github.com/pytorch/vision/blob/v0.23.0/LICENSE), and successful offline-load check in provenance. |
+| Pretraining boundary | Supervised ImageNet-1K initialization only; no food-domain, text, label-graph, or downstream ingredient pretraining. | “Learnable” remains conditional on this visual prior and does not become an intrinsic label property or proof of direct visibility. Possible pretraining-data overlap is not established as absent. |
+| Trainability | Train every backbone, BatchNorm affine parameter, BatchNorm running statistic, and new head from the first optimizer step. Do not freeze stages, use a linear-probe warm-up, or apply layer-wise progressive unfreezing. | The selector measures acquisition under local end-to-end supervised adaptation (`P0 + A3`), not fixed-representation accessibility. The implementation must assert the trainable parameter set. |
+| Full-frame input transform | Decode as three-channel RGB, convert to a float tensor in `[0,1]`, then set the long side to 384 and round the short side to the nearest integer with half rounded up. Resize once with bilinear interpolation and antialiasing. Center-pad to 384×384 with the ImageNet mean `(0.485, 0.456, 0.406)`, assigning an odd residual pixel to the right or bottom, then normalize by mean `(0.485, 0.456, 0.406)` and standard deviation `(0.229, 0.224, 0.225)`. | The deterministic fit/pad geometry is identical for train and validation before the train-only flip, and preserves the complete image without stretching or center cropping. P2 must test landscape, portrait, square, odd-padding, and RGB-conversion cases and serialize the transform identity and parameters. This deliberately differs from the checkpoint's official center-crop evaluation transform. |
+| Primary training augmentation | Apply only `RandomHorizontalFlip(p=0.5)` after full-frame fit/pad and before normalization. Validation is deterministic and has no stochastic augmentation. No random crop, rotation, vertical flip, colour transform, `TrivialAugmentWide`, MixUp, or CutMix belongs to the primary selector configuration. | The primary learning trajectory cannot lose border evidence through augmentation. An optional P1 robustness configuration may add a separately named policy, but it cannot replace the primary or alter validation preprocessing after outcomes are seen. |
+| Independent head | Retain the stock adaptive global average pool and flattening. Retain `Dropout(p=0.2, inplace=True)`, replace only the 1000-way linear layer with a newly instantiated biased `Linear(1280, 165)`, and return raw logits. Instantiate the layer after the declared global seed using the pinned PyTorch `2.8.0` default initialization; record an initial head-state hash. | No label text, dependencies, query decoder, per-label architecture, sigmoid layer, or pretrained classifier weights enter the head (`H0`). Class count comes from the saved encoder rather than a hard-coded label list. |
+| Loss family and weighting | `BCEWithLogitsLoss(reduction="mean")` with train-only `pos_weight[c] = (N_train - P_c) / P_c`, where `P_c` is the number of positive train records for label `c`. No label smoothing, focal term, or validation/test-derived weight is allowed. | Persist the ordered positive counts, `pos_weight` vector, formula, and hash. P2 must implement this selector-specific vector rather than silently reuse the current DataModule's differently normalized [`classes_weights`](../../src/data_processing/images_recipes.py). Weighting improves sensitivity to minority positives but changes calibration; AP remains ranking evidence and later probability calibration stays validation-only. |
+| Execution boundary | Primary implementation target: true FP32, physical batch 8, no gradient accumulation, on the 8 GB development GPU. R2 measured 3,744.1 MiB peak allocated and 4,250.0 MiB peak reserved for a synthetic full forward/BCE backward/Adam step at 384 pixels. | This is engineering feasibility, not throughput or accuracy evidence. The complete instrumented pipeline must repeat the measurement. A physical-batch or precision change alters optimization/BatchNorm semantics and requires a recorded protocol revision before campaign execution. |
+| Campaign and logging handoff | Use one declared seed per configuration, a fixed epoch budget without primary-run early stopping, and per-label train/validation AP at every declared evaluation point. | P1 freezes the remaining campaign values and instrumentation before the pilot. No seed-level stability claim is permitted. |
+
+The exact resize rule can be expressed without floating ambiguity: if `W >= H`,
+set `(W', H') = (384, max(1, floor(384 * H / W + 0.5)))`; otherwise set
+`(W', H') = (max(1, floor(384 * W / H + 0.5)), 384)`. Set
+`left = floor((384 - W') / 2)`, `right = 384 - W' - left`,
+`top = floor((384 - H') / 2)`, and `bottom = 384 - H' - top`.
+Padding is applied in float space before normalization so the padded region is
+exactly zero after normalization.
+
+This selector protocol is independent from the 4A comparison protocol even
+though EfficientNetV2-S appears in both roles. The 4A portfolio currently uses
+the common 224-pixel comparison boundary and removes classifier dropout;
+4B-D1 instead uses the 384-pixel full-frame boundary and retains stock dropout.
+Configurations cannot be shared silently between those roles.
+
+The R2 smoke established only that a direct 165-logit adapter can load,
+differentiate, and fit the development GPU. The current
+[model implementation inventory](../implementation_details/models.md) does not
+yet include the EfficientNetV2 wrapper, the exact full-frame transform, per-label AP
+trajectories, or the complete provenance manifest. Macro-section 3 must
+implement and validate them; 4B-D1 must not be described as current runtime
+support until those gates pass.
 
 ### 2. Tune each model category once on the full common task
 
@@ -236,8 +281,8 @@ vocabulary decisions as uncertain.
 | Owner | Required decision or artifact | Status |
 | --- | --- | --- |
 | Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Done: established pair and custom P2-S adopted in the [portfolio](experimental_model_portfolio.md); the [completed 4A plan](../plans/experimental_model_research.md) hands implementation gates to Phase 5. Q1–Q4 are unchanged. |
-| Subphase 4B | Choose and justify M_ref. | In progress; [`reference_selector_research.md`](../plans/reference_selector_research.md) is the resume-gate plan for Macro-section 3. |
-| Macro-section 3 | Freeze the M_ref learnability protocol and produce versioned V_selected evidence. | Deferred until M_ref is selected. |
+| Subphase 4B | Choose, verify, and freeze M_ref. | Done: 4B-D1 freezes the EfficientNetV2-S model-side selector and [`reference_selector_research.md`](../plans/reference_selector_research.md) records the completed evidence and handoff. |
+| Macro-section 3 | Freeze the remaining M_ref campaign, implement the workflow, and produce versioned V_selected evidence. | In progress at P1 under [`recognizable_ingredient_selection.md`](../plans/recognizable_ingredient_selection.md). |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
 

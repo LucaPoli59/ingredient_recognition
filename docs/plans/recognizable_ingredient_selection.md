@@ -1,21 +1,26 @@
 # Recognizable ingredient selection plan
 
 **Created:** 2026-08-10
-**Last updated:** 2026-08-27
+**Last updated:** 2026-09-15
 
-This plan is the operational source of truth for Macro-section 3, **Ingredient selection**, in [`general_plan.md`](../general_plan.md). It preserves the November 2024 ResNet selection as a historical baseline and replaces its exploratory workflow with a reproducible, research-informed decision-profile study over the frozen FoodOn-first `v5` vocabulary. Macro-section 3 owns the resulting selected vocabulary, but its new execution is deferred until Subphase 4B chooses the justified reference selector. The independent Subphase 4A experiment-model shortlist is not a Phase 3 gate.
+This plan is the operational source of truth for Macro-section 3, **Ingredient selection**, in [`general_plan.md`](../general_plan.md). It preserves the November 2024 ResNet selection as a historical baseline and replaces its exploratory workflow with a reproducible, research-informed decision-profile study over the frozen FoodOn-first `v5` vocabulary. Macro-section 3 owns the resulting selected vocabulary and now executes against the frozen Subphase 4B reference selector. The independent Subphase 4A experiment-model shortlist is not a Phase 3 gate.
+
+Subphase 4B completed that dependency on 2026-09-15 by freezing the 4B-D1
+EfficientNetV2-S model-side protocol. Macro-section 3 is now active at P1. The
+independent Subphase 4A experiment-model portfolio remains outside this plan's
+selector decision.
 
 ## Progress tracker
 
-**Overall status:** Deferred
-**Current task:** Await the Subphase 4B decision that identifies and freezes the reference selector (`M_ref`).
-**Next action:** After `M_ref` is approved, freeze its `v5` configuration panel, one declared seed per configuration, budgets, AP trajectories, fixed-policy F1 diagnostics, controls, profile criteria, and output manifest before implementing or launching new experiments.
+**Overall status:** In progress
+**Current task:** P1 — freeze the remaining `v5` campaign contract around the incoming 4B-D1 EfficientNetV2-S selector.
+**Next action:** Predeclare the primary optimizer, learning rate and scheduler, fixed epoch budget, evaluation cadence, optional bounded configuration-sensitivity panel, AP/F1 measurement policy, controls, profile criteria, and output manifest before implementing or launching new experiments.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | P0 | Reconstruct the historical 2024 selection process and resolve its discrepancies | **Done** | Saved configurations, metrics, metadata, checkpoints, notebooks, launchers, journals, and the external communication archive establish the four historical stages and the exact 40-label rule. The accepted resolutions are recorded in this plan. |
-| P1 | Freeze the new selection question and experimental contract | **Deferred** | The plan adopts a profile that separates optimization, held-out generalization, and validity/mechanism evidence. Subphase 4B must first identify `M_ref`; P1 then freezes its panel and fixed F1 policy before the pilot. P3 will use the bounded pilot to freeze numerical promotion gates. |
-| P2 | Implement deterministic historical reproduction and reusable analysis | **Deferred** | Create a dedicated source package and command-line entry points after P1; notebooks become optional views, not execution state. |
+| P1 | Freeze the new selection question and experimental contract | **In progress** | The plan adopts a profile that separates optimization, held-out generalization, and validity/mechanism evidence. The [4B-D1 handoff](../project_objective/model_comparison_methodology.md#4b-d1--frozen-reference-selector-protocol) now fixes the model, weights, trainability, base transforms, head, loss boundary, and execution target. P1 must freeze the remaining campaign panel and fixed F1 policy before P2; P3 will use the bounded pilot to freeze numerical promotion gates. |
+| P2 | Implement the selector integration, deterministic historical reproduction, and reusable analysis | **Deferred** | Add the 4B-D1 model/transform and required AP/provenance extensions through canonical training APIs, then create the dedicated analysis package and thin command-line entry points. Notebooks become optional views, not execution state. |
 | P3 | Run and validate a bounded `v5` pilot | **Deferred** | Compare candidate learning-dynamics criteria and controls without test access; use the pilot to freeze the final rule. |
 | P4 | Run the full `v5` reference-selector learnability campaign | **Deferred** | Execute each frozen `M_ref` configuration once with its declared seed, preserve a complete provenance manifest, and report the resulting single-run limitation. |
 | P5 | Combine learnability with relevance and visual-observability evidence | **Deferred** | Apply the semantic, support, and annotation protocol; distinguish direct visual evidence from contextual predictability. |
@@ -24,7 +29,7 @@ This plan is the operational source of truth for Macro-section 3, **Ingredient s
 
 ## Objective
 
-Determine which ingredients in the standard `ingredients_target_v5_metadata.json` vocabulary provide a meaningful and reproducible learning target for image-based models. After Subphase 4B selects `M_ref`, the workflow must identify labels whose signal it learns, separate that evidence from validation generalization and human visual observability, and produce named experimental projections without creating a second implicit default vocabulary.
+Determine which ingredients in the standard `ingredients_target_v5_metadata.json` vocabulary provide a meaningful and reproducible learning target for image-based models. Using the frozen 4B-D1 `M_ref`, the workflow must identify labels whose signal it learns, separate that evidence from validation generalization and human visual observability, and produce named experimental projections without creating a second implicit default vocabulary.
 
 The result is not a claim that every retained ingredient is literally visible. A label may be directly visible, inferable from dish context, or learnable mainly through dataset priors. Those cases must remain distinguishable in the evidence and final tiers.
 
@@ -45,8 +50,8 @@ The result is not a claim that every retained ingredient is literally visible. A
 - Selecting model hyperparameters, thresholds, or ingredients from the test split.
 - Training one independently tuned model per ingredient by default.
 - Repeating an identical configuration across several random seeds to estimate run-to-run stability. The study has a declared single-seed-per-configuration resource limit.
-- Selecting the new vocabulary with an arbitrary historical ResNet before Subphase 4B reviews and freezes `M_ref`.
-- Making weighted loss, augmentation, or any other ablation a selection requirement before the pilot justifies it.
+- Replacing the frozen 4B-D1 selector with an arbitrary historical ResNet or revising it after inspecting label-selection outcomes.
+- Adding loss variants, stronger augmentation, or other ablations beyond the frozen 4B-D1 primary protocol as selection requirements before the pilot justifies them.
 - Rewriting legacy metadata, configurations, checkpoints, or exported results.
 - Deleting historical experiments or scripts before the retention manifest, compatibility smoke tests, and replacement parity checks are complete.
 - Replacing the shared `ingredients_target` default. Any smaller vocabulary is an explicitly named projection for a declared experiment or evaluation tier.
@@ -77,8 +82,8 @@ The minimum retained historical artifacts and the compatibility anchors are owne
 
 ## Adopted decision-profile framework
 
-**Status:** Adopted for Phase 3 planning on 2026-08-12. Its execution is
-deferred until Subphase 4B selects `M_ref`. P1 must then freeze the exact
+**Status:** Adopted for Phase 3 planning on 2026-08-12 and released for P1 on
+2026-09-15 after Subphase 4B froze `M_ref`. P1 must now freeze the remaining
 configuration panel and measurement policy; P3 will freeze numerical promotion
 gates from the bounded pilot.
 
@@ -148,12 +153,40 @@ The protocol must include the least expensive controls that answer the relevant 
 
 A shuffled-label control is optional at pilot time and becomes mandatory only if the cheaper controls cannot distinguish optimization artifacts from a learned signal.
 
-## Experimental contract to freeze in P1
+## Frozen `M_ref` handoff from Subphase 4B
+
+The binding [4B-D1 decision](../project_objective/model_comparison_methodology.md#4b-d1--frozen-reference-selector-protocol)
+is an incoming constraint, not a P1 search space. It fixes:
+
+- Torchvision EfficientNetV2-S with exact
+  `EfficientNet_V2_S_Weights.IMAGENET1K_V1` initialization and full-backbone
+  training from the first optimizer step;
+- RGB full-frame 384×384 aspect-preserving fit/pad preprocessing, bilinear
+  antialiasing, ImageNet normalization, a primary train-only horizontal flip,
+  and deterministic validation preprocessing;
+- stock global average pooling and classifier dropout followed by a new biased
+  `Linear(1280, 165)` layer initialized after the declared seed;
+- mean-reduced positive-weighted BCE, with the ordered `pos_weight` vector
+  computed only from train support; and
+- true FP32, physical batch 8, no gradient accumulation as the initial 8 GB
+  execution contract, subject to a recorded pre-campaign methodology revision
+  if the complete instrumented implementation cannot pass its resource gate.
+
+The exact checkpoint hash, resize arithmetic, padding rule, head initialization
+boundary, limitations, and provenance requirements remain authoritative in
+4B-D1. The current repository does not yet implement the complete protocol.
+P1 freezes the campaign settings below; P2 implements and tests the missing
+wrapper, transform, AP instrumentation, and manifest.
+
+## Campaign contract to freeze in P1
+
+4B-D1 has already fixed the model-side protocol. P1 must freeze all remaining
+campaign-side values before any pilot or label-outcome inspection:
 
 1. Use the frozen `v5` train and validation metadata and their saved class order; do not access test outcomes.
-2. Select `M_ref` configurations globally using validation objectives, never a different configuration chosen after inspecting each label.
+2. Define one global primary optimizer, learning rate, scheduler, and configuration-selection rule; never choose a different configuration after inspecting each label.
 3. Use one primary `M_ref` configuration and an optional bounded robustness panel. Run each configuration once with one declared seed; do not present this as evidence of seed-level stability or of reproducibility across stochastic training runs.
-4. Keep batch sampling, epoch budget, transforms, loss, threshold, logging cadence, and early-stopping behavior explicit and comparable.
+4. Inherit the 4B-D1 physical batch, precision, transform, head, and weighted-loss boundary. Freeze batch sampling, a fixed epoch budget without primary-run early stopping, evaluation cadence, threshold policy, and any separately named augmentation robustness variant. Do not silently substitute the repository defaults.
 5. Log per-label train and validation AP at every declared evaluation point, including support, prevalence, and class index; persist raw or regenerable scores sufficient to rebuild validation precision-recall summaries.
 6. If F1 is reported, declare one threshold-selection and decision policy before analysis. Log its train and validation trajectory separately; never maximise it per epoch or label for selection.
 7. Persist the exact model, optimizer, scheduler, loss-weighting state, transform identity, seed, code revision, environment, metadata hashes, and encoder classes in a run manifest.
@@ -162,7 +195,7 @@ A shuffled-label control is optional at pilot time and becomes mandatory only if
 
 ## Planned architecture and artifacts
 
-The exact module names are frozen during P1, but the implementation boundary is fixed now:
+The exact module names may be finalized during P2, but the implementation boundary is fixed now:
 
 - `src/ingredient_selection/` will contain reusable ingestion, trajectory metrics, selection rules, validation, and plotting data preparation;
 - `scripts/ingredient_selection/` will contain thin command-line entry points for historical reproduction, campaign analysis, and report generation;
@@ -256,6 +289,7 @@ This plan is complete only when:
 | 2026-08-12 | Removed repeated-seed training from the `v5` selection protocol | Available time does not permit multiple runs with identical hyperparameters. Each configuration will use one declared seed; the analysis substitutes temporal/configuration checks and finite-validation-sample uncertainty where feasible, and does not claim seed-level stability. |
 | 2026-08-12 | Deferred new vocabulary-selection execution until the then-undivided Macro-section 4 chose `M_ref` (now owned by Subphase 4B) | Learnability is conditional on the selector. The historical ResNet remains a baseline, not an automatic selector; Phase 3 retains ownership of producing the shared selected vocabulary after the model-research decision. |
 | 2026-08-27 | Narrowed the resume dependency to Subphase 4B | Macro-section 4 now separates experiment-model research (4A) from reference-selector research (4B). Phase 3 needs the frozen `M_ref`, not completion of the independent experiment-model shortlist. |
+| 2026-09-15 | Accepted the completed 4B-D1 EfficientNetV2-S handoff and resumed Macro-section 3 at P1 | The selector's exact model-side protocol and interpretation boundary are now binding. P1 owns only the remaining campaign settings and measurement contract; implementation and pilot execution remain P2 and P3. |
 
 ## Related documentation
 
@@ -265,5 +299,6 @@ This plan is complete only when:
 - [`../project_objective/benchmark_decisions.md`](../project_objective/benchmark_decisions.md)
 - [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md)
 - [`../project_objective/model_comparison_methodology.md`](../project_objective/model_comparison_methodology.md)
+- [`reference_selector_research.md`](reference_selector_research.md)
 - [`../research/topics/label_learnability/learnability_assessment.md`](../research/topics/label_learnability/learnability_assessment.md)
 - [`../../README_PROJECT_KNOWLEDGE.md`](../../README_PROJECT_KNOWLEDGE.md)

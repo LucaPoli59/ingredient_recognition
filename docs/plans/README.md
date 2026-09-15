@@ -1,15 +1,14 @@
 # Implementation plans
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-14
+**Last updated:** 2026-09-15
 
 This directory contains the execution plans for concrete project implementations. These plans translate work packages from the project-wide [`general_plan.md`](../general_plan.md) into bounded technical tasks, verification steps, dependencies, and completion criteria.
 
 ## Active plans
 
 - [`data_ingredient_refactor/`](data_ingredient_refactor/README.md) contains the active Yummly Data plan and its controlled-vocabulary evaluation for Work packages 2.1b–2.4.
-- [`reference_selector_research.md`](reference_selector_research.md) is the active Subphase 4B plan for researching and freezing the reference selector that gates Macro-section 3.
-- [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the deferred Macro-section 3 plan for historical reproduction, v5 learnability analysis, visual-observability evidence, and final named ingredient tiers.
+- [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the active Macro-section 3 plan for the EfficientNetV2-S selector campaign, historical reproduction, v5 learnability analysis, visual-observability evidence, and final named ingredient tiers.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 
@@ -18,6 +17,7 @@ The 4A and 4B plans may cite shared research evidence, but their criteria, decis
 - [`experiment_comparison.md`](experiment_comparison.md) is the completed Work package 7.1 plan for optional Lightning-model ingredient logging and offline intra/inter-experiment comparison with JSON/HTML reports.
 - [`experimental_model_research.md`](experimental_model_research.md) retains the completed 4A discovery, five-candidate research, established-pair selection and custom-design decision. The portfolio hands three categories to Phase 5; 4B remains independent.
 - [`custom_attention_model.md`](custom_attention_model.md) retains all four completed 4A.4 research subphases, the three-topology comparison and the selected P2-S implementation handoff. Completion does not certify runtime feasibility.
+- [`reference_selector_research.md`](reference_selector_research.md) retains the completed Subphase 4B discovery, three-protocol shortlist, EfficientNetV2-S decision, exact 4B-D1 freeze, and Macro-section 3 handoff. Completion does not implement or train the selector.
 
 ## Scope
 

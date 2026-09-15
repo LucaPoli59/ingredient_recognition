@@ -1,7 +1,7 @@
 # Yummly data and benchmark decisions
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-27
+**Last updated:** 2026-09-15
 **Status:** Active and binding
 
 ## Purpose
@@ -24,7 +24,8 @@ The existing 65,146-record metadata remains valid for historical experiments. It
 | D8 | What happens to `<UNK>`? | Remove it from new multi-label vocabularies and outputs because it has no positive training target. Preserve saved behavior for any legacy experiment selected for retention. |
 | D9 | Which primary metrics are used? | Report macro mean average precision and micro F1 together; neither is sufficient alone. |
 | D10 | Where are thresholds and calibration selected? | Fit thresholds, calibration, and other selection-time parameters on validation data only. Keep the test split unavailable to selection decisions. |
-| D11 | How are ingredient selection and model comparison coupled? | Subphase 4A chooses the experiment model categories, Subphase 4B independently chooses the reference selector, and Macro-section 3 then produces one shared selected vocabulary. Compare model categories on common full and selected tasks; test vocabulary reduction through transferred-hyperparameter and support-matched random-vocabulary controls; keep selected-task local adaptation separate. |
+| D11 | How are ingredient selection and model comparison coupled? | Subphase 4A chooses the experiment model categories, Subphase 4B independently freezes the reference selector, and Macro-section 3 then produces one shared selected vocabulary. Compare model categories on common full and selected tasks; test vocabulary reduction through transferred-hyperparameter and support-matched random-vocabulary controls; keep selected-task local adaptation separate. |
+| D12 | Which protocol defines reference-selector learnability? | Use the 4B-D1 EfficientNetV2-S protocol: exact supervised ImageNet-1K weights, full-backbone adaptation, full-frame 384-pixel preprocessing, an independent pooled 165-logit head, and train-only positive-weighted BCE. Macro-section 3 must implement the missing wrapper/instrumentation and freeze the remaining campaign settings before inspecting label outcomes. |
 
 ## D1: target-field contract
 
@@ -148,9 +149,9 @@ Also report per-label support and per-label metrics, with explicit treatment of 
 ## D11: comparative training and vocabulary-reduction methodology
 
 The project uses one shared, versioned selected vocabulary rather than a
-different learned vocabulary per model category. Subphase 4B first chooses
-the justified reference selector, while Subphase 4A independently chooses the
-experiment model categories; Macro-section 3 then owns the selection
+different learned vocabulary per model category. Subphase 4B has frozen the
+justified reference selector under D12, while Subphase 4A independently chooses
+the experiment model categories; Macro-section 3 then owns the selection
 workflow and produces the shared projection. Macro-section 6 tunes every model
 category on the full v5 task, uses its unchanged full-task configuration for the
 selected-vocabulary ablation, and runs support-matched random-vocabulary
@@ -164,6 +165,32 @@ ownership boundaries are in
 document is authoritative for this decision; the active Macro-section 3 plan
 owns the selection implementation and the later Macro-sections 6 and 7 own
 training and final-comparison execution.
+
+## D12: frozen reference-selector boundary
+
+The reference selector is Torchvision EfficientNetV2-S initialized with the
+exact `EfficientNet_V2_S_Weights.IMAGENET1K_V1` artifact and trained end to end
+from the first step. It consumes the frozen ordered 165-label `v5` task,
+preserves the complete image through the declared 384-pixel aspect-preserving
+fit/pad transform, and emits independent raw logits through the stock global
+average pool, stock classifier dropout, and a new biased `Linear(1280, 165)`
+layer. The loss family is mean-reduced `BCEWithLogitsLoss` with per-label
+`pos_weight` computed from train positives only.
+
+The exact artifact hash, resize/padding arithmetic, augmentation boundary,
+head initialization, FP32 physical-batch-8 execution boundary, interpretation,
+and Phase 3 provenance requirements are authoritative in
+[`model_comparison_methodology.md`](model_comparison_methodology.md#4b-d1--frozen-reference-selector-protocol).
+This decision fixes a measurement instrument, not the final benchmark winner.
+It neither proves that an ingredient is directly visible nor establishes that
+EfficientNetV2-S is the best-performing `v5` model.
+
+The repository does not yet implement this complete protocol. Macro-section 3
+P1 must freeze the remaining optimizer, learning-rate/scheduler, epoch budget,
+evaluation cadence, and optional bounded robustness panel before outcome
+inspection; P2 then implements the wrapper, transforms, AP logging, manifest,
+and validation. Any change to D12 after label outcomes are inspected is a new
+versioned methodology decision, not an implementation convenience.
 
 ## Automatic readiness checklist
 
