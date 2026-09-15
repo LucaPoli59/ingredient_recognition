@@ -1,7 +1,7 @@
 # Reference-selector research and decision plan
 
 **Created:** 2026-08-12
-**Last updated:** 2026-08-27
+**Last updated:** 2026-09-15
 **Linked macro-section and subphase:** [Subphase 4B, Reference-selector research](../general_plan.md#4b-reference-selector-research)
 **Overall status:** In progress
 
@@ -67,18 +67,18 @@ This subphase does not:
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** R1 — reduce the completed R0 inventory to a bounded shortlist
-and state the selector decision priority.
-**Next action:** Retain at most three scientifically distinct protocols that
-pass the mandatory gates; do not create candidate dossiers or run comparative
-training.
+**Current task:** R2 — verify only the decision-relevant uncertainties of the
+three R1 finalists and choose `M_ref` without comparative training.
+**Next action:** Inspect the current source and complete bounded load, forward,
+backward, provenance, and 8 GB resource checks only where they can change the
+choice among the R1 finalists.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | R0 | Discover candidate families and map them to the frozen `v5` task, repository, instrumentation needs, and compute boundary. | **Done** | The dated [discovery and integration inventory](../research/discovery/2026-08-22/README.md) retain the broad landscape and repository-backed intake tiers. No selector was chosen. |
 | R0.1 | Conduct the broad candidate-landscape discovery. | **Done** | The [2026-08-22 discovery](../research/discovery/2026-08-22/README.md) covers supervised, visual self-supervised, vision-language, food-domain, and structured multi-label families with explicit interpretation boundaries. |
 | R0.2 | Map credible candidates to the current `v5` task and integration path. | **Done** | The [candidate and instrumentation inventory](../research/discovery/2026-08-22/candidate_integration_inventory.md) records verified, conditional, and deferred paths plus the common observability gap. |
-| R1 | Freeze a shortlist of at most three distinct protocols and the decision priority. | **Pending** | Use the existing R0 evidence; group exclusions by reason instead of producing one dossier per rejected candidate. |
+| R1 | Freeze a shortlist of at most three distinct protocols and the decision priority. | **Done** | Retained supervised ResNet-50 full fine-tuning, supervised EfficientNetV2-S full fine-tuning, and frozen DINOv2 ViT-B/14-register linear transfer. The [R1 checkpoint](#r1-completion-checkpoint--2026-09-15) records gate outcomes, grouped exclusions, claim boundaries, and the R2 priority without selecting `M_ref`. |
 | R2 | Verify the finalists only as needed, compare them, and choose `M_ref`. | **Pending** | Produce one concise comparison table. Use current-source inspection and a bounded load/forward/resource smoke where an uncertainty can change the decision; do not run comparative training. |
 | R3 | Freeze the selected protocol and hand it to Macro-section 3. | **Pending** | Record the exact model, weights/pretraining, trainability, transforms, head, resource boundary, limitations, and Phase 3 instrumentation requirements; synchronize the binding methodology and plans. |
 
@@ -146,6 +146,93 @@ Compare finalists in this priority order:
 Do not invent a numeric score. If two finalists remain effectively equivalent,
 prefer the maintained, lower-cost, easier-to-audit protocol instead of opening
 another experiment campaign solely to break the tie.
+
+#### R1 completion checkpoint — 2026-09-15
+
+R1 retains exactly three protocols from the R0 intake. They cover the smallest
+set of measurement choices needed to decide between historical supervised
+continuity, a maintained modern supervised learner, and visual
+self-supervised linear accessibility. This is an eligibility shortlist, not a
+ranking or an `M_ref` decision. Candidate accuracy, selected-vocabulary size,
+Subphase 4A portfolio membership, and test evidence were not inspected.
+
+At this stage a gate pass means that R0 and current repository evidence expose
+no known disqualifying condition and that any remaining uncertainty has a
+bounded R2 verification path. R2 must reject a finalist if its exact protocol
+cannot satisfy that verification; plausible parameter counts or historical
+runs do not by themselves certify current 8 GB feasibility.
+
+| ID | Protocol carried into R2 | Distinct measurement and rationale | R1 gate outcome | Bounded R2 uncertainty |
+| --- | --- | --- | --- | --- |
+| `R1-SC` | Torchvision ResNet-50 with traceable ImageNet-1K supervised weights, full-backbone fine-tuning (`P0 + A3`), and one independent 165-logit pooled head (`H0`). | Supervised continuity control. It most closely preserves the historical question “can an end-to-end image learner begin learning this label?” while removing the old F1-only decision rule. | **Eligible.** The current wrapper and retained experiments provide the lowest-risk task and integration path. The shared AP/provenance layer is still required. | Pin the exact weight enum instead of `DEFAULT`; verify transforms, output shape, a backward pass, peak VRAM and elapsed time on current `v5`, and confirm the configuration fields that Macro-section 3 must capture. |
+| `R1-MS` | Torchvision EfficientNetV2-S with traceable ImageNet-1K supervised weights, full-backbone fine-tuning (`P0 + A3`), and one independent 165-logit pooled head (`H0`). | Single modern supervised representative. It keeps the prior, adaptation, and head comparable to `R1-SC` while testing whether the instrument should prioritize historical continuity or a more recent efficiency-oriented architecture. It has the lowest published parameter count in the R0 maintained-library pool and needs no new third-party stack; neither fact is treated as accuracy or memory evidence. | **Eligible for bounded verification.** The canonical image/logit contract is direct and the integration path is proportionate; official scale metadata is not treated as measured memory evidence. | Confirm the exact weight-native input policy, instantiate the minimal 165-logit protocol, and measure full-fine-tuning memory/time with the common head and artifacts. |
+| `R1-VS` | DINOv2 ViT-B/14 with registers, a frozen visual-self-supervised backbone (`P1 + A0`), and a newly learned independent 165-logit linear head (`H0`). Downstream ingredient text is forbidden. | Distinct representation-accessibility instrument. It asks whether each label is linearly accessible in a broad visual prior at much lower adaptation cost; it does **not** establish that the local end-to-end learner can acquire the representation. | **Eligible only through the bounded reproducibility repair already identified by R0.2.** Earlier project execution supports integration plausibility, not current provenance or resource certification. | Pin upstream source revision and checkpoint checksum, make pretrained/frozen state truthful, freeze preprocessing and register policy, verify 165-score output and head-only gradients, and measure current resource use. |
+
+EfficientNetV2-S is retained independently of its separate Subphase 4A role.
+For R1 it represents only the parameter-efficient modern supervised route
+selected from the verified torchvision pool; the 4A portfolio decision is
+neither evidence for nor against selecting it as `M_ref`.
+
+The four mandatory gates were applied as follows. **Pass-to-R2** means that a
+credible bounded path exists, not that R2's current-environment confirmation
+has already happened.
+
+| Mandatory gate | `R1-SC` | `R1-MS` | `R1-VS` | R2 release condition |
+| --- | --- | --- | --- | --- |
+| Task fit | **Pass:** canonical images, 165 independent logits, no label text or dependencies. | **Pass:** same canonical independent-logit contract. | **Pass:** canonical images and learned independent logits; downstream text is prohibited. | Reject any implementation that changes the split, label order, or `H0` output semantics. |
+| Evidence path | **Pass-to-R2:** shared Lightning instrumentation can attach named train/validation AP and run provenance. | **Pass-to-R2:** the same shared layer applies after minimal wrapper integration. | **Pass-to-R2:** the shared layer applies to the learned head and its scores. | Confirm a common attachment and serialization path for the required artifacts; implementing that shared layer remains a Macro-section 3 prerequisite. |
+| Operational fit | **Pass-to-R2:** strongest historical integration evidence, but no current `v5` measurement. | **Pass-to-R2:** compact maintained model with a direct adapter; full-training memory is unmeasured. | **Pass-to-R2:** historical frozen-backbone execution exists; current resource state is unmeasured. | Record current load/forward/backward compatibility, peak VRAM, physical batch/accumulation, and elapsed time. |
+| Reproducibility | **Pass-to-R2:** exact torchvision enum must replace the moving `DEFAULT` alias. | **Pass-to-R2:** exact enum, transform, and new wrapper configuration must be serialized. | **Pass-to-R2 after named repair:** upstream revision, checkpoint checksum, preprocessing, register and freeze state must be explicit. | A finalist becomes selectable only when every identifier and trainability state reconstructs without test or downstream feedback. |
+
+##### Grouped exclusions
+
+- **Redundant supervised representatives:** DenseNet remains broken in the
+  model-owned transform contract and adds no distinct measurement principle.
+  ConvNeXt Tiny and Swin V2 Tiny are credible maintained alternatives, but
+  carrying them alongside EfficientNetV2-S would turn R2 into a supervised
+  architecture tournament without changing the `P0 + A3 + H0` claim. If
+  `R1-MS` fails a mandatory gate, reopen only this maintained-library slot and
+  choose a replacement by the same scientific-fit, auditability, and resource
+  rules.
+- **Unresolved external priors:** compact DINOv3 and SigLIP 2 do not remove a
+  clear limitation of the verified DINOv2 path proportionately. Their access,
+  licence/dependency, checkpoint, memory, and interpretation conditions remain
+  unresolved; CLIP would duplicate the generic vision-language question.
+  Downstream text-prototype scoring is outside the task-fit gate.
+- **Unsupported or disproportionate pretraining paths:** MAE/FCMAE, I-JEPA,
+  Food2K, Recipe1M+/VLPCook, and FoodSeg/ReLeM lack the complete compact,
+  maintained, traceable checkpoint and overlap/taxonomy path required here.
+  They remain research evidence, not R2 finalists.
+- **Confounded heads and interfaces:** spatial label-query heads,
+  dependency-aware heads, graph/set decoders, and generative food VLMs change
+  the meaning of learnability or exceed the output/compute contract. They may
+  become separately controlled diagnostics, but cannot replace the independent
+  `H0` selector in this decision.
+- **Subphase 4A-only designs:** MaxViT-T and the custom P2-S topology do not
+  enter through portfolio membership. They lack a verified current selector
+  path, and P2-S deliberately changes the head measurement. Their experiment
+  roles remain untouched by this exclusion.
+
+##### Decision priority handed to R2
+
+R2 must first choose the scientific claim, not the architecture with the most
+promising reputation:
+
+1. decide whether the primary instrument should measure end-to-end label
+   acquisition under local supervised adaptation (`R1-SC` or `R1-MS`) or
+   linear accessibility under a fixed visual self-supervised prior (`R1-VS`);
+2. within that claim, prefer the protocol able to expose interpretable
+   per-label train/validation AP without downstream text or label-dependency
+   information;
+3. require exact, auditable pretraining, transform, trainability, data, seed,
+   and environment provenance; and
+4. only after the scientific and evidence questions are effectively tied,
+   prefer the lower-cost maintained protocol with lower integration risk.
+
+The different claim made by `R1-VS` must not be collapsed into an accuracy
+comparison with the two full-fine-tuning protocols. R2 may use source
+inspection and technical smoke evidence to resolve the choice, but not a
+candidate training or AP tournament.
 
 ### R2. Decision-relevant verification and selection
 
@@ -224,3 +311,4 @@ This plan is complete only when:
 | 2026-08-22 | Completed R0.2 and handed intake tiers to the decision stage. | The inventory identified credible and conditional paths, deferred disproportionate ones, and isolated a shared instrumentation/provenance gap without selecting `M_ref`. |
 | 2026-08-27 | Compressed the remaining R1–R5 sequence into R1–R3. | R0 already provides broad evidence. The decision only needs a bounded shortlist, decision-relevant verification, one frozen selector, and its Phase 3 handoff; exhaustive candidate dossiers, a numeric rubric, and separate decision/synchronization stages do not advance the objective. |
 | 2026-08-27 | Reclassified the plan as Subphase 4B and separated it from Subphase 4A. | Shared discoveries and technical evidence may support both streams, but this plan owns only the selector criteria, `M_ref` decision, and Phase 3 handoff. |
+| 2026-09-15 | Completed R1 with three protocol-level finalists and an ordered decision rule. | ResNet-50 full fine-tuning preserves supervised continuity, EfficientNetV2-S is the sole modern supervised representative, and frozen DINOv2 B/14-register exposes the distinct linear-accessibility question. Grouped exclusions avoid an architecture tournament; no `M_ref` was selected and no candidate was trained. |
