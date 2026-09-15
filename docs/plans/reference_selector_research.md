@@ -67,11 +67,11 @@ This subphase does not:
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** R2 — verify only the decision-relevant uncertainties of the
-three R1 finalists and choose `M_ref` without comparative training.
-**Next action:** Inspect the current source and complete bounded load, forward,
-backward, provenance, and 8 GB resource checks only where they can change the
-choice among the R1 finalists.
+**Current task:** R3 — freeze the selected EfficientNetV2-S protocol and hand
+it to Macro-section 3 without reopening an architecture comparison.
+**Next action:** Pin the exact selector weights, transform, trainability, head,
+loss, resource boundary, and provenance contract; then synchronize the binding
+methodology and the Macro-section 3 execution plan.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -79,7 +79,7 @@ choice among the R1 finalists.
 | R0.1 | Conduct the broad candidate-landscape discovery. | **Done** | The [2026-08-22 discovery](../research/discovery/2026-08-22/README.md) covers supervised, visual self-supervised, vision-language, food-domain, and structured multi-label families with explicit interpretation boundaries. |
 | R0.2 | Map credible candidates to the current `v5` task and integration path. | **Done** | The [candidate and instrumentation inventory](../research/discovery/2026-08-22/candidate_integration_inventory.md) records verified, conditional, and deferred paths plus the common observability gap. |
 | R1 | Freeze a shortlist of at most three distinct protocols and the decision priority. | **Done** | Retained supervised ResNet-50 full fine-tuning, supervised EfficientNetV2-S full fine-tuning, and frozen DINOv2 ViT-B/14-register linear transfer. The [R1 checkpoint](#r1-completion-checkpoint--2026-09-15) records gate outcomes, grouped exclusions, claim boundaries, and the R2 priority without selecting `M_ref`. |
-| R2 | Verify the finalists only as needed, compare them, and choose `M_ref`. | **Pending** | Produce one concise comparison table. Use current-source inspection and a bounded load/forward/resource smoke where an uncertainty can change the decision; do not run comparative training. |
+| R2 | Verify the finalists only as needed, compare them, and choose `M_ref`. | **Done** | Selected supervised EfficientNetV2-S with full-backbone fine-tuning and an independent 165-logit pooled head. The [R2 checkpoint](#r2-completion-checkpoint--2026-09-15) records the source audit, bounded synthetic smoke, interpretation boundary, exclusions, and remaining R3 freeze items; no candidate training or accuracy comparison was run. |
 | R3 | Freeze the selected protocol and hand it to Macro-section 3. | **Pending** | Record the exact model, weights/pretraining, trainability, transforms, head, resource boundary, limitations, and Phase 3 instrumentation requirements; synchronize the binding methodology and plans. |
 
 ## Dependencies and fixed constraints
@@ -255,6 +255,65 @@ Choose one `M_ref` from this table. Briefly group excluded alternatives by the
 gate or trade-off that mattered. If no finalist passes, reopen only the failed
 gate or intake category rather than repeating the broad discovery.
 
+#### R2 completion checkpoint — 2026-09-15
+
+R2 selects **`M_ref = R1-MS`**, namely Torchvision EfficientNetV2-S with
+supervised ImageNet-1K initialization, full-backbone adaptation (`P0 + A3`),
+and an independent pooled 165-logit head (`H0`). The architecture and
+adaptation identity are decided here; R3 still owns the exact protocol freeze
+and binding Macro-section 3 handoff.
+
+The choice was made from source inspection at repository commit `861abff` and
+a bounded engineering smoke on the current development environment. The smoke
+used synthetic inputs and targets only: one warm-up Adam step followed by three
+timed forward, BCE-with-logits backward, and optimizer steps in FP32, physical
+batch 8, no gradient accumulation, and candidate-native canvas sizes. It did
+not load `v5` examples, inspect train/validation AP, access the test split, or
+compare predictive quality.
+
+| ID | Exact inspected route | Adaptation, head, input, and meaning of “learnable” | Integration, provenance, and licence boundary | Current 8 GB evidence |
+| --- | --- | --- | --- | --- |
+| `R1-SC` | Torchvision ResNet-50; the [current wrapper](../../src/models/resnet.py) resolves `ResNet50_Weights.DEFAULT` to `IMAGENET1K_V2`, whose official 0.23 contract uses a 224 crop and 232 resize. | Full-backbone training; global pooled 2048 → 165 linear head; current model-owned train/validation transforms use a 224 canvas. A positive result would mean that this historically continuous supervised learner can acquire the label under local end-to-end adaptation. | Already wrapped, but `DEFAULT` and the wrapper's aspect-ratio-changing tuple resize are not a sufficient exact protocol. R3 would have to pin the enum and transform semantics. Torchvision code is BSD-licensed; inspected checkpoint URL ends in `resnet50-11ad3fa6.pth`, SHA-256 `11ad3fa62ca79e40addfd354a8ec4b7c75143b3038b8d2a807fbc68deab379ca`. | **Pass.** 23,846,117 total/trainable parameters; 1,015.2 MiB peak allocated, 1,174.0 MiB peak reserved; 0.0663 s/step in the bounded 224 smoke. |
+| `R1-MS` | Torchvision EfficientNetV2-S with exact `EfficientNet_V2_S_Weights.IMAGENET1K_V1`; the maintained 0.23 weight contract uses a 384 canvas and ImageNet normalization. | Full-backbone training; global pooled 1280 → 165 linear head. A positive result means that a maintained modern supervised image learner can acquire the label under the local end-to-end protocol. R3 must freeze whether the 384 canvas uses the official center crop or a full-frame aspect-preserving fit/pad policy; the latter is the current handoff preference because ingredient evidence may occur near image borders. | No repository wrapper exists yet, but the direct Torchvision adapter loaded and differentiated without a new dependency. Exact enum, transform, head, and trainability must be serialized. Torchvision code is BSD-licensed; inspected checkpoint URL ends in `efficientnet_v2_s-dd5fe13b.pth`, SHA-256 `dd5fe13b1d60ec15317ccc8ca158186e134d3366c3dde9cb9a4e301f2dc66c74`. | **Pass.** 20,388,853 total/trainable parameters; 3,744.1 MiB peak allocated, 4,250.0 MiB peak reserved; 0.1435 s/step in the bounded 384 smoke. This is the highest measured cost but remains proportionate to the 8 GB boundary at physical batch 8. |
+| `R1-VS` | Official DINOv2 Hub route `dinov2_vitb14_reg_lc`; the [current wrapper](../../src/models/dinov2.py) freezes the ViT-B/14-register visual backbone and replaces its classifier with a 3840 → 165 linear head on a 224 canvas. | Head-only training. A positive result would mean linear accessibility in a fixed visual self-supervised representation, not acquisition of ingredient evidence by local end-to-end learning. | Current wrapper follows an unpinned Hub `main`, always requests pretrained weights even when its serialized flag says otherwise, and first loads then replaces the upstream ImageNet linear head. The cached source has no recoverable Git revision. The two cached files were identified by SHA-256 as `73182a088cf94833c94b1666d1c99e02fe87e2007bff57b564fb6206e25dba71` (backbone) and `d046c4caca798f721394e4bf19e2b434061ea61fa1dea729229195ed746a1cab` (upstream head). Official code and weights are Apache-2.0. | **Pass for the frozen protocol.** 87,217,317 total and 633,765 trainable parameters; 439.6 MiB peak allocated, 508.0 MiB peak reserved; 0.0651 s/step in the bounded 224 smoke. The low cost follows from freezing the backbone and is not comparable to full fine-tuning. |
+
+The environment was PyTorch `2.8.0+cu129`, Torchvision `0.23.0+cu129`, CUDA
+12.9, and an NVIDIA RTX 4060 reporting 8,187 MiB. All candidates returned
+finite `[8, 165]` outputs and finite gradients in the intended trainable head.
+The short timings are operational smoke observations, not throughput
+benchmarks: they use different resolutions and trainability policies and omit
+the data-loader and complete campaign overhead.
+
+The decision follows the R1 priority rather than a model reputation ranking:
+
+1. the primary selector should answer whether a local supervised image learner
+   begins to acquire evidence for each ingredient; therefore full end-to-end
+   adaptation is a closer match than frozen linear accessibility;
+2. within the two supervised protocols, the existing
+   [EfficientNetV2 evidence dossier](../research/topics/experimental_model_candidates/efficientnet_v2.md)
+   supports the stronger sensitivity hypothesis through a maintained modern
+   training-aware CNN and direct food/multi-label precedent, while preserving
+   the same independent-head claim;
+3. its exact maintained-library initialization is auditable and the direct
+   adapter passed the output, gradient, and 8 GB gates; and
+4. its greater measured cost is acceptable because scientific sensitivity is
+   ordered ahead of cost, and no extra candidate campaign is needed.
+
+This is **not evidence that EfficientNetV2-S is more accurate on `v5`**. No
+local predictive comparison was performed, and the separate Subphase 4A
+portfolio decision did not select `M_ref`. ResNet-50 remains the historical
+continuity control and bounded fallback if R3 cannot freeze a valid
+EfficientNetV2-S input/provenance contract. Frozen DINOv2 remains a useful
+representation-accessibility diagnostic, but it is not the primary selector
+because it measures a different estimand and currently has avoidable source
+and configuration provenance defects.
+
+Primary implementation contracts inspected for this checkpoint are the
+[Torchvision ResNet-50 weights](https://docs.pytorch.org/vision/0.23/models/generated/torchvision.models.resnet50.html),
+[Torchvision EfficientNetV2-S weights](https://docs.pytorch.org/vision/0.23/models/generated/torchvision.models.efficientnet_v2_s.html),
+[Torchvision BSD licence](https://github.com/pytorch/vision/blob/v0.23.0/LICENSE),
+and the [official DINOv2 repository and model card](https://github.com/facebookresearch/dinov2).
+
 ### R3. Freeze and hand off
 
 Record the selected protocol with enough precision for Macro-section 3 to use
@@ -312,3 +371,4 @@ This plan is complete only when:
 | 2026-08-27 | Compressed the remaining R1–R5 sequence into R1–R3. | R0 already provides broad evidence. The decision only needs a bounded shortlist, decision-relevant verification, one frozen selector, and its Phase 3 handoff; exhaustive candidate dossiers, a numeric rubric, and separate decision/synchronization stages do not advance the objective. |
 | 2026-08-27 | Reclassified the plan as Subphase 4B and separated it from Subphase 4A. | Shared discoveries and technical evidence may support both streams, but this plan owns only the selector criteria, `M_ref` decision, and Phase 3 handoff. |
 | 2026-09-15 | Completed R1 with three protocol-level finalists and an ordered decision rule. | ResNet-50 full fine-tuning preserves supervised continuity, EfficientNetV2-S is the sole modern supervised representative, and frozen DINOv2 B/14-register exposes the distinct linear-accessibility question. Grouped exclusions avoid an architecture tournament; no `M_ref` was selected and no candidate was trained. |
+| 2026-09-15 | Completed R2 and selected EfficientNetV2-S full fine-tuning as `M_ref`. | The supervised end-to-end protocol best matches local label acquisition; the modern maintained CNN supplies the preferred sensitivity hypothesis and passed bounded 384-pixel output, gradient, provenance-path, and 8 GB checks. ResNet-50 remains a continuity fallback and frozen DINOv2 a differently interpreted diagnostic. No candidate training or accuracy comparison informed the decision. |

@@ -4,7 +4,7 @@
 **Last updated:** 2026-09-15
 **Overall status:** In progress  
 **Current macro-phase:** Data and Model research
-**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and the independent Subphase 4B `M_ref` decision. Subphase 4A research is complete; its established-pair and custom-model handoffs are ready for Phase 5 planning after data readiness.
+**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and R3's exact EfficientNetV2-S selector freeze and Macro-section 3 handoff. Subphase 4A research is complete; its established-pair and custom-model handoffs are ready for Phase 5 planning after data readiness.
 
 ## Purpose
 
@@ -33,8 +33,8 @@ A macro-section may remain **In progress** while some of its work packages are *
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
-| 3 | Ingredient selection | **Deferred** | The historical rule is reconstructed and the decision profile is adopted; resume after Subphase 4B selects the justified reference selector. |
-| 4 | Model research | **In progress** | 4A is complete with two established families and one selected custom topology; continue the independent 4B selector decision. |
+| 3 | Ingredient selection | **Deferred** | The historical rule is reconstructed and the decision profile is adopted; resume after Subphase 4B freezes and hands off the selected EfficientNetV2-S reference protocol. |
+| 4 | Model research | **In progress** | 4A is complete with two established families and one selected custom topology; R2 selected EfficientNetV2-S as `M_ref` and R3 must freeze its exact protocol and handoff. |
 | 5 | Additional model implementation | **Deferred** | All three 4A research handoffs are available; prepare their implementation plan after the remaining DataModule readiness checks. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done; final comparisons resume after comparable benchmark runs are complete. |
@@ -153,7 +153,7 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 | Work package | Status | Next action |
 | --- | --- | --- |
 | 3.1 Preliminary evidence and historical reconstruction | **Done** | Retain the exact max-Q3 intersection as a read-only baseline and regression fixture. |
-| 3.2 Selection criteria and experimental protocol | **Deferred** | After Subphase 4B chooses `M_ref`, freeze its `v5` panel, one declared seed per configuration, AP trajectories, fixed-policy F1 diagnostics, controls, provenance, single-run uncertainty policy, and bounded-pilot procedure for numerical decision-profile gates. |
+| 3.2 Selection criteria and experimental protocol | **Deferred** | After Subphase 4B freezes and hands off the selected EfficientNetV2-S protocol, freeze its `v5` panel, one declared seed per configuration, AP trajectories, fixed-policy F1 diagnostics, controls, provenance, single-run uncertainty policy, and bounded-pilot procedure for numerical decision-profile gates. |
 | 3.3 Reproducible `v5` learnability study | **Deferred** | Implement maintained analysis, run a bounded pilot, freeze the rule, then execute the `M_ref` campaign. |
 | 3.4 Relevance and visual-observability validation | **Deferred** | Combine learnability with semantic/support criteria and audited direct/contextual/not-inferable evidence. |
 | 3.5 Final vocabulary tiers and integration | **Deferred** | Freeze named headline and exploratory projections, integrate them, and retire superseded scripts only after parity and retention gates pass. |
@@ -170,8 +170,9 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 - [x] Opened the dedicated [`recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) operational plan.
 - [x] Adopted a research-informed learnability decision profile: train AP for optimization, validation AP for generalization, and separate stability, support, mechanism, and observability evidence; F1 is fixed-policy diagnostic evidence only.
 - [x] Adopted the cross-phase methodology: Subphase 4A chooses the experiment model categories, Subphase 4B chooses the reference selector, Macro-section 3 produces one shared selected vocabulary, and Macro-sections 6–7 separate full-task comparison, transferred vocabulary ablation, support-matched random controls, and optional local adaptation.
+- [x] Selected supervised EfficientNetV2-S with full-backbone fine-tuning and an independent 165-logit pooled head as `M_ref` after a current-source audit and bounded 384-pixel output, gradient, provenance-path, and 8 GB smoke; no candidate training or predictive comparison informed the choice.
 
-### Deferred until the Subphase 4B reference-selector decision
+### Deferred until the Subphase 4B protocol freeze and handoff
 
 - [ ] Freeze the global `M_ref` configuration panel, one declared seed per configuration, budgets, transforms, loss state, single-run limitation, and per-label logging contract before inspecting selection outcomes.
 - [ ] Pilot robust train-AP learning-dynamics and validation-AP statistics, including early-to-late change, a late-window level, temporal/configuration sensitivity, finite-validation-sample uncertainty where feasible, profile gates, and a fixed-policy F1 diagnostic where relevant.
@@ -188,7 +189,7 @@ The historical rule is reproduced by maintained read-only code; the `v5` campaig
 
 ### Next action
 
-Complete the Subphase 4B decision and freeze the justified reference selector under [`model_comparison_methodology.md`](project_objective/model_comparison_methodology.md). Then resume [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) to freeze the `v5` experimental contract and candidate decision-profile measures before the bounded pilot. Completion of the separate Subphase 4A shortlist is not a Phase 3 gate.
+Complete R3 by freezing the selected EfficientNetV2-S reference protocol under [`model_comparison_methodology.md`](project_objective/model_comparison_methodology.md) and handing its reproducibility and instrumentation contract to Macro-section 3. Then resume [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) to freeze the `v5` experimental contract and candidate decision-profile measures before the bounded pilot. Completion of the separate Subphase 4A shortlist is not a Phase 3 gate.
 
 ## 4. Model research
 
@@ -203,7 +204,7 @@ Broad discoveries, primary-source catalogs, implementation audits, and resource 
 | Subphase | Status | Owned outcome | Next action |
 | --- | --- | --- | --- |
 | 4A Experimental-model research | **Done** | EfficientNetV2-S and MaxViT-T plus P2-S dual-scale ingredient-query readout with pooled context, with source-linked hypotheses and implementation gates. | Use [4A-D1/4A-D2](project_objective/experimental_model_portfolio.md) and the [completed plans](plans/README.md#completed-plans) for the Phase 5 handoff after data readiness. |
-| 4B Reference-selector research | **In progress** | One frozen and justified `M_ref` protocol that releases Macro-section 3. | Execute R2 on the three R1 finalists, then complete the bounded R3 freeze and handoff. |
+| 4B Reference-selector research | **In progress** | One frozen and justified `M_ref` protocol that releases Macro-section 3. | Complete R3: freeze the selected EfficientNetV2-S protocol and hand its reproducibility and instrumentation requirements to Macro-section 3. |
 
 ### 4A. Experimental-model research
 
@@ -251,10 +252,10 @@ Maintain the source-to-decision record and carry the three-category [portfolio](
 
 This subphase asks which single model protocol is a sufficiently sensitive, interpretable, reproducible, and affordable measurement instrument for Phase 3 label learnability. It does not choose the final experiment winner and does not own the broader model shortlist.
 
-- **Completed evidence:** R0.1 provides the selector-oriented landscape across supervised, visual self-supervised, vision-language, food-domain, and structured multi-label families. R0.2 maps credible paths to the `v5` interface, 8 GB boundary, and shared instrumentation/provenance gap. R1 retains three protocol-level finalists: full-fine-tuned ResNet-50, full-fine-tuned EfficientNetV2-S, and frozen DINOv2 B/14-register with an independent linear head; it does not choose `M_ref`.
-- **Pending:** Inspect only decision-relevant technical or resource uncertainties without comparative candidate training or tuning; choose `M_ref`, freeze its exact protocol and interpretation boundary, and hand it to Macro-section 3.
+- **Completed evidence:** R0.1 provides the selector-oriented landscape across supervised, visual self-supervised, vision-language, food-domain, and structured multi-label families. R0.2 maps credible paths to the `v5` interface, 8 GB boundary, and shared instrumentation/provenance gap. R1 retains three protocol-level finalists. R2 selects full-fine-tuned EfficientNetV2-S with an independent 165-logit pooled head after source inspection and bounded synthetic output, gradient, provenance-path, and 8 GB checks; it does not claim comparative accuracy.
+- **Pending:** Freeze the exact EfficientNetV2-S weights, transforms, trainability, head, loss, resource boundary, interpretation limits, and Phase 3 observability/provenance contract; synchronize the binding methodology and handoff.
 - **Completion gate:** One justified `M_ref` passes the declared selector gates, its exact reproducible protocol and limitations are frozen, and Macro-section 3 receives the instrumentation and execution handoff.
-- **Next action:** Execute R2 in [`reference_selector_research.md`](plans/reference_selector_research.md): inspect current source and run only bounded load/forward/backward, provenance, and 8 GB resource checks that can change the choice among the three R1 finalists; do not run comparative training.
+- **Next action:** Execute R3 in [`reference_selector_research.md`](plans/reference_selector_research.md): freeze the chosen EfficientNetV2-S protocol without reopening candidate comparison, synchronize the binding methodology, and release Macro-section 3.
 
 **Model-research macro-section completion gate:** Macro-section 4 is **Done** only when both 4A and 4B pass their separate completion gates. Subphase 4B may release Macro-section 3 as soon as its own gate passes; it does not need to wait for completion of the independent 4A shortlist.
 
@@ -518,6 +519,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-09-14 | Experiment observability and comparison tooling | Implemented optional epoch-level ingredient precision/recall/F1 in the Lightning model and the local N-experiment comparator; validated all 200 target-v5 trials, resumed TensorBoard histories, selected W&B parameter trajectories and checkpoint metadata. | Work package 7.1 **Done**; final comparison remains **Deferred** | [Implementation contract](implementation_details/experiment_comparison.md), [completed plan](plans/experiment_comparison.md) |
 
 | 2026-09-15 | Reference-selector research | Completed R1 by applying the mandatory gates to the R0 inventory and retaining three distinct protocol-level finalists: supervised ResNet-50 full fine-tuning, supervised EfficientNetV2-S full fine-tuning, and frozen DINOv2 B/14-register linear transfer. Exclusions are grouped by redundancy, unresolved prerequisites, disproportionate cost, or measurement confounding; no `M_ref` was selected and no candidate was trained. | Subphase 4B **In progress**; R2 decision-relevant verification and choice are next; Macro-section 3 remains **Deferred** | [R1 checkpoint](plans/reference_selector_research.md#r1-completion-checkpoint--2026-09-15) |
+| 2026-09-15 | Reference-selector research | Completed R2 and selected supervised EfficientNetV2-S full fine-tuning with an independent 165-logit pooled head as `M_ref`. The source audit and bounded synthetic smoke verified the direct maintained-library route, finite output/head gradients, and 384-pixel FP32 batch-8 operation within the 8 GB boundary; no candidate training, AP, selected-vocabulary result, or test evidence informed the choice. | Subphase 4B **In progress**; R3 exact protocol freeze and Macro-section 3 handoff are next; Macro-section 3 remains **Deferred** | [R2 checkpoint](plans/reference_selector_research.md#r2-completion-checkpoint--2026-09-15) |
 
 ## Tracker maintenance rules
 
