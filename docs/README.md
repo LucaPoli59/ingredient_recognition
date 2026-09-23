@@ -1,7 +1,7 @@
 # Project documentation
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-27
+**Last updated:** 2026-09-23
 
 This directory contains the durable technical documentation for the Ingredient Recognition project. It complements the repository-level [`README_PROJECT_KNOWLEDGE.md`](../README_PROJECT_KNOWLEDGE.md), which provides a concise map of the project and its current state. The cross-category storage and organization rules are consolidated in [`README_DOCS_ORGN.md`](README_DOCS_ORGN.md).
 
@@ -31,6 +31,9 @@ docs/
 ├── project_objective/
 │   ├── README.md
 │   └── <files>.md
+├── experiment_results/
+│   ├── README.md
+│   └── <campaign_or_comparison>.md
 ├── research/
 │   ├── README.md
 │   ├── topics/
@@ -61,6 +64,10 @@ Use this directory for research-oriented explanations of model architectures. A 
 ### `project_objective/`
 
 Use this directory to formalize the research project's problem, objectives, scope, constraints, assumptions, and success criteria before conducting discovery research. Follow the local conventions in [`project_objective/README.md`](project_objective/README.md).
+
+### `experiment_results/`
+
+Use this directory for reviewed, reproducible outcomes from named experiment campaigns. Each record must preserve provenance, cohort comparability, quantitative findings, interpretation status, and limitations, and must distinguish exploratory or historical validation evidence from final benchmark results. Keep raw reports and checkpoints in their experiment or analysis-output locations. Follow the local conventions in [`experiment_results/README.md`](experiment_results/README.md).
 
 ### `plans/`
 

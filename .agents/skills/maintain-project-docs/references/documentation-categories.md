@@ -9,17 +9,18 @@ Use this reference after reading the live `docs/README_DOCS_ORGN.md`, `docs/READ
 3. [Documentation governance](#documentation-governance)
 4. [General project plan](#general-project-plan)
 5. [Project objective](#project-objective)
-6. [Topic research](#topic-research)
-7. [Discovery research](#discovery-research)
-8. [Implementation details](#implementation-details)
-9. [Model deep dives](#model-deep-dives)
-10. [Technical details](#technical-details)
-11. [Implementation plans](#implementation-plans)
-12. [Index READMEs and collection folders](#index-readmes-and-collection-folders)
-13. [Repository knowledge](#repository-knowledge)
-14. [Scratch and generated material](#scratch-and-generated-material)
-15. [Synchronization matrix](#synchronization-matrix)
-16. [Compact document outlines](#compact-document-outlines)
+6. [Experiment results](#experiment-results)
+7. [Topic research](#topic-research)
+8. [Discovery research](#discovery-research)
+9. [Implementation details](#implementation-details)
+10. [Model deep dives](#model-deep-dives)
+11. [Technical details](#technical-details)
+12. [Implementation plans](#implementation-plans)
+13. [Index READMEs and collection folders](#index-readmes-and-collection-folders)
+14. [Repository knowledge](#repository-knowledge)
+15. [Scratch and generated material](#scratch-and-generated-material)
+16. [Synchronization matrix](#synchronization-matrix)
+17. [Compact document outlines](#compact-document-outlines)
 
 ## Common conventions
 
@@ -85,6 +86,18 @@ Use the general-plan status vocabulary consistently: `Done`, `In progress`, `Pen
 **Maintenance:** Update a binding decision explicitly when evidence changes it. Record status, rationale, affected version, and unresolved consequences. Link supporting research instead of copying it. Update the index whenever files or roles change.
 
 **Do not store:** Temporary exploration, routine task progress, generic literature summaries, or model-specific implementation notes.
+
+## Experiment results
+
+**Location:** `docs/experiment_results/`
+
+**Purpose:** Preserve reviewed outcomes from named training, HPO, ablation, or evaluation campaigns with enough provenance and comparability detail to reproduce and correctly interpret the result.
+
+**Organization:** Use one focused document per campaign or coherent comparison. Record the exact experiment inputs, data and label contract, command or analysis implementation, artifact cutoff, cohort rules, metrics, quantitative findings, interpretation, and limitations. Mark the result as exploratory, historical, provisional, superseded, or final. Keep concise reviewed figures beside the record when they materially aid interpretation.
+
+**Maintenance:** Update the collection README whenever records or figures change. Synchronize `general_plan.md` when a permanent result changes project-level evidence or status, and update `README_PROJECT_KNOWLEDGE.md` when the collection becomes or changes a stable entry point. Preserve superseded results and link replacements.
+
+**Do not store:** Raw JSON/HTML reports, checkpoints, logs, exhaustive generated tables, unreviewed exploratory output, implementation contracts, or binding benchmark policy. Validation-only HPO evidence is not a final benchmark result, and adaptive trials are not seed replicates.
 
 ## Topic research
 
@@ -205,6 +218,7 @@ Do not cite an unreviewed scratch artifact as the final project record. When pro
 | Change code-facing behavior or contract | Code/tests and owning `implementation_details/` record in the same change |
 | Adopt or revise a binding methodology | Owning `project_objective/` decision record, affected plan, general plan if state/gate changes |
 | Add research evidence without adopting it | Owning topic or discovery record and its nearest index |
+| Promote a reviewed experiment outcome | Owning `experiment_results/` record and index; `general_plan.md` when the result materially changes project evidence or status |
 | Change stable architecture, canonical workflow, path, or default | Owning implementation record and `README_PROJECT_KNOWLEDGE.md`; trackers only if state changes |
 | Change documentation governance | `README_DOCS_ORGN.md`, affected category/entry READMEs, and this skill |
 | Supersede a result or approach | Mark old record, state reason/date, link replacement, preserve relevant history |
@@ -276,4 +290,22 @@ Use only the sections that materially help the record. Do not copy a template me
 ## Project implications
 ## Open questions
 ## References
+```
+
+### Experiment-result record
+
+```markdown
+# <Campaign or comparison title>
+
+**Created:** YYYY-MM-DD
+**Last updated:** YYYY-MM-DD
+**Status:** <Exploratory, historical, provisional, superseded, or final>
+
+## Purpose and scope
+## Evidence and provenance
+## Comparable cohort or protocol
+## Quantitative findings
+## Interpretation
+## Limitations and next evidence
+## Related documentation
 ```

@@ -15,10 +15,11 @@ Treat the repository documents as authoritative and this skill as their operatio
 2. `docs/README.md` for common writing, language, naming, dating, and maintenance conventions.
 3. The nearest category or collection `README.md` for local structure.
 4. `docs/project_objective/` for the research scope and binding methodological decisions.
-5. `docs/general_plan.md` for project-level status, priorities, dependencies, gates, and history.
-6. The relevant feature plan for active implementation state and task sequence.
-7. Code and tests for observed runtime behavior, with `docs/implementation_details/` synchronized to the supported contract.
-8. `README_PROJECT_KNOWLEDGE.md` for the stable repository-wide map, never as a replacement for the owners above.
+5. `docs/experiment_results/` for reviewed empirical outcomes and their bounded interpretation.
+6. `docs/general_plan.md` for project-level status, priorities, dependencies, gates, and history.
+7. The relevant feature plan for active implementation state and task sequence.
+8. Code and tests for observed runtime behavior, with `docs/implementation_details/` synchronized to the supported contract.
+9. `README_PROJECT_KNOWLEDGE.md` for the stable repository-wide map, never as a replacement for the owners above.
 
 If this skill conflicts with a live authoritative source, follow that source and update the skill when the task authorizes it.
 
@@ -43,6 +44,7 @@ Classify each item before writing:
 
 - temporary exploration or raw output;
 - research evidence;
+- reviewed experiment result;
 - binding research or benchmark decision;
 - verified current implementation contract;
 - architecture-specific model explanation;
@@ -70,6 +72,8 @@ When records conflict:
 Use the category playbooks in [references/documentation-categories.md](references/documentation-categories.md). Prefer the most specific applicable category. Link to an authoritative statement instead of copying it into multiple files.
 
 Keep scratch scripts, notebooks, raw reports, logs, and intermediate analysis outside `docs/`, normally under `src_scratches/`. Promote only reviewed, interpretable findings with reproducible provenance.
+
+Store reviewed outcomes from named campaigns under `docs/experiment_results/`. State whether each outcome is exploratory, historical, provisional, superseded, or final; preserve cohort-selection rules and artifact provenance; and never present validation-only HPO evidence as a final benchmark result.
 
 ### 4. Write for future verification
 

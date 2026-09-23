@@ -1,7 +1,7 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-15
+**Last updated:** 2026-09-23
 **Overall status:** In progress  
 **Current macro-phase:** Data and Ingredient selection
 **Current focus:** Complete the remaining Data 2.4 runtime smoke checks and Phase 3 P1's campaign/measurement freeze around the binding 4B-D1 EfficientNetV2-S selector. Macro-section 4 research is complete; its experiment-model and reference-selector handoffs are available.
@@ -37,7 +37,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Deferred** | All three 4A research handoffs are available; prepare their implementation plan after the remaining DataModule readiness checks. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
-| 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done; final comparisons resume after comparable benchmark runs are complete. |
+| 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
 
 ## 1. Project foundation
@@ -351,6 +351,8 @@ This macro-section covers the frozen evaluation protocol, statistical comparison
 
 A preparatory [artifact and observability audit](implementation_details/experiment_artifacts.md) was completed on 2026-09-14 for the existing target-v5 ResNet and DINOv2 campaigns. It records mixed loss objectives, pruning, restart conflicts, sparse checkpoint selection and AMP-scaled gradient limitations. The [comparison application](implementation_details/experiment_comparison.md) is implemented and validated on those campaigns; final benchmark analysis remains deferred, and the exploratory report does not establish final model rankings or satisfy the resume gate.
 
+The reviewed [historical basic_v5 comparison](experiment_results/basic_v5_resnet_dinov2.md) retains the bounded empirical outcome: full fine-tuning of pretrained ResNet18 trial 77 outperformed the frozen-backbone DINOv2-B/14 linear-probe trial 61 on the shared unweighted validation-loss cohort, with lower aggregate threshold metrics and lower compute and artifact cost. This is historical validation evidence without test evaluation, repeated fixed-configuration seeds, per-ingredient metrics, or a matched adaptation protocol. It does not change the final benchmark methodology, the adopted model portfolio, or this macro-section's **Deferred** status.
+
 ### 7.1 Experiment observability and comparison tooling
 
 **Status:** Done
@@ -522,6 +524,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-09-15 | Reference-selector research | Completed R1 by applying the mandatory gates to the R0 inventory and retaining three distinct protocol-level finalists: supervised ResNet-50 full fine-tuning, supervised EfficientNetV2-S full fine-tuning, and frozen DINOv2 B/14-register linear transfer. Exclusions are grouped by redundancy, unresolved prerequisites, disproportionate cost, or measurement confounding; no `M_ref` was selected and no candidate was trained. | Subphase 4B **In progress**; R2 decision-relevant verification and choice are next; Macro-section 3 remains **Deferred** | [R1 checkpoint](plans/reference_selector_research.md#r1-completion-checkpoint--2026-09-15) |
 | 2026-09-15 | Reference-selector research | Completed R2 and selected supervised EfficientNetV2-S full fine-tuning with an independent 165-logit pooled head as `M_ref`. The source audit and bounded synthetic smoke verified the direct maintained-library route, finite output/head gradients, and 384-pixel FP32 batch-8 operation within the 8 GB boundary; no candidate training, AP, selected-vocabulary result, or test evidence informed the choice. | Subphase 4B **In progress**; R3 exact protocol freeze and Macro-section 3 handoff are next; Macro-section 3 remains **Deferred** | [R2 checkpoint](plans/reference_selector_research.md#r2-completion-checkpoint--2026-09-15) |
 | 2026-09-15 | Reference-selector freeze and Phase 3 handoff | Completed R3 and froze 4B-D1: exact EfficientNetV2-S weights and supervised prior, full adaptation, full-frame 384-pixel transform, independent head, weighted BCE, FP32 batch-8 target, interpretation limits, and required provenance. Macro-section 3 accepted the handoff at P1; no implementation or label outcome informed the freeze. | Subphase 4B and Macro-section 4 **Done**; Macro-section 3 and Work package 3.2 **In progress** | [4B-D1](project_objective/model_comparison_methodology.md#4b-d1--frozen-reference-selector-protocol), [R3 checkpoint](plans/reference_selector_research.md#r3-completion-checkpoint--2026-09-15), [Phase 3 plan](plans/recognizable_ingredient_selection.md) |
+| 2026-09-23 | Historical experiment comparison | Reviewed the existing basic_v5 ResNet and DINOv2 campaigns with the maintained comparator. ResNet18 trial 77 is the stronger observed validation artifact, while the frozen DINOv2 linear-probe boundary and missing final-benchmark evidence remain explicit. | Historical result **Done**; Macro-section 7 final comparison remains **Deferred** | [Reviewed experiment result](experiment_results/basic_v5_resnet_dinov2.md) |
 
 ## Tracker maintenance rules
 

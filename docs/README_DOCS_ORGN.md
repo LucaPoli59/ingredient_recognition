@@ -1,7 +1,7 @@
 # Documentation organization directives
 
 **Created:** 2026-08-06  
-**Last updated:** 2026-08-06
+**Last updated:** 2026-09-23
 
 This document is the authoritative guide for storing durable information and organizing documentation in the Ingredient Recognition project. Read it together with [`README.md`](README.md) before creating, moving, or substantially revising a document. Directory-specific READMEs add local detail and must remain consistent with these directives.
 
@@ -24,6 +24,7 @@ The following map is the placement rule for long-term information. Choose the mo
 | `README_DOCS_ORGN.md` | Cross-category governance directives and long-term storage rules | Project results or implementation-specific decisions |
 | [`general_plan.md`](general_plan.md) | Whole-thesis roadmap, macro-section/work-package status, dependencies, gates, next actions, and append-only project history; only macro-sections and first-level work packages (`X.y`) | Detailed implementation instructions, second-level or deeper work packages (`X.ya`, `X.yb`, `X.y.Z`), or a second copy of research evidence |
 | [`project_objective/`](project_objective/README.md) | Research problem, objective, scope, non-goals, assumptions, success criteria, binding benchmark decisions, and durable data/objective audits | Temporary exploration, ordinary task progress, or model-specific implementation notes |
+| [`experiment_results/`](experiment_results/README.md) | Reviewed outcomes from named experiment campaigns, with reproducible provenance, comparability boundaries, quantitative findings, interpretation status, and limitations | Raw generated reports, checkpoints, implementation contracts, binding methodology, or unreviewed exploratory output |
 | [`research/topics/`](research/topics/README.md) | Focused, reusable research about one well-defined topic, independent of a single implementation when possible | Current repository contracts or decisions that have not been adopted through a project-objective document |
 | [`research/discovery/`](research/discovery/README.md) | Date-stamped broad state-of-the-art snapshots, source catalogs, and initial recommendations | Permanent implementation contracts or a replacement for focused topic records |
 | [`implementation_details/`](implementation_details) | Current code-facing contracts, supported variants, configuration behavior, integration points, and operational constraints | Broad literature surveys, speculative future behavior, or task-by-task execution logs |
@@ -38,10 +39,11 @@ The following map is the placement rule for long-term information. Choose the mo
 Use the following source-of-truth boundaries:
 
 1. `project_objective/` contains the research scope and binding methodological decisions. Research documents provide evidence; they become binding only when the decision is recorded there.
-2. `general_plan.md` is authoritative for project-level status, priorities, dependencies, gates, and historical transitions.
-3. A feature plan under `plans/` is authoritative for the execution state and task sequence of that feature while it is active.
-4. The code is authoritative for observed runtime behavior. `implementation_details/` records the intended and supported contract and must be synchronized with the code.
-5. `research/`, `models_deepdive/`, and `technical_details/` preserve evidence and explanations. They do not silently override a binding decision or the current implementation.
+2. `experiment_results/` contains reviewed empirical outcomes and their bounded interpretation. It does not override the benchmark methodology or project status.
+3. `general_plan.md` is authoritative for project-level status, priorities, dependencies, gates, and historical transitions.
+4. A feature plan under `plans/` is authoritative for the execution state and task sequence of that feature while it is active.
+5. The code is authoritative for observed runtime behavior. `implementation_details/` records the intended and supported contract and must be synchronized with the code.
+6. `research/`, `models_deepdive/`, and `technical_details/` preserve evidence and explanations. They do not silently override a binding decision or the current implementation.
 
 When two records disagree, do not hide the conflict by editing one claim in isolation. Identify whether the difference is historical, planned, or an actual defect; update the responsible source-of-truth document and the relevant plan or tracker in the same change; preserve the superseded record when it is part of project history.
 
@@ -60,6 +62,10 @@ Every substantial document must state its purpose and scope, distinguish evidenc
 ### Project objective
 
 State the problem, motivation, inputs and outputs, scope, explicit non-goals, assumptions, constraints, research questions, success criteria, and unresolved questions. Keep binding decisions explicit, versioned where necessary, and separate from exploratory alternatives.
+
+### Experiment results
+
+Record one named campaign or one coherent comparison per document. Identify the exact experiment paths, data and label contract, code or command, artifact cutoff, cohort-selection rules, metrics, quantitative findings, interpretation, and limitations. State whether the result is exploratory, historical, provisional, superseded, or final. Validation-only evidence must never be described as a final benchmark result, and adaptive HPO trials must not be presented as independent seed replicates. Keep raw reports and large generated outputs outside `docs/`; retain only reviewed figures and concise tables needed to understand the finding.
 
 ### General project plan
 
