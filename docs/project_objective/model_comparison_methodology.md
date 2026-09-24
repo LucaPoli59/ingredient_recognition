@@ -1,8 +1,8 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-15
-**Status:** Active and binding design; Subphase 4B has frozen the EfficientNetV2-S reference-selector protocol, Macro-section 3 is released to P1, and the later benchmark also requires the independent Subphase 4A model portfolio.
+**Last updated:** 2026-09-24
+**Status:** Active and binding design; Subphase 4B has frozen the EfficientNetV2-S reference-selector protocol, Phase 3-D1 has frozen its campaign and measurement contract, and the later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
 
@@ -19,9 +19,9 @@ It applies to Macro-section 3, Subphases 4A and 4B, and Macro-sections 6 and 7 o
 [general_plan.md](../general_plan.md). The selection workflow remains owned by
 Macro-section 3 and its operational plan. Training implementation, hyperparameter
 optimization (HPO), and final result production remain owned by Macro-sections 6
-and 7. It now prescribes the model-side `M_ref` protocol under 4B-D1, but does
-not prescribe the P1 optimizer panel, numerical ingredient threshold, Phase 6
-HPO budget, or final selected vocabulary.
+and 7. It prescribes the model-side `M_ref` protocol under 4B-D1 and its
+campaign-side protocol under Phase 3-D1. It does not prescribe the numerical
+ingredient promotion gates, Phase 6 HPO budget, or final selected vocabulary.
 
 ## Research questions
 
@@ -103,10 +103,10 @@ per-label score trajectories, representativeness, compute cost, and integration
 feasibility. It was not chosen from a candidate training tournament, test
 result, or selected-vocabulary outcome.
 
-Macro-section 3 then owns the execution: it freezes the remaining campaign
-configuration around the binding model-side protocol, runs the learnability
-profile without test access, and produces exactly one shared V_selected plus
-the associated evidence and provenance. A different
+Macro-section 3 then owns the execution: it implements the binding model- and
+campaign-side protocols, runs the learnability profile without test access, and
+produces exactly one shared V_selected plus the associated evidence and
+provenance. A different
 selected vocabulary for each model category is rejected for the primary study,
 because it would make a model comparison a comparison of different tasks.
 
@@ -117,10 +117,8 @@ meaning of “learnable” for the vocabulary-selection study.
 #### 4B-D1 — Frozen reference-selector protocol
 
 **Adopted:** 2026-09-15. The model-side selector identity is frozen below.
-Macro-section 3 P1 owns the remaining campaign-side configuration: optimizer,
-learning rate, scheduler, fixed epoch budget, evaluation cadence, and any
-optional bounded configuration-sensitivity panel. Those choices must be
-declared before label outcomes are inspected and cannot silently revise 4B-D1.
+The complementary campaign-side configuration is now frozen under Phase 3-D1.
+Neither decision may be revised silently after label outcomes are inspected.
 
 | Field | Binding choice | Consequence or implementation requirement |
 | --- | --- | --- |
@@ -129,11 +127,11 @@ declared before label outcomes are inspected and cannot silently revise 4B-D1.
 | Pretraining boundary | Supervised ImageNet-1K initialization only; no food-domain, text, label-graph, or downstream ingredient pretraining. | “Learnable” remains conditional on this visual prior and does not become an intrinsic label property or proof of direct visibility. Possible pretraining-data overlap is not established as absent. |
 | Trainability | Train every backbone, BatchNorm affine parameter, BatchNorm running statistic, and new head from the first optimizer step. Do not freeze stages, use a linear-probe warm-up, or apply layer-wise progressive unfreezing. | The selector measures acquisition under local end-to-end supervised adaptation (`P0 + A3`), not fixed-representation accessibility. The implementation must assert the trainable parameter set. |
 | Full-frame input transform | Decode as three-channel RGB, convert to a float tensor in `[0,1]`, then set the long side to 384 and round the short side to the nearest integer with half rounded up. Resize once with bilinear interpolation and antialiasing. Center-pad to 384×384 with the ImageNet mean `(0.485, 0.456, 0.406)`, assigning an odd residual pixel to the right or bottom, then normalize by mean `(0.485, 0.456, 0.406)` and standard deviation `(0.229, 0.224, 0.225)`. | The deterministic fit/pad geometry is identical for train and validation before the train-only flip, and preserves the complete image without stretching or center cropping. P2 must test landscape, portrait, square, odd-padding, and RGB-conversion cases and serialize the transform identity and parameters. This deliberately differs from the checkpoint's official center-crop evaluation transform. |
-| Primary training augmentation | Apply only `RandomHorizontalFlip(p=0.5)` after full-frame fit/pad and before normalization. Validation is deterministic and has no stochastic augmentation. No random crop, rotation, vertical flip, colour transform, `TrivialAugmentWide`, MixUp, or CutMix belongs to the primary selector configuration. | The primary learning trajectory cannot lose border evidence through augmentation. An optional P1 robustness configuration may add a separately named policy, but it cannot replace the primary or alter validation preprocessing after outcomes are seen. |
+| Primary training augmentation | Apply only `RandomHorizontalFlip(p=0.5)` after full-frame fit/pad and before normalization. Validation is deterministic and has no stochastic augmentation. No random crop, rotation, vertical flip, colour transform, `TrivialAugmentWide`, MixUp, or CutMix belongs to the primary selector configuration. | The primary learning trajectory cannot lose border evidence through augmentation. Phase 3-D1 adopts no additional training-time robustness configuration, so this policy is the only campaign augmentation. |
 | Independent head | Retain the stock adaptive global average pool and flattening. Retain `Dropout(p=0.2, inplace=True)`, replace only the 1000-way linear layer with a newly instantiated biased `Linear(1280, 165)`, and return raw logits. Instantiate the layer after the declared global seed using the pinned PyTorch `2.8.0` default initialization; record an initial head-state hash. | No label text, dependencies, query decoder, per-label architecture, sigmoid layer, or pretrained classifier weights enter the head (`H0`). Class count comes from the saved encoder rather than a hard-coded label list. |
 | Loss family and weighting | `BCEWithLogitsLoss(reduction="mean")` with train-only `pos_weight[c] = (N_train - P_c) / P_c`, where `P_c` is the number of positive train records for label `c`. No label smoothing, focal term, or validation/test-derived weight is allowed. | Persist the ordered positive counts, `pos_weight` vector, formula, and hash. P2 must implement this selector-specific vector rather than silently reuse the current DataModule's differently normalized [`classes_weights`](../../src/data_processing/images_recipes.py). Weighting improves sensitivity to minority positives but changes calibration; AP remains ranking evidence and later probability calibration stays validation-only. |
 | Execution boundary | Primary implementation target: true FP32, physical batch 8, no gradient accumulation, on the 8 GB development GPU. R2 measured 3,744.1 MiB peak allocated and 4,250.0 MiB peak reserved for a synthetic full forward/BCE backward/Adam step at 384 pixels. | This is engineering feasibility, not throughput or accuracy evidence. The complete instrumented pipeline must repeat the measurement. A physical-batch or precision change alters optimization/BatchNorm semantics and requires a recorded protocol revision before campaign execution. |
-| Campaign and logging handoff | Use one declared seed per configuration, a fixed epoch budget without primary-run early stopping, and per-label train/validation AP at every declared evaluation point. | P1 freezes the remaining campaign values and instrumentation before the pilot. No seed-level stability claim is permitted. |
+| Campaign and logging handoff | Use one declared seed per configuration, a fixed epoch budget without primary-run early stopping, and per-label train/validation AP at every declared evaluation point. | Phase 3-D1 below fixes the remaining values and instrumentation. No seed-level stability claim is permitted. |
 
 The exact resize rule can be expressed without floating ambiguity: if `W >= H`,
 set `(W', H') = (384, max(1, floor(384 * H / W + 0.5)))`; otherwise set
@@ -157,7 +155,74 @@ trajectories, or the complete provenance manifest. Macro-section 3 must
 implement and validate them; 4B-D1 must not be described as current runtime
 support until those gates pass.
 
-### 2. Tune each model category once on the full common task
+### 2. Freeze the Phase 3 campaign and measurement protocol
+
+#### Phase 3-D1 — Frozen selector campaign and measurement protocol
+
+**Adopted:** 2026-09-24. This decision completes P1 without inspecting a new
+`v5` selector outcome. The numeric profile-promotion gates remain a P3 pilot
+output, but the data that may inform them, the optimization path, measurements,
+controls, and isolation procedure are fixed here.
+
+| Field | Binding choice | Consequence or implementation requirement |
+| --- | --- | --- |
+| Primary configuration | Exactly one primary configuration and no additional training-time robustness configuration. Run it once with global seed `42`. | Configuration sensitivity is unavailable rather than assumed. Borderline evidence must remain `uncertain`; no seed- or configuration-stability claim is permitted. |
+| Optimizer | One parameter group containing every trainable backbone and head parameter; `torch.optim.AdamW(lr=1e-4, betas=(0.9, 0.999), eps=1e-8, weight_decay=1e-4, amsgrad=False, foreach=False, fused=False)`. Apply decay uniformly; use no gradient clipping. | AdamW keeps weight decay separate from the adaptive moments, while the explicit single-tensor path avoids the additional peak memory documented for `foreach`. The learning rate and decay are predeclared conservative values, not an optimality claim. See the [AdamW paper](https://openreview.net/pdf?id=Bkg6RiCqY7) and [PyTorch 2.8 API](https://docs.pytorch.org/docs/2.8/generated/torch.optim.AdamW.html). |
+| Learning-rate schedule | Step once per epoch. Use `LinearLR(start_factor=0.1, end_factor=1.0, total_iters=2)` followed through `SequentialLR(milestones=[2])` by `CosineAnnealingLR(T_max=18, eta_min=1e-6)`. Do not restart or react to validation metrics. | The first two epochs protect the pretrained representation and new weighted head from an abrupt full update; the remaining fixed cosine path reaches the declared floor at the end of the budget without selecting a schedule from outcomes. The implementation follows the pinned [LinearLR](https://docs.pytorch.org/docs/2.8/generated/torch.optim.lr_scheduler.LinearLR.html), [SequentialLR](https://docs.pytorch.org/docs/2.8/generated/torch.optim.lr_scheduler.SequentialLR.html), and [CosineAnnealingLR](https://docs.pytorch.org/docs/2.8/generated/torch.optim.lr_scheduler.CosineAnnealingLR.html) semantics. |
+| Training budget | `20` complete epochs, no early stopping, no pruning, no SWA, physical batch `8`, no accumulation, and no automatic batch-size change. With 47,965 training records and `drop_last=False`, this is 5,996 optimizer steps per epoch and 119,920 planned optimizer steps. | The profile measures acquisition under one fixed resource budget. Only a non-finite value, failed invariant, interrupted run, or resource-gate failure may abort the campaign; changing the protocol requires a versioned pre-outcome revision. |
+| Precision and randomness | Lightning `precision="32-true"`; no autocast or gradient scaler. Call `seed_everything(42, workers=True)` before model/head and DataLoader construction; seed the train generator with `42`; set `CUBLAS_WORKSPACE_CONFIG=:4096:8`, disable cuDNN benchmarking, request deterministic algorithms, set `torch.set_float32_matmul_precision("highest")`, and disable TF32 through both `torch.backends.cuda.matmul.allow_tf32=False` and `torch.backends.cudnn.allow_tf32=False`. Preserve the resolved PyTorch matmul/TF32 flags in the manifest. | P2 must fail clearly if the pinned stack cannot execute deterministically instead of falling back silently. Reproduction remains conditional on the same release, platform, and device, as stated by the [PyTorch reproducibility note](https://docs.pytorch.org/docs/2.8/notes/randomness.html). |
+| Batch sampling | Shuffle all training records without replacement each epoch through the seeded generator; use no class-aware sampler and `drop_last=False`. Audit train and validation passes are ordered, deterministic, use the validation transform, and run with dropout and BatchNorm in evaluation mode. | The class imbalance intervention remains solely the frozen `pos_weight`; batch composition cannot become an unrecorded second intervention. Audit train AP is not accumulated from batches produced while the weights are changing. |
+| Evaluation cadence | Run full deterministic train and validation audits before optimization (`epoch=0`) and after epochs `2, 4, 6, 8, 10, 12, 14, 16, 18, 20`. Log ordinary training loss and learning rate every training epoch. | Train and validation AP at a named checkpoint refer to one fixed model state and identical evaluation geometry. The extra train pass is intentionally separated from stochastic training. |
+| AP trajectory statistics | For each label and split retain AP at every audit point. Define `W_early={2,4,6}`, `W_near={10,12,14,16,18}`, and `W_late={12,14,16,18,20}`. Precompute initialization-to-late gain, early-to-late median gain, late median, late IQR, near-versus-late median shift, and the late train-minus-validation gap. | These are candidate profile inputs, not numerical inclusion gates. P3 may choose absolute gates only from the isolated pilot cohort; it may not replace the robust windows with a maximum or tune a different window per label. |
+| F1 policy | At every audit point apply `sigmoid(logit) >= 0.5` globally and report per-label precision, recall, and F1 with zero-division value `0`, plus aggregate micro F1. Do not calibrate, search, or vary this threshold by epoch or label. | F1 is a historical-continuity and operating-point diagnostic only. It cannot promote or reject a label in the Phase 3 learnability profile. Later benchmark threshold selection remains validation-only under D10. |
+| Finite-sample uncertainty | At the final checkpoint, compute a deterministic 95% percentile interval for each validation AP from 1,000 record-level bootstrap resamples. Use `42_000 + class_index` as the bootstrap seed for that label; reject resamples lacking either class and record any label for which 1,000 valid samples cannot be obtained within 10,000 draws. | This interval describes validation-sample uncertainty only. It is not a seed, training-run, or temporal-stability interval and cannot compensate for the single-run design. |
+| Low-cost controls | Always report train/validation support and prevalence, the `epoch=0` reference, Spearman associations between support/prevalence and profile statistics, a constant train-prevalence baseline, and a train-only cuisine-prior baseline with `(P_c,l + 1)/(N_c + 2)` and global train prevalence for an unknown cuisine. Compare late validation AP with both baselines. | Cuisine is a diagnostic unavailable to the image-only model, not an inference input or fair competitor. A positive image advantage does not establish direct visibility. Co-occurrence and shuffled-label controls are not primary requirements; a shuffled control requires a recorded pilot addendum if cheaper controls cannot distinguish signal from an artefact. |
+| Vocabulary-reduction controls | Do not train selected or random reduced vocabularies during P1–P4. Preserve the support and prevalence fields needed by Macro-section 6 to generate deterministic support-matched random vocabularies after `V_selected` is known. | This prevents Phase 3 from paying for or interpreting the later Q3 ablation prematurely. The selected-versus-random training comparison remains owned by Macro-section 6. |
+
+#### Pilot isolation without a second selector training
+
+P2 must generate the exact P3 pilot cohort before model construction and before
+any new selector metric is read. Sort the 165 labels by `(train positive count,
+class name)`, split that ordered list into three contiguous 55-label support
+strata, rank labels inside each stratum by the SHA-256 digest of
+`phase3-pilot-v1\0<label>`, and take the first eight from every stratum. Persist
+the resulting 24 names, indices, supports, generation string, and manifest hash.
+
+The single 20-epoch run emits all 165 logits because the frozen head is shared,
+but P3 analysis is allowed to expose only these 24 labels. P3 freezes simple
+absolute gates and an `uncertain` band from that cohort; it may not optimize a
+fixed retained count. A machine-readable rule file and its input hashes must
+exist before P4 can expose or classify the remaining 141 labels. P4 then applies
+the frozen rule to the same sealed run, so the pilot does not require another
+full training. Any optimizer, schedule, transform, loss, seed, budget, or audit
+change invalidates that reuse and creates a new protocol version.
+
+#### Frozen output and provenance boundary
+
+One versioned report under
+`analysis_outputs/ingredient_selection/<protocol_id>/` must contain at least:
+
+- `campaign_manifest.json`: protocol ID, clean Git revision, command, UTC times,
+  environment and device, determinism flags, exact 4B-D1 fields and hashes,
+  optimizer/scheduler state, seed, metadata hashes, ordered classes and hash,
+  positive counts/weights and hash, transform identity, and initial head hash;
+- `pilot_cohort.json` and, after P3, `profile_rule.json` with their source hashes;
+- `metrics_per_label_epoch.csv`: one row per run, audit epoch, split, and class,
+  including support, prevalence, AP, fixed-policy precision/recall/F1, and the
+  actual learning rate/configuration identity;
+- compressed validation record IDs, targets, and logits for every audit point,
+  sufficient to rebuild PR curves and final bootstrap intervals;
+- `profile_evidence.csv`, named projections, plots, and
+  `validation_summary.json`, each generated from validated inputs rather than
+  notebook state.
+
+The campaign must start from a clean tracked worktree. Large checkpoints, raw
+scores, and generated reports remain outside `docs/`; durable documentation
+records only reviewed decisions and results. P2 owns schema tests, class-order
+and hash validation, test-split access denial, deterministic rerun checks, and
+the complete instrumented 8 GB resource gate.
+
+### 3. Tune each model category once on the full common task
 
 For every approved model category m, Macro-section 6 performs one bounded HPO
 campaign on V_base and freezes H_base(m) from validation data. The search
@@ -171,7 +236,7 @@ common starting point for the vocabulary-reduction ablation. No model category
 is tuned separately for each ingredient, and no test result selects an
 architecture, hyperparameter, threshold, or vocabulary.
 
-### 3. Measure vocabulary reduction with transferred hyperparameters
+### 4. Measure vocabulary reduction with transferred hyperparameters
 
 For every approved model category, train one new V_selected run using its
 unchanged H_base(m). Compare it with the corresponding full-vocabulary model
@@ -198,7 +263,7 @@ under the same training procedure, does changing the output vocabulary change
 performance on the retained labels? They do not establish that H_base(m) is
 optimal for the smaller vocabulary.
 
-### 4. Control for arbitrary label removal
+### 5. Control for arbitrary label removal
 
 Macro-section 6 generates several deterministic V_random^(r) controls before
 their runs. Each has the cardinality of V_selected and is stratified by train and
@@ -218,7 +283,7 @@ stochastic-training runs. With a small number of draws they support a descriptiv
 comparison, not a formal significance claim. They also do not prove that every
 retained ingredient is directly visible.
 
-### 5. Keep the selected-task local adaptation separate
+### 6. Keep the selected-task local adaptation separate
 
 Removing outputs can alter the optimization problem: in this repository,
 BCEWithLogitsLoss uses mean reduction by default, and optional pos_weight values
@@ -240,7 +305,7 @@ training procedure. If the schedule cannot accommodate the local panel, the
 project may report the transferred result but must not describe it as the best
 attainable selected-task configuration.
 
-### 6. Preserve selection isolation and report the single-run limit
+### 7. Preserve selection isolation and report the single-run limit
 
 All vocabulary selection, HPO, local adaptation, control design, thresholds, and
 calibration use training and validation data only. Test data is accessed only
@@ -282,7 +347,7 @@ vocabulary decisions as uncertain.
 | --- | --- | --- |
 | Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Done: established pair and custom P2-S adopted in the [portfolio](experimental_model_portfolio.md); the [completed 4A plan](../plans/experimental_model_research.md) hands implementation gates to Phase 5. Q1–Q4 are unchanged. |
 | Subphase 4B | Choose, verify, and freeze M_ref. | Done: 4B-D1 freezes the EfficientNetV2-S model-side selector and [`reference_selector_research.md`](../plans/reference_selector_research.md) records the completed evidence and handoff. |
-| Macro-section 3 | Freeze the remaining M_ref campaign, implement the workflow, and produce versioned V_selected evidence. | In progress at P1 under [`recognizable_ingredient_selection.md`](../plans/recognizable_ingredient_selection.md). |
+| Macro-section 3 | Implement the frozen 4B-D1/Phase 3-D1 workflow and produce versioned V_selected evidence. | P1 is done; P2 implementation is next under [`recognizable_ingredient_selection.md`](../plans/recognizable_ingredient_selection.md). |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
 

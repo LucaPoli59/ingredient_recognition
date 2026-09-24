@@ -1,7 +1,7 @@
 # Reference-selector research and decision plan
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-15
+**Last updated:** 2026-09-24
 **Linked macro-section and subphase:** [Subphase 4B, Reference-selector research](../general_plan.md#4b-reference-selector-research)
 **Overall status:** Done
 
@@ -68,7 +68,7 @@ This subphase does not:
 
 **Overall status:** Done
 **Current task:** Complete — 4B-D1 is frozen and Macro-section 3 has accepted the handoff.
-**Next action:** Execute P1 in the Macro-section 3 [recognizable-ingredient plan](recognizable_ingredient_selection.md): freeze the remaining campaign settings and measurement contract before implementation or pilot execution.
+**Next action:** Maintain 4B-D1 while Macro-section 3 executes P2 in the [recognizable-ingredient plan](recognizable_ingredient_selection.md). P1 has frozen the complementary campaign settings under Phase 3-D1.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -77,7 +77,7 @@ This subphase does not:
 | R0.2 | Map credible candidates to the current `v5` task and integration path. | **Done** | The [candidate and instrumentation inventory](../research/discovery/2026-08-22/candidate_integration_inventory.md) records verified, conditional, and deferred paths plus the common observability gap. |
 | R1 | Freeze a shortlist of at most three distinct protocols and the decision priority. | **Done** | Retained supervised ResNet-50 full fine-tuning, supervised EfficientNetV2-S full fine-tuning, and frozen DINOv2 ViT-B/14-register linear transfer. The [R1 checkpoint](#r1-completion-checkpoint--2026-09-15) records gate outcomes, grouped exclusions, claim boundaries, and the R2 priority without selecting `M_ref`. |
 | R2 | Verify the finalists only as needed, compare them, and choose `M_ref`. | **Done** | Selected supervised EfficientNetV2-S with full-backbone fine-tuning and an independent 165-logit pooled head. The [R2 checkpoint](#r2-completion-checkpoint--2026-09-15) records the source audit, bounded synthetic smoke, interpretation boundary, exclusions, and remaining R3 freeze items; no candidate training or accuracy comparison was run. |
-| R3 | Freeze the selected protocol and hand it to Macro-section 3. | **Done** | [4B-D1](../project_objective/model_comparison_methodology.md#4b-d1--frozen-reference-selector-protocol) freezes the exact EfficientNetV2-S model-side protocol, interpretation, resource boundary, and provenance requirements. The binding benchmark decision, Phase 3 plan, and general tracker are synchronized; Phase 3 is active at P1. |
+| R3 | Freeze the selected protocol and hand it to Macro-section 3. | **Done** | [4B-D1](../project_objective/model_comparison_methodology.md#4b-d1--frozen-reference-selector-protocol) freezes the exact EfficientNetV2-S model-side protocol, interpretation, resource boundary, and provenance requirements. The handoff remains accepted; Phase 3 has since completed P1 and is ready for P2. |
 
 ## Dependencies and fixed constraints
 
@@ -357,9 +357,10 @@ The detailed protocol is authoritative in
 [4B-D1](../project_objective/model_comparison_methodology.md#4b-d1--frozen-reference-selector-protocol),
 and [D12](../project_objective/benchmark_decisions.md#d12-frozen-reference-selector-boundary)
 records the benchmark-level decision. The Phase 3 plan accepts these choices as
-incoming constraints and is now active at P1, which must freeze only the
-remaining optimizer, learning-rate/scheduler, epoch-budget, evaluation-cadence,
-optional bounded robustness-panel, and measurement-policy values.
+incoming constraints. Its completed P1 decision now freezes the complementary
+optimizer, learning-rate/scheduler, epoch-budget, evaluation-cadence,
+single-configuration boundary, and measurement-policy values under
+[Phase 3-D1](../project_objective/model_comparison_methodology.md#phase-3-d1--frozen-selector-campaign-and-measurement-protocol).
 
 R3 changes documentation and methodology only. EfficientNetV2-S, the exact
 transform, per-label AP trajectories, and the complete manifest are not yet

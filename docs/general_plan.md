@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-23
+**Last updated:** 2026-09-24
 **Overall status:** In progress  
 **Current macro-phase:** Data and Ingredient selection
-**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and Phase 3 P1's campaign/measurement freeze around the binding 4B-D1 EfficientNetV2-S selector. Macro-section 4 research is complete; its experiment-model and reference-selector handoffs are available.
+**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and Phase 3 P2 implementation of the frozen 4B-D1 EfficientNetV2-S selector plus Phase 3-D1 campaign/measurement contract. Macro-section 4 research and Phase 3 P1 are complete.
 
 ## Purpose
 
@@ -33,7 +33,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
-| 3 | Ingredient selection | **In progress** | The binding EfficientNetV2-S selector handoff is available; execute P1 to freeze the remaining campaign and measurement contract before implementation and the bounded pilot. |
+| 3 | Ingredient selection | **In progress** | The model- and campaign-side selector protocols are frozen; implement P2 and pass its instrumentation, provenance, deterministic-audit, blind-pilot, and 8 GB gates before campaign execution. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Deferred** | All three 4A research handoffs are available; prepare their implementation plan after the remaining DataModule readiness checks. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
@@ -146,15 +146,15 @@ The Data macro-section is **Done** only when shared image loading, legacy compat
 
 This macro-section selects ingredients that provide scientifically meaningful and reproducible image-learning targets. The adopted Phase 3 profile separates train-AP optimization, validation-AP generalization, temporal/configuration sensitivity, validity/mechanism, semantic relevance, support, and visual observability; F1 is a secondary diagnostic under a fixed policy. None of these dimensions may be collapsed into raw frequency or one transient F1 maximum.
 
-The 2024 ResNet selection has been reconstructed as a historical baseline: it intersected four top-quartile sets defined by each label's maximum train F1 and produced 40 legacy `ingredients_ok` labels. Train F1 is accepted as an intentional convergence signal for that narrow question, but the legacy rule is not reused as the final `v5` criterion and the old/new plot is not accepted as comparative evidence. Macro-section 3 retains ownership of the new shared selected vocabulary. Subphase 4B has now frozen the independent EfficientNetV2-S reference-selector protocol, so Phase 3 is active at P1; the Subphase 4A experiment-model shortlist remains a separate decision.
+The 2024 ResNet selection has been reconstructed as a historical baseline: it intersected four top-quartile sets defined by each label's maximum train F1 and produced 40 legacy `ingredients_ok` labels. Train F1 is accepted as an intentional convergence signal for that narrow question, but the legacy rule is not reused as the final `v5` criterion and the old/new plot is not accepted as comparative evidence. Macro-section 3 retains ownership of the new shared selected vocabulary. Subphase 4B froze the independent EfficientNetV2-S reference-selector protocol, and Phase 3 P1 has frozen its campaign and measurement contract; P2 implementation is next. The Subphase 4A experiment-model shortlist remains a separate decision.
 
 ### Work-package status
 
 | Work package | Status | Next action |
 | --- | --- | --- |
 | 3.1 Preliminary evidence and historical reconstruction | **Done** | Retain the exact max-Q3 intersection as a read-only baseline and regression fixture. |
-| 3.2 Selection criteria and experimental protocol | **In progress** | Inherit 4B-D1 and freeze the remaining optimizer, learning-rate/scheduler, epoch budget, evaluation cadence, optional bounded robustness panel, AP trajectories, fixed-policy F1 diagnostics, controls, provenance, single-run uncertainty policy, and bounded-pilot procedure for numerical decision-profile gates. |
-| 3.3 Reproducible `v5` learnability study | **Deferred** | Implement maintained analysis, run a bounded pilot, freeze the rule, then execute the `M_ref` campaign. |
+| 3.2 Selection criteria and experimental protocol | **Done** | 4B-D1 and Phase 3-D1 freeze the model, single seed-42 AdamW campaign, 20-epoch schedule, deterministic audits, AP/F1 policy, controls, uncertainty, sealed pilot, and provenance/output boundary. Numerical profile gates remain a P3 pilot output. |
+| 3.3 Reproducible `v5` learnability study | **Pending** | Implement P2, pass its tests and instrumented resource gate, then run the sealed P3/P4 workflow without a second selector training. |
 | 3.4 Relevance and visual-observability validation | **Deferred** | Combine learnability with semantic/support criteria and audited direct/contextual/not-inferable evidence. |
 | 3.5 Final vocabulary tiers and integration | **Deferred** | Freeze named headline and exploratory projections, integrate them, and retire superseded scripts only after parity and retention gates pass. |
 
@@ -172,12 +172,14 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 - [x] Adopted the cross-phase methodology: Subphase 4A chooses the experiment model categories, Subphase 4B chooses the reference selector, Macro-section 3 produces one shared selected vocabulary, and Macro-sections 6–7 separate full-task comparison, transferred vocabulary ablation, support-matched random controls, and optional local adaptation.
 - [x] Selected supervised EfficientNetV2-S with full-backbone fine-tuning and an independent 165-logit pooled head as `M_ref` after a current-source audit and bounded 384-pixel output, gradient, provenance-path, and 8 GB smoke; no candidate training or predictive comparison informed the choice.
 - [x] Froze 4B-D1: exact EfficientNetV2-S weights, full end-to-end trainability, RGB 384-pixel full-frame fit/pad preprocessing, independent pooled head, train-only positive-weighted BCE, FP32 batch-8 resource target, interpretation limits, and the Phase 3 provenance handoff.
+- [x] Froze Phase 3-D1: one seed-42 AdamW/warm-up/cosine run for 20 epochs, deterministic train/validation audits every two epochs, robust AP windows, fixed-0.5 F1 diagnostics, final validation bootstrap intervals, low-cost controls, a blind support-stratified pilot cohort, and one-run P3/P4 reuse.
 
 ### Active after the Subphase 4B protocol freeze and handoff
 
-- [ ] Freeze the remaining global `M_ref` campaign panel: one declared seed per configuration, optimizer, learning rate and scheduler, fixed epoch budget, evaluation cadence, optional named robustness configuration, single-run limitation, and per-label logging contract. Inherit the 4B-D1 transform, head, and loss unchanged.
-- [ ] Pilot robust train-AP learning-dynamics and validation-AP statistics, including early-to-late change, a late-window level, temporal/configuration sensitivity, finite-validation-sample uncertainty where feasible, profile gates, and a fixed-policy F1 diagnostic where relevant.
-- [ ] Add support/prevalence, non-visual, and matched-size vocabulary controls; use like-for-like cohorts and statistics for every reduction claim.
+- [x] Freeze the remaining global `M_ref` campaign and measurement contract without inspecting new selector outcomes.
+- [ ] Implement the 4B-D1 wrapper/transform/loss and Phase 3-D1 optimizer, scheduler, deterministic audit, AP/F1, bootstrap, pilot-isolation, provenance, and output-schema paths through canonical APIs.
+- [ ] Pilot robust train-AP learning-dynamics and validation-AP statistics on the sealed cohort, including initialization/early-to-late change, a late-window level, temporal sensitivity, final validation bootstrap uncertainty, profile gates, and fixed-0.5 F1 diagnostics. Configuration sensitivity is unavailable under the single-configuration contract.
+- [ ] Add Phase 3 support/prevalence and non-visual controls, and preserve the matching fields needed for Macro-section 6's later matched-size vocabulary controls; use like-for-like cohorts and statistics for every reduction claim.
 - [ ] Implement deterministic historical reproduction and `v5` analysis in a dedicated source package, with plots generated from validated manifests rather than notebook state.
 - [ ] Define what “relevant” means for the thesis question independently of frequency or optimization ease.
 - [ ] Define and pilot instance-level visual-observability annotation with at least two reviewers and agreement measurement.
@@ -190,7 +192,7 @@ The historical rule is reproduced by maintained read-only code; the `v5` campaig
 
 ### Next action
 
-Execute P1 in [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md): accept the binding 4B-D1 model-side protocol and freeze the remaining `v5` campaign, instrumentation, controls, output schema, and candidate decision-profile measures before implementation or the bounded pilot. Do not reopen the separate Subphase 4A portfolio or revise `M_ref` from label outcomes.
+Execute P2 in [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md): implement and test the binding 4B-D1 model-side and Phase 3-D1 campaign-side contracts before any selector campaign or pilot outcome is opened. Do not reopen the separate Subphase 4A portfolio or revise `M_ref` from label outcomes.
 
 ## 4. Model research
 
@@ -254,9 +256,9 @@ Maintain the source-to-decision record and carry the three-category [portfolio](
 This subphase asks which single model protocol is a sufficiently sensitive, interpretable, reproducible, and affordable measurement instrument for Phase 3 label learnability. It does not choose the final experiment winner and does not own the broader model shortlist.
 
 - **Completed evidence:** R0.1 provides the selector-oriented landscape across supervised, visual self-supervised, vision-language, food-domain, and structured multi-label families. R0.2 maps credible paths to the `v5` interface, 8 GB boundary, and shared instrumentation/provenance gap. R1 retains three protocol-level finalists. R2 selects full-fine-tuned EfficientNetV2-S after source inspection and bounded synthetic output, gradient, provenance-path, and 8 GB checks. R3 freezes its exact model-side protocol as [4B-D1](project_objective/model_comparison_methodology.md#4b-d1--frozen-reference-selector-protocol), records [D12](project_objective/benchmark_decisions.md#d12-frozen-reference-selector-boundary), and hands the remaining campaign work to Phase 3 without claiming comparative accuracy.
-- **Pending:** No 4B task remains. EfficientNetV2-S integration, AP instrumentation, the remaining campaign freeze, pilot, and vocabulary generation belong to Macro-section 3.
+- **Pending:** No 4B task remains. EfficientNetV2-S integration, AP instrumentation, pilot execution, and vocabulary generation belong to Macro-section 3; its campaign freeze is complete under Phase 3-D1.
 - **Completion gate:** Met on 2026-09-15: one justified `M_ref` passed the declared gates, its reproducible model-side protocol and limitations are binding, and Macro-section 3 accepted the instrumentation and execution handoff.
-- **Next action:** Maintain the completed [`reference_selector_research.md`](plans/reference_selector_research.md) record. Execute Phase 3 P1 without reopening the selector from downstream outcomes.
+- **Next action:** Maintain the completed [`reference_selector_research.md`](plans/reference_selector_research.md) record. Execute Phase 3 P2 without reopening the selector from downstream outcomes.
 
 **Model-research macro-section completion gate:** Met on 2026-09-15. Subphase 4A provides the independent experiment-model portfolio and Subphase 4B provides the frozen reference selector; neither decision substitutes for the other.
 
@@ -525,6 +527,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-09-15 | Reference-selector research | Completed R2 and selected supervised EfficientNetV2-S full fine-tuning with an independent 165-logit pooled head as `M_ref`. The source audit and bounded synthetic smoke verified the direct maintained-library route, finite output/head gradients, and 384-pixel FP32 batch-8 operation within the 8 GB boundary; no candidate training, AP, selected-vocabulary result, or test evidence informed the choice. | Subphase 4B **In progress**; R3 exact protocol freeze and Macro-section 3 handoff are next; Macro-section 3 remains **Deferred** | [R2 checkpoint](plans/reference_selector_research.md#r2-completion-checkpoint--2026-09-15) |
 | 2026-09-15 | Reference-selector freeze and Phase 3 handoff | Completed R3 and froze 4B-D1: exact EfficientNetV2-S weights and supervised prior, full adaptation, full-frame 384-pixel transform, independent head, weighted BCE, FP32 batch-8 target, interpretation limits, and required provenance. Macro-section 3 accepted the handoff at P1; no implementation or label outcome informed the freeze. | Subphase 4B and Macro-section 4 **Done**; Macro-section 3 and Work package 3.2 **In progress** | [4B-D1](project_objective/model_comparison_methodology.md#4b-d1--frozen-reference-selector-protocol), [R3 checkpoint](plans/reference_selector_research.md#r3-completion-checkpoint--2026-09-15), [Phase 3 plan](plans/recognizable_ingredient_selection.md) |
 | 2026-09-23 | Historical experiment comparison | Reviewed the existing basic_v5 ResNet and DINOv2 campaigns with the maintained comparator. ResNet18 trial 77 is the stronger observed validation artifact, while the frozen DINOv2 linear-probe boundary and missing final-benchmark evidence remain explicit. | Historical result **Done**; Macro-section 7 final comparison remains **Deferred** | [Reviewed experiment result](experiment_results/basic_v5_resnet_dinov2.md) |
+| 2026-09-24 | Ingredient-selection campaign freeze | Completed P1 and adopted Phase 3-D1 without inspecting a new selector outcome. The single seed-42 AdamW/warm-up/cosine campaign, 20-epoch budget, deterministic two-epoch AP/F1 audits, bootstrap/control boundary, blind 24-label pilot, one-run P3/P4 reuse, and output manifest are binding. | Work package 3.2 **Done**; Work package 3.3 **Pending** at P2 | [Phase 3-D1](project_objective/model_comparison_methodology.md#phase-3-d1--frozen-selector-campaign-and-measurement-protocol), [Phase 3 plan](plans/recognizable_ingredient_selection.md) |
 
 ## Tracker maintenance rules
 

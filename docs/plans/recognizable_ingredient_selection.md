@@ -1,28 +1,29 @@
 # Recognizable ingredient selection plan
 
 **Created:** 2026-08-10
-**Last updated:** 2026-09-15
+**Last updated:** 2026-09-24
 
 This plan is the operational source of truth for Macro-section 3, **Ingredient selection**, in [`general_plan.md`](../general_plan.md). It preserves the November 2024 ResNet selection as a historical baseline and replaces its exploratory workflow with a reproducible, research-informed decision-profile study over the frozen FoodOn-first `v5` vocabulary. Macro-section 3 owns the resulting selected vocabulary and now executes against the frozen Subphase 4B reference selector. The independent Subphase 4A experiment-model shortlist is not a Phase 3 gate.
 
 Subphase 4B completed that dependency on 2026-09-15 by freezing the 4B-D1
-EfficientNetV2-S model-side protocol. Macro-section 3 is now active at P1. The
-independent Subphase 4A experiment-model portfolio remains outside this plan's
-selector decision.
+EfficientNetV2-S model-side protocol. P1 completed on 2026-09-24 by freezing the
+complementary Phase 3-D1 campaign and measurement contract. Macro-section 3 is
+now ready for P2 implementation. The independent Subphase 4A experiment-model
+portfolio remains outside this plan's selector decision.
 
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** P1 — freeze the remaining `v5` campaign contract around the incoming 4B-D1 EfficientNetV2-S selector.
-**Next action:** Predeclare the primary optimizer, learning rate and scheduler, fixed epoch budget, evaluation cadence, optional bounded configuration-sensitivity panel, AP/F1 measurement policy, controls, profile criteria, and output manifest before implementing or launching new experiments.
+**Current task:** P2 — implement the frozen 4B-D1 model-side and Phase 3-D1 campaign-side contracts.
+**Next action:** Add the maintained EfficientNetV2-S wrapper and full-frame transform, selector-specific weighted loss and AdamW schedule, deterministic audit path, AP/F1 logging, sealed pilot cohort, provenance manifest, and schema/resource tests before any campaign execution.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | P0 | Reconstruct the historical 2024 selection process and resolve its discrepancies | **Done** | Saved configurations, metrics, metadata, checkpoints, notebooks, launchers, journals, and the external communication archive establish the four historical stages and the exact 40-label rule. The accepted resolutions are recorded in this plan. |
-| P1 | Freeze the new selection question and experimental contract | **In progress** | The plan adopts a profile that separates optimization, held-out generalization, and validity/mechanism evidence. The [4B-D1 handoff](../project_objective/model_comparison_methodology.md#4b-d1--frozen-reference-selector-protocol) now fixes the model, weights, trainability, base transforms, head, loss boundary, and execution target. P1 must freeze the remaining campaign panel and fixed F1 policy before P2; P3 will use the bounded pilot to freeze numerical promotion gates. |
-| P2 | Implement the selector integration, deterministic historical reproduction, and reusable analysis | **Deferred** | Add the 4B-D1 model/transform and required AP/provenance extensions through canonical training APIs, then create the dedicated analysis package and thin command-line entry points. Notebooks become optional views, not execution state. |
-| P3 | Run and validate a bounded `v5` pilot | **Deferred** | Compare candidate learning-dynamics criteria and controls without test access; use the pilot to freeze the final rule. |
-| P4 | Run the full `v5` reference-selector learnability campaign | **Deferred** | Execute each frozen `M_ref` configuration once with its declared seed, preserve a complete provenance manifest, and report the resulting single-run limitation. |
+| P1 | Freeze the new selection question and experimental contract | **Done** | [Phase 3-D1](../project_objective/model_comparison_methodology.md#phase-3-d1--frozen-selector-campaign-and-measurement-protocol) fixes one seed-42 AdamW/warm-up/cosine configuration, 20 epochs, deterministic two-epoch audits, AP windows, fixed-0.5 F1 diagnostics, bootstrap uncertainty, low-cost controls, a sealed support-stratified pilot cohort, and the output boundary. No new selector outcome informed the decision. |
+| P2 | Implement the selector integration, deterministic historical reproduction, and reusable analysis | **Pending** | Add the frozen model/transform, loss, optimizer/scheduler, deterministic audit, AP/provenance, blind-cohort, historical reproduction, and reporting paths through canonical APIs. Notebooks become optional views, not execution state. |
+| P3 | Run and validate a bounded `v5` pilot | **Deferred** | Execute the sealed single campaign after P2 gates pass, expose only the deterministic 24-label pilot cohort, and freeze absolute numerical profile gates without choosing a fixed retained count. |
+| P4 | Apply the frozen profile to the full `v5` campaign evidence | **Deferred** | Unlock the remaining 141 labels from the same sealed 20-epoch run, apply the immutable P3 rule, preserve complete provenance, and report the single-run limitation. No second selector training is required unless a pre-outcome protocol failure invalidates the run. |
 | P5 | Combine learnability with relevance and visual-observability evidence | **Deferred** | Apply the semantic, support, and annotation protocol; distinguish direct visual evidence from contextual predictability. |
 | P6 | Freeze named headline and exploratory ingredient tiers | **Deferred** | Publish versioned projections of the shared `v5` vocabulary, with explicit inclusion evidence and uncertainty. |
 | P7 | Integrate the workflow and retire superseded scripts safely | **Deferred** | Connect training and analysis to canonical APIs, verify parity, document current behavior, then clean legacy notebooks and launchers only after retention gates pass. |
@@ -82,10 +83,9 @@ The minimum retained historical artifacts and the compatibility anchors are owne
 
 ## Adopted decision-profile framework
 
-**Status:** Adopted for Phase 3 planning on 2026-08-12 and released for P1 on
-2026-09-15 after Subphase 4B froze `M_ref`. P1 must now freeze the remaining
-configuration panel and measurement policy; P3 will freeze numerical promotion
-gates from the bounded pilot.
+**Status:** Adopted for Phase 3 planning on 2026-08-12, released after Subphase
+4B froze `M_ref`, and completed at the P1 contract level on 2026-09-24. P3 will
+freeze only the numerical promotion gates from the isolated pilot cohort.
 
 The framework applies the reusable findings in
 [`label_learnability/learnability_assessment.md`](../research/topics/label_learnability/learnability_assessment.md)
@@ -126,17 +126,16 @@ changes.
 
 ### Candidate trajectory statistics
 
-P1 will define the compact set of robust statistics and their aggregation
-policy; P3 will evaluate them without prematurely fixing numerical promotion
-gates:
+Phase 3-D1 fixes the compact statistics and aggregation windows; P3 will select
+numerical promotion gates from the isolated pilot cohort without changing the
+statistics:
 
-- early-to-late change in train AP, using declared robust early and late windows;
-- robust late-window train AP rather than a single-epoch maximum;
+- initialization-to-late and early-to-late changes in train AP, using the frozen audit epochs and robust windows;
+- robust late-window train and validation AP rather than a single-epoch maximum;
 - validation AP for every declared configuration and its train-to-validation gap;
-- late-window dispersion, nearby-window sensitivity, and configuration sensitivity where the bounded panel is run;
-- validation-score resampling intervals where feasible, explicitly labelled as finite-validation-sample uncertainty rather than run-to-run uncertainty;
-- a predeclared fixed-threshold F1 trajectory, only where a binary-output policy is relevant; and
-- optional positive example-label confidence, variability, or forgetting diagnostics for ambiguous candidates. These are an exploratory multi-label adaptation, not a mandatory standard metric.
+- late-window dispersion and nearby-window sensitivity; configuration sensitivity is explicitly unavailable because P1 adopted no second training configuration;
+- a deterministic final-checkpoint validation AP bootstrap, explicitly labelled as finite-validation-sample uncertainty rather than run-to-run uncertainty; and
+- a global fixed-0.5 F1 trajectory as diagnostic evidence only.
 
 The pilot must reject criteria that merely guarantee a fixed quota, are dominated by a one-epoch spike, change substantially under a nearby reasonable epoch window, or let a per-label threshold maximise F1 retrospectively. It must choose explicit numerical profile gates from the fixed pilot evidence and may retain an `uncertain` band instead of forcing every label into a binary decision.
 
@@ -148,10 +147,13 @@ The protocol must include the least expensive controls that answer the relevant 
 - an untrained or early-epoch reference for learning-delta calculations;
 - a non-visual prevalence baseline, and a cuisine-prior diagnostic where appropriate;
 - an image-model-versus-non-visual baseline comparison before calling a signal plausibly visual;
-- at least one matched-size random or support-matched vocabulary projection when claiming that vocabulary reduction improves training or validation behavior;
-- identical-metric full-vocabulary versus selected-projection comparisons when assessing the effect of label-space reduction.
+- support/prevalence fields sufficient for the later matched-size support-matched vocabulary controls; and
+- identical-metric full-vocabulary versus selected-projection comparisons only when Macro-section 6 assesses the effect of label-space reduction.
 
-A shuffled-label control is optional at pilot time and becomes mandatory only if the cheaper controls cannot distinguish optimization artifacts from a learned signal.
+A shuffled-label control is optional at pilot time and requires a recorded
+addendum before the non-pilot labels are exposed if the cheaper controls cannot
+distinguish optimization artifacts from a learned signal. Reduced-vocabulary
+training and matched-random runs remain owned by Macro-section 6, not P1–P4.
 
 ## Frozen `M_ref` handoff from Subphase 4B
 
@@ -175,23 +177,33 @@ is an incoming constraint, not a P1 search space. It fixes:
 The exact checkpoint hash, resize arithmetic, padding rule, head initialization
 boundary, limitations, and provenance requirements remain authoritative in
 4B-D1. The current repository does not yet implement the complete protocol.
-P1 freezes the campaign settings below; P2 implements and tests the missing
+P1 has frozen the campaign settings below; P2 implements and tests the missing
 wrapper, transform, AP instrumentation, and manifest.
 
-## Campaign contract to freeze in P1
+## Frozen P1 campaign contract
 
-4B-D1 has already fixed the model-side protocol. P1 must freeze all remaining
-campaign-side values before any pilot or label-outcome inspection:
+The binding [Phase 3-D1 decision](../project_objective/model_comparison_methodology.md#phase-3-d1--frozen-selector-campaign-and-measurement-protocol)
+now owns the exact campaign values. In summary, P2 must implement one seed-42
+configuration with AdamW, a two-epoch linear warm-up followed by cosine decay,
+20 complete epochs, physical batch 8 in true FP32, deterministic train and
+validation audits before training and every two epochs, fixed-0.5 F1 diagnostic
+trajectories, final-checkpoint validation AP bootstrap intervals, and no second
+training-time robustness configuration.
 
-1. Use the frozen `v5` train and validation metadata and their saved class order; do not access test outcomes.
-2. Define one global primary optimizer, learning rate, scheduler, and configuration-selection rule; never choose a different configuration after inspecting each label.
-3. Use one primary `M_ref` configuration and an optional bounded robustness panel. Run each configuration once with one declared seed; do not present this as evidence of seed-level stability or of reproducibility across stochastic training runs.
-4. Inherit the 4B-D1 physical batch, precision, transform, head, and weighted-loss boundary. Freeze batch sampling, a fixed epoch budget without primary-run early stopping, evaluation cadence, threshold policy, and any separately named augmentation robustness variant. Do not silently substitute the repository defaults.
-5. Log per-label train and validation AP at every declared evaluation point, including support, prevalence, and class index; persist raw or regenerable scores sufficient to rebuild validation precision-recall summaries.
-6. If F1 is reported, declare one threshold-selection and decision policy before analysis. Log its train and validation trajectory separately; never maximise it per epoch or label for selection.
-7. Persist the exact model, optimizer, scheduler, loss-weighting state, transform identity, seed, code revision, environment, metadata hashes, and encoder classes in a run manifest.
-8. Validate every report column against saved configurations; do not relabel booleans manually in analysis code.
-9. Keep model and hyperparameter selection on validation. Train AP is used only for the predeclared optimization evidence; validation AP is the primary held-out learnability evidence; no test metric is read by selection commands.
+The selection workflow must preserve the following execution boundaries:
+
+1. Use only the frozen `v5` train and validation metadata and their saved class order. Selector commands must not open the test metadata.
+2. Compute audit train AP in a separate deterministic evaluation pass from one fixed model state; never aggregate predictions from training batches whose weights changed during the epoch.
+3. Generate and hash the 24-label support-stratified pilot cohort before model construction or outcome inspection. P3 may expose only that cohort until `profile_rule.json` is frozen.
+4. Reuse the same sealed 20-epoch run when P4 applies the rule to the remaining 141 labels. A second selector training is unnecessary unless an implementation or resource gate invalidated the first run before non-pilot inspection.
+5. Derive every report field from validated configuration or run state; do not relabel transform, loss, weighting, or augmentation booleans in analysis code.
+6. Keep train AP as optimization evidence and validation AP as held-out evidence. F1, bootstrap intervals, cuisine priors, and support relationships retain their declared diagnostic boundaries.
+7. Treat the absence of repeated seeds and a configuration panel as missing stability evidence, not as agreement. Borderline labels remain `uncertain`.
+
+P3 still owns the numerical values that map these frozen statistics to the five
+provisional profile outcomes. It may choose simple absolute gates and an
+uncertain band from the pilot cohort, but may not change the learner, metric,
+windows, cohort, budget, or force a fixed number of selected labels.
 
 ## Planned architecture and artifacts
 
@@ -202,14 +214,18 @@ The exact module names may be finalized during P2, but the implementation bounda
 - canonical training remains under `src/training/`, with only the reusable logging/configuration extensions required by this study;
 - notebooks may consume generated tables for exploration, but no selection decision may depend on notebook execution order or hidden state.
 
-Each analysis execution will create one versioned report directory containing:
+Each analysis execution will create one versioned
+`analysis_outputs/ingredient_selection/<protocol_id>/` report directory
+containing:
 
-- an input manifest with experiment groups, run identifiers, class order, configuration, declared random seed, code revision, environment, and data hashes;
-- a tidy per-label, per-epoch metrics table;
+- `campaign_manifest.json` with run identity, clean code revision, ordered class and data hashes, exact model/weight/head/loss/optimizer/scheduler/transform state, seed, deterministic-runtime state, environment, and device evidence;
+- `pilot_cohort.json` before training and `profile_rule.json` after P3, both carrying the source hashes needed to enforce the analysis gate;
+- `metrics_per_label_epoch.csv`, the tidy per-label and per-audit-epoch metrics table;
+- compressed validation record identifiers, targets, and logits for every audit point, sufficient to regenerate precision-recall summaries and the final bootstrap intervals;
 - per-label optimization, generalization, temporal/configuration sensitivity, validity/mechanism, and observability evidence with uncertainty and profile reasons;
 - provisional profile outcomes and the selected, rejected, and uncertain named projections of `v5`;
 - plots for trajectories, temporal/configuration sensitivity, support relationships, and control comparisons;
-- a machine-readable validation summary proving schema, class-order, and provenance checks.
+- `validation_summary.json`, proving schema, class-order, provenance, blind-pilot, deterministic-analysis, test-isolation, and resource checks.
 
 Large checkpoints and raw training logs remain in `experiments/`; the report links them rather than copying them.
 
@@ -220,7 +236,7 @@ The replacement report must make the selection logic inspectable rather than mer
 - small-multiple or filtered per-label train/validation AP trajectories with late-window dispersion;
 - early-versus-late train-AP change, robust late-window distributions, and validation-AP summaries;
 - precision-recall views or regenerable score references for representative and borderline labels;
-- temporal-window sensitivity summaries and, when the bounded panel is run, configuration-comparison views;
+- temporal-window sensitivity summaries; the report must mark configuration sensitivity unavailable rather than inventing a comparison;
 - learnability statistics versus train support and prevalence;
 - decision-profile plots with provisional outcomes, numerical gates, uncertainty, and reasons visible;
 - like-for-like full-vocabulary, selected-projection, and matched-control comparisons when reduction claims are made.
@@ -240,8 +256,11 @@ Plots must label the split, statistic, aggregation window, declared random seed,
 ### New workflow
 
 - Unit-test train-AP trajectory summaries and profile assignment on hand-verifiable flat, improving, noisy-spike, degrading, low-support, and missing-epoch cases.
+- Prove that audit train AP comes from a deterministic evaluation pass at one model state rather than the stochastic training loop.
+- Fix the complete 20-epoch learning-rate sequence in a unit test, including the warm-up/cosine transition at epoch 2 and resume at the next epoch boundary.
 - Verify that fixed-policy F1 is a reproducible diagnostic and cannot alter a profile through an undeclared threshold search.
 - Reject inconsistent class order, duplicated run IDs, mixed metadata hashes, a missing declared seed, or contradictory configuration fields.
+- Reject a pilot cohort that does not reproduce the Phase 3-D1 support-stratified SHA-256 rule, and prevent all-label analysis until the hashed rule file exists.
 - Re-run analysis on the same inputs and require identical machine-readable outputs.
 - Verify that changing plot styling cannot change the selected ingredient sets.
 - Prove that no test metrics are read by selection commands.
@@ -290,6 +309,7 @@ This plan is complete only when:
 | 2026-08-12 | Deferred new vocabulary-selection execution until the then-undivided Macro-section 4 chose `M_ref` (now owned by Subphase 4B) | Learnability is conditional on the selector. The historical ResNet remains a baseline, not an automatic selector; Phase 3 retains ownership of producing the shared selected vocabulary after the model-research decision. |
 | 2026-08-27 | Narrowed the resume dependency to Subphase 4B | Macro-section 4 now separates experiment-model research (4A) from reference-selector research (4B). Phase 3 needs the frozen `M_ref`, not completion of the independent experiment-model shortlist. |
 | 2026-09-15 | Accepted the completed 4B-D1 EfficientNetV2-S handoff and resumed Macro-section 3 at P1 | The selector's exact model-side protocol and interpretation boundary are now binding. P1 owns only the remaining campaign settings and measurement contract; implementation and pilot execution remain P2 and P3. |
+| 2026-09-24 | Completed P1 and adopted Phase 3-D1 | One seed-42 AdamW/warm-up/cosine configuration, 20 epochs, deterministic two-epoch audits, AP/F1/uncertainty controls, the sealed 24-label pilot, one-run P3/P4 reuse, and the output boundary are frozen. No new selector outcome was inspected; P2 implementation is next. |
 
 ## Related documentation
 

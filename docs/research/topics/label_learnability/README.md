@@ -1,7 +1,7 @@
 # Label learnability research
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-15
+**Last updated:** 2026-09-24
 
 ## Context
 
@@ -26,8 +26,8 @@ model, threshold, numerical cut-off, or production vocabulary.
 ## Related work
 
 - [`../../../plans/recognizable_ingredient_selection.md`](../../../plans/recognizable_ingredient_selection.md)
-  is the project-specific plan that has adopted this profile and is now active
-  at P1 after Subphase 4B froze the reference selector.
+  is the project-specific plan that has adopted this profile, completed the P1
+  campaign freeze, and is now ready for P2 implementation.
 - [`../../../project_objective/model_comparison_methodology.md`](../../../project_objective/model_comparison_methodology.md)
   owns the binding cross-phase methodology that fixes the reference-selector
   dependency and the later shared-vocabulary comparisons.

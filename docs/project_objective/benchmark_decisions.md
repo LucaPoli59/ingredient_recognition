@@ -1,7 +1,7 @@
 # Yummly data and benchmark decisions
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-15
+**Last updated:** 2026-09-24
 **Status:** Active and binding
 
 ## Purpose
@@ -25,7 +25,8 @@ The existing 65,146-record metadata remains valid for historical experiments. It
 | D9 | Which primary metrics are used? | Report macro mean average precision and micro F1 together; neither is sufficient alone. |
 | D10 | Where are thresholds and calibration selected? | Fit thresholds, calibration, and other selection-time parameters on validation data only. Keep the test split unavailable to selection decisions. |
 | D11 | How are ingredient selection and model comparison coupled? | Subphase 4A chooses the experiment model categories, Subphase 4B independently freezes the reference selector, and Macro-section 3 then produces one shared selected vocabulary. Compare model categories on common full and selected tasks; test vocabulary reduction through transferred-hyperparameter and support-matched random-vocabulary controls; keep selected-task local adaptation separate. |
-| D12 | Which protocol defines reference-selector learnability? | Use the 4B-D1 EfficientNetV2-S protocol: exact supervised ImageNet-1K weights, full-backbone adaptation, full-frame 384-pixel preprocessing, an independent pooled 165-logit head, and train-only positive-weighted BCE. Macro-section 3 must implement the missing wrapper/instrumentation and freeze the remaining campaign settings before inspecting label outcomes. |
+| D12 | Which model-side protocol defines reference-selector learnability? | Use the 4B-D1 EfficientNetV2-S protocol: exact supervised ImageNet-1K weights, full-backbone adaptation, full-frame 384-pixel preprocessing, an independent pooled 165-logit head, and train-only positive-weighted BCE. |
+| D13 | Which campaign measures reference-selector learnability? | Use the Phase 3-D1 single-run protocol: seed 42, AdamW with a fixed warm-up/cosine schedule, 20 epochs, deterministic audits every two epochs, AP trajectories, fixed-0.5 F1 diagnostics, finite-validation bootstrap uncertainty, low-cost non-visual controls, and a support-stratified blind pilot cohort. No extra robustness configuration or second pilot training is required. |
 
 ## D1: target-field contract
 
@@ -185,12 +186,35 @@ This decision fixes a measurement instrument, not the final benchmark winner.
 It neither proves that an ingredient is directly visible nor establishes that
 EfficientNetV2-S is the best-performing `v5` model.
 
-The repository does not yet implement this complete protocol. Macro-section 3
-P1 must freeze the remaining optimizer, learning-rate/scheduler, epoch budget,
-evaluation cadence, and optional bounded robustness panel before outcome
-inspection; P2 then implements the wrapper, transforms, AP logging, manifest,
-and validation. Any change to D12 after label outcomes are inspected is a new
-versioned methodology decision, not an implementation convenience.
+The repository does not yet implement this complete protocol. Phase 3-D1 now
+freezes the complementary campaign under D13; P2 must implement the wrapper,
+transforms, AP logging, manifest, and validation. Any change to D12 after label
+outcomes are inspected is a new versioned methodology decision, not an
+implementation convenience.
+
+## D13: frozen reference-selector campaign boundary
+
+The selector campaign uses exactly one primary configuration and one declared
+seed. It runs the 4B-D1 model for 20 complete epochs with physical batch 8,
+train-only positive-weighted BCE, AdamW at `1e-4`, a two-epoch linear warm-up,
+and cosine decay to `1e-6`. There is no early stopping, scheduler reaction to
+validation, repeated seed, or additional training-time robustness
+configuration.
+
+Full deterministic train and validation audits occur before optimization and
+after every second epoch. Per-label AP is the primary trajectory measurement;
+F1 uses one global fixed `0.5` threshold and remains diagnostic. A deterministic
+24-label support-stratified cohort is the only outcome visible while P3 freezes
+the numerical gates. P4 then applies the frozen rule to the remaining labels
+from the same sealed run, avoiding a second full selector training.
+
+The exact optimizer arguments, schedule, randomness controls, audit epochs,
+trajectory windows, bootstrap policy, non-visual controls, pilot construction,
+and output manifest are authoritative in
+[`model_comparison_methodology.md`](model_comparison_methodology.md#phase-3-d1--frozen-selector-campaign-and-measurement-protocol).
+P2 must pass the complete instrumented resource and reproducibility gates before
+the run is accepted. Any campaign-side change after non-pilot label outcomes are
+visible creates a new versioned methodology decision.
 
 ## Automatic readiness checklist
 

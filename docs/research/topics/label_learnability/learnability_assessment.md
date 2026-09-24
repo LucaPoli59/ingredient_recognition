@@ -1,7 +1,7 @@
 # Assessing label learnability in supervised classification
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-15
+**Last updated:** 2026-09-24
 **Status:** Evidence synthesis and reusable recommendation; not a binding project decision.
 
 ## Question and boundary
@@ -239,8 +239,8 @@ recommended protocol, not equivalent evidence.
 For the Ingredient Recognition project, the general evidence profile has been
 adopted as the planning framework in
 [`recognizable_ingredient_selection.md`](../../../plans/recognizable_ingredient_selection.md).
-Subphase 4B has now frozen the reference selector and the project-specific plan
-is active at P1; the binding cross-phase rationale and ownership boundary are in
+Subphase 4B has frozen the reference selector and the project-specific plan has
+completed P1; the binding campaign, cross-phase rationale, and ownership boundary are in
 [`model_comparison_methodology.md`](../../../project_objective/model_comparison_methodology.md).
 The selection plan—not this research note—will record the frozen numerical
 gates, run panel, single-run resource limit, and implementation decision after
