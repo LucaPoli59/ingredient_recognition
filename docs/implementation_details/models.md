@@ -1,7 +1,7 @@
 # Vision models
 
 **Created:** 2026-08-02
-**Last updated:** 2026-09-24
+**Last updated:** 2026-09-27
 
 This page describes the implementation of the models available in `src/models` and their contract with the training pipeline. The problem remains a multi-label classification task: each model outputs a vector of `num_classes` **logits**, with no final sigmoid. Converting logits to probabilities and applying `BCEWithLogitsLoss` are responsibilities of the Lightning module.
 
@@ -91,6 +91,11 @@ comparison implementation, whose role and input contract differ.
 The exact loss, optimizer, scheduler, audit cadence, blind-pilot gate, and
 resource result are documented in
 [`ingredient_selection.md`](ingredient_selection.md).
+The wrapper exposes `MAX_ALLOWED_BATCH_SIZE = 8` for the measured 384-pixel
+true-FP32 full-fine-tuning contract on the RTX 4060. The specialized Phase 3
+launcher requests effective 128 and resolves physical 8 with Lightning
+accumulation 16; the cap is hardware/protocol-specific, not an architecture
+constant that guarantees memory feasibility on every device.
 
 ## Torchvision ResNet wrapper
 

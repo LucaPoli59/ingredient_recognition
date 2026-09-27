@@ -107,6 +107,23 @@ Le immagini sono normalmente ridimensionate a 224×224. Per i modelli generici i
 
 ## Addestramento e valutazione
 
+Le revisioni operative Phase 3-D2/D3 del 27 settembre 2026 richiedono batch
+effettivo 128 e 40 epoche nel workspace WSL principale (2 di warm-up e 38 di
+cosine decay, audit ogni 2 epoche). Il launcher rilanciabile è
+`scripts/launch_exps/ingredient_selection/train_selector.py`: effettua il gate
+CUDA su un'intera epoca prima di costruire da zero il modello della campagna.
+Le prove 128/64/32/16 hanno prodotto OOM; `EfficientNetV2SSelector` espone quindi
+`MAX_ALLOWED_BATCH_SIZE = 8`, con accumulo Lightning 16. Il limite vale per
+full fine-tuning FP32 a 384 px sulla RTX 4060. Provenienza, batch fisico ed
+effettivo, accumulo, limite VRAM e snapshot dei sorgenti sono nel manifest; il
+repository può avere modifiche locali, purché il gate corrisponda esattamente
+agli stessi sorgenti. La run v1 interrotta è conservata; il gate incompleto v2
+è stato interrotto prima dell'avvio della campagna, e la nuova è identificata
+come `phase3-d1-v3`. Il contratto è in
+[`docs/implementation_details/ingredient_selection.md`](docs/implementation_details/ingredient_selection.md)
+e la decisione vincolante in
+[`Phase 3-D3`](docs/project_objective/model_comparison_methodology.md#phase-3-d3--forty-epoch-campaign-amendment), con le regole batch/provenienza di D2.
+
 `src/lightning/lgn_models.py` incapsula un `BaseModel` in un `LightningModule`. La configurazione predefinita usa `BCEWithLogitsLoss` per la classificazione multi-label, con sigmoid in fase di calcolo metriche/inferenza. Le metriche di default includono accuracy, precision, recall e Hamming distance con media weighted; F1 non è abilitata di default e mancano average precision, calibrazione e selezione esplicita delle soglie. Questa configurazione è legacy e non coincide con il protocollo deciso per il nuovo benchmark.
 
 `src/lightning/lgn_trainers.py` fornisce:
@@ -187,7 +204,7 @@ Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi
 
 - Completare la prova end-to-end WSL avviata con la policy `pin_memory` automatica e registrare l'esito del training minimo.
 - Completare la fase Data residua definita in `docs/plans/data_ingredient_refactor/yummly_data_phase.md`: gli anchor legacy 2.1c sono già verificati; restano il completamento del training e gli smoke test di checkpoint reload e dashboard richiesti dalla 2.4.
-- Eseguire P3 in `docs/plans/recognizable_ingredient_selection.md`: rigenerare il resource gate legato alla revisione P2 pulita, eseguire la singola campagna congelata e analizzare soltanto la cohort pilot da 24 label per fissare i gate numerici senza quota prefissata.
+- Eseguire P3 in `docs/plans/recognizable_ingredient_selection.md`: completare il gate su un'epoca e avviare dal workspace principale la campagna v3 da 40 epoche con batch effettivo 128; analizzare poi soltanto la cohort pilot da 24 label per fissare i gate numerici senza quota prefissata.
 - Verificare e, se necessario, uniformare alcuni import che dipendono dalla directory di avvio (`config`, `models`, `data_processing` vs `settings.config`, `src.*`).
 - Verificare la gestione di ripresa dello studio Optuna, che condivide un journal globale configurato in `experiments/journal.log`.
 - Correggere o documentare la differenza fra porta Optuna dichiarata (8051) e quella usata dallo script (8055).

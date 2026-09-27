@@ -18,6 +18,7 @@ class EfficientNetV2SSelector(BaseModel):
     """Exact model-side adapter frozen by decision 4B-D1."""
 
     PRETTY_NAME = "EfficientNetV2-S Phase 3 selector"
+    MAX_ALLOWED_BATCH_SIZE = 8  # RTX 4060, 384 px, full fine-tuning, true FP32.
     WEIGHTS_ENUM = "EfficientNet_V2_S_Weights.IMAGENET1K_V1"
     WEIGHTS_URL = EfficientNet_V2_S_Weights.IMAGENET1K_V1.url
     WEIGHTS_SIZE = 86_721_253
@@ -69,6 +70,10 @@ class EfficientNetV2SSelector(BaseModel):
     @property
     def classifier_target_layer(self):
         return self.model.classifier[1]
+
+    @property
+    def max_allowed_batch_size(self):
+        return self.MAX_ALLOWED_BATCH_SIZE
 
     def to_config(self) -> Dict[str, Any]:
         config = super().to_config()

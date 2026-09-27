@@ -1,7 +1,7 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-24
+**Last updated:** 2026-09-27
 **Status:** Active and binding design; Subphase 4B has frozen the EfficientNetV2-S reference-selector protocol, Phase 3-D1 has frozen its campaign and measurement contract, and the later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
@@ -119,6 +119,9 @@ meaning of “learnable” for the vocabulary-selection study.
 **Adopted:** 2026-09-15. The model-side selector identity is frozen below.
 The complementary campaign-side configuration is now frozen under Phase 3-D1.
 Neither decision may be revised silently after label outcomes are inspected.
+The execution amendment Phase 3-D2 below supersedes the original batch and
+clean-worktree requirements. Phase 3-D3 sets the active 40-epoch budget for
+the replacement `phase3-d1-v3` campaign.
 
 | Field | Binding choice | Consequence or implementation requirement |
 | --- | --- | --- |
@@ -160,7 +163,10 @@ This implementation result does not contain a label outcome or revise 4B-D1.
 
 #### Phase 3-D1 — Frozen selector campaign and measurement protocol
 
-**Adopted:** 2026-09-24. This decision completes P1 without inspecting a new
+**Adopted:** 2026-09-24. The original values remain as historical evidence:
+Phase 3-D2 supersedes batch/provenance, and Phase 3-D3 supersedes the budget,
+cosine duration, audit horizon and final analysis windows. Other fields remain
+binding. This decision completes P1 without inspecting a new
 `v5` selector outcome. The numeric profile-promotion gates remain a P3 pilot
 output, but the data that may inform them, the optimization path, measurements,
 controls, and isolation procedure are fixed here.
@@ -189,7 +195,8 @@ strata, rank labels inside each stratum by the SHA-256 digest of
 `phase3-pilot-v1\0<label>`, and take the first eight from every stratum. Persist
 the resulting 24 names, indices, supports, generation string, and manifest hash.
 
-The single 20-epoch run emits all 165 logits because the frozen head is shared,
+The single sealed run (originally 20 epochs, now 40 under Phase 3-D3) emits
+all 165 logits because the frozen head is shared,
 but P3 analysis is allowed to expose only these 24 labels. P3 freezes simple
 absolute gates and an `uncertain` band from that cohort; it may not optimize a
 fixed retained count. A machine-readable rule file and its input hashes must
@@ -217,11 +224,100 @@ One versioned report under
   `validation_summary.json`, each generated from validated inputs rather than
   notebook state.
 
-The campaign must start from a clean tracked worktree. Large checkpoints, raw
+The original v1 campaign required a clean tracked worktree; Phase 3-D2 permits
+the main workspace with an immutable content-addressed source snapshot. Large checkpoints, raw
 scores, and generated reports remain outside `docs/`; durable documentation
 records only reviewed decisions and results. P2 owns schema tests, class-order
 and hash validation, test-split access denial, deterministic rerun checks, and
 the complete instrumented 8 GB resource gate.
+
+#### Phase 3-D2 — Effective-batch and main-workspace execution amendment
+
+**Adopted:** 2026-09-27, following the user's explicit request before any
+per-label outcome was inspected. `phase3-d1-v1` was interrupted during epoch
+1 (zero-based), retained as a superseded incomplete campaign, and cannot be
+combined with the replacement evidence. The replacement starts from the exact
+pretrained weights and a newly seeded head, never from the interrupted run or
+a disposable capacity-test model. Its planned protocol ID was `phase3-d1-v2`.
+Before that campaign started, the user adopted Phase 3-D3 below; D2's batch
+and provenance rules remain binding for v3.
+
+The requested effective batch is **128**. Test physical divisors in descending
+order (`128,64,32,16,8,4,2,1`) and set the model's `MAX_ALLOWED_BATCH_SIZE` to
+the largest passing physical divisor. Lightning uses
+`accumulate_grad_batches = 128 / physical_batch_size`. Capacity is resolved
+before campaign training and cannot change adaptively during the run.
+
+On the development RTX 4060, quick trials at 128, 64, 32 and 16 raised CUDA
+OOM, while physical 8 completed two accumulated AdamW steps. The current cap
+is therefore **8** with accumulation **16**, conditional on a mandatory full
+disposable epoch plus deterministic validation-inference gate. All tests use
+the same real train data, weighted BCE, FP32, full adaptation, and optimizer
+settings as the campaign. They expose no ingredient AP/F1 outcomes and their
+models are discarded. Raw capacity records are under
+`analysis_outputs/ingredient_selection/capacity_v2/`.
+
+The allocator is capped using
+`min(total_VRAM - 512 MiB, free_VRAM_at_start - 256 MiB)` through
+[PyTorch's per-process memory limit](https://docs.pytorch.org/docs/2.8/generated/torch.cuda.memory.set_per_process_memory_fraction.html).
+The cap prevents a trial from being accepted through host/shared-memory
+oversubscription, observed locally in the initial unbounded batch-128 OOM.
+Both the gate and campaign record the resolved limit.
+
+With 47,965 records, each epoch has 374 groups of 128 plus a final group of
+93: **375 optimizer updates per epoch and 7,500 over 20 epochs**. Keep all
+records (`drop_last=False`). Since Lightning divides each microbatch loss by
+the accumulation count, scale the returned loss by
+`accumulation * actual_microbatch_records / actual_group_records`; this gives
+the final incomplete group its correct sample-mean gradient. A CPU Lightning
+test compares the actual updates with direct full-group BCE updates.
+
+The LR, decay, warm-up, cosine schedule, epoch budget, seed, transforms,
+weights, audits, pilot rule, and analysis statistics remain fixed. The number
+of optimizer updates changes substantially; the old and new runs are not
+equivalent optimization protocols. No linear learning-rate scaling is assumed
+or tuned from outcomes. Accumulation aggregates gradients, whereas
+[BatchNorm](https://docs.pytorch.org/docs/2.8/generated/torch.nn.BatchNorm2d.html)
+continues to use the physical microbatch's statistics; effective 128 does not
+give BatchNorm 128 simultaneous examples.
+
+The canonical rerunnable launcher is
+[`train_selector.py`](../../scripts/launch_exps/ingredient_selection/train_selector.py).
+It runs the full-epoch gate in a fresh subprocess, then starts a fresh campaign
+only if that gate passes. Code provenance is the Git base revision **plus** a
+SHA-256 inventory and saved ZIP of the exact Python sources, including new
+maintained source/launcher files. Record the actual tracked-worktree status;
+the gate must match the same revision, source-content hash, batch plan, data,
+weights, and worker settings. This permits execution in the main workspace
+without requiring unrelated local changes to be committed. Data, secrets,
+raw outputs, and checkpoints are excluded from the source snapshot.
+
+#### Phase 3-D3 — Forty-epoch campaign amendment
+
+**Adopted:** 2026-09-27 by explicit user request, before any per-label outcome
+inspection and before the v2 campaign started. The disposable v2 full-epoch
+gate was interrupted; no completed gate or training result is reused. The
+active protocol ID is **`phase3-d1-v3`**. After verification and commit, rerun
+the one-epoch capacity gate against the exact committed source, then construct
+a freshly initialized campaign model. Never resume v1 or the discarded gate
+model.
+
+| Field | Active binding value | Rationale |
+| --- | --- | --- |
+| Training budget | 40 complete epochs, no early stopping | Explicit budget extension, not an outcome-selected stopping point. |
+| Scheduler | The same 2-epoch linear warm-up, then `CosineAnnealingLR(T_max=38, eta_min=1e-6)` | Extend the decay through the new horizon without a restart or unrequested LR scaling. |
+| Audit cadence | Initialization plus every 2 epochs through 40: 21 fixed-state train/validation audits | Preserve the measurement cadence and include the actual final checkpoint. |
+| AP windows | `W_early={2,4,6}`, `W_near={30,32,34,36,38}`, `W_late={32,34,36,38,40}` | Preserve the early acquisition reference and the five-point end-of-budget windows; do not analyze epoch 20 as the final state. |
+| Optimizer-update budget | 375 per epoch, 15,000 over 40 epochs, with the same correctly weighted final group of 93 records | The effective-128 sampling arithmetic is unchanged. |
+| Final uncertainty | Bootstrap from epoch-40 validation scores | Keep the same statistic and resampling policy at the actual final model state. |
+
+All other D1/D2 choices remain unchanged, including effective 128, physical 8
+and accumulation 16 on the development GPU, true FP32, weights, seed, loss,
+initial LR and decay, transforms, pilot-generation rule, and blind P3/P4 reuse.
+Capacity testing remains one disposable full epoch, not a 40-epoch experiment.
+The manifest and analysis validate the 40-epoch budget and 38-epoch cosine
+duration explicitly. Earlier campaign and capacity artifacts remain separate
+historical evidence and are never pooled with v3 selection evidence.
 
 ### 3. Tune each model category once on the full common task
 

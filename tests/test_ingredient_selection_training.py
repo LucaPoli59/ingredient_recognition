@@ -51,19 +51,19 @@ class IngredientSelectionTrainingTests(unittest.TestCase):
         self.assertFalse(group["foreach"])
         self.assertFalse(group["fused"])
 
-    def test_complete_twenty_epoch_learning_rate_sequence_and_transition(self):
+    def test_complete_forty_epoch_learning_rate_sequence_and_transition(self):
         _, optimizer, scheduler = self._configured()
         used = []
-        for _ in range(20):
+        for _ in range(40):
             used.append(optimizer.param_groups[0]["lr"])
             optimizer.step()
             scheduler.step()
         expected = [1e-5, 5.5e-5] + [
-            1e-6 + (1e-4 - 1e-6) * (1 + math.cos(math.pi * step / 18)) / 2
-            for step in range(18)
+            1e-6 + (1e-4 - 1e-6) * (1 + math.cos(math.pi * step / 38)) / 2
+            for step in range(38)
         ]
 
-        self.assertEqual(len(used), 20)
+        self.assertEqual(len(used), 40)
         for actual, planned in zip(used, expected):
             self.assertAlmostEqual(actual, planned, places=14)
         self.assertAlmostEqual(optimizer.param_groups[0]["lr"], 1e-6, places=14)

@@ -14,7 +14,7 @@ import numpy as np
 import torch
 
 
-PROTOCOL_ID = "phase3-d1-v1"
+PROTOCOL_ID = "phase3-d1-v3"
 PILOT_GENERATION = "phase3-pilot-v1"
 
 
@@ -24,18 +24,18 @@ class SelectorProtocol:
     seed: int = 42
     num_classes: int = 165
     image_size: int = 384
-    batch_size: int = 8
-    max_epochs: int = 20
-    audit_epochs: tuple[int, ...] = (0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20)
+    batch_size: int = 128
+    max_epochs: int = 40
+    audit_epochs: tuple[int, ...] = tuple(range(0, 41, 2))
     early_window: tuple[int, ...] = (2, 4, 6)
-    near_window: tuple[int, ...] = (10, 12, 14, 16, 18)
-    late_window: tuple[int, ...] = (12, 14, 16, 18, 20)
+    near_window: tuple[int, ...] = (30, 32, 34, 36, 38)
+    late_window: tuple[int, ...] = (32, 34, 36, 38, 40)
     learning_rate: float = 1e-4
     weight_decay: float = 1e-4
     adam_betas: tuple[float, float] = (0.9, 0.999)
     adam_eps: float = 1e-8
     warmup_epochs: int = 2
-    cosine_epochs: int = 18
+    cosine_epochs: int = 38
     minimum_learning_rate: float = 1e-6
     f1_threshold: float = 0.5
     bootstrap_samples: int = 1000

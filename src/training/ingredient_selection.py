@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Any
+import time
 
 import lightning as lgn
 import numpy as np
@@ -10,9 +11,25 @@ import torch
 
 from src.ingredient_selection.artifacts import SelectorArtifactStore
 from src.ingredient_selection.data import SelectorDataModule
+from src.ingredient_selection.batching import BatchPlan, accumulation_loss_factor
 from src.ingredient_selection.metrics import final_validation_bootstrap, per_label_metrics
 from src.ingredient_selection.protocol import SelectorProtocol
 from src.models.efficientnet import EfficientNetV2SSelector
+
+
+def configure_cuda_memory_budget() -> dict[str, Any]:
+    """Avoid WDDM/shared-host-memory oversubscription during resource trials."""
+    if not torch.cuda.is_available():
+        raise RuntimeError("the selector requires CUDA")
+    free, total = torch.cuda.mem_get_info()
+    allowed = min(total - 512 * 1024 ** 2, free - 256 * 1024 ** 2)
+    if allowed <= 0:
+        raise RuntimeError("insufficient free CUDA memory for the resource gate")
+    fraction = allowed / total
+    torch.cuda.set_per_process_memory_fraction(fraction)
+    return {"free_at_start_mib": free / (1024 ** 2),
+            "allowed_mib": allowed / (1024 ** 2), "allocator_fraction": fraction,
+            "free_memory_margin_mib": 256}
 
 
 class SelectorLightningModule(lgn.LightningModule):
@@ -23,12 +40,16 @@ class SelectorLightningModule(lgn.LightningModule):
             model: torch.nn.Module,
             pos_weight: torch.Tensor,
             protocol: SelectorProtocol = SelectorProtocol(),
+            batch_plan: BatchPlan | None = None,
+            train_records: int | None = None,
     ):
         super().__init__()
         if pos_weight.shape != (protocol.num_classes,):
             raise ValueError("pos_weight does not match the frozen class count")
         self.model = model
         self.protocol = protocol
+        self.batch_plan = batch_plan
+        self.train_records = train_records
         self.register_buffer("pos_weight", pos_weight.detach().clone().float())
         self.loss_fn = torch.nn.BCEWithLogitsLoss(pos_weight=self.pos_weight, reduction="mean")
         self.save_hyperparameters({"protocol": protocol.to_dict()})
@@ -42,7 +63,11 @@ class SelectorLightningModule(lgn.LightningModule):
         loss = self.loss_fn(logits, targets)
         if not torch.isfinite(loss):
             raise FloatingPointError(f"non-finite selector loss at batch {batch_index}")
-        self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True)
+        self.log("train_loss", loss, on_step=True, on_epoch=True, prog_bar=True,
+                 batch_size=images.shape[0])
+        if self.batch_plan is not None and self.train_records is not None:
+            loss = loss * accumulation_loss_factor(
+                batch_index, images.shape[0], self.train_records, self.batch_plan)
         return loss
 
     def configure_optimizers(self):
@@ -166,41 +191,56 @@ def run_resource_gate(
         datamodule: SelectorDataModule,
         *,
         protocol: SelectorProtocol = SelectorProtocol(),
+        batch_plan: BatchPlan,
+        full_epoch: bool = False,
 ) -> dict[str, Any]:
-    """Measure a disposable real-data forward/BCE/backward/AdamW step."""
+    """Measure disposable Lightning training, including initialized AdamW state."""
     if not torch.cuda.is_available():
         raise RuntimeError("the frozen selector resource gate requires CUDA")
+    memory_budget = configure_cuda_memory_budget()
     lgn.seed_everything(protocol.seed, workers=True)
-    model = EfficientNetV2SSelector(num_classes=protocol.num_classes).cuda()
     pos_weight = torch.as_tensor(
         (len(datamodule.bundle.train.record_ids) - datamodule.bundle.train.supports)
         / datamodule.bundle.train.supports,
         dtype=torch.float32,
     )
-    module = SelectorLightningModule(model, pos_weight, protocol).cuda()
-    configured = module.configure_optimizers()
-    optimizer = configured["optimizer"]
-    images, targets, _ = next(iter(datamodule.train_dataloader()))
-    if images.shape != (protocol.batch_size, 3, protocol.image_size, protocol.image_size):
-        raise AssertionError(f"resource gate received unexpected batch shape {tuple(images.shape)}")
-    images = images.cuda()
-    targets = targets.cuda()
     torch.cuda.empty_cache()
     torch.cuda.reset_peak_memory_stats()
-    optimizer.zero_grad(set_to_none=True)
-    loss = module.loss_fn(module(images), targets)
-    loss.backward()
-    optimizer.step()
-    torch.cuda.synchronize()
+    started = time.monotonic()
     result = {
         "device": torch.cuda.get_device_name(),
-        "batch_shape": list(images.shape),
-        "loss": float(loss.detach().cpu()),
-        "peak_allocated_mib": torch.cuda.max_memory_allocated() / (1024 ** 2),
-        "peak_reserved_mib": torch.cuda.max_memory_reserved() / (1024 ** 2),
+        "batch_shape": [batch_plan.physical_batch_size, 3, 384, 384],
+        "batch_plan": batch_plan.to_dict(),
+        "full_epoch": full_epoch,
+        "memory_budget": memory_budget,
         "device_total_mib": torch.cuda.get_device_properties(0).total_memory / (1024 ** 2),
-        "passed": bool(torch.isfinite(loss)),
     }
-    del optimizer, module, model, images, targets, loss
-    torch.cuda.empty_cache()
+    try:
+        model = EfficientNetV2SSelector(num_classes=protocol.num_classes)
+        module = SelectorLightningModule(model, pos_weight, protocol, batch_plan,
+                                        len(datamodule.bundle.train.record_ids))
+        trainer = lgn.Trainer(
+            accelerator="gpu", devices=1, max_epochs=1, precision="32-true",
+            deterministic=True, accumulate_grad_batches=batch_plan.accumulate_grad_batches,
+            limit_train_batches=1.0 if full_epoch else 2 * batch_plan.accumulate_grad_batches,
+            limit_val_batches=0, num_sanity_val_steps=0, logger=False,
+            enable_checkpointing=False, enable_progress_bar=False, enable_model_summary=False,
+        )
+        trainer.fit(module, datamodule=datamodule)
+        if full_epoch:
+            module.eval()
+            with torch.inference_mode():
+                for images, _, _ in datamodule.val_dataloader():
+                    if not torch.isfinite(module(images.to(module.device))).all():
+                        raise FloatingPointError("non-finite capacity validation logits")
+        torch.cuda.synchronize()
+        result.update(passed=True, optimizer_steps=trainer.global_step,
+                      completed_epochs=trainer.current_epoch)
+    except torch.OutOfMemoryError as error:
+        result.update(passed=False, failure="cuda_out_of_memory", message=str(error))
+    result.update(
+        peak_allocated_mib=torch.cuda.max_memory_allocated() / (1024 ** 2),
+        peak_reserved_mib=torch.cuda.max_memory_reserved() / (1024 ** 2),
+        elapsed_seconds=time.monotonic() - started,
+    )
     return result

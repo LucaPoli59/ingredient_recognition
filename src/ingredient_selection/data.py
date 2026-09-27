@@ -163,7 +163,7 @@ def _seed_worker(worker_id: int) -> None:
 
 
 class SelectorDataModule(lgn.LightningDataModule):
-    """Physical-batch-8 loader set with separate deterministic audit datasets."""
+    """Physical microbatch loader set with separate deterministic audit datasets."""
 
     def __init__(
             self,
@@ -174,8 +174,8 @@ class SelectorDataModule(lgn.LightningDataModule):
             pin_memory: bool = False,
     ):
         super().__init__()
-        if batch_size != 8:
-            raise ValueError("Phase 3-D1 requires physical batch size 8")
+        if batch_size < 1 or 128 % batch_size:
+            raise ValueError("physical batch size must be a positive divisor of 128")
         if seed != 42:
             raise ValueError("Phase 3-D1 requires seed 42")
         self.bundle = bundle

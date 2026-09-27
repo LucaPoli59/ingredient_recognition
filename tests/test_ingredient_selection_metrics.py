@@ -59,8 +59,9 @@ class IngredientSelectionMetricTests(unittest.TestCase):
         rows = []
         for class_index, (name, (train_values, val_values)) in enumerate(profiles.items()):
             for split, values in (("train", train_values), ("val", val_values)):
+                values = values[:6] + [values[5]] * 10 + values[6:]
                 for epoch, ap in zip(protocol.audit_epochs, values):
-                    if name == "missing" and split == "train" and epoch == 14:
+                    if name == "missing" and split == "train" and epoch == protocol.late_window[1]:
                         continue
                     rows.append({
                         "run_id": "run",

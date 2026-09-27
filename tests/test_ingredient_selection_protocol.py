@@ -5,6 +5,7 @@ import numpy as np
 import torch
 
 from src.ingredient_selection.protocol import (
+    SelectorProtocol,
     build_pilot_cohort,
     compute_pos_weight,
     validate_pilot_cohort,
@@ -15,6 +16,18 @@ class IngredientSelectionProtocolTests(unittest.TestCase):
     def setUp(self):
         self.names = [f"ingredient_{index:03d}" for index in range(165)]
         self.supports = [(index % 17) + 1 for index in range(165)]
+
+    def test_forty_epoch_budget_and_final_analysis_windows_are_consistent(self):
+        protocol = SelectorProtocol()
+        self.assertEqual(protocol.protocol_id, "phase3-d1-v3")
+        self.assertEqual(protocol.max_epochs, 40)
+        self.assertEqual(protocol.warmup_epochs + protocol.cosine_epochs, 40)
+        self.assertEqual(protocol.audit_epochs, tuple(range(0, 41, 2)))
+        self.assertEqual(protocol.early_window, (2, 4, 6))
+        self.assertEqual(protocol.near_window, (30, 32, 34, 36, 38))
+        self.assertEqual(protocol.late_window, (32, 34, 36, 38, 40))
+        self.assertTrue(set(protocol.early_window + protocol.near_window + protocol.late_window)
+                        <= set(protocol.audit_epochs))
 
     def test_pilot_is_deterministic_stratified_and_keeps_source_indices(self):
         first = build_pilot_cohort(self.names, self.supports)

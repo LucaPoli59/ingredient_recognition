@@ -12,6 +12,7 @@ from sklearn.metrics import average_precision_score
 
 from src.ingredient_selection.artifacts import read_json, write_json
 from src.ingredient_selection.data import SelectorDataBundle
+from src.ingredient_selection.batching import resolve_batch_plan
 from src.ingredient_selection.metrics import (
     ProfileThresholds,
     classify_profile,
@@ -107,12 +108,18 @@ def analyze_campaign(
         raise ValueError("campaign identity hash is invalid")
     if identity.get("seed") != protocol.seed:
         raise ValueError("campaign seed is missing or differs from Phase 3-D1")
+    stored_capacity = identity.get("execution", {}).get("max_allowed_batch_size")
+    if not isinstance(stored_capacity, int) or stored_capacity <= 0:
+        raise ValueError("campaign physical-batch capacity is missing or invalid")
+    batch_plan = resolve_batch_plan(protocol.batch_size, stored_capacity)
     expected_contract = {
         "model": {"type": "EfficientNetV2SSelector", "weights": "EfficientNet_V2_S_Weights.IMAGENET1K_V1", "input_size": [384, 384], "full_backbone_trainable": True},
         "loss": {"type": "BCEWithLogitsLoss", "reduction": "mean", "pos_weight_formula": "(N_train-P_c)/P_c"},
         "optimizer": {"type": "AdamW", "lr": protocol.learning_rate, "betas": list(protocol.adam_betas), "eps": protocol.adam_eps, "weight_decay": protocol.weight_decay, "amsgrad": False, "foreach": False, "fused": False, "parameter_groups": 1, "gradient_clipping": None},
-        "scheduler": {"type": "SequentialLR", "milestones": [2], "interval": "epoch"},
-        "execution": {"max_epochs": protocol.max_epochs, "batch_size": protocol.batch_size, "drop_last": False, "gradient_accumulation": 1, "precision": "32-true", "early_stopping": False, "swa": False, "audit_epochs": list(protocol.audit_epochs)},
+        "scheduler": {"type": "SequentialLR", "milestones": [protocol.warmup_epochs], "interval": "epoch",
+                      "warmup": {"type": "LinearLR", "start_factor": 0.1, "end_factor": 1.0, "total_iters": protocol.warmup_epochs},
+                      "main": {"type": "CosineAnnealingLR", "T_max": protocol.cosine_epochs, "eta_min": protocol.minimum_learning_rate}},
+        "execution": {"max_epochs": protocol.max_epochs, "batch_size": batch_plan.physical_batch_size, "requested_batch_size": protocol.batch_size, "drop_last": False, "gradient_accumulation": batch_plan.accumulate_grad_batches, "precision": "32-true", "early_stopping": False, "swa": False, "audit_epochs": list(protocol.audit_epochs)},
     }
     for section, expected_fields in expected_contract.items():
         actual = identity.get(section)
@@ -189,9 +196,9 @@ def analyze_campaign(
     encoded = visible.to_csv(index=False, lineterminator="\n").encode("utf-8")
     (output / "profile_evidence.csv").write_bytes(encoded)
     correlations = {
-        "support_vs_train_gain": _spearman(evidence["train_support"], evidence["train_initial_to_late_gain"]),
-        "support_vs_val_late_ap": _spearman(evidence["train_support"], evidence["val_late_median_ap"]),
-        "prevalence_vs_val_late_ap": _spearman(evidence["train_prevalence"], evidence["val_late_median_ap"]),
+        "support_vs_train_gain": _spearman(visible["train_support"], visible["train_initial_to_late_gain"]),
+        "support_vs_val_late_ap": _spearman(visible["train_support"], visible["val_late_median_ap"]),
+        "prevalence_vs_val_late_ap": _spearman(visible["train_prevalence"], visible["val_late_median_ap"]),
     }
     correlations = {name: (value if np.isfinite(value) else None) for name, value in correlations.items()}
     summary = {

@@ -18,15 +18,15 @@ decision.
 
 **Overall status:** In progress
 **Current task:** P3 — run the sealed campaign and validate only the deterministic 24-label pilot.
-**Next action:** Run the resource gate from the clean P2 revision, execute the single 20-epoch campaign, expose only the pilot evidence, and freeze simple absolute profile gates without selecting a fixed quota.
+**Next action:** Complete the full-epoch capacity gate for Phase 3-D3 in the main workspace, then start the fresh 40-epoch effective-batch-128 `phase3-d1-v3` campaign through the dedicated Python launcher. Expose only the pilot after completion and freeze simple absolute profile gates.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | P0 | Reconstruct the historical 2024 selection process and resolve its discrepancies | **Done** | Saved configurations, metrics, metadata, checkpoints, notebooks, launchers, journals, and the external communication archive establish the four historical stages and the exact 40-label rule. The accepted resolutions are recorded in this plan. |
 | P1 | Freeze the new selection question and experimental contract | **Done** | [Phase 3-D1](../project_objective/model_comparison_methodology.md#phase-3-d1--frozen-selector-campaign-and-measurement-protocol) fixes one seed-42 AdamW/warm-up/cosine configuration, 20 epochs, deterministic two-epoch audits, AP windows, fixed-0.5 F1 diagnostics, bootstrap uncertainty, low-cost controls, a sealed support-stratified pilot cohort, and the output boundary. No new selector outcome informed the decision. |
 | P2 | Implement the selector integration, deterministic historical reproduction, and reusable analysis | **Done** | Added the exact EfficientNetV2-S/full-frame adapter, train/validation-only data boundary, weighted BCE and AdamW schedule, fixed-state AP/F1 audits, bootstrap and controls, hashed blind gate, manifests, thin CLIs, and read-only historical regression. All 64 repository tests pass; the real batch-8 FP32 gate passed at 3,632.20 MiB allocated and 5,362.00 MiB reserved. See the [implementation contract](../implementation_details/ingredient_selection.md). |
-| P3 | Run and validate a bounded `v5` pilot | **Pending** | Execute the sealed single campaign from the committed P2 revision, expose only the deterministic 24-label pilot cohort, and freeze absolute numerical profile gates without choosing a fixed retained count. |
-| P4 | Apply the frozen profile to the full `v5` campaign evidence | **Deferred** | Unlock the remaining 141 labels from the same sealed 20-epoch run, apply the immutable P3 rule, preserve complete provenance, and report the single-run limitation. No second selector training is required unless a pre-outcome protocol failure invalidates the run. |
+| P3 | Run and validate a bounded `v5` pilot | **In progress** | The user interrupted v1 before per-label inspection and adopted [Phase 3-D2](../project_objective/model_comparison_methodology.md#phase-3-d2--effective-batch-and-main-workspace-execution-amendment), then [D3](../project_objective/model_comparison_methodology.md#phase-3-d3--forty-epoch-campaign-amendment) before v2 started. Quick CUDA trials reject physical 128/64/32/16; physical 8 with accumulation 16 passes. A full-epoch gate and fresh 40-epoch v3 campaign precede pilot-only analysis. |
+| P4 | Apply the frozen profile to the full `v5` campaign evidence | **Deferred** | Unlock the remaining 141 labels from the same sealed 40-epoch v3 run, apply the immutable P3 rule, preserve complete provenance, and report the single-run limitation. No second selector training is required unless a pre-outcome protocol failure invalidates the run. |
 | P5 | Combine learnability with relevance and visual-observability evidence | **Deferred** | Apply the semantic, support, and annotation protocol; distinguish direct visual evidence from contextual predictability. |
 | P6 | Freeze named headline and exploratory ingredient tiers | **Deferred** | Publish versioned projections of the shared `v5` vocabulary, with explicit inclusion evidence and uncertainty. |
 | P7 | Integrate the workflow and retire superseded scripts safely | **Deferred** | Connect training and analysis to canonical APIs, verify parity, document current behavior, then clean legacy notebooks and launchers only after retention gates pass. |
@@ -129,7 +129,8 @@ changes.
 
 ### Candidate trajectory statistics
 
-Phase 3-D1 fixes the compact statistics and aggregation windows; P3 will select
+Phase 3-D1 fixes the compact statistics, with the active final aggregation
+windows amended by Phase 3-D3; P3 will select
 numerical promotion gates from the isolated pilot cohort without changing the
 statistics:
 
@@ -177,6 +178,11 @@ is an incoming constraint, not a P1 search space. It fixes:
   execution contract, subject to a recorded pre-campaign methodology revision
   if the complete instrumented implementation cannot pass its resource gate.
 
+The original execution boundary above is retained as history. The active
+[Phase 3-D2 amendment](../project_objective/model_comparison_methodology.md#phase-3-d2--effective-batch-and-main-workspace-execution-amendment)
+requests effective batch 128, resolves a tested physical cap, and uses exact
+Lightning accumulation. Physical 8/accumulation 16 is the measured candidate.
+
 The exact checkpoint hash, resize arithmetic, padding rule, head initialization
 boundary, limitations, and provenance requirements remain authoritative in
 4B-D1. P2 now implements and tests the complete model, transform, loss,
@@ -187,19 +193,26 @@ No campaign outcome was inspected during implementation.
 ## Frozen P1 campaign contract
 
 The binding [Phase 3-D1 decision](../project_objective/model_comparison_methodology.md#phase-3-d1--frozen-selector-campaign-and-measurement-protocol)
-now owns the exact campaign values. In summary, P2 must implement one seed-42
+owns the original campaign values, amended by Phase 3-D2 for batch/provenance
+and [Phase 3-D3](../project_objective/model_comparison_methodology.md#phase-3-d3--forty-epoch-campaign-amendment) for the 40-epoch horizon.
+The current implementation uses one seed-42
 configuration with AdamW, a two-epoch linear warm-up followed by cosine decay,
-20 complete epochs, physical batch 8 in true FP32, deterministic train and
+40 complete epochs (2 warm-up + 38 cosine), effective batch 128 in true FP32, deterministic train and
 validation audits before training and every two epochs, fixed-0.5 F1 diagnostic
 trajectories, final-checkpoint validation AP bootstrap intervals, and no second
 training-time robustness configuration.
+
+The early AP window remains `{2,4,6}`; near and late windows are respectively
+`{30,32,34,36,38}` and `{32,34,36,38,40}`. Final bootstrap scores come from epoch
+40. The v2 disposable gate was interrupted before completion, and no v2
+campaign started; its model cannot initialize v3.
 
 The selection workflow must preserve the following execution boundaries:
 
 1. Use only the frozen `v5` train and validation metadata and their saved class order. Selector commands must not open the test metadata.
 2. Compute audit train AP in a separate deterministic evaluation pass from one fixed model state; never aggregate predictions from training batches whose weights changed during the epoch.
 3. Generate and hash the 24-label support-stratified pilot cohort before model construction or outcome inspection. P3 may expose only that cohort until `profile_rule.json` is frozen.
-4. Reuse the same sealed 20-epoch run when P4 applies the rule to the remaining 141 labels. A second selector training is unnecessary unless an implementation or resource gate invalidated the first run before non-pilot inspection.
+4. Reuse the same sealed 40-epoch v3 run when P4 applies the rule to the remaining 141 labels. A second selector training is unnecessary unless an implementation or resource gate invalidated the first run before non-pilot inspection.
 5. Derive every report field from validated configuration or run state; do not relabel transform, loss, weighting, or augmentation booleans in analysis code.
 6. Keep train AP as optimization evidence and validation AP as held-out evidence. F1, bootstrap intervals, cuisine priors, and support relationships retain their declared diagnostic boundaries.
 7. Treat the absence of repeated seeds and a configuration panel as missing stability evidence, not as agreement. Borderline labels remain `uncertain`.
@@ -222,7 +235,7 @@ Each analysis execution will create one versioned
 `analysis_outputs/ingredient_selection/<protocol_id>/` report directory
 containing:
 
-- `campaign_manifest.json` with run identity, clean code revision, ordered class and data hashes, exact model/weight/head/loss/optimizer/scheduler/transform state, seed, deterministic-runtime state, environment, and device evidence;
+- `campaign_manifest.json` with run identity, Git base revision, exact source hashes and snapshot, actual worktree status, ordered class and data hashes, exact model/weight/head/loss/optimizer/scheduler/transform state, seed, deterministic-runtime state, environment, and device evidence;
 - `pilot_cohort.json` before training and `profile_rule.json` after P3, both carrying the source hashes needed to enforce the analysis gate;
 - `metrics_per_label_epoch.csv`, the tidy per-label and per-audit-epoch metrics table;
 - compressed validation record identifiers, targets, and logits for every audit point, sufficient to regenerate precision-recall summaries and the final bootstrap intervals;
@@ -261,7 +274,7 @@ Plots must label the split, statistic, aggregation window, declared random seed,
 
 - Unit-test train-AP trajectory summaries and profile assignment on hand-verifiable flat, improving, noisy-spike, degrading, low-support, and missing-epoch cases.
 - Prove that audit train AP comes from a deterministic evaluation pass at one model state rather than the stochastic training loop.
-- Fix the complete 20-epoch learning-rate sequence in a unit test, including the warm-up/cosine transition at epoch 2 and resume at the next epoch boundary.
+- Fix the complete 40-epoch learning-rate sequence in a unit test, including the warm-up/cosine transition at epoch 2 and resume at the next epoch boundary; reject the superseded 20-epoch budget and 18-epoch cosine in analysis.
 - Verify that fixed-policy F1 is a reproducible diagnostic and cannot alter a profile through an undeclared threshold search.
 - Reject inconsistent class order, duplicated run IDs, mixed metadata hashes, a missing declared seed, or contradictory configuration fields.
 - Reject a pilot cohort that does not reproduce the Phase 3-D1 support-stratified SHA-256 rule, and prevent all-label analysis until the hashed rule file exists.
@@ -315,6 +328,8 @@ This plan is complete only when:
 | 2026-09-15 | Accepted the completed 4B-D1 EfficientNetV2-S handoff and resumed Macro-section 3 at P1 | The selector's exact model-side protocol and interpretation boundary are now binding. P1 owns only the remaining campaign settings and measurement contract; implementation and pilot execution remain P2 and P3. |
 | 2026-09-24 | Completed P1 and adopted Phase 3-D1 | One seed-42 AdamW/warm-up/cosine configuration, 20 epochs, deterministic two-epoch audits, AP/F1/uncertainty controls, the sealed 24-label pilot, one-run P3/P4 reuse, and the output boundary are frozen. No new selector outcome was inspected; P2 implementation is next. |
 | 2026-09-24 | Completed P2 selector integration | Implemented the exact model/transform and train/validation-only campaign boundary, deterministic AP/F1 audits and analysis, hashed pilot/rule gate, historical regression, provenance schemas, and resource check. The 64-test suite and real RTX 4060 batch-8 gate pass; no selector outcome was inspected. P3 is next. |
+| 2026-09-27 | Adopted Phase 3-D2 and restarted P3 preparation | Interrupted the incomplete batch-8/no-accumulation v1 campaign by user request without per-label inspection. Retained its artifacts in the main workspace. Added the rerunnable launcher, exact effective-128 resolution and tail weighting, source snapshots, and descending real CUDA capacity tests. Physical 128/64/32/16 OOM; physical 8 with accumulation 16 completes two optimizer steps. All 68 tests pass; the full-epoch gate must precede the fresh v2 campaign. |
+| 2026-09-27 | Adopted Phase 3-D3 before v2 campaign launch | The user extended the sealed campaign to 40 epochs and authorized a commit. Interrupted the incomplete disposable v2 gate, retained the 2-epoch warm-up and two-epoch audits, extended cosine to 38 epochs, moved the final AP windows to epochs 30–40, and versioned the replacement as v3. All 72 repository tests pass, including manifest agreement and rejection of the old budget/scheduler. No ingredient outcome informed the change. Commit and relaunch the mandatory full-epoch gate before the fresh 40-epoch campaign. |
 
 ## Related documentation
 

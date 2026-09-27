@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 
+from scripts.ingredient_selection.run_campaign import _campaign_identity
 from src.ingredient_selection.analysis import analyze_campaign
 from src.ingredient_selection.artifacts import write_json
 from src.ingredient_selection.data import SelectorDataBundle, SelectorDataModule
@@ -14,9 +15,12 @@ from src.ingredient_selection.metrics import ProfileThresholds
 from src.ingredient_selection.protocol import (
     SelectorProtocol,
     build_pilot_cohort,
+    compute_pos_weight,
     ordered_values_hash,
     sha256_json,
 )
+from src.ingredient_selection.batching import resolve_batch_plan
+from src.models.efficientnet import EfficientNetV2SSelector
 
 
 class IngredientSelectionAnalysisTests(unittest.TestCase):
@@ -65,8 +69,23 @@ class IngredientSelectionAnalysisTests(unittest.TestCase):
         self.assertEqual(tuple(targets.shape), (2, 165))
         self.assertEqual(list(record_ids), ["val-positive", "val-negative"])
 
+    def test_manifest_uses_the_same_budget_and_scheduler_as_training(self):
+        protocol = SelectorProtocol()
+        plan = resolve_batch_plan(protocol.batch_size, EfficientNetV2SSelector.MAX_ALLOWED_BATCH_SIZE)
+        identity = _campaign_identity(
+            self.bundle, protocol, "revision", self.bundle.train.supports.astype(int).tolist(),
+            compute_pos_weight(self.bundle.train.targets), "head_hash", plan,
+            {"sha256": "source_hash"}, 0,
+        )
+        self.assertEqual(identity["execution"]["max_epochs"], 40)
+        self.assertEqual(identity["execution"]["planned_steps"], 40)
+        self.assertEqual(identity["scheduler"]["warmup"]["total_iters"], 2)
+        self.assertEqual(identity["scheduler"]["main"]["T_max"], 38)
+        self.assertEqual(identity["execution"]["audit_epochs"], list(range(0, 41, 2)))
+
     def _write_campaign(self) -> Path:
         protocol = SelectorProtocol()
+        plan = resolve_batch_plan(protocol.batch_size, EfficientNetV2SSelector.MAX_ALLOWED_BATCH_SIZE)
         output = self.root / "output"
         (output / "audit_scores").mkdir(parents=True)
         identity = {
@@ -80,8 +99,10 @@ class IngredientSelectionAnalysisTests(unittest.TestCase):
             "model": {"type": "EfficientNetV2SSelector", "weights": "EfficientNet_V2_S_Weights.IMAGENET1K_V1", "input_size": [384, 384], "full_backbone_trainable": True},
             "loss": {"type": "BCEWithLogitsLoss", "reduction": "mean", "pos_weight_formula": "(N_train-P_c)/P_c"},
             "optimizer": {"type": "AdamW", "lr": 1e-4, "betas": [0.9, 0.999], "eps": 1e-8, "weight_decay": 1e-4, "amsgrad": False, "foreach": False, "fused": False, "parameter_groups": 1, "gradient_clipping": None},
-            "scheduler": {"type": "SequentialLR", "milestones": [2], "interval": "epoch"},
-            "execution": {"max_epochs": 20, "batch_size": 8, "drop_last": False, "gradient_accumulation": 1, "precision": "32-true", "early_stopping": False, "swa": False, "audit_epochs": list(protocol.audit_epochs)},
+            "scheduler": {"type": "SequentialLR", "milestones": [protocol.warmup_epochs], "interval": "epoch",
+                          "warmup": {"type": "LinearLR", "start_factor": 0.1, "end_factor": 1.0, "total_iters": protocol.warmup_epochs},
+                          "main": {"type": "CosineAnnealingLR", "T_max": protocol.cosine_epochs, "eta_min": protocol.minimum_learning_rate}},
+            "execution": {"max_epochs": protocol.max_epochs, "batch_size": plan.physical_batch_size, "requested_batch_size": 128, "max_allowed_batch_size": EfficientNetV2SSelector.MAX_ALLOWED_BATCH_SIZE, "drop_last": False, "gradient_accumulation": plan.accumulate_grad_batches, "precision": "32-true", "early_stopping": False, "swa": False, "audit_epochs": list(protocol.audit_epochs)},
         }
         write_json(output / "campaign_manifest.json", {
             "campaign_identity": identity,
@@ -102,7 +123,7 @@ class IngredientSelectionAnalysisTests(unittest.TestCase):
                         "support": 1,
                         "records": 2,
                         "prevalence": 0.5,
-                        "average_precision": 0.1 + 0.07 * position - (0.03 if split == "val" else 0),
+                        "average_precision": 0.1 + 0.7 * position / (len(protocol.audit_epochs) - 1) - (0.03 if split == "val" else 0),
                         "ap_valid": True,
                         "precision_at_0_5": 1.0,
                         "recall_at_0_5": 1.0,
@@ -114,7 +135,7 @@ class IngredientSelectionAnalysisTests(unittest.TestCase):
         targets = self.bundle.val.targets
         logits = np.vstack([np.ones(165), -np.ones(165)]).astype(np.float32)
         np.savez_compressed(
-            output / "audit_scores" / "validation_epoch_20.npz",
+            output / "audit_scores" / f"validation_epoch_{protocol.max_epochs:02d}.npz",
             record_ids=np.asarray(self.bundle.val.record_ids),
             targets=targets,
             logits=logits,
@@ -180,6 +201,26 @@ class IngredientSelectionAnalysisTests(unittest.TestCase):
         write_json(manifest_path, manifest)
 
         with self.assertRaisesRegex(ValueError, "seed"):
+            analyze_campaign(output, self.bundle)
+
+    def test_analysis_rejects_previous_twenty_epoch_budget(self):
+        output = self._write_campaign()
+        path = output / "campaign_manifest.json"
+        manifest = json.loads(path.read_text())
+        manifest["campaign_identity"]["execution"]["max_epochs"] = 20
+        manifest["campaign_identity_hash"] = sha256_json(manifest["campaign_identity"])
+        write_json(path, manifest)
+        with self.assertRaisesRegex(ValueError, "execution"):
+            analyze_campaign(output, self.bundle)
+
+    def test_analysis_rejects_previous_eighteen_epoch_cosine_schedule(self):
+        output = self._write_campaign()
+        path = output / "campaign_manifest.json"
+        manifest = json.loads(path.read_text())
+        manifest["campaign_identity"]["scheduler"]["main"]["T_max"] = 18
+        manifest["campaign_identity_hash"] = sha256_json(manifest["campaign_identity"])
+        write_json(path, manifest)
+        with self.assertRaisesRegex(ValueError, "scheduler"):
             analyze_campaign(output, self.bundle)
 
 
