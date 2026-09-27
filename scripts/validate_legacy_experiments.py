@@ -80,6 +80,7 @@ EXPECTED_SELECTED_LABEL_INDICES = [
     170,
     180,
 ]
+APPEND_ONLY_MANIFEST_PATHS = {"experiments/journal.log", "experiments/journal_trash.log"}
 
 
 def sha256(path: Path) -> str:
@@ -419,11 +420,25 @@ def verify_configuration_evidence(root: Path) -> dict[str, Any]:
     return result
 
 
-def verify_manifest(root: Path, manifest: dict[str, Any]) -> None:
+def _sha256_prefix(path: Path, size: int) -> str:
+    digest = hashlib.sha256()
+    remaining = size
+    with path.open("rb") as stream:
+        while remaining:
+            block = stream.read(min(1024 * 1024, remaining))
+            if not block:
+                raise AssertionError(f"artifact became shorter while hashing: {path}")
+            digest.update(block)
+            remaining -= len(block)
+    return digest.hexdigest().upper()
+
+
+def verify_manifest(root: Path, manifest: dict[str, Any]) -> list[dict[str, Any]]:
     artifacts = manifest.get("artifacts", [])
     if not artifacts:
         raise AssertionError("retention manifest has no artifacts")
     seen: set[str] = set()
+    append_only_extensions: list[dict[str, Any]] = []
     for artifact in artifacts:
         path = artifact["path"]
         if path in seen:
@@ -434,8 +449,23 @@ def verify_manifest(root: Path, manifest: dict[str, Any]) -> None:
             raise AssertionError(f"manifest artifact is missing: {path}")
         actual_size = file_path.stat().st_size
         actual_hash = sha256(file_path)
-        if actual_size != artifact["size"] or actual_hash != artifact["sha256"]:
-            raise AssertionError(f"manifest hash/size mismatch: {path}")
+        if actual_size == artifact["size"] and actual_hash == artifact["sha256"]:
+            continue
+        if (
+                path in APPEND_ONLY_MANIFEST_PATHS
+                and actual_size >= artifact["size"]
+                and _sha256_prefix(file_path, artifact["size"]) == artifact["sha256"]
+        ):
+            append_only_extensions.append({
+                "path": path,
+                "retained_prefix_size": artifact["size"],
+                "current_size": actual_size,
+                "current_sha256": actual_hash,
+                "retained_prefix_sha256": artifact["sha256"],
+            })
+            continue
+        raise AssertionError(f"manifest hash/size mismatch: {path}")
+    return append_only_extensions
 
 
 def write_report(path: Path, report: dict[str, Any]) -> None:
@@ -461,7 +491,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             manifest = load_json(manifest_path)
 
-        verify_manifest(root, manifest)
+        append_only_extensions = verify_manifest(root, manifest)
         selection = reproduce_selection(root)
         selected_labels = set(selection["intersection_labels"])
         metadata = verify_metadata(root, selected_labels)
@@ -472,6 +502,7 @@ def main(argv: list[str] | None = None) -> int:
             "status": "PASS",
             "manifest": rel(root, manifest_path) if manifest_path.is_relative_to(root) else str(manifest_path),
             "manifest_artifacts": len(manifest["artifacts"]),
+            "append_only_manifest_extensions": append_only_extensions,
             "historical_selection": selection,
             "metadata": metadata,
             "checkpoint_anchors": checkpoints,

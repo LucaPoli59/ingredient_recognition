@@ -147,13 +147,14 @@ the common 224-pixel comparison boundary and removes classifier dropout;
 4B-D1 instead uses the 384-pixel full-frame boundary and retains stock dropout.
 Configurations cannot be shared silently between those roles.
 
-The R2 smoke established only that a direct 165-logit adapter can load,
-differentiate, and fit the development GPU. The current
-[model implementation inventory](../implementation_details/models.md) does not
-yet include the EfficientNetV2 wrapper, the exact full-frame transform, per-label AP
-trajectories, or the complete provenance manifest. Macro-section 3 must
-implement and validate them; 4B-D1 must not be described as current runtime
-support until those gates pass.
+The earlier R2 smoke established only that a direct 165-logit adapter could
+load, differentiate, and fit the development GPU. Phase 3 P2 has now promoted
+that prototype into maintained runtime support: the exact wrapper, full-frame
+transform, weighted loss, deterministic AP/F1 audit path, blind cohort gate,
+and provenance artifacts are implemented and covered by the repository suite.
+The real-data batch-8 FP32 resource gate passed on the development RTX 4060.
+See the [implementation contract](../implementation_details/ingredient_selection.md).
+This implementation result does not contain a label outcome or revise 4B-D1.
 
 ### 2. Freeze the Phase 3 campaign and measurement protocol
 
@@ -347,7 +348,7 @@ vocabulary decisions as uncertain.
 | --- | --- | --- |
 | Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Done: established pair and custom P2-S adopted in the [portfolio](experimental_model_portfolio.md); the [completed 4A plan](../plans/experimental_model_research.md) hands implementation gates to Phase 5. Q1–Q4 are unchanged. |
 | Subphase 4B | Choose, verify, and freeze M_ref. | Done: 4B-D1 freezes the EfficientNetV2-S model-side selector and [`reference_selector_research.md`](../plans/reference_selector_research.md) records the completed evidence and handoff. |
-| Macro-section 3 | Implement the frozen 4B-D1/Phase 3-D1 workflow and produce versioned V_selected evidence. | P1 is done; P2 implementation is next under [`recognizable_ingredient_selection.md`](../plans/recognizable_ingredient_selection.md). |
+| Macro-section 3 | Implement the frozen 4B-D1/Phase 3-D1 workflow and produce versioned V_selected evidence. | P1 and P2 are done; P3 runs the sealed campaign and may inspect only the 24-label pilot under [`recognizable_ingredient_selection.md`](../plans/recognizable_ingredient_selection.md). |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
 

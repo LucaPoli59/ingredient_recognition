@@ -5,6 +5,7 @@ import numpy as np
 import torch
 from torchvision.transforms import v2
 from torchvision.models import Weights
+from torchvision.transforms.v2 import functional as v2f
 
 from settings.config import DEF_IMAGE_SHAPE
 
@@ -156,3 +157,105 @@ def transform_core_dino(image_shape: Tuple[int, int] = DEF_IMAGE_SHAPE,
         v2.ToDtype(torch.float32, scale=True),  # Rescale [0, 255] to [0, 1]
         v2.Normalize(mean=DINO_MEAN, std=DINO_STD),  # Normalize using DinoV2 stats
     ]
+
+
+IMAGENET_MEAN = (0.485, 0.456, 0.406)
+IMAGENET_STD = (0.229, 0.224, 0.225)
+
+
+def selector_fit_pad_geometry(width: int, height: int, size: int = 384
+                              ) -> Tuple[int, int, int, int, int, int]:
+    """Return the exact Phase 3 resized geometry and center padding.
+
+    The short side uses integer arithmetic equivalent to round-half-up.  The
+    returned values are ``(resized_width, resized_height, left, top, right,
+    bottom)``.
+    """
+    if width <= 0 or height <= 0 or size <= 0:
+        raise ValueError("width, height, and size must be positive")
+
+    if width >= height:
+        resized_width = size
+        resized_height = max(1, (2 * size * height + width) // (2 * width))
+    else:
+        resized_height = size
+        resized_width = max(1, (2 * size * width + height) // (2 * height))
+
+    horizontal = size - resized_width
+    vertical = size - resized_height
+    left = horizontal // 2
+    top = vertical // 2
+    return resized_width, resized_height, left, top, horizontal - left, vertical - top
+
+
+class ConvertToRGB(torch.nn.Module):
+    """Convert PIL inputs to RGB and reject ambiguous tensor channel counts."""
+
+    def forward(self, image: Image.Image | np.ndarray | torch.Tensor):
+        if isinstance(image, Image.Image):
+            return image.convert("RGB")
+        tensor = v2f.to_image(image)
+        channels = tensor.shape[-3]
+        if channels == 1:
+            return tensor.expand(3, *tensor.shape[-2:])
+        if channels == 4:
+            return tensor[:3]
+        if channels != 3:
+            raise ValueError(f"selector images must have 1, 3, or 4 channels, got {channels}")
+        return tensor
+
+
+class SelectorFullFrameFitPad(torch.nn.Module):
+    """Resize a full image once and mean-pad it to the Phase 3 square input."""
+
+    def __init__(self, size: int = 384, mean: Sequence[float] = IMAGENET_MEAN):
+        super().__init__()
+        if len(mean) != 3:
+            raise ValueError("mean must contain exactly three RGB values")
+        self.size = int(size)
+        self.mean = tuple(float(value) for value in mean)
+
+    def forward(self, image: torch.Tensor) -> torch.Tensor:
+        if image.ndim != 3 or image.shape[0] != 3:
+            raise ValueError(f"expected a [3,H,W] image, got {tuple(image.shape)}")
+        height, width = image.shape[-2:]
+        resized_width, resized_height, left, top, _, _ = selector_fit_pad_geometry(
+            width, height, self.size
+        )
+        resized = v2f.resize(
+            image,
+            [resized_height, resized_width],
+            interpolation=v2.InterpolationMode.BILINEAR,
+            antialias=True,
+        )
+        fill = torch.as_tensor(self.mean, dtype=resized.dtype, device=resized.device).view(3, 1, 1)
+        output = fill.expand(3, self.size, self.size).clone()
+        output[:, top:top + resized_height, left:left + resized_width] = resized
+        return output
+
+
+def transform_selector_efficientnet_v2_s(
+        image_shape: Tuple[int, int] = (384, 384), train: bool = False) -> v2.Compose:
+    """Build the frozen 4B-D1 full-frame EfficientNetV2-S transform."""
+    if tuple(image_shape) != (384, 384):
+        raise ValueError("the frozen selector transform requires image_shape=(384, 384)")
+    operations: List[torch.nn.Module] = [
+        ConvertToRGB(),
+        v2.ToImage(),
+        v2.ToDtype(torch.float32, scale=True),
+        SelectorFullFrameFitPad(size=384, mean=IMAGENET_MEAN),
+    ]
+    if train:
+        operations.append(v2.RandomHorizontalFlip(p=0.5))
+    operations.append(v2.Normalize(mean=IMAGENET_MEAN, std=IMAGENET_STD))
+    return v2.Compose(operations)
+
+
+def transform_aug_selector_efficientnet_v2_s(
+        image_shape: Tuple[int, int] = (384, 384)) -> v2.Compose:
+    return transform_selector_efficientnet_v2_s(image_shape=image_shape, train=True)
+
+
+def transform_plain_selector_efficientnet_v2_s(
+        image_shape: Tuple[int, int] = (384, 384)) -> v2.Compose:
+    return transform_selector_efficientnet_v2_s(image_shape=image_shape, train=False)

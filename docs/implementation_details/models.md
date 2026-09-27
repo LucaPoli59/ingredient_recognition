@@ -1,7 +1,7 @@
 # Vision models
 
 **Created:** 2026-08-02
-**Last updated:** 2026-08-27
+**Last updated:** 2026-09-24
 
 This page describes the implementation of the models available in `src/models` and their contract with the training pipeline. The problem remains a multi-label classification task: each model outputs a vector of `num_classes` **logits**, with no final sigmoid. Converting logits to probabilities and applying `BCEWithLogitsLoss` are responsibilities of the Lightning module.
 
@@ -71,6 +71,26 @@ The `pretrained` parameter is preserved in the configuration, but the current im
 ### Preprocessing and interpretability
 
 DINOv2 uses dedicated builders (`transform_*_dino`). If an augmentation function is passed, training enables `random_crop=True`, while validation/inference uses `random_crop=False`; without an override, the configured builders are used directly. For Grad-CAM the target is `backbone.blocks[-1].norm1`: its token activations are converted back to the patch grid, removing CLS and register tokens. The classifier remains `linear_head`.
+
+## EfficientNetV2-S Phase 3 selector
+
+`EfficientNetV2SSelector` is the maintained, role-specific implementation of
+the frozen 4B-D1 reference learner. It always loads
+`EfficientNet_V2_S_Weights.IMAGENET1K_V1`, retains the stock adaptive pooling
+and `Dropout(p=0.2, inplace=True)`, and replaces only the classifier linear
+layer with a biased `Linear(1280, num_classes)`. The constructor rejects random
+initialization, non-384 inputs, and layer-wise pretraining, and asserts that
+every backbone and head parameter remains trainable.
+
+Its model-owned transforms preserve the full frame through an exact
+long-side-384 round-half-up resize and ImageNet-mean center padding. Training
+adds only a horizontal flip; validation and audit transforms are deterministic.
+This wrapper is deliberately distinct from the future 4A EfficientNetV2-S
+comparison implementation, whose role and input contract differ.
+
+The exact loss, optimizer, scheduler, audit cadence, blind-pilot gate, and
+resource result are documented in
+[`ingredient_selection.md`](ingredient_selection.md).
 
 ## Torchvision ResNet wrapper
 

@@ -1,28 +1,31 @@
 # Recognizable ingredient selection plan
 
 **Created:** 2026-08-10
-**Last updated:** 2026-09-24
+**Last updated:** 2026-09-27
 
 This plan is the operational source of truth for Macro-section 3, **Ingredient selection**, in [`general_plan.md`](../general_plan.md). It preserves the November 2024 ResNet selection as a historical baseline and replaces its exploratory workflow with a reproducible, research-informed decision-profile study over the frozen FoodOn-first `v5` vocabulary. Macro-section 3 owns the resulting selected vocabulary and now executes against the frozen Subphase 4B reference selector. The independent Subphase 4A experiment-model shortlist is not a Phase 3 gate.
 
 Subphase 4B completed that dependency on 2026-09-15 by freezing the 4B-D1
 EfficientNetV2-S model-side protocol. P1 completed on 2026-09-24 by freezing the
-complementary Phase 3-D1 campaign and measurement contract. Macro-section 3 is
-now ready for P2 implementation. The independent Subphase 4A experiment-model
-portfolio remains outside this plan's selector decision.
+complementary Phase 3-D1 campaign and measurement contract. P2 completed on
+2026-09-24 with the maintained selector, deterministic audit/analysis paths,
+historical regression, and real-data resource gate. Macro-section 3 is now
+ready for the sealed P3 campaign and pilot-only analysis. The independent
+Subphase 4A experiment-model portfolio remains outside this plan's selector
+decision.
 
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** P2 — implement the frozen 4B-D1 model-side and Phase 3-D1 campaign-side contracts.
-**Next action:** Add the maintained EfficientNetV2-S wrapper and full-frame transform, selector-specific weighted loss and AdamW schedule, deterministic audit path, AP/F1 logging, sealed pilot cohort, provenance manifest, and schema/resource tests before any campaign execution.
+**Current task:** P3 — run the sealed campaign and validate only the deterministic 24-label pilot.
+**Next action:** Run the resource gate from the clean P2 revision, execute the single 20-epoch campaign, expose only the pilot evidence, and freeze simple absolute profile gates without selecting a fixed quota.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | P0 | Reconstruct the historical 2024 selection process and resolve its discrepancies | **Done** | Saved configurations, metrics, metadata, checkpoints, notebooks, launchers, journals, and the external communication archive establish the four historical stages and the exact 40-label rule. The accepted resolutions are recorded in this plan. |
 | P1 | Freeze the new selection question and experimental contract | **Done** | [Phase 3-D1](../project_objective/model_comparison_methodology.md#phase-3-d1--frozen-selector-campaign-and-measurement-protocol) fixes one seed-42 AdamW/warm-up/cosine configuration, 20 epochs, deterministic two-epoch audits, AP windows, fixed-0.5 F1 diagnostics, bootstrap uncertainty, low-cost controls, a sealed support-stratified pilot cohort, and the output boundary. No new selector outcome informed the decision. |
-| P2 | Implement the selector integration, deterministic historical reproduction, and reusable analysis | **Pending** | Add the frozen model/transform, loss, optimizer/scheduler, deterministic audit, AP/provenance, blind-cohort, historical reproduction, and reporting paths through canonical APIs. Notebooks become optional views, not execution state. |
-| P3 | Run and validate a bounded `v5` pilot | **Deferred** | Execute the sealed single campaign after P2 gates pass, expose only the deterministic 24-label pilot cohort, and freeze absolute numerical profile gates without choosing a fixed retained count. |
+| P2 | Implement the selector integration, deterministic historical reproduction, and reusable analysis | **Done** | Added the exact EfficientNetV2-S/full-frame adapter, train/validation-only data boundary, weighted BCE and AdamW schedule, fixed-state AP/F1 audits, bootstrap and controls, hashed blind gate, manifests, thin CLIs, and read-only historical regression. All 64 repository tests pass; the real batch-8 FP32 gate passed at 3,632.20 MiB allocated and 5,362.00 MiB reserved. See the [implementation contract](../implementation_details/ingredient_selection.md). |
+| P3 | Run and validate a bounded `v5` pilot | **Pending** | Execute the sealed single campaign from the committed P2 revision, expose only the deterministic 24-label pilot cohort, and freeze absolute numerical profile gates without choosing a fixed retained count. |
 | P4 | Apply the frozen profile to the full `v5` campaign evidence | **Deferred** | Unlock the remaining 141 labels from the same sealed 20-epoch run, apply the immutable P3 rule, preserve complete provenance, and report the single-run limitation. No second selector training is required unless a pre-outcome protocol failure invalidates the run. |
 | P5 | Combine learnability with relevance and visual-observability evidence | **Deferred** | Apply the semantic, support, and annotation protocol; distinguish direct visual evidence from contextual predictability. |
 | P6 | Freeze named headline and exploratory ingredient tiers | **Deferred** | Publish versioned projections of the shared `v5` vocabulary, with explicit inclusion evidence and uncertainty. |
@@ -176,9 +179,10 @@ is an incoming constraint, not a P1 search space. It fixes:
 
 The exact checkpoint hash, resize arithmetic, padding rule, head initialization
 boundary, limitations, and provenance requirements remain authoritative in
-4B-D1. The current repository does not yet implement the complete protocol.
-P1 has frozen the campaign settings below; P2 implements and tests the missing
-wrapper, transform, AP instrumentation, and manifest.
+4B-D1. P2 now implements and tests the complete model, transform, loss,
+optimizer/scheduler, audit, blind-analysis, and manifest boundary described in
+the [implementation contract](../implementation_details/ingredient_selection.md).
+No campaign outcome was inspected during implementation.
 
 ## Frozen P1 campaign contract
 
@@ -310,6 +314,7 @@ This plan is complete only when:
 | 2026-08-27 | Narrowed the resume dependency to Subphase 4B | Macro-section 4 now separates experiment-model research (4A) from reference-selector research (4B). Phase 3 needs the frozen `M_ref`, not completion of the independent experiment-model shortlist. |
 | 2026-09-15 | Accepted the completed 4B-D1 EfficientNetV2-S handoff and resumed Macro-section 3 at P1 | The selector's exact model-side protocol and interpretation boundary are now binding. P1 owns only the remaining campaign settings and measurement contract; implementation and pilot execution remain P2 and P3. |
 | 2026-09-24 | Completed P1 and adopted Phase 3-D1 | One seed-42 AdamW/warm-up/cosine configuration, 20 epochs, deterministic two-epoch audits, AP/F1/uncertainty controls, the sealed 24-label pilot, one-run P3/P4 reuse, and the output boundary are frozen. No new selector outcome was inspected; P2 implementation is next. |
+| 2026-09-24 | Completed P2 selector integration | Implemented the exact model/transform and train/validation-only campaign boundary, deterministic AP/F1 audits and analysis, hashed pilot/rule gate, historical regression, provenance schemas, and resource check. The 64-test suite and real RTX 4060 batch-8 gate pass; no selector outcome was inspected. P3 is next. |
 
 ## Related documentation
 
