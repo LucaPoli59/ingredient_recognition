@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-27
+**Last updated:** 2026-09-28
 **Overall status:** In progress  
 **Current macro-phase:** Data and Ingredient selection
-**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and execute Phase 3 P3: the sealed 40-epoch effective-batch-128 EfficientNetV2-S campaign followed by pilot-only analysis and numerical profile-gate freeze. Macro-section 4 research and Phase 3 P1–P2 are complete.
+**Current focus:** Complete the remaining Data 2.4 runtime smoke checks. Phase 3 P3 has completed the sealed 40-epoch campaign and blind pilot-derived rule freeze; P4 awaits separate authorization before exposing the other 141 labels.
 
 ## Purpose
 
@@ -33,7 +33,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
-| 3 | Ingredient selection | **In progress** | Phase 3-D2/D3 replace interrupted v1 with effective batch 128 and 40 epochs in the main workspace; pass the full-epoch capacity gate, run v3, and freeze numerical gates from the blind 24-label pilot. |
+| 3 | Ingredient selection | **In progress** | P3 completed the 40-epoch v3 campaign and froze the numerical profile from only the 24-label pilot. P4 and the remaining 141 outcomes remain deferred pending a separate execution decision. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Deferred** | All three 4A research handoffs are available; prepare their implementation plan after the remaining DataModule readiness checks. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
@@ -154,7 +154,7 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 | --- | --- | --- |
 | 3.1 Preliminary evidence and historical reconstruction | **Done** | Retain the exact max-Q3 intersection as a read-only baseline and regression fixture. |
 | 3.2 Selection criteria and experimental protocol | **Done** | 4B-D1 and Phase 3-D1 with the D2/D3 amendments freeze the model, single seed-42 AdamW campaign, 40-epoch schedule, deterministic audits, AP/F1 policy, controls, uncertainty, sealed pilot, and provenance/output boundary. Numerical profile gates remain a P3 pilot output. |
-| 3.3 Reproducible `v5` learnability study | **In progress** | Complete the full-epoch gate for effective batch 128 (measured physical cap 8, accumulation 16), execute the fresh 40-epoch v3 campaign with a source snapshot, then freeze gates from only the 24-label pilot. |
+| 3.3 Reproducible `v5` learnability study | **In progress** | P3's completed 40-epoch v3 campaign and 24-label pilot froze [D4](project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule). P4 full-label application remains deferred until separately authorized; no final selected vocabulary exists. |
 | 3.4 Relevance and visual-observability validation | **Deferred** | Combine learnability with semantic/support criteria and audited direct/contextual/not-inferable evidence. |
 | 3.5 Final vocabulary tiers and integration | **Deferred** | Freeze named headline and exploratory projections, integrate them, and retire superseded scripts only after parity and retention gates pass. |
 
@@ -175,12 +175,13 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 - [x] Froze Phase 3-D1: one seed-42 AdamW/warm-up/cosine run for 20 epochs, deterministic train/validation audits every two epochs, robust AP windows, fixed-0.5 F1 diagnostics, final validation bootstrap intervals, low-cost controls, a blind support-stratified pilot cohort, and one-run P3/P4 reuse.
 - [x] Implemented P2 through canonical source modules and thin CLIs: exact selector/transform/loss/schedule, train/validation-only data access, fixed-state AP/F1 audits, bootstrap/controls, blind rule gate, manifest schemas, and deterministic historical reproduction. All 64 tests pass and the real RTX 4060 batch-8 FP32 gate fits the 8 GB boundary.
 - [x] Amended execution before per-label inspection under Phase 3-D2/D3: main-workspace launcher and source snapshots, effective batch 128, and a 40-epoch horizon; the extended 72-test suite verifies the current batch, schedule, final windows and analysis contract.
+- [x] Completed the fresh 40-epoch v3 selector campaign, exposed only the sealed 24-label pilot, and froze [Phase 3-D4](project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule) with absolute AP/support/stability/advantage gates and a conservative bootstrap overlap band. The [reviewed pilot record](experiment_results/phase3_d1_v3_pilot.md) is provisional, not a selected vocabulary.
 
 ### Active after the Subphase 4B protocol freeze and handoff
 
 - [x] Freeze the remaining global `M_ref` campaign and measurement contract without inspecting new selector outcomes.
 - [x] Implement the 4B-D1 wrapper/transform/loss and Phase 3-D1 optimizer, scheduler, deterministic audit, AP/F1, bootstrap, pilot-isolation, provenance, and output-schema paths through canonical APIs.
-- [ ] Pilot robust train-AP learning-dynamics and validation-AP statistics on the sealed cohort, including initialization/early-to-late change, a late-window level, temporal sensitivity, final validation bootstrap uncertainty, profile gates, and fixed-0.5 F1 diagnostics. Configuration sensitivity is unavailable under the single-configuration contract.
+- [x] Piloted robust train-AP learning dynamics and validation-AP statistics on the sealed cohort, including initialization/early-to-late change, late-window levels, temporal sensitivity, final validation bootstrap uncertainty, frozen profile gates and fixed-0.5 F1 diagnostics. Configuration sensitivity remains unavailable under the single-configuration contract.
 - [ ] Add Phase 3 support/prevalence and non-visual controls, and preserve the matching fields needed for Macro-section 6's later matched-size vocabulary controls; use like-for-like cohorts and statistics for every reduction claim.
 - [x] Implement deterministic historical reproduction and `v5` analysis in a dedicated source package, with plot-ready evidence generated from validated manifests rather than notebook state.
 - [ ] Define what “relevant” means for the thesis question independently of frequency or optimization ease.
@@ -194,7 +195,7 @@ The historical rule is reproduced by maintained read-only code; the `v5` campaig
 
 ### Next action
 
-Execute P3 in [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md): complete the Phase 3-D2 full-epoch gate, run the fresh effective-batch-128 campaign from the main workspace with content-addressed source provenance, inspect only the 24-label pilot, and freeze absolute numerical gates. The interrupted v1 is retained as superseded evidence; the other 141 labels remain sealed until P4.
+Maintain P3's frozen [numerical rule](project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule) and [pilot result](experiment_results/phase3_d1_v3_pilot.md). P4 in [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) requires a separate execution decision before applying that unchanged rule to the other 141 outcomes. Continue the remaining Data 2.4 runtime smoke checks independently. The interrupted v1 and v2 gate remain separate history; the post-fit resource-gate validation device limitation remains documented.
 
 ## 4. Model research
 
@@ -533,6 +534,8 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-09-24 | Ingredient-selection implementation | Completed P2 without inspecting selector outcomes. Added the exact selector and fit/pad transform, train/validation-only data boundary, weighted loss and frozen schedule, fixed-state audits, AP/F1/bootstrap analysis, pilot/rule hash gate, manifests and historical regression. All 64 tests pass; the real batch-8 FP32 gate used 3,632.20 MiB allocated and 5,362.00 MiB reserved on the 8 GB RTX 4060. | Work package 3.3 **In progress** at P3 | [Implementation contract](implementation_details/ingredient_selection.md), [Phase 3 plan](plans/recognizable_ingredient_selection.md) |
 | 2026-09-27 | Ingredient-selection execution amendment | Adopted Phase 3-D2 by user request: interrupted v1 before per-label inspection, retained its artifacts, returned execution to the main workspace, and requested effective batch 128 with measured physical capacity and exact Lightning accumulation. Quick CUDA trials reject 128/64/32/16; physical 8 with accumulation 16 passes. A full-epoch gate and fresh source snapshot are mandatory before v2. | Work package 3.3 **In progress** at P3 | [Phase 3-D2](project_objective/model_comparison_methodology.md#phase-3-d2--effective-batch-and-main-workspace-execution-amendment), [implementation](implementation_details/ingredient_selection.md) |
 | 2026-09-27 | Ingredient-selection budget amendment | Adopted Phase 3-D3 by user request before v2 campaign launch: 40 epochs with 2 warm-up and 38 cosine epochs, unchanged two-epoch audits and relocated final windows. The incomplete disposable v2 gate was interrupted; v3 requires a fresh full-epoch gate against the committed sources. | Work packages 3.2 **Done**, 3.3 **In progress** at P3 | [Phase 3-D3](project_objective/model_comparison_methodology.md#phase-3-d3--forty-epoch-campaign-amendment), [Phase 3 plan](plans/recognizable_ingredient_selection.md) |
+| 2026-09-27 | Ingredient-selection campaign launch | The v3 full-epoch training gate passed with 375 CUDA updates, and the fresh 40-epoch effective-batch-128 campaign started at 16:17 UTC from revision `192059e`. Manifest, gate and all 152 source-snapshot entries were verified without per-label outcome inspection. | Work package 3.3 **In progress**; pilot analysis and gate freeze pending | [Launch checkpoint](plans/recognizable_ingredient_selection.md#p3-resource-gate-and-launch-checkpoint--2026-09-27), [verification and device limitation](implementation_details/ingredient_selection.md#verified-resource-and-test-evidence) |
+| 2026-09-28 | Ingredient-selection P3 completion | The same v3 campaign completed 40 epochs. Blind analysis of only 24 pilot labels froze the absolute D4 rule with bootstrap overlap handling and preserved pilot artifacts; no non-pilot label outcome or test split was inspected. | P3 **Done**; Work package 3.3 **In progress**, P4 **Deferred** pending separate authorization | [D4 decision](project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule), [pilot result](experiment_results/phase3_d1_v3_pilot.md), [feature-plan checkpoint](plans/recognizable_ingredient_selection.md#p3-pilot-and-numerical-rule-completion--2026-09-28) |
 
 ## Tracker maintenance rules
 

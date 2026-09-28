@@ -1,4 +1,5 @@
 import json
+import hashlib
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,10 +9,11 @@ import pandas as pd
 from PIL import Image
 
 from scripts.ingredient_selection.run_campaign import _campaign_identity
-from src.ingredient_selection.analysis import analyze_campaign
+from src.ingredient_selection.analysis import analyze_campaign, report_frozen_pilot
 from src.ingredient_selection.artifacts import write_json
 from src.ingredient_selection.data import SelectorDataBundle, SelectorDataModule
-from src.ingredient_selection.metrics import ProfileThresholds
+from src.ingredient_selection.metrics import PROFILE_CLASSIFIER_VERSION, ProfileThresholds
+import src.ingredient_selection.metrics as classifier_module
 from src.ingredient_selection.protocol import (
     SelectorProtocol,
     build_pilot_cohort,
@@ -107,6 +109,7 @@ class IngredientSelectionAnalysisTests(unittest.TestCase):
         write_json(output / "campaign_manifest.json", {
             "campaign_identity": identity,
             "campaign_identity_hash": sha256_json(identity),
+            "status": "completed",
         })
         pilot = build_pilot_cohort(self.bundle.class_names, self.bundle.train.supports)
         write_json(output / "pilot_cohort.json", pilot)
@@ -165,22 +168,45 @@ class IngredientSelectionAnalysisTests(unittest.TestCase):
 
         manifest = json.loads((output / "campaign_manifest.json").read_text())
         pilot = json.loads((output / "pilot_cohort.json").read_text())
+        pilot_evidence = (output / "profile_evidence.csv").read_bytes()
+        (output / "pilot_profile_evidence.csv").write_bytes(pilot_evidence)
         gates = ProfileThresholds(1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.5, -1.0)
         rule = {
             "schema_version": 1,
             "protocol_id": SelectorProtocol().protocol_id,
             "campaign_identity_hash": manifest["campaign_identity_hash"],
             "pilot_artifact_hash": pilot["artifact_hash"],
+            "pilot_evidence_sha256": hashlib.sha256(pilot_evidence).hexdigest(),
+            "classifier_version": PROFILE_CLASSIFIER_VERSION,
+            "classifier_source_sha256": hashlib.sha256(Path(classifier_module.__file__).read_bytes()).hexdigest(),
             "gates": gates.to_dict(),
         }
         rule["artifact_hash"] = sha256_json(rule)
         write_json(output / "profile_rule.json", rule)
+
+        frozen_pilot = report_frozen_pilot(output)
+        self.assertEqual(frozen_pilot["analysis_scope"], "pilot_only")
+        self.assertEqual(frozen_pilot["visible_label_count"], 24)
+        self.assertEqual(len(pd.read_csv(output / "pilot_profile_decisions.csv")), 24)
 
         full_summary = analyze_campaign(output, self.bundle)
         full_evidence = pd.read_csv(output / "profile_evidence.csv")
         self.assertEqual(full_summary["analysis_scope"], "full")
         self.assertEqual(len(full_evidence), 165)
         self.assertEqual(set(full_evidence["provisional_outcome"]), {"generalizable_candidate"})
+
+        bad_source_rule = dict(rule)
+        bad_source_rule["classifier_source_sha256"] = "wrong-source"
+        bad_source_rule.pop("artifact_hash")
+        bad_source_rule["artifact_hash"] = sha256_json(bad_source_rule)
+        write_json(output / "profile_rule.json", bad_source_rule)
+        with self.assertRaisesRegex(ValueError, "classifier source"):
+            report_frozen_pilot(output)
+
+        write_json(output / "profile_rule.json", rule)
+        (output / "pilot_profile_evidence.csv").write_bytes(b"tampered")
+        with self.assertRaisesRegex(ValueError, "pilot evidence"):
+            report_frozen_pilot(output)
 
     def test_analysis_rejects_a_tampered_rule(self):
         output = self._write_campaign()

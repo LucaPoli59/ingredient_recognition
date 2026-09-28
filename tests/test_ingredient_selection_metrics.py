@@ -96,16 +96,39 @@ class IngredientSelectionMetricTests(unittest.TestCase):
             "val_late_iqr": 0.02,
             "train_minus_val_late_gap": 0.1,
             "image_vs_cuisine_ap_advantage": 0.2,
+            "cuisine_prior_ap": 0.15,
+            "bootstrap_valid": True,
+            "bootstrap_ap_lower": 0.55,
+            "bootstrap_ap_upper": 0.65,
         }
         self.assertEqual(classify_profile(base, gates)[0], "generalizable_candidate")
         self.assertEqual(classify_profile(base | {"train_support": 2}, gates)[0], "uncertain")
         self.assertEqual(classify_profile(base | {"train_initial_to_late_gain": 0.01}, gates)[0],
                          "no_sustained_optimization")
-        self.assertEqual(classify_profile(base | {"val_late_median_ap": 0.1}, gates)[0],
+        self.assertEqual(classify_profile(base | {
+            "val_late_median_ap": 0.1, "bootstrap_ap_lower": 0.05,
+            "bootstrap_ap_upper": 0.15,
+        }, gates)[0],
                          "optimization_only")
         self.assertEqual(classify_profile(base | {"train_late_iqr": 0.3}, gates)[0], "uncertain")
-        self.assertEqual(classify_profile(base | {"image_vs_cuisine_ap_advantage": 0.01}, gates)[0],
+        self.assertEqual(classify_profile(base | {
+            "image_vs_cuisine_ap_advantage": 0.01,
+            "cuisine_prior_ap": 0.4,
+            "bootstrap_ap_lower": 0.41, "bootstrap_ap_upper": 0.42,
+        }, gates)[0],
                          "context_predictable")
+        self.assertEqual(classify_profile(base | {
+            "val_late_median_ap": 0.24,
+            "bootstrap_ap_lower": 0.20,
+            "bootstrap_ap_upper": 0.30,
+        }, gates)[0], "uncertain")
+        self.assertEqual(classify_profile(base | {
+            "image_vs_cuisine_ap_advantage": 0.06,
+            "cuisine_prior_ap": 0.34,
+            "bootstrap_ap_lower": 0.36,
+            "bootstrap_ap_upper": 0.43,
+        }, gates)[0], "uncertain")
+        self.assertEqual(classify_profile(base | {"bootstrap_valid": False}, gates)[0], "uncertain")
         self.assertEqual(classify_profile(base | {"trajectory_complete": False}, gates)[0], "uncertain")
 
 

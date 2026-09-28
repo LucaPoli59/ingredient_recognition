@@ -12,6 +12,9 @@ from sklearn.metrics import average_precision_score, precision_recall_fscore_sup
 from src.ingredient_selection.protocol import SelectorProtocol
 
 
+PROFILE_CLASSIFIER_VERSION = "phase3-pilot-bootstrap-band-v1"
+
+
 def sigmoid(logits: np.ndarray) -> np.ndarray:
     values = np.asarray(logits, dtype=np.float64)
     positive = values >= 0
@@ -232,14 +235,21 @@ class ProfileThresholds:
 
 
 def classify_profile(row: Mapping[str, Any], gates: ProfileThresholds) -> tuple[str, list[str]]:
-    """Apply P3-supplied absolute gates without tuning a retained-label quota."""
+    """Apply absolute gates with a conservative final-checkpoint bootstrap band."""
     required = [
         "trajectory_complete", "train_support", "train_initial_to_late_gain",
         "train_late_median_ap", "val_late_median_ap", "train_late_iqr",
         "val_late_iqr", "train_minus_val_late_gap", "image_vs_cuisine_ap_advantage",
+        "cuisine_prior_ap", "bootstrap_valid", "bootstrap_ap_lower", "bootstrap_ap_upper",
     ]
     if any(key not in row or pd.isna(row[key]) for key in required) or not row["trajectory_complete"]:
         return "uncertain", ["incomplete_evidence"]
+    if not row["bootstrap_valid"]:
+        return "uncertain", ["invalid_validation_bootstrap"]
+    lower = float(row["bootstrap_ap_lower"])
+    upper = float(row["bootstrap_ap_upper"])
+    if not 0 <= lower <= upper <= 1:
+        return "uncertain", ["invalid_validation_bootstrap"]
     if int(row["train_support"]) < gates.min_train_support:
         return "uncertain", ["low_support"]
     if (
@@ -247,14 +257,25 @@ def classify_profile(row: Mapping[str, Any], gates: ProfileThresholds) -> tuple[
             or float(row["train_late_median_ap"]) < gates.min_train_late_ap
     ):
         return "no_sustained_optimization", ["train_signal_below_gate"]
-    if float(row["val_late_median_ap"]) < gates.min_val_late_ap:
-        return "optimization_only", ["validation_signal_below_gate"]
+    val_ap = float(row["val_late_median_ap"])
+    if val_ap < gates.min_val_late_ap:
+        if upper < gates.min_val_late_ap:
+            return "optimization_only", ["validation_signal_below_gate"]
+        return "uncertain", ["validation_gate_overlaps_bootstrap_interval"]
+    if lower < gates.min_val_late_ap:
+        return "uncertain", ["validation_gate_overlaps_bootstrap_interval"]
     if (
             float(row["train_late_iqr"]) > gates.max_train_late_iqr
             or float(row["val_late_iqr"]) > gates.max_val_late_iqr
             or float(row["train_minus_val_late_gap"]) > gates.max_train_val_gap
     ):
         return "uncertain", ["late_window_or_generalization_instability"]
-    if float(row["image_vs_cuisine_ap_advantage"]) < gates.min_image_advantage:
-        return "context_predictable", ["insufficient_image_advantage"]
+    advantage = float(row["image_vs_cuisine_ap_advantage"])
+    cuisine_ap = float(row["cuisine_prior_ap"])
+    if advantage < gates.min_image_advantage:
+        if upper - cuisine_ap < gates.min_image_advantage:
+            return "context_predictable", ["insufficient_image_advantage"]
+        return "uncertain", ["image_advantage_gate_overlaps_bootstrap_interval"]
+    if lower - cuisine_ap < gates.min_image_advantage:
+        return "uncertain", ["image_advantage_gate_overlaps_bootstrap_interval"]
     return "generalizable_candidate", ["all_numeric_gates_passed"]

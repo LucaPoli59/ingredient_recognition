@@ -1,7 +1,7 @@
 # Experiment results
 
 **Created:** 2026-09-23
-**Last updated:** 2026-09-23
+**Last updated:** 2026-09-28
 
 ## Context and scope
 
@@ -22,6 +22,7 @@ Raw JSON/HTML reports, checkpoints, event files, W&B stores, exhaustive tables, 
 
 - [`basic_v5_resnet_dinov2.md`](basic_v5_resnet_dinov2.md) records the exploratory validation comparison of the existing `basic_v5` ResNet18 and frozen-backbone DINOv2-B/14 HPO campaigns. It identifies ResNet18 trial 77 as the stronger observed artifact while retaining the final-benchmark gate.
 - [`basic_v5_resnet_dinov2.png`](basic_v5_resnet_dinov2.png) is the compact, versioned figure derived from the same reviewed comparison.
+- [`phase3_d1_v3_pilot.md`](phase3_d1_v3_pilot.md) records only the sealed 24-label pilot of the completed 40-epoch reference-selector campaign, the provisional numerical-profile outcomes, exact artifact provenance, and interpretation limits; the other 141 labels remain outside this review.
 
 ## Maintenance rules
 

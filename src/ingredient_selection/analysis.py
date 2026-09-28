@@ -14,6 +14,7 @@ from src.ingredient_selection.artifacts import read_json, write_json
 from src.ingredient_selection.data import SelectorDataBundle
 from src.ingredient_selection.batching import resolve_batch_plan
 from src.ingredient_selection.metrics import (
+    PROFILE_CLASSIFIER_VERSION,
     ProfileThresholds,
     classify_profile,
     sigmoid,
@@ -79,7 +80,8 @@ def _control_metrics(
 
 
 def _validate_profile_rule(
-        rule: dict[str, Any], manifest: dict[str, Any], pilot: dict[str, Any]) -> ProfileThresholds:
+        rule: dict[str, Any], manifest: dict[str, Any], pilot: dict[str, Any],
+        output: Path) -> ProfileThresholds:
     payload = dict(rule)
     artifact_hash = payload.pop("artifact_hash", None)
     if artifact_hash != sha256_json(payload):
@@ -90,6 +92,15 @@ def _validate_profile_rule(
         raise ValueError("profile rule campaign identity hash does not match")
     if rule.get("pilot_artifact_hash") != pilot["artifact_hash"]:
         raise ValueError("profile rule was not frozen from this pilot cohort")
+    if rule.get("classifier_version") != PROFILE_CLASSIFIER_VERSION:
+        raise ValueError("profile rule classifier version differs from current source")
+    source_hash = hashlib.sha256(Path(__file__).with_name("metrics.py").read_bytes()).hexdigest()
+    if rule.get("classifier_source_sha256") != source_hash:
+        raise ValueError("profile rule classifier source differs from current source")
+    pilot_evidence = output / "pilot_profile_evidence.csv"
+    if (not pilot_evidence.is_file()
+            or rule.get("pilot_evidence_sha256") != hashlib.sha256(pilot_evidence.read_bytes()).hexdigest()):
+        raise ValueError("profile rule pilot evidence is missing or has changed")
     return ProfileThresholds(**rule["gates"])
 
 
@@ -179,7 +190,7 @@ def analyze_campaign(
     rule_path = output / "profile_rule.json"
     rule_applied = rule_path.is_file()
     if rule_applied:
-        gates = _validate_profile_rule(read_json(rule_path), manifest, pilot)
+        gates = _validate_profile_rule(read_json(rule_path), manifest, pilot, output)
         outcomes = [classify_profile(row, gates) for row in evidence.to_dict("records")]
         evidence["provisional_outcome"] = [item[0] for item in outcomes]
         evidence["profile_reasons"] = [";".join(item[1]) for item in outcomes]
@@ -222,4 +233,40 @@ def analyze_campaign(
         "profile_evidence_sha256": hashlib.sha256(encoded).hexdigest(),
     }
     write_json(output / "validation_summary.json", summary)
+    return summary
+
+
+def report_frozen_pilot(output_dir: str | Path) -> dict[str, Any]:
+    """Classify only the archived 24-label pilot after the rule is frozen."""
+    output = Path(output_dir).resolve()
+    manifest = read_json(output / "campaign_manifest.json")
+    if manifest.get("status") != "completed":
+        raise ValueError("pilot classification requires a completed campaign")
+    pilot = read_json(output / "pilot_cohort.json")
+    rule = read_json(output / "profile_rule.json")
+    gates = _validate_profile_rule(rule, manifest, pilot, output)
+    visible = pd.read_csv(output / "pilot_profile_evidence.csv")
+    expected = sorted((item["class_index"], item["class_name"]) for item in pilot["labels"])
+    observed = sorted(zip(visible["class_index"].tolist(), visible["class_name"].tolist()))
+    if len(visible) != 24 or observed != expected:
+        raise ValueError("pilot evidence does not contain exactly the sealed cohort")
+
+    outcomes = [classify_profile(row, gates) for row in visible.to_dict("records")]
+    result = visible[["class_index", "class_name"]].copy()
+    result["provisional_outcome"] = [item[0] for item in outcomes]
+    result["profile_reasons"] = [";".join(item[1]) for item in outcomes]
+    result = result.sort_values("class_index").reset_index(drop=True)
+    encoded = result.to_csv(index=False, lineterminator="\n").encode("utf-8")
+    (output / "pilot_profile_decisions.csv").write_bytes(encoded)
+    summary = {
+        "schema_version": 1,
+        "protocol_id": rule["protocol_id"],
+        "analysis_scope": "pilot_only",
+        "visible_label_count": len(result),
+        "profile_rule_hash": rule["artifact_hash"],
+        "pilot_evidence_sha256": rule["pilot_evidence_sha256"],
+        "pilot_decisions_sha256": hashlib.sha256(encoded).hexdigest(),
+        "outcome_counts": {name: int(count) for name, count in result["provisional_outcome"].value_counts().items()},
+    }
+    write_json(output / "pilot_profile_summary.json", summary)
     return summary

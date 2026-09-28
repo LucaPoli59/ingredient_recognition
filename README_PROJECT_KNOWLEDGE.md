@@ -2,8 +2,8 @@
 
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
-**Ultimo aggiornamento:** 27 settembre 2026
-**Stato della ricognizione:** architettura e flusso principale verificati nel codice; il dataset Yummly è stato analizzato integralmente su metadata e 65.146 immagini. Il baseline riproducibile `ingredients_target_v4_metadata.json` (161 etichette, 60.354 ricette) resta disponibile per confronto, mentre la generazione FoodOn-first `ingredients_target_v5_metadata.json` è il nuovo default runtime con 165 target supportati dal train e 47.965/5.996/5.996 ricette train/val/test. Il fuzzy matching è stato valutato e scartato. Il filtro standard è supporto minimo 500 ricette train per ingrediente e almeno 3 target trattenuti per ricetta. La policy 2.4 è implementata: i nuovi output multi-label non includono `<UNK>`, mentre gli encoder legacy ne conservano indice e dimensione. L'ambiente ML WSL è ora operativo e il DataModule disabilita automaticamente la pinned memory fuori da Windows nativo; restano da completare gli smoke test di training, checkpoint reload e dashboard. La selezione ResNet del novembre 2024 è stata ricostruita e la compatibilità 2.1c è chiusa: il risultato da 40 label è una baseline storica, il manifest read-only copre 72 artefatti e il verificatore riproduce la selezione e carica tre checkpoint anchor senza riscrivere dati. La 4B ha congelato come `M_ref` un protocollo EfficientNetV2-S supervisionato, full fine-tuning, input full-frame 384×384 e head indipendente da 165 logit. La P1 ha inoltre congelato una sola campagna con seed 42, AdamW, warm-up più cosine, 20 epoche, audit AP deterministici ogni due epoche, F1 diagnostico a soglia 0,5, controlli non visuali e pilot cieco da 24 label riutilizzando la stessa run in P3/P4. P2 ha implementato wrapper, metriche AP, isolamento pilot, manifest, analisi e gate di riproducibilità; la Macro-sezione 3 è ora pronta per la campagna P3. Il confronto esplorativo storico `basic_v5` è conservato sotto `docs/experiment_results/`: ResNet18 trial 77 supera il linear probe DINOv2-B/14 trial 61 sui dati di validation disponibili, senza modificare il gate del benchmark finale.
+**Ultimo aggiornamento:** 28 settembre 2026
+**Stato della ricognizione:** architettura e flusso principale verificati nel codice. `ingredients_target_v5_metadata.json` è il default runtime FoodOn-first, con 165 target e split Yummly 47.965/5.996/5.996 train/val/test; `v4` e le generazioni legacy restano disponibili. La compatibilità storica 2.1c è chiusa; Data 2.4 deve ancora completare gli smoke test di training, checkpoint reload e dashboard. Il selettore 4B-D1 EfficientNetV2-S è implementato. La campagna Phase 3-D1/D2/D3 `phase3-d1-v3` ha completato 40 epoche con batch effettivo 128; P3 ha esposto solo il pilot cieco da 24 label e congelato la regola numerica D4. Le altre 141 label e il vocabolario finale restano fuori da questa verifica. Il confronto esplorativo storico `basic_v5` è conservato sotto `docs/experiment_results/` senza modificare il gate del benchmark finale.
 
 ## Scopo
 
@@ -65,10 +65,9 @@ Tutti i modelli di visione discendono da `BaseModel`, che centralizza configuraz
 - `src/models/dinov2.py`: DINOv2 ViT-B/14 con head lineare sostituita; usa `torch.hub` per caricare `facebookresearch/dinov2` e può congelare il backbone (default).
 - `src/models/dummy.py`: modelli minimi per test.
 
-EfficientNetV2-S non ha ancora un wrapper mantenuto nel repository. La decisione
-4B-D1 ne congela il futuro uso come selettore, ma resta un contratto pianificato
-finché la Macro-sezione 3 non implementa e verifica modello, trasformazioni,
-serializzazione e logging AP.
+`src/models/efficientnet.py` implementa il wrapper EfficientNetV2-S mantenuto
+per il selettore 4B-D1, con head indipendente da 165 logit e full fine-tuning.
+Il contratto sperimentale 4A resta distinto dal protocollo selettore.
 
 Le direttive complete sulla collocazione delle informazioni, sulle fonti autorevoli, sul ciclo di vita e sulla conservazione a lungo termine sono in `docs/README_DOCS_ORGN.md`. Deve essere letto insieme a `docs/README.md` prima di creare, spostare o modificare sostanzialmente un documento.
 
@@ -123,6 +122,15 @@ come `phase3-d1-v3`. Il contratto è in
 [`docs/implementation_details/ingredient_selection.md`](docs/implementation_details/ingredient_selection.md)
 e la decisione vincolante in
 [`Phase 3-D3`](docs/project_objective/model_comparison_methodology.md#phase-3-d3--forty-epoch-campaign-amendment), con le regole batch/provenienza di D2.
+La campagna v3 è terminata dopo 40 epoche. `scripts/ingredient_selection/analyze_campaign.py`
+ha esposto soltanto le 24 label del pilot prima del congelamento della regola;
+`scripts/ingredient_selection/report_pilot.py` riproduce le decisioni sul solo
+pilot archiviato. I gate numerici, legati agli hash di campagna, pilot, evidenza
+e classificatore, sono in
+[`Phase 3-D4`](docs/project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule).
+I risultati provvisori sono in
+[`docs/experiment_results/phase3_d1_v3_pilot.md`](docs/experiment_results/phase3_d1_v3_pilot.md).
+L'analisi completa delle altre 141 label è ancora differita.
 
 `src/lightning/lgn_models.py` incapsula un `BaseModel` in un `LightningModule`. La configurazione predefinita usa `BCEWithLogitsLoss` per la classificazione multi-label, con sigmoid in fase di calcolo metriche/inferenza. Le metriche di default includono accuracy, precision, recall e Hamming distance con media weighted; F1 non è abilitata di default e mancano average precision, calibrazione e selezione esplicita delle soglie. Questa configurazione è legacy e non coincide con il protocollo deciso per il nuovo benchmark.
 
@@ -204,7 +212,7 @@ Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi
 
 - Completare la prova end-to-end WSL avviata con la policy `pin_memory` automatica e registrare l'esito del training minimo.
 - Completare la fase Data residua definita in `docs/plans/data_ingredient_refactor/yummly_data_phase.md`: gli anchor legacy 2.1c sono già verificati; restano il completamento del training e gli smoke test di checkpoint reload e dashboard richiesti dalla 2.4.
-- Eseguire P3 in `docs/plans/recognizable_ingredient_selection.md`: completare il gate su un'epoca e avviare dal workspace principale la campagna v3 da 40 epoche con batch effettivo 128; analizzare poi soltanto la cohort pilot da 24 label per fissare i gate numerici senza quota prefissata.
+- Eseguire P4 in `docs/plans/recognizable_ingredient_selection.md` soltanto dopo una decisione separata: applicare la regola numerica P3 già congelata alle altre 141 label senza modificare i gate o riaddestrare il selettore.
 - Verificare e, se necessario, uniformare alcuni import che dipendono dalla directory di avvio (`config`, `models`, `data_processing` vs `settings.config`, `src.*`).
 - Verificare la gestione di ripresa dello studio Optuna, che condivide un journal globale configurato in `experiments/journal.log`.
 - Correggere o documentare la differenza fra porta Optuna dichiarata (8051) e quella usata dallo script (8055).

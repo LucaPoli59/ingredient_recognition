@@ -1,8 +1,8 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-27
-**Status:** Active and binding design; Subphase 4B has frozen the EfficientNetV2-S reference-selector protocol, Phase 3-D1 has frozen its campaign and measurement contract, and the later benchmark also requires the independent Subphase 4A model portfolio.
+**Last updated:** 2026-09-28
+**Status:** Active and binding design; 4B-D1 and Phase 3-D1–D3 fixed the selector and campaign, and Phase 3-D4 now fixes the numerical profile rule from only the blind pilot. The later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
 
@@ -318,6 +318,50 @@ Capacity testing remains one disposable full epoch, not a 40-epoch experiment.
 The manifest and analysis validate the 40-epoch budget and 38-epoch cosine
 duration explicitly. Earlier campaign and capacity artifacts remain separate
 historical evidence and are never pooled with v3 selection evidence.
+
+#### Phase 3-D4 — Pilot-frozen numerical profile rule
+
+**Adopted:** 2026-09-28, after the complete v3 campaign and inspection of only
+the precommitted 24-label pilot. This is the P3 numerical-gate freeze permitted
+by D1; it does not revise the learner, seed, data, metrics, windows, budget,
+audits or the P3/P4 isolation rule. The other 141 label outcomes were not
+inspected and must remain sealed until a separate P4 execution.
+
+The machine-readable authority is
+[`profile_rule.json`](../../analysis_outputs/ingredient_selection/phase3-d1-v3/profile_rule.json)
+(artifact hash `7cf03371245860bf1a5be0c61a9fe54282e358fc910f21d1da6204f91354cda1`).
+It binds the campaign identity, hashed 24-label cohort, immutable pilot-evidence
+copy, and classifier source hash. The [reviewed pilot result](../experiment_results/phase3_d1_v3_pilot.md)
+owns the observed 24-label outcomes, not this methodology record.
+
+| Gate | Absolute value | Role |
+| --- | ---: | --- |
+| Minimum final-train positive support | 500 | Lower support remains `uncertain`; this is measured after the final recipe filters, not assumed from the target-builder's nominal support filter. |
+| Minimum initialization-to-late train-AP gain | 0.10 | Require acquisition beyond the pretraining/random-head reference. |
+| Minimum late-median train AP | 0.35 | Require a sustained absolute train ranking level, not one maximum. |
+| Minimum late-median validation AP | 0.20 | Require an absolute held-out ranking level, with bootstrap overlap assigned `uncertain`. |
+| Maximum late-window train/validation AP IQR | 0.03 each | Flag temporal dispersion rather than selecting a favourable epoch. |
+| Maximum late train-minus-validation AP gap | 0.50 | Mark a large optimization/generalization divergence `uncertain`. |
+| Minimum late image-minus-cuisine-prior AP advantage | 0.10 | Require a material image-model margin over the declared non-visual diagnostic. |
+
+The classification order is fixed in
+[`classify_profile`](../../src/ingredient_selection/metrics.py): missing,
+invalid-bootstrap or low-support evidence is `uncertain`; failed train gain or
+level is `no_sustained_optimization`; clearly sub-gate validation AP is
+`optimization_only`; excessive IQR/gap is `uncertain`; a clearly sub-gate
+image advantage is `context_predictable`; and only a fully passing profile is
+`generalizable_candidate`. A case near either validation or image-advantage
+gate is `uncertain` when the epoch-40 validation AP bootstrap interval straddles
+the corresponding absolute boundary. The image comparison subtracts the
+point-estimated cuisine-prior AP from both bootstrap AP bounds. That interval
+is a conservative screen, **not** a formal interval for the late-window median
+or the model-minus-prior difference. F1 never changes these outcomes.
+
+This rule has no retained-label quota. Its pilot calibration does not certify
+seed/configuration stability, direct visual observability, semantic relevance,
+or a final selected vocabulary. P4 may apply it unchanged to the same v3 run
+only after the separate execution gate; P5–P6 own subsequent evidence and
+projection decisions.
 
 ### 3. Tune each model category once on the full common task
 
