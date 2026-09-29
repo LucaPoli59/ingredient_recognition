@@ -23,6 +23,8 @@ Raw JSON/HTML reports, checkpoints, event files, W&B stores, exhaustive tables, 
 - [`basic_v5_resnet_dinov2.md`](basic_v5_resnet_dinov2.md) records the exploratory validation comparison of the existing `basic_v5` ResNet18 and frozen-backbone DINOv2-B/14 HPO campaigns. It identifies ResNet18 trial 77 as the stronger observed artifact while retaining the final-benchmark gate.
 - [`basic_v5_resnet_dinov2.png`](basic_v5_resnet_dinov2.png) is the compact, versioned figure derived from the same reviewed comparison.
 - [`phase3_d1_v3_pilot.md`](phase3_d1_v3_pilot.md) records only the sealed 24-label pilot of the completed 40-epoch reference-selector campaign, the provisional numerical-profile outcomes, exact artifact provenance, and interpretation limits; the other 141 labels remain outside this review.
+- [`phase3_d1_v3_full_profile.md`](phase3_d1_v3_full_profile.md) reviews P4's unchanged application of the pilot-frozen rule to all 165 labels; its five outcomes are provisional and do not constitute a selected vocabulary.
+- [`phase3_d1_v3_p4_decision_map.svg`](phase3_d1_v3_p4_decision_map.svg), [`phase3_d1_v3_p4_support_vs_validation_ap.svg`](phase3_d1_v3_p4_support_vs_validation_ap.svg), and [`phase3_d1_v3_p4_ap_trajectory_examples.svg`](phase3_d1_v3_p4_ap_trajectory_examples.svg) are the compact, reproducible figures reviewed with that result.
 
 ## Maintenance rules
 

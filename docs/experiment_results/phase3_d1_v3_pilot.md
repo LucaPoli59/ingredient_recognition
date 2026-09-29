@@ -7,10 +7,13 @@
 ## Purpose and boundary
 
 This record reviews only the sealed 24-label, train-support-stratified pilot of
-the completed `phase3-d1-v3` reference-selector campaign. The other 141 label
-outcomes remain unopened for the Phase 3 P4 application gate. The numerical
+the completed `phase3-d1-v3` reference-selector campaign. At the P3 decision
+cutoff, the other 141 label outcomes remained unopened for P4. The numerical
 profile rule is binding in [Phase 3-D4](../project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule),
 while this document owns the observed pilot outcome and its limitations.
+That isolation statement describes the P3 decision cutoff; P4 has since
+applied the unchanged rule to all labels in the separate
+[full-profile record](phase3_d1_v3_full_profile.md).
 
 ## Provenance and comparability
 
@@ -28,7 +31,7 @@ while this document owns the observed pilot outcome and its limitations.
 - Inputs: [`campaign_manifest.json`](../../analysis_outputs/ingredient_selection/phase3-d1-v3/campaign_manifest.json),
   [`pilot_cohort.json`](../../analysis_outputs/ingredient_selection/phase3-d1-v3/pilot_cohort.json),
   [`pilot_profile_evidence.csv`](../../analysis_outputs/ingredient_selection/phase3-d1-v3/pilot_profile_evidence.csv),
-  and [`validation_summary.json`](../../analysis_outputs/ingredient_selection/phase3-d1-v3/validation_summary.json).
+  and the archived [`pilot_validation_summary.json`](../../analysis_outputs/ingredient_selection/phase3-d1-v3/pilot_validation_summary.json).
   The pilot evidence has SHA-256 `a6e544fd0be6af106103e60d6705fce78a9a0868c0e97d7ebfb10a7d334acf1a`.
 - Frozen decision: [`profile_rule.json`](../../analysis_outputs/ingredient_selection/phase3-d1-v3/profile_rule.json)
   has content hash `7cf03371245860bf1a5be0c61a9fe54282e358fc910f21d1da6204f91354cda1`;

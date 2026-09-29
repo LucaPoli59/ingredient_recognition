@@ -11,15 +11,16 @@ complementary Phase 3-D1 campaign and measurement contract. P2 completed on
 2026-09-24 with the maintained selector, deterministic audit/analysis paths,
 historical regression, and real-data resource gate. P3 completed the sealed
 40-epoch v3 campaign and froze the numerical profile from only the blind pilot
-on 2026-09-28. The independent
+on 2026-09-28. P4 then applied the unchanged rule to all 165 labels from the
+same campaign, without retraining or test access. The independent
 Subphase 4A experiment-model portfolio remains outside this plan's selector
 decision.
 
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** P3 complete; P4 remains deferred pending a separate execution decision.
-**Next action:** Review the frozen [Phase 3-D4 rule](../project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule) and [pilot-only result](../experiment_results/phase3_d1_v3_pilot.md). Do not open the remaining 141 label outcomes or run P4 under the monitoring authorization.
+**Current task:** P4 complete; P5 semantic and visual-observability review remains deferred.
+**Next action:** Use the [P4 numerical profile](../experiment_results/phase3_d1_v3_full_profile.md) only as an input to a separately reviewed P5 relevance and two-reviewer observability protocol. Do not call the 25 numerical candidates a final or directly visible vocabulary.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -27,7 +28,7 @@ decision.
 | P1 | Freeze the new selection question and experimental contract | **Done** | [Phase 3-D1](../project_objective/model_comparison_methodology.md#phase-3-d1--frozen-selector-campaign-and-measurement-protocol) fixes one seed-42 AdamW/warm-up/cosine configuration, 20 epochs, deterministic two-epoch audits, AP windows, fixed-0.5 F1 diagnostics, bootstrap uncertainty, low-cost controls, a sealed support-stratified pilot cohort, and the output boundary. No new selector outcome informed the decision. |
 | P2 | Implement the selector integration, deterministic historical reproduction, and reusable analysis | **Done** | Added the exact EfficientNetV2-S/full-frame adapter, train/validation-only data boundary, weighted BCE and AdamW schedule, fixed-state AP/F1 audits, bootstrap and controls, hashed blind gate, manifests, thin CLIs, and read-only historical regression. All 64 repository tests pass; the real batch-8 FP32 gate passed at 3,632.20 MiB allocated and 5,362.00 MiB reserved. See the [implementation contract](../implementation_details/ingredient_selection.md). |
 | P3 | Run and validate a bounded `v5` pilot | **Done** | The full 40-epoch v3 campaign completed at 14:36 UTC on 2026-09-28. Blind analysis validated all 21 audit points and exposed only 24 labels; all 24 final AP bootstraps are valid. [D4](../project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule) froze simple absolute gates plus a bootstrap overlap band, bound to the campaign, cohort, pilot evidence and classifier source hashes. The [reviewed result](../experiment_results/phase3_d1_v3_pilot.md) reports 5 numeric candidates, 5 optimization-only, 1 contextual and 13 uncertain, without claiming a selected vocabulary. |
-| P4 | Apply the frozen profile to the full `v5` campaign evidence | **Deferred** | Await separate user authorization before unlocking the remaining 141 labels from the same sealed v3 run. Apply the immutable D4 rule, preserve complete provenance, and report the single-run limitation. No second selector training is required. |
+| P4 | Apply the frozen profile to the full `v5` campaign evidence | **Done** | Separately authorized on 2026-09-28. The same v3 run yielded 165 validated rows with unchanged D4 gates and all 24 pilot decisions reproduced: 25 numerical candidates, 40 optimization-only, 13 context-predictable, 4 without sustained optimization and 83 uncertain. The [reviewed P4 result](../experiment_results/phase3_d1_v3_full_profile.md), machine-readable named groups and deterministic figures retain provenance and the single-run limit; no test or reduced-vocabulary training was used. |
 | P5 | Combine learnability with relevance and visual-observability evidence | **Deferred** | Apply the semantic, support, and annotation protocol; distinguish direct visual evidence from contextual predictability. |
 | P6 | Freeze named headline and exploratory ingredient tiers | **Deferred** | Publish versioned projections of the shared `v5` vocabulary, with explicit inclusion evidence and uncertainty. |
 | P7 | Integrate the workflow and retire superseded scripts safely | **Deferred** | Connect training and analysis to canonical APIs, verify parity, document current behavior, then clean legacy notebooks and launchers only after retention gates pass. |
@@ -356,6 +357,30 @@ P3 is **Done**. The other 141 label outcomes remain unexposed; P4 is
 training, semantic tier or final selected list was produced. The user-owned
 dirty training/IDE files and the older v1/v2 artifacts remain untouched.
 
+## P4 full-profile completion — 2026-09-28
+
+The user separately authorized P4 after the P3 pilot and numerical rule were
+committed as `fca417f`. The unchanged `profile_rule.json` was applied to all 165
+labels from the same completed v3 campaign, with the original train/validation
+metadata and audit artifacts. The full analysis validated the campaign, class
+order, 21 audit points, validation-score record order, pilot evidence and
+classifier source before writing the 165-row `profile_evidence.csv` (SHA-256
+`5eb830a33192d0be77987e89dd4cb637f00ce714c31db0ab504c5f44a9239993`).
+The P3 pilot summary was archived before the working validation summary was
+replaced; all 24 archived decisions match the P4 rows exactly.
+
+The new `report_campaign.py` command revalidates those inputs and writes
+`p4_profile_report.json` with all named provisional groups, reason counts and
+SHA-256 provenance, plus three diagnostic figures in SVG/PNG form. Its report
+and all six figure files reproduced byte-for-byte on a second run. The
+[reviewed full-profile result](../experiment_results/phase3_d1_v3_full_profile.md)
+records 25 `generalizable_candidate`, 40 `optimization_only`, 13
+`context_predictable`, 4 `no_sustained_optimization` and 83 `uncertain` labels.
+These are numerical profile outcomes under one seed/configuration, not direct
+visibility annotations or a final selected vocabulary. No test, P5/P6,
+reduced-vocabulary training or legacy cleanup was performed. P4 is **Done**;
+P5 is the next deferred gate.
+
 ## Decision log
 
 | Date | Decision or change | Rationale |
@@ -379,6 +404,7 @@ dirty training/IDE files and the older v1/v2 artifacts remain untouched.
 | 2026-09-27 | Adopted Phase 3-D3 before v2 campaign launch | The user extended the sealed campaign to 40 epochs and authorized a commit. Interrupted the incomplete disposable v2 gate, retained the 2-epoch warm-up and two-epoch audits, extended cosine to 38 epochs, moved the final AP windows to epochs 30–40, and versioned the replacement as v3. All 72 repository tests pass, including manifest agreement and rejection of the old budget/scheduler. No ingredient outcome informed the change. Commit and relaunch the mandatory full-epoch gate before the fresh 40-epoch campaign. |
 | 2026-09-27 | Passed the v3 full-epoch training gate and launched the sealed campaign | The resource gate completed 375 CUDA optimizer updates, then the launcher constructed a fresh model for 40 epochs from revision `192059e`. Verified the gate, manifest and all 152 source-snapshot entries without opening per-label outcomes. The post-fit validation check was CPU-based and is documented separately from the CUDA training-memory result. |
 | 2026-09-28 | Completed P3 and froze the pilot-derived numerical rule | The fresh v3 campaign completed 40 epochs; blind analysis exposed only 24 labels. D4 freezes absolute AP/support/stability/advantage gates with a conservative bootstrap overlap band and source-bound rule hash. The pilot-only report is reproducible; P4 remains deferred. |
+| 2026-09-28 | Completed P4 under separate authorization without changing D4 | Applied the frozen rule to the same 165-label run, confirmed exact pilot parity and deterministic full reports/figures, and retained 83 uncertain outcomes rather than forcing a target count. The numerical candidates require P5 relevance/observability evidence before P6 can freeze named tiers. |
 
 ## Related documentation
 
@@ -389,6 +415,7 @@ dirty training/IDE files and the older v1/v2 artifacts remain untouched.
 - [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md)
 - [`../project_objective/model_comparison_methodology.md`](../project_objective/model_comparison_methodology.md)
 - [`../experiment_results/phase3_d1_v3_pilot.md`](../experiment_results/phase3_d1_v3_pilot.md)
+- [`../experiment_results/phase3_d1_v3_full_profile.md`](../experiment_results/phase3_d1_v3_full_profile.md)
 - [`reference_selector_research.md`](reference_selector_research.md)
 - [`../research/topics/label_learnability/learnability_assessment.md`](../research/topics/label_learnability/learnability_assessment.md)
 - [`../../README_PROJECT_KNOWLEDGE.md`](../../README_PROJECT_KNOWLEDGE.md)

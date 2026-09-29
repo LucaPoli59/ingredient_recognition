@@ -31,7 +31,8 @@ outcomes; no final selected vocabulary exists yet.
 | `src/ingredient_selection/metrics.py` | Computes per-label AP, fixed-0.5 precision/recall/F1, micro F1, trajectory-window summaries, deterministic AP bootstrap intervals, and application of later P3 gates. |
 | `src/ingredient_selection/artifacts.py` | Writes the manifest, cohort, tidy metrics, compressed validation scores, and bootstrap output atomically while rejecting duplicate audit keys. |
 | `src/ingredient_selection/analysis.py` | Validates provenance and audit cadence, derives controls and profile evidence, exposes only the 24-label pilot before a hashed rule exists, writes `validation_summary.json`, and classifies only the archived pilot on demand after the rule freeze. |
-| `scripts/ingredient_selection/` | Provides thin campaign, analysis, pilot-report, and historical-reproduction commands. |
+| `src/ingredient_selection/reporting.py` | Revalidates a completed full profile against the rule, pilot decisions, class order, evidence hash and trajectory table; writes named provisional groups and deterministic SVG/PNG diagnostic figures. |
+| `scripts/ingredient_selection/` | Provides thin campaign, analysis, pilot/full-report, and historical-reproduction commands. |
 | `scripts/launch_exps/ingredient_selection/train_selector.py` | Rerunnable launcher: descending short OOM probes or a full-epoch resource gate followed by the fresh campaign. |
 
 ## Campaign execution boundary
@@ -56,6 +57,15 @@ Run commands from the WSL repository with the `wsl_image_pytorch` interpreter:
 # After freezing profile_rule.json, report only the archived pilot:
 /root/miniconda3/envs/wsl_image_pytorch/bin/python \
   scripts/ingredient_selection/report_pilot.py \
+  analysis_outputs/ingredient_selection/phase3-d1-v3
+
+# P4 only, after separate authorization: apply the unchanged rule to all labels
+# and render the validated full-profile report and figures:
+/root/miniconda3/envs/wsl_image_pytorch/bin/python \
+  scripts/ingredient_selection/analyze_campaign.py \
+  analysis_outputs/ingredient_selection/phase3-d1-v3
+/root/miniconda3/envs/wsl_image_pytorch/bin/python \
+  scripts/ingredient_selection/report_campaign.py \
   analysis_outputs/ingredient_selection/phase3-d1-v3
 ```
 
@@ -113,7 +123,15 @@ preserved `pilot_profile_evidence.csv` bytes. The
 `pilot_profile_decisions.csv` and `pilot_profile_summary.json`; it never loads
 the 165-label metrics file. Do not rerun `analyze_campaign.py` after rule
 creation until P4 is separately authorized, because a valid rule unlocks its
-full-label mode. Neither path opens test metadata.
+full-label mode. P4 has now been authorized: its full analysis writes a 165-row
+`profile_evidence.csv`, while `pilot_profile_evidence.csv` and
+`pilot_validation_summary.json` preserve P3's pre-rule evidence. The
+`report_campaign.py` path rejects a pilot-only analysis, changed evidence,
+modified rule or classifier source, different pilot decisions, missing class
+order, inconsistent audit trajectory keys, and any test-split access recorded
+by the analysis summary. Its `p4_profile_report.json` contains all provisional
+named groups, reason counts, hashes and figure exemplars. Neither analysis
+path opens test metadata.
 
 `classify_profile` applies eight absolute gates and a conservative uncertainty
 band. It uses the epoch-40 AP bootstrap bounds as a corroboration check around
@@ -168,7 +186,7 @@ so that finite-logit check ran on CPU. The recorded GPU peak is a training
 capacity result, not proof of a complete CUDA validation audit. The actual
 campaign's audits run inside Trainer callbacks before teardown. Correcting the
 post-fit gate device is a future runtime follow-up; do not silently relabel the
-completed measurement or mutate this running campaign.
+completed measurement or retroactively alter the campaign provenance.
 
 The launcher then constructed a fresh model and started the 40-epoch campaign
 at `2026-09-27T16:17:14.169539+00:00` (18:17 Europe/Rome). Its manifest records
@@ -203,26 +221,34 @@ separately from the campaign's training source snapshot. The repository suite st
 the bootstrap-overlap classification and pilot-report route. The reviewed
 outcomes are in the [pilot result](../experiment_results/phase3_d1_v3_pilot.md).
 
+P4 reused the same v3 artifacts with the unchanged D4 rule. The full report
+validated all 165 class identities, the 24 archived pilot outcomes and the
+complete train/validation audit table. Two consecutive rendering runs produced
+byte-identical JSON, three SVG figures and their PNG counterparts. The
+[reviewed full-profile result](../experiment_results/phase3_d1_v3_full_profile.md)
+owns the observed numerical outcomes; figures are diagnostic, not human
+observability annotations or final vocabulary decisions.
+
 The P2 repository suite passed 64 tests after the original integration. The Phase 3 tests
 cover resize/padding/RGB behavior, head construction and trainability,
 positive-weight arithmetic, blind cohort reproduction and tamper rejection,
 AP/F1 separation, bootstrap determinism, trajectory edge cases, profile
-assignment, the complete 20-epoch learning-rate sequence, optimizer/scheduler
+assignment, the complete 40-epoch learning-rate sequence, optimizer/scheduler
 resume, eval-mode auditing, test-split isolation, rule-gated label exposure,
 and append-only historical retention.
 
 ## Limitations and next action
 
-- Only the blind 24-label pilot outcome was inspected during P3; the other 141
-  labels remain sealed until P4.
+- P3 inspected only the blind 24-label pilot; P4 subsequently applied its
+  frozen rule to the other 141 outcomes without another selector training.
 - The single campaign does not estimate seed or configuration stability.
 - Bootstrap intervals describe validation-record uncertainty only.
 - The cuisine prior is a mechanism diagnostic, not an image-model competitor.
 - Checkpoints and generated outputs remain outside durable documentation.
 
-P3 is complete and P4 remains deferred. Its next authorized action, when
-separately requested, is to apply the frozen rule to the remaining 141 labels
-without retraining the selector. The incomplete v2 capacity gate was
+P3 and P4 are complete. P5 and P6 still own human observability, semantic
+relevance and the final named vocabulary tiers; no current report should be
+used as a direct-visibility or final-selection claim. The incomplete v2 capacity gate was
 interrupted before any v2 campaign started. The interrupted v1's artifacts
 remain in the original report/experiment directories and are excluded from
 replacement learnability evidence. The post-fit gate's CPU validation

@@ -3,7 +3,7 @@
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
 **Ultimo aggiornamento:** 28 settembre 2026
-**Stato della ricognizione:** architettura e flusso principale verificati nel codice. `ingredients_target_v5_metadata.json` è il default runtime FoodOn-first, con 165 target e split Yummly 47.965/5.996/5.996 train/val/test; `v4` e le generazioni legacy restano disponibili. La compatibilità storica 2.1c è chiusa; Data 2.4 deve ancora completare gli smoke test di training, checkpoint reload e dashboard. Il selettore 4B-D1 EfficientNetV2-S è implementato. La campagna Phase 3-D1/D2/D3 `phase3-d1-v3` ha completato 40 epoche con batch effettivo 128; P3 ha esposto solo il pilot cieco da 24 label e congelato la regola numerica D4. Le altre 141 label e il vocabolario finale restano fuori da questa verifica. Il confronto esplorativo storico `basic_v5` è conservato sotto `docs/experiment_results/` senza modificare il gate del benchmark finale.
+**Stato della ricognizione:** architettura e flusso principale verificati nel codice. `ingredients_target_v5_metadata.json` è il default runtime FoodOn-first, con 165 target e split Yummly 47.965/5.996/5.996 train/val/test; `v4` e le generazioni legacy restano disponibili. La compatibilità storica 2.1c è chiusa; Data 2.4 deve ancora completare gli smoke test di training, checkpoint reload e dashboard. Il selettore 4B-D1 EfficientNetV2-S è implementato. La campagna Phase 3-D1/D2/D3 `phase3-d1-v3` ha completato 40 epoche con batch effettivo 128; P3 ha congelato la regola numerica D4 sul pilot cieco da 24 label e P4 l'ha applicata senza modifiche alle 165 label. Le 25 candidate numeriche non sono ancora il vocabolario finale: rilevanza semantica e osservabilità restano a P5–P6. Il confronto esplorativo storico `basic_v5` è conservato sotto `docs/experiment_results/` senza modificare il gate del benchmark finale.
 
 ## Scopo
 
@@ -130,7 +130,12 @@ e classificatore, sono in
 [`Phase 3-D4`](docs/project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule).
 I risultati provvisori sono in
 [`docs/experiment_results/phase3_d1_v3_pilot.md`](docs/experiment_results/phase3_d1_v3_pilot.md).
-L'analisi completa delle altre 141 label è ancora differita.
+P4 ha applicato la stessa regola alle 165 label tramite
+`scripts/ingredient_selection/analyze_campaign.py`; il nuovo
+`scripts/ingredient_selection/report_campaign.py` verifica la concordanza col
+pilot e produce gruppi provvisori nominativi e grafici riproducibili. Il
+risultato revisionato è in
+[`docs/experiment_results/phase3_d1_v3_full_profile.md`](docs/experiment_results/phase3_d1_v3_full_profile.md).
 
 `src/lightning/lgn_models.py` incapsula un `BaseModel` in un `LightningModule`. La configurazione predefinita usa `BCEWithLogitsLoss` per la classificazione multi-label, con sigmoid in fase di calcolo metriche/inferenza. Le metriche di default includono accuracy, precision, recall e Hamming distance con media weighted; F1 non è abilitata di default e mancano average precision, calibrazione e selezione esplicita delle soglie. Questa configurazione è legacy e non coincide con il protocollo deciso per il nuovo benchmark.
 
@@ -212,7 +217,7 @@ Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi
 
 - Completare la prova end-to-end WSL avviata con la policy `pin_memory` automatica e registrare l'esito del training minimo.
 - Completare la fase Data residua definita in `docs/plans/data_ingredient_refactor/yummly_data_phase.md`: gli anchor legacy 2.1c sono già verificati; restano il completamento del training e gli smoke test di checkpoint reload e dashboard richiesti dalla 2.4.
-- Eseguire P4 in `docs/plans/recognizable_ingredient_selection.md` soltanto dopo una decisione separata: applicare la regola numerica P3 già congelata alle altre 141 label senza modificare i gate o riaddestrare il selettore.
+- Preparare P5 in `docs/plans/recognizable_ingredient_selection.md`: valutare rilevanza semantica e osservabilità delle candidate numeriche con un protocollo a due revisori prima di definire i tier finali P6.
 - Verificare e, se necessario, uniformare alcuni import che dipendono dalla directory di avvio (`config`, `models`, `data_processing` vs `settings.config`, `src.*`).
 - Verificare la gestione di ripresa dello studio Optuna, che condivide un journal globale configurato in `experiments/journal.log`.
 - Correggere o documentare la differenza fra porta Optuna dichiarata (8051) e quella usata dallo script (8055).

@@ -14,6 +14,7 @@ from src.ingredient_selection.artifacts import write_json
 from src.ingredient_selection.data import SelectorDataBundle, SelectorDataModule
 from src.ingredient_selection.metrics import PROFILE_CLASSIFIER_VERSION, ProfileThresholds
 import src.ingredient_selection.metrics as classifier_module
+from src.ingredient_selection.reporting import generate_campaign_report
 from src.ingredient_selection.protocol import (
     SelectorProtocol,
     build_pilot_cohort,
@@ -93,6 +94,7 @@ class IngredientSelectionAnalysisTests(unittest.TestCase):
         identity = {
             "protocol_id": protocol.protocol_id,
             "seed": protocol.seed,
+            "class_order": list(self.bundle.class_names),
             "class_order_hash": ordered_values_hash(self.bundle.class_names),
             "metadata_sha256": {
                 "train": self.bundle.train.metadata_sha256,
@@ -194,6 +196,22 @@ class IngredientSelectionAnalysisTests(unittest.TestCase):
         self.assertEqual(full_summary["analysis_scope"], "full")
         self.assertEqual(len(full_evidence), 165)
         self.assertEqual(set(full_evidence["provisional_outcome"]), {"generalizable_candidate"})
+
+        first_report = generate_campaign_report(output)
+        first_bytes = (output / "p4_profile_report.json").read_bytes()
+        self.assertEqual(first_report["analysis_scope"], "full_profile_only")
+        self.assertEqual(first_report["outcome_counts"]["generalizable_candidate"], 165)
+        self.assertEqual(len(first_report["figure_sha256"]), 6)
+        second_report = generate_campaign_report(output)
+        self.assertEqual(second_report["figure_sha256"], first_report["figure_sha256"])
+        self.assertEqual((output / "p4_profile_report.json").read_bytes(), first_bytes)
+
+        full_path = output / "profile_evidence.csv"
+        full_bytes = full_path.read_bytes()
+        full_path.write_bytes(full_bytes + b"\n")
+        with self.assertRaisesRegex(ValueError, "evidence changed"):
+            generate_campaign_report(output)
+        full_path.write_bytes(full_bytes)
 
         bad_source_rule = dict(rule)
         bad_source_rule["classifier_source_sha256"] = "wrong-source"
