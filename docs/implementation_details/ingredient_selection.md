@@ -1,7 +1,7 @@
 # Ingredient-selection workflow
 
 **Created:** 2026-09-24
-**Last updated:** 2026-09-28
+**Last updated:** 2026-10-04
 
 ## Purpose and scope
 
@@ -32,6 +32,7 @@ outcomes; no final selected vocabulary exists yet.
 | `src/ingredient_selection/artifacts.py` | Writes the manifest, cohort, tidy metrics, compressed validation scores, and bootstrap output atomically while rejecting duplicate audit keys. |
 | `src/ingredient_selection/analysis.py` | Validates provenance and audit cadence, derives controls and profile evidence, exposes only the 24-label pilot before a hashed rule exists, writes `validation_summary.json`, and classifies only the archived pilot on demand after the rule freeze. |
 | `src/ingredient_selection/reporting.py` | Revalidates a completed full profile against the rule, pilot decisions, class order, evidence hash and trajectory table; writes named provisional groups and deterministic SVG/PNG diagnostic figures. |
+| `src/ingredient_selection/observability.py` | Uses only the standard library to validate the completed P4 inputs, sample a blind P5 validation-image pilot, verify/harden the packet, render two independently ordered review forms, and score completed human responses without choosing a vocabulary. |
 | `scripts/ingredient_selection/` | Provides thin campaign, analysis, pilot/full-report, and historical-reproduction commands. |
 | `scripts/launch_exps/ingredient_selection/train_selector.py` | Rerunnable launcher: descending short OOM probes or a full-epoch resource gate followed by the fresh campaign. |
 
@@ -237,6 +238,45 @@ assignment, the complete 40-epoch learning-rate sequence, optimizer/scheduler
 resume, eval-mode auditing, test-split isolation, rule-gated label exposure,
 and append-only historical retention.
 
+## Optional appendix: retained former P5 blind review pilot
+
+The [appendix protocol](../project_objective/ingredient_observability_protocol.md)
+and its prepared packet are retained for optional interpretation of future
+results. Under [D5](../project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix),
+manual review is not a selection dependency and cannot affect vocabulary
+membership or primary model comparisons. The package initializer loads
+the training protocol lazily so the standard-library observability module can
+run without importing PyTorch. From the WSL repository root:
+
+```bash
+/usr/bin/python3 scripts/ingredient_selection/observability_review.py prepare
+```
+
+The command verifies the completed full P4 report, frozen rule and evidence
+hashes, campaign class order, validation-only metadata hash and image paths.
+It writes, without overwriting changed files, the unblinded
+`analysis_outputs/ingredient_selection/phase3-d1-v3/p5_observability/pilot/packet_manifest.json`
+and blinded `reviewer_a.html` and `reviewer_b.html`. The packet contains 64
+image–label pairs with a unique image for each pair, six recipe positives and
+two recipe negatives for each of eight purposively chosen pilot labels. The
+HTML uses relative paths to the local shared image store; it does not copy
+images or reveal the stratum, recipe name, model score or P4 outcome. Opening
+the HTML where its relative image paths resolve is required. Responses stay
+in browser-local storage until each reviewer exports their own JSON.
+
+After two *different people* complete the forms, score only their actual
+exports with `observability_review.py score --packet ... --reviewer-a ...
+--reviewer-b ... --output ...`. The scorer rejects changed packet contents,
+changed source-image bytes, wrong/missing pair IDs, invalid categories and
+identical reviewer identifiers. Software cannot prove that the named people
+worked independently; that remains a study-procedure requirement.
+It emits a four-category confusion matrix, raw agreement, Cohen's kappa and
+descriptive agreed-category counts for recipe-positive pairs. It never
+adjudicates or writes a selected vocabulary. No human results exist yet.
+The two focused standard-library tests pass. On 2026-09-29 the full ML test
+suite was unavailable because a bare `import torch` segfaulted before test
+discovery; this does not constitute a test failure of the new review module.
+
 ## Limitations and next action
 
 - P3 inspected only the blind 24-label pilot; P4 subsequently applied its
@@ -246,9 +286,11 @@ and append-only historical retention.
 - The cuisine prior is a mechanism diagnostic, not an image-model competitor.
 - Checkpoints and generated outputs remain outside durable documentation.
 
-P3 and P4 are complete. P5 and P6 still own human observability, semantic
-relevance and the final named vocabulary tiers; no current report should be
-used as a direct-visibility or final-selection claim. The incomplete v2 capacity gate was
+P3 and P4 are complete. Mandatory P5 review is superseded, with its unannotated
+packet and tools retained as an optional appendix. P6 owns the shared
+numerical-profile-based vocabulary freeze and can proceed without reviewers;
+no current report establishes direct visibility or a published final
+projection. The incomplete v2 capacity gate was
 interrupted before any v2 campaign started. The interrupted v1's artifacts
 remain in the original report/experiment directories and are excluded from
 replacement learnability evidence. The post-fit gate's CPU validation

@@ -1,7 +1,7 @@
 # Phase 3-D1 v3 full numerical profile
 
 **Created:** 2026-09-28
-**Last updated:** 2026-09-28
+**Last updated:** 2026-10-04
 **Status:** Provisional, full train/validation profile; not a selected vocabulary or test result.
 
 ## Purpose and boundary
@@ -25,7 +25,7 @@ Phase 3 P4 applies the [pilot-frozen D4 numerical rule](../project_objective/mod
 | `no_sustained_optimization` | 4 | Train gain or late train AP fails the absolute optimization screen. |
 | `uncertain` | 83 | 13 low support; 50 bootstrap overlap at the validation-AP gate; 17 overlap at the image-advantage gate; 3 late-window or train–validation-gap flags. |
 
-The 25 **numerical** candidates are avocado, baking powder, baking soda, beansprouts, black turtle bean, butter, carrot, cheese, cherry tomatoes, chicken, chicken broth, chickpea, cinnamon, corn, cucumber, egg food product, flour, milk, onion, pea, red bell pepper, red onion, shrimp food product, sugar, and vanilla extract. These names are not `V_selected`: in particular, a high image score for flour, chicken broth or vanilla extract is not proof that the ingredient itself is visible in a prepared-dish image. P5 must review mechanism and observability before P6 can define tiers.
+The 25 **numerical** candidates are avocado, baking powder, baking soda, beansprouts, black turtle bean, butter, carrot, cheese, cherry tomatoes, chicken, chicken broth, chickpea, cinnamon, corn, cucumber, egg food product, flour, milk, onion, pea, red bell pepper, red onion, shrimp food product, sugar, and vanilla extract. These names are not yet a published `V_selected`: in particular, a high image score for flour, chicken broth or vanilla extract is not proof that the ingredient itself is visible in a prepared-dish image. Under the 2026-10-04 D5 amendment, P6 defines the shared projection from numerical evidence without a manual observability gate.
 
 The `context_predictable` group is chili pepper, cumin, fish sauce, garam masala, ginger, lime juice, olive oil, salt, scallion, sesame oil, soy sauce, turmeric, and yogurt food product. The four `no_sustained_optimization` labels are canola oil, chili, vegetable oil, and yellow onion. Complete membership, including the 40 optimization-only and 83 uncertain labels, is in the machine-readable report and per-label CSV rather than copied into this review.
 
@@ -41,4 +41,4 @@ The reviewed figures show the two decisive held-out dimensions, support dependen
 
 The labels are conditional on one pretrained selector, one split, one training configuration and seed, the fixed 40-epoch budget and D4's pilot-chosen absolute screens. The epoch-40 validation bootstrap is record-resampling uncertainty, not a formal interval for late-window median AP, model-minus-prior AP, training-seed variation or configuration stability. The cuisine prior uses metadata unavailable to the image-only model and is a mechanism diagnostic, not a fair deployable competitor. Neither image advantage nor AP establishes literal ingredient visibility. No selected-vocabulary retraining or matched random-reduction control was run; those belong to Macro-section 6 after a vocabulary is frozen.
 
-P4 closes the numerical learnability study, not Macro-section 3. P5 must define semantic relevance, inspect direct/contextual/not-inferable evidence at instance level with two reviewers and agreement measurement, and retain uncertainty. P6 then decides named headline and exploratory projections without changing the default `v5` vocabulary or consulting test outcomes.
+P4 closes the numerical learnability study, not Macro-section 3. [Phase 3-D5](../project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix), adopted on 2026-10-04, supersedes the former mandatory P5 semantic/observability gate. The prepared review is retained as an optional interpretation appendix and cannot affect membership or primary rankings. P6 now defines the shared numerical-profile-based projection without changing the default `v5` vocabulary or consulting test outcomes. This changes the downstream scope only; all reported P4 values, groups and provenance remain unchanged.

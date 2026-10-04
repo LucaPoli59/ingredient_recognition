@@ -1,7 +1,7 @@
 # Recognizable ingredient selection plan
 
 **Created:** 2026-08-10
-**Last updated:** 2026-09-28
+**Last updated:** 2026-10-04
 
 This plan is the operational source of truth for Macro-section 3, **Ingredient selection**, in [`general_plan.md`](../general_plan.md). It preserves the November 2024 ResNet selection as a historical baseline and replaces its exploratory workflow with a reproducible, research-informed decision-profile study over the frozen FoodOn-first `v5` vocabulary. Macro-section 3 owns the resulting selected vocabulary and now executes against the frozen Subphase 4B reference selector. The independent Subphase 4A experiment-model shortlist is not a Phase 3 gate.
 
@@ -19,8 +19,8 @@ decision.
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** P4 complete; P5 semantic and visual-observability review remains deferred.
-**Next action:** Use the [P4 numerical profile](../experiment_results/phase3_d1_v3_full_profile.md) only as an input to a separately reviewed P5 relevance and two-reviewer observability protocol. Do not call the 25 numerical candidates a final or directly visible vocabulary.
+**Current task:** P5's mandatory manual review is superseded under Phase 3-D5; its prepared material is retained as an optional interpretation appendix.
+**Next action:** Execute P6: specify and publish the deterministic mapping from the unchanged numerical profile to one shared versioned vocabulary. Manual review is not a dependency; the 25 candidates are not yet a frozen projection or a direct-visibility claim.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -29,13 +29,13 @@ decision.
 | P2 | Implement the selector integration, deterministic historical reproduction, and reusable analysis | **Done** | Added the exact EfficientNetV2-S/full-frame adapter, train/validation-only data boundary, weighted BCE and AdamW schedule, fixed-state AP/F1 audits, bootstrap and controls, hashed blind gate, manifests, thin CLIs, and read-only historical regression. All 64 repository tests pass; the real batch-8 FP32 gate passed at 3,632.20 MiB allocated and 5,362.00 MiB reserved. See the [implementation contract](../implementation_details/ingredient_selection.md). |
 | P3 | Run and validate a bounded `v5` pilot | **Done** | The full 40-epoch v3 campaign completed at 14:36 UTC on 2026-09-28. Blind analysis validated all 21 audit points and exposed only 24 labels; all 24 final AP bootstraps are valid. [D4](../project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule) froze simple absolute gates plus a bootstrap overlap band, bound to the campaign, cohort, pilot evidence and classifier source hashes. The [reviewed result](../experiment_results/phase3_d1_v3_pilot.md) reports 5 numeric candidates, 5 optimization-only, 1 contextual and 13 uncertain, without claiming a selected vocabulary. |
 | P4 | Apply the frozen profile to the full `v5` campaign evidence | **Done** | Separately authorized on 2026-09-28. The same v3 run yielded 165 validated rows with unchanged D4 gates and all 24 pilot decisions reproduced: 25 numerical candidates, 40 optimization-only, 13 context-predictable, 4 without sustained optimization and 83 uncertain. The [reviewed P4 result](../experiment_results/phase3_d1_v3_full_profile.md), machine-readable named groups and deterministic figures retain provenance and the single-run limit; no test or reduced-vocabulary training was used. |
-| P5 | Combine learnability with relevance and visual-observability evidence | **Deferred** | Apply the semantic, support, and annotation protocol; distinguish direct visual evidence from contextual predictability. |
-| P6 | Freeze named headline and exploratory ingredient tiers | **Deferred** | Publish versioned projections of the shared `v5` vocabulary, with explicit inclusion evidence and uncertainty. |
+| P5 | Former mandatory semantic and visual-observability review | **Superseded** | [D5](../project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix) moves both manual reviews to an [optional appendix](../project_objective/ingredient_observability_protocol.md). The unannotated 64-pair packet and source are retained; no reviewer results are claimed. |
+| P6 | Freeze the shared numerical-profile-based vocabulary and exploratory groups | **Pending** | Define a deterministic outcome-to-membership rule, publish one shared versioned `V_selected`, and retain excluded/uncertain groups with reasons. No manual review gate remains; the final projection has not been published. |
 | P7 | Integrate the workflow and retire superseded scripts safely | **Deferred** | Connect training and analysis to canonical APIs, verify parity, document current behavior, then clean legacy notebooks and launchers only after retention gates pass. |
 
 ## Objective
 
-Determine which ingredients in the standard `ingredients_target_v5_metadata.json` vocabulary provide a meaningful and reproducible learning target for image-based models. Using the frozen 4B-D1 `M_ref`, the workflow must identify labels whose signal it learns, separate that evidence from validation generalization and human visual observability, and produce named experimental projections without creating a second implicit default vocabulary.
+Determine which ingredients in the standard `ingredients_target_v5_metadata.json` vocabulary provide a reproducible learning target for image-based models. Using the frozen 4B-D1 `M_ref`, identify optimization and validation signals and produce a shared numerical-profile-based projection without creating a second implicit default vocabulary. Manual relevance and observability judgments are optional interpretation outside selection under D5.
 
 The result is not a claim that every retained ingredient is literally visible. A label may be directly visible, inferable from dish context, or learnable mainly through dataset priors. Those cases must remain distinguishable in the evidence and final tiers.
 
@@ -107,21 +107,22 @@ The final inclusion decision must not collapse these dimensions into one unexpla
 2. **Generalization:** whether validation AP shows reproducible held-out ranking quality without test access. Fixed-policy validation F1, precision, and recall are supplementary only when the declared output policy needs them.
 3. **Temporal stability and uncertainty:** whether the optimization and validation conclusions persist across nearby declared epoch windows and, where the bounded panel is run, remain qualitatively consistent across configurations. A single run cannot establish seed-level stability.
 4. **Validity and mechanism:** whether support, prevalence, co-occurrence, a non-visual/context baseline, and an image-model advantage support the claimed signal rather than a shortcut or artefact.
-5. **Visual evidence type:** whether audited examples are `direct`, `contextual`, `not_inferable`, or `uncertain`. Model metrics alone cannot establish direct visibility.
-6. **Research relevance and evaluation support:** whether the label helps answer the thesis question and has enough support for its intended tier.
+5. **Optional visual interpretation:** `direct`, `contextual`, `not_inferable`, or `uncertain` judgments may be studied in the appendix but cannot affect selection. Model metrics alone cannot establish direct visibility.
+6. **Evaluation support:** whether the label has enough numerical support for its intended projection. Manual research-relevance screening is outside selection; target validity remains owned by the existing Data contract.
 
 ### Operational profile outputs
 
 The analysis must assign evidence and a reasoned provisional outcome rather
-than a percentile rank or a forced binary class. P5 combines these outcomes
-with semantic relevance and human observability; it does not silently turn a
-predictive metric into a visibility claim.
+than a percentile rank or a forced binary class. Under D5, P6 maps these
+unchanged outcomes to the shared projection without manual relevance or
+observability screening. Optional appendix judgments do not establish a causal
+signal mechanism or literal visibility from predictive metrics.
 
 | Provisional outcome | Minimum evidence pattern | Required action |
 | --- | --- | --- |
 | `no_sustained_optimization` | No stable improvement in train AP under the declared budget. | Inspect support and annotations; do not call the label intrinsically impossible. |
 | `optimization_only` | Sustained train AP but weak or unstable validation AP. | Investigate overfit, split, support, regularisation, and label ambiguity. |
-| `generalizable_candidate` | Sustained train and validation AP, sufficient support, image-model advantage, and no contradiction from the declared temporal or configuration checks. | Send to semantic and observability review before inclusion in any direct-visual tier; report that it is not seed-validated. |
+| `generalizable_candidate` | Sustained train and validation AP, sufficient support, image-model advantage, and no contradiction from the declared temporal or configuration checks. | Carry numerical evidence to P6's projection rule; report that it is neither seed-validated nor certified directly visible. |
 | `context_predictable` | Stable validation AP but a strong contextual/non-visual baseline or contextual evidence. | Keep distinct from direct visual-recognition claims; decide its research use explicitly. |
 | `uncertain` | Low support, unstable late-window behaviour, configuration sensitivity, conflicting controls, or incomplete evidence. | Gather evidence, report uncertainty, or defer the decision. |
 
@@ -241,7 +242,7 @@ containing:
 - `pilot_cohort.json` before training and `profile_rule.json` after P3, both carrying the source hashes needed to enforce the analysis gate;
 - `metrics_per_label_epoch.csv`, the tidy per-label and per-audit-epoch metrics table;
 - compressed validation record identifiers, targets, and logits for every audit point, sufficient to regenerate precision-recall summaries and the final bootstrap intervals;
-- per-label optimization, generalization, temporal/configuration sensitivity, validity/mechanism, and observability evidence with uncertainty and profile reasons;
+- per-label optimization, generalization, temporal/configuration sensitivity, support and numerical control evidence with uncertainty and profile reasons; optional manual evidence remains separate;
 - provisional profile outcomes and the selected, rejected, and uncertain named projections of `v5`;
 - plots for trajectories, temporal/configuration sensitivity, support relationships, and control comparisons;
 - `validation_summary.json`, proving schema, class-order, provenance, blind-pilot, deterministic-analysis, test-isolation, and resource checks.
@@ -292,7 +293,7 @@ This plan is complete only when:
 - the historical 40-label result is reproduced by maintained read-only code;
 - the `v5` selection protocol, controls, declared seed, numerical profile gates, and decision rule are frozen before the full analysis;
 - the full campaign produces deterministic reports with complete provenance;
-- every provisional profile outcome and final tier has explicit evidence across optimization, generalization, support, temporal/configuration sensitivity, validity/mechanism, observability, and relevance as applicable, together with the single-run limitation;
+- every provisional profile outcome and final projection has explicit numerical evidence across optimization, generalization, support, temporal checks and declared controls, with unavailable seed/configuration sensitivity and the single-run limitation explicit; manual annotation is not required;
 - headline and exploratory tiers are versioned named projections, not a replacement default vocabulary;
 - the test split was not used for ingredient, model, threshold, or hyperparameter selection;
 - required compatibility and replacement-parity checks pass before any legacy cleanup;
@@ -302,12 +303,12 @@ This plan is complete only when:
 
 | Risk | Consequence | Mitigation |
 | --- | --- | --- |
-| A training metric is interpreted as visual generalization | Frequent or memorized labels are called recognizable | Use train AP only for optimization, require separate validation AP and observability evidence, and keep F1 diagnostic. |
+| A training metric is interpreted as visual generalization | Frequent or memorized labels are called recognizable | Use train AP only for optimization, require separate validation AP, retain numerical controls and keep F1 diagnostic; do not claim literal visibility. |
 | A relative rule retains labels even when all runs are poor | The selected vocabulary has an arbitrary fixed size | Use a profile with sustained optimization, validation, temporal/configuration checks, validity, and uncertainty evidence; allow an uncertain tier. |
 | Per-label tuning overfits the selection process | Each label benefits from a different post-hoc configuration | Freeze one global configuration panel before inspecting selection outcomes. |
 | Vocabulary reduction appears beneficial because metrics or cohorts changed | The improvement claim is invalid | Compare identical metrics, records, budgets, and single-run constraints; add matched-size controls. |
 | One stochastic run is mistaken for stable evidence | A label is promoted or rejected due to seed-specific variation | Record the declared seed, use temporal windows and validation-score resampling for limited uncertainty checks, classify borderline labels as `uncertain`, and make no seed-stability claim. |
-| Support dominates AP or F1 diagnostics | The study selects only frequent labels | Report support dependence, stratify evidence, and combine it with relevance and observability rather than hiding it. |
+| Support dominates AP or F1 diagnostics | The study selects only frequent labels | Report support dependence and uncertainty, retain fixed gates and support-matched numerical controls rather than applying subjective relevance or visibility filters. |
 | Notebook state or mislabeled configuration fields corrupt the report | The selection cannot be reproduced | Use deterministic source modules, manifests, schema validation, and generated plots. |
 | Cleanup removes unique forensic evidence | Historical claims can no longer be verified | Apply the 2.1c retention manifest and hashes before deleting anything. |
 
@@ -381,6 +382,54 @@ visibility annotations or a final selected vocabulary. No test, P5/P6,
 reduced-vocabulary training or legacy cleanup was performed. P4 is **Done**;
 P5 is the next deferred gate.
 
+## P5 preparation and pilot packet — 2026-09-29
+
+**Historical checkpoint:** the mandatory dependency described below was superseded on 2026-10-04 by D5. The packet and software remain optional; no human review was completed.
+
+The [P5 pilot protocol](../project_objective/ingredient_observability_protocol.md)
+separates label-level semantic validity from instance-level direct, contextual,
+not-inferable and uncertain image evidence. Its purposive eight-label pilot
+tests the rubric rather than estimating population visibility. The maintained
+pure-standard-library command generated 64 validation-only ingredient–image
+pairs (48 target-present, 16 target-absent) with distinct image files, source
+hashes and two different blinded reviewer orders. The packet hash is
+`8c792c167bd7ec4583546836c2e923a74303293e2a8c38c049ef612ff7d5cf18`.
+Re-running preparation accepted the byte-identical outputs. Two focused tests
+cover deterministic sampling, agreement arithmetic and tamper/incomplete-
+response rejection. The complete ML test suite could not be re-executed on
+2026-09-29 because a bare `import torch` segfaulted in the WSL environment;
+this is a runtime verification limitation, not a P5 result.
+
+P5 is **In progress**. Neither reviewer has supplied an annotation; no human
+agreement, semantic verdict, direct-visibility claim, final tier or P6 action
+exists. The next step is two independent reviews of the sealed packet, then
+pilot disagreement analysis and a frozen main-panel design. Reviewer answers
+must remain outside Git and must not alter the recipe targets.
+
+## P5 scope amendment and P6 handoff — 2026-10-04
+
+The user moved both manual semantic-relevance and visual-observability reviews
+outside the main study. [D5](../project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix)
+owns the decision: selection assesses the model's learning on the existing
+ingredient targets, and subjective judgments must not decide membership.
+P5's mandatory role is **Superseded**, not successfully annotated. Its rubric,
+64-pair packet and tools are retained as an optional future-results appendix.
+
+P6 is **Pending** and no longer waits for reviewers. Its bounded tasks are:
+
+1. Specify a deterministic mapping from D4 outcomes to the primary shared
+   projection and explicitly document the treatment of contextual, train-only,
+   uncertain and failed-optimization outcomes without changing D4 gates.
+2. Export the selected names and original `v5` indices in saved class order,
+   plus excluded/uncertain reasons and links to the P4 evidence.
+3. Version the projection with rule, class-order and evidence hashes; verify
+   deterministic regeneration, membership, and test isolation.
+4. Record the result and downstream handoff for identical-vocabulary model
+   comparisons and the later selected-versus-random controls.
+
+This amendment does not publish `V_selected` or run P6. No appendix annotation
+is required for plan completion, and no literal-visibility claim is introduced.
+
 ## Decision log
 
 | Date | Decision or change | Rationale |
@@ -405,6 +454,8 @@ P5 is the next deferred gate.
 | 2026-09-27 | Passed the v3 full-epoch training gate and launched the sealed campaign | The resource gate completed 375 CUDA optimizer updates, then the launcher constructed a fresh model for 40 epochs from revision `192059e`. Verified the gate, manifest and all 152 source-snapshot entries without opening per-label outcomes. The post-fit validation check was CPU-based and is documented separately from the CUDA training-memory result. |
 | 2026-09-28 | Completed P3 and froze the pilot-derived numerical rule | The fresh v3 campaign completed 40 epochs; blind analysis exposed only 24 labels. D4 freezes absolute AP/support/stability/advantage gates with a conservative bootstrap overlap band and source-bound rule hash. The pilot-only report is reproducible; P4 remains deferred. |
 | 2026-09-28 | Completed P4 under separate authorization without changing D4 | Applied the frozen rule to the same 165-label run, confirmed exact pilot parity and deterministic full reports/figures, and retained 83 uncertain outcomes rather than forcing a target count. The numerical candidates require P5 relevance/observability evidence before P6 can freeze named tiers. |
+| 2026-09-29 | Began P5 with a blind two-reviewer pilot | Adopted a separate semantic and visual rubric, generated a source-hashed 64-pair validation-only packet, and implemented deterministic preparation and agreement scoring. Human review and the main panel remain pending. |
+| 2026-10-04 | Superseded mandatory P5 and retained an optional interpretation appendix | By user decision, manual relevance and observability judgments are outside the model-learnability selection objective and may introduce subjective membership bias. D5 removes reviewer dependencies, preserves D4/P4 evidence, and releases P6 numerical projection work without claiming a completed human review. |
 
 ## Related documentation
 
@@ -414,6 +465,7 @@ P5 is the next deferred gate.
 - [`../project_objective/benchmark_decisions.md`](../project_objective/benchmark_decisions.md)
 - [`../project_objective/ingredient_vocabulary_audit.md`](../project_objective/ingredient_vocabulary_audit.md)
 - [`../project_objective/model_comparison_methodology.md`](../project_objective/model_comparison_methodology.md)
+- [`../project_objective/ingredient_observability_protocol.md`](../project_objective/ingredient_observability_protocol.md)
 - [`../experiment_results/phase3_d1_v3_pilot.md`](../experiment_results/phase3_d1_v3_pilot.md)
 - [`../experiment_results/phase3_d1_v3_full_profile.md`](../experiment_results/phase3_d1_v3_full_profile.md)
 - [`reference_selector_research.md`](reference_selector_research.md)

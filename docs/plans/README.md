@@ -1,14 +1,14 @@
 # Implementation plans
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-15
+**Last updated:** 2026-10-04
 
 This directory contains the execution plans for concrete project implementations. These plans translate work packages from the project-wide [`general_plan.md`](../general_plan.md) into bounded technical tasks, verification steps, dependencies, and completion criteria.
 
 ## Active plans
 
 - [`data_ingredient_refactor/`](data_ingredient_refactor/README.md) contains the active Yummly Data plan and its controlled-vocabulary evaluation for Work packages 2.1b–2.4.
-- [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the active Macro-section 3 plan for the EfficientNetV2-S selector campaign, historical reproduction, v5 learnability analysis, visual-observability evidence, and final named ingredient tiers.
+- [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the active Macro-section 3 plan for the EfficientNetV2-S selector campaign, historical reproduction, numerical `v5` learnability profile and shared vocabulary freeze. Former mandatory P5 manual review is superseded and retained as an optional appendix.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 

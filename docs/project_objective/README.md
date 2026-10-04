@@ -1,7 +1,7 @@
 # Project objective
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-28
+**Last updated:** 2026-10-04
 
 This directory contains the documents that formalize the research problem addressed by the Ingredient Recognition project. These documents establish the context and boundaries that guide topic research, discovery work, technical decisions, and evaluation.
 
@@ -10,6 +10,7 @@ project_objective/
 ├── README.md
 ├── benchmark_decisions.md
 ├── experimental_model_portfolio.md
+├── ingredient_observability_protocol.md
 ├── ingredient_vocabulary_audit.md
 ├── model_comparison_methodology.md
 ├── problem_definition.md
@@ -31,6 +32,7 @@ Keep each file focused on a clearly identified aspect of the objective. Update t
 ## Current documents
 
 - [`experimental_model_portfolio.md`](experimental_model_portfolio.md) owns the adopted 4A established pair (4A-D1) and custom P2-S query/context topology (4A-D2), their protocols/fallbacks, rationale and implementation gates; all three are selected designs, not verified implementations.
+- [`ingredient_observability_protocol.md`](ingredient_observability_protocol.md) retains the former P5 rubric and blind pilot as an optional interpretation appendix; manual review is outside vocabulary selection under Phase 3-D5.
 - [`problem_definition.md`](problem_definition.md) defines the research problem, scope, research questions, evaluation principles, and completion gates.
 - [`yummly_data_audit.md`](yummly_data_audit.md) documents the processing lineage, schema, distributions, quality defects, leakage, and implications of the Yummly data used by the project.
 - [`ingredient_vocabulary_audit.md`](ingredient_vocabulary_audit.md) audits the 209-target candidate generation, quantifies fragmentation and semantic collisions, and defines the discussion gate before extractor changes.

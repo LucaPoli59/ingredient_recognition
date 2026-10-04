@@ -1,7 +1,7 @@
 # Ingredient prediction from a food image: project objective
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-02
+**Last updated:** 2026-10-04
 
 ## Executive definition
 
@@ -207,13 +207,13 @@ Results should be broken down by:
 
 - ingredient frequency;
 - cuisine and course where metadata is valid;
-- direct versus contextual versus low-observability ingredients;
+- optionally, direct versus contextual versus low-observability examples in a separate interpretation appendix;
 - image resolution and source-quality flags;
 - records belonging to singleton or repeated exact-image groups;
 - common dish types and high-cardinality recipes;
 - labels affected by normalization changes.
 
-Observability remains an important interpretation issue, but it is not a benchmark-construction review requirement. If a later ingredient-selection study introduces observability annotations, it must be reported as a separate analysis and must not silently redefine the recipe-level target.
+Observability remains an interpretation issue, not a benchmark-construction or vocabulary-selection review requirement. [Phase 3-D5](model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix), adopted on 2026-10-04, places manual semantic-relevance and visual review outside primary model-learnability selection. The retained [optional appendix](ingredient_observability_protocol.md) may help discuss future results but cannot change recipe targets, vocabulary membership, tuning or primary model rankings. No human annotation is required to complete the main study.
 
 ## Success criteria
 

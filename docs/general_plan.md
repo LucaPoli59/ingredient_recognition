@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-28
+**Last updated:** 2026-10-04
 **Overall status:** In progress  
 **Current macro-phase:** Data and Ingredient selection
-**Current focus:** Complete the remaining Data 2.4 runtime smoke checks. Ingredient selection P4 has applied the pilot-frozen rule to the full 165-label v3 campaign; P5 semantic relevance and visual-observability validation is the next separate gate before any final selected vocabulary.
+**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and prepare Ingredient selection P6's shared numerical-profile-based vocabulary freeze. Former P5 manual review is an optional interpretation appendix and no longer blocks selection.
 
 ## Purpose
 
@@ -33,7 +33,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
-| 3 | Ingredient selection | **In progress** | P4 applied the unchanged pilot-frozen numerical rule to all 165 v3 labels; Work package 3.3 is done. P5 relevance/observability and P6 final tiers remain deferred. |
+| 3 | Ingredient selection | **In progress** | P4 completed the 165-label numerical profile; Work package 3.3 is done. Mandatory P5/3.4 is superseded; P6's shared numerical projection is next without reviewer dependencies. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Deferred** | All three 4A research handoffs are available; prepare their implementation plan after the remaining DataModule readiness checks. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
@@ -144,7 +144,7 @@ The Data macro-section is **Done** only when shared image loading, legacy compat
 
 **Status:** In progress
 
-This macro-section selects ingredients that provide scientifically meaningful and reproducible image-learning targets. The adopted Phase 3 profile separates train-AP optimization, validation-AP generalization, temporal/configuration sensitivity, validity/mechanism, semantic relevance, support, and visual observability; F1 is a secondary diagnostic under a fixed policy. None of these dimensions may be collapsed into raw frequency or one transient F1 maximum.
+This macro-section selects ingredients from numerical evidence of model learning on the existing recipe-ingredient targets. The adopted profile separates train-AP optimization, validation-AP generalization, temporal checks, support, numerical controls and uncertainty; F1 is a secondary diagnostic. Under [Phase 3-D5](project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix), manual semantic relevance and visual observability are optional interpretation outside selection. Numerical evidence is not reduced to raw frequency or one transient F1 maximum.
 
 The 2024 ResNet selection has been reconstructed as a historical baseline: it intersected four top-quartile sets defined by each label's maximum train F1 and produced 40 legacy `ingredients_ok` labels. Train F1 is accepted as an intentional convergence signal for that narrow question, but the legacy rule is not reused as the final `v5` criterion and the old/new plot is not accepted as comparative evidence. Macro-section 3 retains ownership of the new shared selected vocabulary. Subphase 4B froze the independent EfficientNetV2-S reference-selector protocol, Phase 3 P1 froze its campaign and measurement contract, and P2 implemented and resource-validated the maintained workflow without inspecting outcomes. P3 executes the sealed campaign and exposes only the pilot cohort. The Subphase 4A experiment-model shortlist remains a separate decision.
 
@@ -155,8 +155,8 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 | 3.1 Preliminary evidence and historical reconstruction | **Done** | Retain the exact max-Q3 intersection as a read-only baseline and regression fixture. |
 | 3.2 Selection criteria and experimental protocol | **Done** | 4B-D1 and Phase 3-D1 with the D2/D3 amendments freeze the model, single seed-42 AdamW campaign, 40-epoch schedule, deterministic audits, AP/F1 policy, controls, uncertainty, sealed pilot, and provenance/output boundary. Numerical profile gates remain a P3 pilot output. |
 | 3.3 Reproducible `v5` learnability study | **Done** | The same completed 40-epoch v3 campaign supplied P3's 24-label D4 freeze and P4's validated 165-label [numerical profile](experiment_results/phase3_d1_v3_full_profile.md). Its 25 candidates are provisional, not a final selected vocabulary. |
-| 3.4 Relevance and visual-observability validation | **Deferred** | Combine learnability with semantic/support criteria and audited direct/contextual/not-inferable evidence. |
-| 3.5 Final vocabulary tiers and integration | **Deferred** | Freeze named headline and exploratory projections, integrate them, and retire superseded scripts only after parity and retention gates pass. |
+| 3.4 Former mandatory relevance and visual-observability validation | **Superseded** | Retain the rubric, source and unannotated packet as an [optional interpretation appendix](project_objective/ingredient_observability_protocol.md). No human review is required for vocabulary selection or comparison. |
+| 3.5 Final numerical-profile-based vocabulary and integration | **Pending** | Define and freeze one shared versioned projection from D4/P4 numerical evidence, retain excluded/uncertain groups, and integrate it. Legacy cleanup remains subject to parity and retention gates. |
 
 ### Completed evidence
 
@@ -185,18 +185,17 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 - [x] Piloted robust train-AP learning dynamics and validation-AP statistics on the sealed cohort, including initialization/early-to-late change, late-window levels, temporal sensitivity, final validation bootstrap uncertainty, frozen profile gates and fixed-0.5 F1 diagnostics. Configuration sensitivity remains unavailable under the single-configuration contract.
 - [x] Add Phase 3 support/prevalence and non-visual controls, and preserve the matching fields needed for Macro-section 6's later matched-size vocabulary controls. No reduced-vocabulary or random-control training claim is made in P4.
 - [x] Implement deterministic historical reproduction and `v5` analysis in a dedicated source package, with plot-ready evidence generated from validated manifests rather than notebook state.
-- [ ] Define what “relevant” means for the thesis question independently of frequency or optimization ease.
-- [ ] Define and pilot instance-level visual-observability annotation with at least two reviewers and agreement measurement.
-- [ ] Combine learnability, generalization, semantic validity, support, observability, and research value into a documented tier rule.
+- [x] Superseded mandatory manual relevance and observability review under D5; retain the prepared material as an optional future-results appendix without selection effects.
+- [ ] Specify a deterministic projection rule from the unchanged numerical profile, including support and uncertainty handling, without subjective membership judgments.
 - [ ] Freeze named headline and exploratory projections of the shared `v5` vocabulary without using test outcomes.
 
 ### Completion gate
 
-The historical rule is reproduced by maintained read-only code; the `v5` campaign and analysis are deterministic and carry complete provenance; the final shared ingredient tiers are versioned and justified by the frozen `M_ref` decision profile across optimization, generalization, temporal/configuration sensitivity, support, validity/mechanism, relevance, and observability criteria, with the single-run limitation stated; the annotation report is complete; and no test outcome influenced selection.
+The historical rule is reproduced by maintained read-only code; the `v5` campaign and analysis are deterministic with complete provenance; the final shared projection is versioned and justified by the unchanged numerical profile, with support, uncertainty and single-run limitations explicit; integration and retention gates pass; and no test outcome or manual review influences selection. An annotation report is not required.
 
 ### Next action
 
-Maintain P3's frozen [numerical rule](project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule), [pilot result](experiment_results/phase3_d1_v3_pilot.md) and [P4 full profile](experiment_results/phase3_d1_v3_full_profile.md). Before P6 chooses any final named vocabulary, P5 in the [active feature plan](plans/recognizable_ingredient_selection.md) must establish semantic relevance and two-reviewer direct/contextual/not-inferable evidence. Continue the remaining Data 2.4 runtime smoke checks independently. The interrupted v1 and v2 gate remain separate history; the post-fit resource-gate validation device limitation remains documented.
+Maintain P3's frozen [numerical rule](project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule), [pilot result](experiment_results/phase3_d1_v3_pilot.md) and [P4 full profile](experiment_results/phase3_d1_v3_full_profile.md). P6 is next under the [active plan](plans/recognizable_ingredient_selection.md): specify and publish the numerical-profile-to-vocabulary mapping without manual review. The optional appendix does not block selection, training or comparisons. Continue the remaining Data 2.4 runtime smoke checks independently; retained interrupted runs and the documented gate-device limitation remain unchanged.
 
 ## 4. Model research
 
@@ -388,7 +387,7 @@ Optional per-ingredient logging is implemented in the Lightning model, defaultin
 - [ ] Report the Q3 selected-versus-random vocabulary ablation only for the reference selector and keep it distinct from model-category rankings.
 - [ ] Report any Q4 local-adaptation results as optimized selected-task results, distinct from the transferred-hyperparameter ablation.
 - [ ] Report primary and secondary metrics with uncertainty.
-- [ ] Compare direct, contextual, not-inferable, and uncertain ingredient slices.
+- [ ] Optionally interpret visual/contextual examples in the appendix after future results; manual categories do not define required comparison slices or primary rankings.
 - [ ] Analyze performance by ingredient, support tier, cuisine, image quality, and predicted cardinality.
 - [ ] Inspect representative successes, false positives, false negatives, and shortcut behavior.
 - [ ] Report compute, memory, training time, and inference cost.
@@ -538,6 +537,8 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-09-27 | Ingredient-selection campaign launch | The v3 full-epoch training gate passed with 375 CUDA updates, and the fresh 40-epoch effective-batch-128 campaign started at 16:17 UTC from revision `192059e`. Manifest, gate and all 152 source-snapshot entries were verified without per-label outcome inspection. | Work package 3.3 **In progress**; pilot analysis and gate freeze pending | [Launch checkpoint](plans/recognizable_ingredient_selection.md#p3-resource-gate-and-launch-checkpoint--2026-09-27), [verification and device limitation](implementation_details/ingredient_selection.md#verified-resource-and-test-evidence) |
 | 2026-09-28 | Ingredient-selection P3 completion | The same v3 campaign completed 40 epochs. Blind analysis of only 24 pilot labels froze the absolute D4 rule with bootstrap overlap handling and preserved pilot artifacts; no non-pilot label outcome or test split was inspected. | P3 **Done**; Work package 3.3 **In progress**, P4 **Deferred** pending separate authorization | [D4 decision](project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule), [pilot result](experiment_results/phase3_d1_v3_pilot.md), [feature-plan checkpoint](plans/recognizable_ingredient_selection.md#p3-pilot-and-numerical-rule-completion--2026-09-28) |
 | 2026-09-28 | Ingredient-selection P4 full profile | After separate authorization, applied the unchanged D4 gates to all 165 labels from the same v3 campaign; verified pilot parity, deterministic full report and figures, and no test access. The 25 numerical candidates remain subject to relevance and observability review. | P4 and Work package 3.3 **Done**; 3.4/P5 **Deferred** | [P4 result](experiment_results/phase3_d1_v3_full_profile.md), [feature-plan checkpoint](plans/recognizable_ingredient_selection.md#p4-full-profile-completion--2026-09-28) |
+| 2026-09-29 | Ingredient-selection P5 pilot preparation | Adopted the separate semantic/visual rubric, generated a deterministic 64-pair blind validation packet for two human reviewers, and implemented agreement scoring. No reviewer result or selected vocabulary exists yet. | Work package 3.4/P5 **In progress** | [P5 protocol](project_objective/ingredient_observability_protocol.md), [feature-plan checkpoint](plans/recognizable_ingredient_selection.md#p5-preparation-and-pilot-packet--2026-09-29) |
+| 2026-10-04 | Ingredient-selection scope amendment | Adopted D5: manual relevance and visual-observability reviews are outside model-learnability selection and retained as an optional future-results appendix. D4 gates and P4 evidence are unchanged; no human annotation or final vocabulary is claimed. | Work package 3.4/P5 **Superseded**; 3.5/P6 **Pending** without reviewer dependencies | [D5 decision](project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix), [optional appendix](project_objective/ingredient_observability_protocol.md), [active plan](plans/recognizable_ingredient_selection.md) |
 
 ## Tracker maintenance rules
 

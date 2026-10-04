@@ -1,7 +1,7 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-28
+**Last updated:** 2026-10-04
 **Status:** Active and binding design; 4B-D1 and Phase 3-D1–D3 fixed the selector and campaign, and Phase 3-D4 now fixes the numerical profile rule from only the blind pilot. The later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
@@ -46,7 +46,7 @@ vocabulary selection.
 | --- | --- |
 | V_base | The frozen 165-label FoodOn-first v5 vocabulary derived from ingredients_target. It is the common full task. |
 | M_ref | The 4B-D1 reference selector: Torchvision EfficientNetV2-S with the exact supervised ImageNet initialization, full-backbone adaptation, full-frame 384-pixel transform, independent 165-logit pooled head, and weighted BCE boundary frozen below. It is a selection instrument, not the automatically preferred final model. |
-| V_selected | A versioned, shared projection of V_base produced by Macro-section 3 with M_ref, the learnability decision profile, semantic evidence, and observability review. |
+| V_selected | A versioned, shared projection of V_base produced by Macro-section 3 from M_ref's frozen numerical learnability profile on the existing recipe-ingredient targets; manual relevance or observability judgments do not determine membership. |
 | V_random^(r) | One deterministic random projection of V_base with the same cardinality as V_selected and support strata matched to it; r identifies the draw. |
 | H_base(m) | Hyperparameters selected for model category m on V_base using validation only and the predeclared Phase 6 budget. |
 | H_local(m) | A small, predeclared local adaptation panel around H_base(m) for V_selected. It is not a second unrestricted HPO campaign. |
@@ -360,8 +360,38 @@ or the model-minus-prior difference. F1 never changes these outcomes.
 This rule has no retained-label quota. Its pilot calibration does not certify
 seed/configuration stability, direct visual observability, semantic relevance,
 or a final selected vocabulary. P4 may apply it unchanged to the same v3 run
-only after the separate execution gate; P5–P6 own subsequent evidence and
-projection decisions.
+only after the separate execution gate. Phase 3-D5 below supersedes the manual
+P5 gate; P6 owns the numerical-profile-to-projection decision.
+
+#### Phase 3-D5 — Numerical selection and optional interpretation appendix
+
+**Adopted:** 2026-10-04, by user decision after P4 and before vocabulary freeze.
+
+The primary study assesses model learning on the frozen recipe-ingredient
+targets. Manual judgments of semantic relevance or literal visual observability
+answer a different question and could introduce subjective membership decisions.
+They are therefore outside the primary selection and comparison protocol.
+
+- Retain the existing `v5` targets, D4 thresholds, P4 outcomes, campaign and
+  single-run interpretation limits. This amendment neither reclassifies a label
+  nor certifies direct visibility.
+- Supersede mandatory P5 semantic review, two-human annotation, agreement
+  measurement and main-panel execution. P6 can proceed without any manual review.
+- In P6, specify and version a deterministic mapping from the frozen numerical
+  outcomes to one shared `V_selected`, with explicit handling of excluded and
+  uncertain outcomes. Membership must not depend on whether a person finds an
+  ingredient relevant or visible. The final projection is not frozen by D5.
+- Preserve the prepared rubric, code and unannotated packet as an
+  [optional interpretation appendix](ingredient_observability_protocol.md).
+  It may support descriptive discussion of future results, but cannot change
+  selection membership, targets, thresholds, tuning, or primary model rankings.
+  If undertaken, its reviewer agreement and sampling limitations remain explicit.
+- Mapping defects remain owned by the existing Data methodology. A discovered
+  defect requires a separate versioned data decision, not a manual exception to
+  vocabulary selection. Test outcomes cannot inform the projection.
+
+The former P5 dependency is retained in dated planning history as superseded;
+it is not a current completion gate for Macro-sections 3, 6 or 7.
 
 ### 3. Tune each model category once on the full common task
 
