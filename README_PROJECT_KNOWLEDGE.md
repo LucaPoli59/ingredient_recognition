@@ -2,8 +2,8 @@
 
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
-**Ultimo aggiornamento:** 4 ottobre 2026
-**Stato della ricognizione:** architettura e flusso principale verificati nel codice. `ingredients_target_v5_metadata.json` è il default runtime FoodOn-first, con 165 target e split Yummly 47.965/5.996/5.996 train/val/test; `v4` e le generazioni legacy restano disponibili. La compatibilità storica 2.1c è chiusa; Data 2.4 deve ancora completare gli smoke test di training, checkpoint reload e dashboard. Il selettore 4B-D1 EfficientNetV2-S è implementato. La campagna Phase 3-D1/D2/D3 `phase3-d1-v3` ha completato 40 epoche con batch effettivo 128; P3 ha congelato la regola numerica D4 sul pilot cieco da 24 label e P4 l'ha applicata senza modifiche alle 165 label. D5 sposta entrambe le revisioni manuali P5 in un'appendice facoltativa, senza effetti sulla selezione o sui confronti. P6 deve ancora pubblicare la proiezione condivisa basata sul profilo numerico; le 25 candidate non sono un vocabolario finale congelato. Il confronto esplorativo storico `basic_v5` è conservato sotto `docs/experiment_results/` senza modificare il gate del benchmark finale.
+**Ultimo aggiornamento:** 5 ottobre 2026
+**Stato della ricognizione:** architettura e flusso principale verificati nel codice. `ingredients_target_v5_metadata.json` è il default runtime FoodOn-first, con 165 target e split Yummly 47.965/5.996/5.996 train/val/test; `v4` e le generazioni legacy restano disponibili. La compatibilità storica 2.1c è chiusa; Data 2.4 deve ancora completare gli smoke test di training, checkpoint reload e dashboard. Il selettore 4B-D1 EfficientNetV2-S è implementato. La campagna Phase 3-D1/D2/D3 `phase3-d1-v3` ha completato 40 epoche con batch effettivo 128; D4 e la sua applicazione originale restano conservati. D5 rende facoltative le revisioni manuali. D6 adotta la politica di qualità validation con intervalli appaiati coerenti, mantenendo train e cuisine come diagnostiche: il relativo report è separato e non sostituisce il default a 165 label. P6 deve ancora pubblicare la proiezione condivisa; lo stato corrente è in `docs/general_plan.md`. Il confronto esplorativo storico `basic_v5` è conservato sotto `docs/experiment_results/` senza modificare il gate del benchmark finale.
 
 ## Scopo
 
@@ -145,6 +145,19 @@ vocabolario, il tuning o il confronto primario tra modelli. La decisione è in
 La rubrica e i limiti sono in
 [`docs/project_objective/ingredient_observability_protocol.md`](docs/project_objective/ingredient_observability_protocol.md).
 
+La revisione D6 usa `scripts/ingredient_selection/review_inclusion.py` e i
+moduli `inclusion.py`, `inclusion_statistics.py` e `inclusion_reporting.py`
+sotto `src/ingredient_selection/`. Rianalizza gli score salvati, senza modello
+o inferenza, con bootstrap sui gruppi di immagini validation byte-identiche:
+mediana delle cinque AP finali e differenza appaiata rispetto alla prevalenza.
+Regola, sorgenti, report e grafico sono conservati separatamente in
+`analysis_outputs/ingredient_selection/phase3-d1-v3/inclusion_d6_v1/`;
+`metrics.py` e gli artefatti D4 restano immutati. La politica è esplicitamente
+post-outcome; [decisione](docs/project_objective/model_comparison_methodology.md#phase-3-d6--held-out-quality-inclusion-policy),
+[risultato revisionato](docs/experiment_results/phase3_d1_v3_d6_profile.md) e
+[contratto](docs/implementation_details/ingredient_selection.md#d6-saved-score-inclusion-review)
+sono le fonti autorevoli. Il report di idoneità non esporta metadata selezionati.
+
 `src/lightning/lgn_models.py` incapsula un `BaseModel` in un `LightningModule`. La configurazione predefinita usa `BCEWithLogitsLoss` per la classificazione multi-label, con sigmoid in fase di calcolo metriche/inferenza. Le metriche di default includono accuracy, precision, recall e Hamming distance con media weighted; F1 non è abilitata di default e mancano average precision, calibrazione e selezione esplicita delle soglie. Questa configurazione è legacy e non coincide con il protocollo deciso per il nuovo benchmark.
 
 `src/lightning/lgn_trainers.py` fornisce:
@@ -225,7 +238,7 @@ Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi
 
 - Completare la prova end-to-end WSL avviata con la policy `pin_memory` automatica e registrare l'esito del training minimo.
 - Completare la fase Data residua definita in `docs/plans/data_ingredient_refactor/yummly_data_phase.md`: gli anchor legacy 2.1c sono già verificati; restano il completamento del training e gli smoke test di checkpoint reload e dashboard richiesti dalla 2.4.
-- Eseguire P6 in `docs/plans/recognizable_ingredient_selection.md`: definire e versionare la proiezione condivisa dal profilo numerico D4/P4. Le revisioni manuali del precedente P5 sono un'appendice facoltativa e non una dipendenza.
+- Eseguire P6 in `docs/plans/recognizable_ingredient_selection.md`: esportare e versionare la proiezione condivisa dal profilo D6, preservando D4 e il default completo. Le revisioni manuali del precedente P5 sono un'appendice facoltativa e non una dipendenza.
 - Verificare e, se necessario, uniformare alcuni import che dipendono dalla directory di avvio (`config`, `models`, `data_processing` vs `settings.config`, `src.*`).
 - Verificare la gestione di ripresa dello studio Optuna, che condivide un journal globale configurato in `experiments/journal.log`.
 - Correggere o documentare la differenza fra porta Optuna dichiarata (8051) e quella usata dallo script (8055).

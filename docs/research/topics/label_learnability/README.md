@@ -1,7 +1,7 @@
 # Label learnability research
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-24
+**Last updated:** 2026-10-05
 
 ## Context
 
@@ -21,13 +21,15 @@ model, threshold, numerical cut-off, or production vocabulary.
 ## Files
 
 - [`learnability_assessment.md`](learnability_assessment.md) synthesizes the
-  evidence and proposes a reusable assessment protocol.
+  evidence and proposes a reusable assessment protocol, including the distinction
+  between acquisition, sufficient held-out predictability and mechanism, and
+  statistic-consistent uncertainty for inclusion decisions.
 
 ## Related work
 
 - [`../../../plans/recognizable_ingredient_selection.md`](../../../plans/recognizable_ingredient_selection.md)
-  is the project-specific plan that has adopted this profile, completed the P1
-  campaign freeze, and is now ready for P2 implementation.
+  is the project-specific operational plan; current execution and any post-P4
+  policy revision are recorded there rather than inferred from this research.
 - [`../../../project_objective/model_comparison_methodology.md`](../../../project_objective/model_comparison_methodology.md)
   owns the binding cross-phase methodology that fixes the reference-selector
   dependency and the later shared-vocabulary comparisons.

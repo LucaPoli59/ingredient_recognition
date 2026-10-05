@@ -1,7 +1,7 @@
 # Assessing label learnability in supervised classification
 
 **Created:** 2026-08-12
-**Last updated:** 2026-09-24
+**Last updated:** 2026-10-05
 **Status:** Evidence synthesis and reusable recommendation; not a binding project decision.
 
 ## Question and boundary
@@ -177,6 +177,54 @@ The output can be a compact evidence table rather than a ranking quota:
 is paired with an explicit human observability review. Model metrics alone do
 not establish direct visibility.
 
+## Translating an evidence profile into inclusion criteria
+
+**Clarification added:** 2026-10-05. A profile's dimensions need not all become
+hard inclusion gates. First distinguish the intended claims:
+
+- **Acquisition:** the declared training procedure improves a label's ranking.
+- **Sufficient held-out predictability:** ranking on unseen records reaches a
+  declared task-quality level with quantified uncertainty.
+- **Mechanism:** the signal may arise from object appearance, context,
+  co-occurrence, or a nuisance correlation.
+
+A task that allows contextual inference should not automatically reject a
+label because a metadata-informed baseline performs well. Such a comparison
+does not identify the image model's mechanism. Likewise, a large train–validation
+gap is an overfitting diagnostic, but two models with identical held-out ranking
+need not have different inclusion decisions merely because one fits train
+better. A failed absolute train-AP floor does not establish absence of learning
+when the trajectory has improved.
+
+AP measures a precision–recall ranking summary, not the fraction of correctly
+classified ingredients at one operating point; the
+[official AP definition](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html)
+keeps this distinction explicit. Its no-discrimination reference depends on
+prevalence, as discussed by [Saito and Rehmsmeier](https://doi.org/10.1371/journal.pone.0118432).
+Report both an absolute level and its relation to a declared baseline.
+Above-baseline evidence alone can include very weak predictors; an absolute
+floor alone can reward common labels. Neither a fixed AP threshold nor a
+prevalence-normalized cutoff has a universal learnability interpretation.
+The quality floor is an application/study design choice and must be named as
+such, with excluded labels described as below that floor rather than impossible.
+
+Match the uncertainty estimate to the decision statistic. An interval for the
+final checkpoint is not an interval for a median across checkpoints. For an AP
+difference, recompute both terms on paired resamples; for a temporal median,
+resample the same records at every checkpoint before computing the median.
+If records share the same image, their dependence should be represented by
+group resampling. A mismatched interval is not guaranteed conservative merely
+because it excludes more cases. Report nominal per-label coverage separately
+from family-wide guarantees, training-seed variation and post-selection bias.
+
+Finally, preserve the original rule when reviewing it after full outcomes are
+visible. Report the revision as exploratory, list all independent failure
+reasons, and show a bounded sensitivity panel without choosing a preferred
+cardinality. [Cawley and Talbot](https://jmlr.org/papers/v11/cawley10a.html)
+show why a finite-sample selection criterion can itself be overfit. A new rule
+on the same validation evidence does not create independent confirmation;
+final evaluation must retain its own untouched boundary.
+
 ## Minimum artefacts for reproducibility
 
 For a study to be revisited or compared fairly, retain:
@@ -239,12 +287,11 @@ recommended protocol, not equivalent evidence.
 For the Ingredient Recognition project, the general evidence profile has been
 adopted as the planning framework in
 [`recognizable_ingredient_selection.md`](../../../plans/recognizable_ingredient_selection.md).
-Subphase 4B has frozen the reference selector and the project-specific plan has
-completed P1; the binding campaign, cross-phase rationale, and ownership boundary are in
+The binding reference selector, campaign, cross-phase rationale and ownership boundary are in
 [`model_comparison_methodology.md`](../../../project_objective/model_comparison_methodology.md).
-The selection plan—not this research note—will record the frozen numerical
-gates, run panel, single-run resource limit, and implementation decision after
-the bounded pilot.
+The selection plan and its linked decisions, rather than this research note,
+record the numerical gates, single-run resource limit, implementation state
+and any separately versioned post-pilot revision.
 
 ## Limitations and open questions
 

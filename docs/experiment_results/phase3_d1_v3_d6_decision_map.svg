@@ -1,0 +1,730 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="750" viewBox="0 0 1160 750" role="img" aria-labelledby="title desc">
+<title id="title">D6 ingredient inclusion: held-out ranking and uncertainty</title>
+<desc id="desc">Every label is shown by validation prevalence and median AP across five late checkpoints, with nominal 95% image-cluster bootstrap intervals. Colors reproduce the complete inclusion decision.</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<g font-family="Arial, Helvetica, sans-serif" fill="#172a3a">
+<text x="84" y="40" font-size="24" font-weight="700">Held-out ingredient ranking</text>
+<text x="84" y="67" font-size="14">165 labels · EfficientNetV2-S · seed 42 · single run</text>
+<text x="84" y="89" font-size="14">Validation AP at epochs 32, 34, 36, 38 and 40; Q is their median.</text>
+<line x1="84" y1="601.000" x2="822" y2="601.000" stroke="#e3e8ed"/>
+<text x="70" y="606.000" text-anchor="end" font-size="12">0.0</text>
+<line x1="84" y1="506.200" x2="822" y2="506.200" stroke="#e3e8ed"/>
+<text x="70" y="511.200" text-anchor="end" font-size="12">0.2</text>
+<line x1="84" y1="411.400" x2="822" y2="411.400" stroke="#e3e8ed"/>
+<text x="70" y="416.400" text-anchor="end" font-size="12">0.4</text>
+<line x1="84" y1="316.600" x2="822" y2="316.600" stroke="#e3e8ed"/>
+<text x="70" y="321.600" text-anchor="end" font-size="12">0.6</text>
+<line x1="84" y1="221.800" x2="822" y2="221.800" stroke="#e3e8ed"/>
+<text x="70" y="226.800" text-anchor="end" font-size="12">0.8</text>
+<line x1="84" y1="127.000" x2="822" y2="127.000" stroke="#e3e8ed"/>
+<text x="70" y="132.000" text-anchor="end" font-size="12">1.0</text>
+<line x1="84.000" y1="127" x2="84.000" y2="601" stroke="#edf0f3"/>
+<text x="84.000" y="624" text-anchor="middle" font-size="12">0.0</text>
+<line x1="189.429" y1="127" x2="189.429" y2="601" stroke="#edf0f3"/>
+<text x="189.429" y="624" text-anchor="middle" font-size="12">0.1</text>
+<line x1="294.857" y1="127" x2="294.857" y2="601" stroke="#edf0f3"/>
+<text x="294.857" y="624" text-anchor="middle" font-size="12">0.2</text>
+<line x1="400.286" y1="127" x2="400.286" y2="601" stroke="#edf0f3"/>
+<text x="400.286" y="624" text-anchor="middle" font-size="12">0.3</text>
+<line x1="505.714" y1="127" x2="505.714" y2="601" stroke="#edf0f3"/>
+<text x="505.714" y="624" text-anchor="middle" font-size="12">0.4</text>
+<line x1="611.143" y1="127" x2="611.143" y2="601" stroke="#edf0f3"/>
+<text x="611.143" y="624" text-anchor="middle" font-size="12">0.5</text>
+<line x1="716.571" y1="127" x2="716.571" y2="601" stroke="#edf0f3"/>
+<text x="716.571" y="624" text-anchor="middle" font-size="12">0.6</text>
+<line x1="822.000" y1="127" x2="822.000" y2="601" stroke="#edf0f3"/>
+<text x="822.000" y="624" text-anchor="middle" font-size="12">0.7</text>
+<line x1="84" y1="506.200" x2="822" y2="506.200" stroke="#303e4a" stroke-width="1.5" stroke-dasharray="7 4"/>
+<line x1="84.000" y1="601.000" x2="822.000" y2="269.200" stroke="#98a3ac" stroke-width="1.3" stroke-dasharray="3 4"/>
+<g data-class-index="0"><title>almond: Q=0.0800; 95% interval=0.0433–0.1573; prevalence=0.0108; decision=below_quality_floor</title>
+<line x1="95.429" y1="580.469" x2="95.429" y2="526.431" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.929 580.469 h 5 M 92.929 526.431 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.429" cy="563.060" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="1"><title>avocado: Q=0.4399; 95% interval=0.3830–0.5100; prevalence=0.0445; decision=included</title>
+<line x1="130.947" y1="419.466" x2="130.947" y2="359.252" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 128.447 419.466 h 5 M 128.447 359.252 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="130.947" cy="392.499" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="2"><title>baby spinach: Q=0.0975; 95% interval=0.0576–0.1725; prevalence=0.0105; decision=below_quality_floor</title>
+<line x1="95.077" y1="573.681" x2="95.077" y2="519.228" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.577 573.681 h 5 M 92.577 519.228 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.077" cy="554.772" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="3"><title>bacon food product: Q=0.1546; 95% interval=0.0915–0.2484; prevalence=0.0133; decision=uncertain</title>
+<line x1="98.067" y1="557.629" x2="98.067" y2="483.255" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 95.567 557.629 h 5 M 95.567 483.255 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="98.067" cy="527.715" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="4"><title>baking powder: Q=0.3518; 95% interval=0.2836–0.4278; prevalence=0.0274; decision=included</title>
+<line x1="112.836" y1="466.553" x2="112.836" y2="398.215" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 110.336 466.553 h 5 M 110.336 398.215 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="112.836" cy="434.249" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="5"><title>baking soda: Q=0.3746; 95% interval=0.2811–0.4841; prevalence=0.0177; decision=included</title>
+<line x1="102.638" y1="467.749" x2="102.638" y2="371.526" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 100.138 467.749 h 5 M 100.138 371.526 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="102.638" cy="423.454" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="6"><title>balsamic vinegar: Q=0.0794; 95% interval=0.0517–0.1338; prevalence=0.0168; decision=below_quality_floor</title>
+<line x1="101.759" y1="576.510" x2="101.759" y2="537.567" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.259 576.510 h 5 M 99.259 537.567 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="101.759" cy="563.349" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="7"><title>banana: Q=0.4639; 95% interval=0.3415–0.6165; prevalence=0.0095; decision=included</title>
+<line x1="94.022" y1="439.131" x2="94.022" y2="308.761" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 91.522 439.131 h 5 M 91.522 308.761 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.022" cy="381.090" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="8"><title>basil: Q=0.3506; 95% interval=0.3057–0.4004; prevalence=0.0684; decision=included</title>
+<line x1="156.091" y1="456.089" x2="156.091" y2="411.196" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 153.591 456.089 h 5 M 153.591 411.196 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="156.091" cy="434.818" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="9"><title>bay leaf: Q=0.1764; 95% interval=0.1376–0.2264; prevalence=0.0400; decision=uncertain</title>
+<line x1="126.200" y1="535.769" x2="126.200" y2="493.684" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 123.700 535.769 h 5 M 123.700 493.684 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="126.200" cy="517.382" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="10"><title>beansprouts: Q=0.3803; 95% interval=0.2711–0.5179; prevalence=0.0107; decision=included</title>
+<line x1="95.253" y1="472.479" x2="95.253" y2="355.512" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.753 472.479 h 5 M 92.753 355.512 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.253" cy="420.725" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="11"><title>beef: Q=0.0983; 95% interval=0.0700–0.1535; prevalence=0.0143; decision=below_quality_floor</title>
+<line x1="99.122" y1="567.807" x2="99.122" y2="528.229" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 96.622 567.807 h 5 M 96.622 528.229 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="99.122" cy="554.389" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="12"><title>beef ground: Q=0.2362; 95% interval=0.1787–0.3105; prevalence=0.0235; decision=uncertain</title>
+<line x1="108.792" y1="516.274" x2="108.792" y2="453.808" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 106.292 516.274 h 5 M 106.292 453.808 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="108.792" cy="489.057" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="13"><title>bell pepper: Q=0.1188; 95% interval=0.0685–0.1981; prevalence=0.0127; decision=below_quality_floor</title>
+<line x1="97.363" y1="568.535" x2="97.363" y2="507.123" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 94.863 568.535 h 5 M 94.863 507.123 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="97.363" cy="544.712" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="14"><title>black olive: Q=0.3305; 95% interval=0.2296–0.4667; prevalence=0.0113; decision=included</title>
+<line x1="95.957" y1="492.154" x2="95.957" y2="379.792" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 93.457 492.154 h 5 M 93.457 379.792 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.957" cy="444.326" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="15"><title>black turtle bean: Q=0.4053; 95% interval=0.3271–0.4991; prevalence=0.0262; decision=included</title>
+<line x1="111.606" y1="445.954" x2="111.606" y2="364.411" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 109.106 445.954 h 5 M 109.106 364.411 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="111.606" cy="408.889" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="16"><title>bread: Q=0.2182; 95% interval=0.1012–0.3763; prevalence=0.0105; decision=uncertain</title>
+<line x1="95.077" y1="553.038" x2="95.077" y2="422.632" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.577 553.038 h 5 M 92.577 422.632 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.077" cy="497.562" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="17"><title>brown sugar: Q=0.1608; 95% interval=0.1296–0.2004; prevalence=0.0424; decision=uncertain</title>
+<line x1="128.661" y1="539.578" x2="128.661" y2="506.024" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 126.161 539.578 h 5 M 126.161 506.024 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="128.661" cy="524.759" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="18"><title>butter: Q=0.4699; 95% interval=0.4391–0.5045; prevalence=0.1621; decision=included</title>
+<line x1="254.908" y1="392.855" x2="254.908" y2="361.890" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 252.408 392.855 h 5 M 252.408 361.890 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="254.908" cy="378.277" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="19"><title>buttermilk food product: Q=0.1388; 95% interval=0.0729–0.2302; prevalence=0.0112; decision=uncertain</title>
+<line x1="95.781" y1="566.428" x2="95.781" y2="491.868" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 93.281 566.428 h 5 M 93.281 491.868 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.781" cy="535.222" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="20"><title>cabbage: Q=0.0771; 95% interval=0.0401–0.1470; prevalence=0.0100; decision=below_quality_floor</title>
+<line x1="94.550" y1="581.995" x2="94.550" y2="531.316" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.050 581.995 h 5 M 92.050 531.316 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.550" cy="564.434" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="21"><title>canola oil: Q=0.0563; 95% interval=0.0454–0.0741; prevalence=0.0325; decision=below_quality_floor</title>
+<line x1="118.287" y1="579.469" x2="118.287" y2="565.883" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 115.787 579.469 h 5 M 115.787 565.883 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="118.287" cy="574.306" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="22"><title>caper food product: Q=0.1346; 95% interval=0.0759–0.2187; prevalence=0.0103; decision=uncertain</title>
+<line x1="94.902" y1="565.030" x2="94.902" y2="497.315" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.402 565.030 h 5 M 92.402 497.315 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.902" cy="537.178" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="23"><title>carrot: Q=0.4019; 95% interval=0.3565–0.4507; prevalence=0.0777; decision=included</title>
+<line x1="165.937" y1="432.025" x2="165.937" y2="387.384" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 163.437 432.025 h 5 M 163.437 387.384 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="165.937" cy="410.481" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="24"><title>cauliflower: Q=0.1726; 95% interval=0.0929–0.2859; prevalence=0.0105; decision=uncertain</title>
+<line x1="95.077" y1="556.977" x2="95.077" y2="465.500" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.577 556.977 h 5 M 92.577 465.500 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.077" cy="519.165" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="25"><title>cayenne pepper: Q=0.0993; 95% interval=0.0795–0.1270; prevalence=0.0412; decision=below_quality_floor</title>
+<line x1="127.430" y1="563.340" x2="127.430" y2="540.805" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 124.930 563.340 h 5 M 124.930 540.805 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="127.430" cy="553.933" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="26"><title>celery: Q=0.1217; 95% interval=0.0870–0.1737; prevalence=0.0250; decision=below_quality_floor</title>
+<line x1="110.375" y1="559.746" x2="110.375" y2="518.675" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 107.875 559.746 h 5 M 107.875 518.675 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="110.375" cy="543.328" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="27"><title>cheese: Q=0.5644; 95% interval=0.5364–0.5978; prevalence=0.1913; decision=included</title>
+<line x1="285.679" y1="346.763" x2="285.679" y2="317.656" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 283.179 346.763 h 5 M 283.179 317.656 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="285.679" cy="333.459" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="28"><title>cherry tomatoes: Q=0.3731; 95% interval=0.2863–0.4892; prevalence=0.0178; decision=included</title>
+<line x1="102.814" y1="465.276" x2="102.814" y2="369.112" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 100.314 465.276 h 5 M 100.314 369.112 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="102.814" cy="424.154" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="29"><title>chicken: Q=0.4144; 95% interval=0.3772–0.4564; prevalence=0.1121; decision=included</title>
+<line x1="202.159" y1="422.225" x2="202.159" y2="384.654" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 199.659 422.225 h 5 M 199.659 384.654 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="202.159" cy="404.561" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="30"><title>chicken broth: Q=0.2541; 95% interval=0.2168–0.3001; prevalence=0.0712; decision=included</title>
+<line x1="159.080" y1="498.230" x2="159.080" y2="458.736" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 156.580 498.230 h 5 M 156.580 458.736 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="159.080" cy="480.571" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="31"><title>chickpea: Q=0.4633; 95% interval=0.3571–0.5766; prevalence=0.0158; decision=included</title>
+<line x1="100.704" y1="431.724" x2="100.704" y2="327.715" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 98.204 431.724 h 5 M 98.204 327.715 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="100.704" cy="381.406" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="32"><title>chili: Q=0.1741; 95% interval=0.1524–0.2027; prevalence=0.0831; decision=uncertain</title>
+<line x1="171.564" y1="528.770" x2="171.564" y2="504.934" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 169.064 528.770 h 5 M 169.064 504.934 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="171.564" cy="518.496" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="33"><title>chili pepper: Q=0.2631; 95% interval=0.2254–0.3117; prevalence=0.0560; decision=included</title>
+<line x1="143.079" y1="494.164" x2="143.079" y2="453.236" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 140.579 494.164 h 5 M 140.579 453.236 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="143.079" cy="476.300" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="34"><title>chili powder: Q=0.2590; 95% interval=0.2177–0.3079; prevalence=0.0607; decision=included</title>
+<line x1="148.003" y1="497.794" x2="148.003" y2="455.041" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 145.503 497.794 h 5 M 145.503 455.041 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="148.003" cy="478.252" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="35"><title>chinese five spice powder: Q=0.2042; 95% interval=0.1237–0.3184; prevalence=0.0110; decision=uncertain</title>
+<line x1="95.605" y1="542.361" x2="95.605" y2="450.083" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 93.105 542.361 h 5 M 93.105 450.083 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.605" cy="504.187" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="36"><title>chive leaf raw: Q=0.1031; 95% interval=0.0599–0.1612; prevalence=0.0173; decision=below_quality_floor</title>
+<line x1="102.286" y1="572.594" x2="102.286" y2="524.602" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.786 572.594 h 5 M 99.786 524.602 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="102.286" cy="552.120" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="37"><title>cilantro: Q=0.5968; 95% interval=0.5688–0.6291; prevalence=0.1866; decision=included</title>
+<line x1="280.755" y1="331.391" x2="280.755" y2="302.805" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 278.255 331.391 h 5 M 278.255 302.805 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="280.755" cy="318.129" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="38"><title>cinnamon: Q=0.3341; 95% interval=0.2808–0.3972; prevalence=0.0534; decision=included</title>
+<line x1="140.266" y1="467.902" x2="140.266" y2="412.719" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 137.766 467.902 h 5 M 137.766 412.719 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="140.266" cy="442.630" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="39"><title>cinnamon stick: Q=0.1282; 95% interval=0.0744–0.2077; prevalence=0.0117; decision=uncertain</title>
+<line x1="96.308" y1="565.738" x2="96.308" y2="502.528" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 93.808 565.738 h 5 M 93.808 502.528 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="96.308" cy="540.211" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="40"><title>coconut milk: Q=0.3146; 95% interval=0.2391–0.3962; prevalence=0.0292; decision=included</title>
+<line x1="114.771" y1="487.688" x2="114.771" y2="413.182" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 112.271 487.688 h 5 M 112.271 413.182 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="114.771" cy="451.878" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="41"><title>coconut oil: Q=0.0650; 95% interval=0.0432–0.1140; prevalence=0.0145; decision=below_quality_floor</title>
+<line x1="99.297" y1="580.544" x2="99.297" y2="546.965" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 96.797 580.544 h 5 M 96.797 546.965 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="99.297" cy="570.211" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="42"><title>cooking spray: Q=0.2157; 95% interval=0.1706–0.2826; prevalence=0.0339; decision=uncertain</title>
+<line x1="119.694" y1="520.146" x2="119.694" y2="467.052" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 117.194 520.146 h 5 M 117.194 467.052 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="119.694" cy="498.771" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="43"><title>coriander: Q=0.0974; 95% interval=0.0588–0.1793; prevalence=0.0120; decision=below_quality_floor</title>
+<line x1="96.660" y1="573.136" x2="96.660" y2="515.996" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 94.160 573.136 h 5 M 94.160 515.996 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="96.660" cy="554.811" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="44"><title>coriander seed whole or pieces: Q=0.1573; 95% interval=0.0805–0.2685; prevalence=0.0107; decision=uncertain</title>
+<line x1="95.253" y1="562.826" x2="95.253" y2="473.736" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.753 562.826 h 5 M 92.753 473.736 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.253" cy="526.419" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="45"><title>corn: Q=0.3238; 95% interval=0.2259–0.4344; prevalence=0.0150; decision=included</title>
+<line x1="99.825" y1="493.945" x2="99.825" y2="395.100" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 97.325 493.945 h 5 M 97.325 395.100 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="99.825" cy="447.525" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="46"><title>corn starch: Q=0.4304; 95% interval=0.3636–0.4978; prevalence=0.0429; decision=included</title>
+<line x1="129.189" y1="428.673" x2="129.189" y2="365.028" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 126.689 428.673 h 5 M 126.689 365.028 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="129.189" cy="396.967" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="47"><title>corn tortillas: Q=0.2297; 95% interval=0.1788–0.2918; prevalence=0.0208; decision=uncertain</title>
+<line x1="105.979" y1="516.266" x2="105.979" y2="462.690" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 103.479 516.266 h 5 M 103.479 462.690 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="105.979" cy="492.145" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="48"><title>cream cheese: Q=0.1072; 95% interval=0.0677–0.1782; prevalence=0.0155; decision=below_quality_floor</title>
+<line x1="100.352" y1="568.897" x2="100.352" y2="516.521" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 97.852 568.897 h 5 M 97.852 516.521 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="100.352" cy="550.169" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="49"><title>cucumber: Q=0.3443; 95% interval=0.2802–0.4165; prevalence=0.0327; decision=included</title>
+<line x1="118.463" y1="468.176" x2="118.463" y2="403.561" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 115.963 468.176 h 5 M 115.963 403.561 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="118.463" cy="437.799" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="50"><title>cumin: Q=0.3488; 95% interval=0.3163–0.3906; prevalence=0.1009; decision=included</title>
+<line x1="190.378" y1="451.058" x2="190.378" y2="415.865" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 187.878 451.058 h 5 M 187.878 415.865 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="190.378" cy="435.651" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="51"><title>cumin seed: Q=0.2100; 95% interval=0.1612–0.2753; prevalence=0.0292; decision=uncertain</title>
+<line x1="114.771" y1="524.587" x2="114.771" y2="470.503" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 112.271 524.587 h 5 M 112.271 470.503 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="114.771" cy="501.471" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="52"><title>curry leaves: Q=0.2560; 95% interval=0.1540–0.3762; prevalence=0.0103; decision=uncertain</title>
+<line x1="94.902" y1="527.997" x2="94.902" y2="422.675" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.402 527.997 h 5 M 92.402 422.675 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.902" cy="479.676" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="53"><title>curry powder: Q=0.1607; 95% interval=0.1045–0.2412; prevalence=0.0168; decision=uncertain</title>
+<line x1="101.759" y1="551.472" x2="101.759" y2="486.670" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.259 551.472 h 5 M 99.259 486.670 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="101.759" cy="524.836" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="54"><title>dijon mustard: Q=0.1357; 95% interval=0.1019–0.1848; prevalence=0.0292; decision=below_quality_floor</title>
+<line x1="114.771" y1="552.696" x2="114.771" y2="513.411" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 112.271 552.696 h 5 M 112.271 513.411 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="114.771" cy="536.679" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="55"><title>dill food product: Q=0.2618; 95% interval=0.1865–0.3662; prevalence=0.0148; decision=uncertain</title>
+<line x1="99.649" y1="512.619" x2="99.649" y2="427.410" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 97.149 512.619 h 5 M 97.149 427.410 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="99.649" cy="476.890" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="56"><title>dry white wine: Q=0.1299; 95% interval=0.0935–0.1857; prevalence=0.0195; decision=below_quality_floor</title>
+<line x1="104.572" y1="556.701" x2="104.572" y2="512.978" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 102.072 556.701 h 5 M 102.072 512.978 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="104.572" cy="539.448" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="57"><title>egg food product: Q=0.5915; 95% interval=0.5600–0.6218; prevalence=0.1843; decision=included</title>
+<line x1="278.294" y1="335.551" x2="278.294" y2="306.248" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 275.794 335.551 h 5 M 275.794 306.248 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="278.294" cy="320.638" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="58"><title>egg whites: Q=0.2126; 95% interval=0.1482–0.2875; prevalence=0.0220; decision=uncertain</title>
+<line x1="107.210" y1="530.769" x2="107.210" y2="464.741" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 104.710 530.769 h 5 M 104.710 464.741 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="107.210" cy="500.251" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="59"><title>egg yolks: Q=0.1981; 95% interval=0.1283–0.2854; prevalence=0.0170; decision=uncertain</title>
+<line x1="101.935" y1="540.186" x2="101.935" y2="465.702" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.435 540.186 h 5 M 99.435 465.702 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="101.935" cy="507.107" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="60"><title>eggplant: Q=0.2346; 95% interval=0.1329–0.3652; prevalence=0.0103; decision=uncertain</title>
+<line x1="94.902" y1="537.982" x2="94.902" y2="427.902" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.402 537.982 h 5 M 92.402 427.902 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.902" cy="489.782" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="61"><title>fennel seed: Q=0.0702; 95% interval=0.0232–0.1433; prevalence=0.0098; decision=below_quality_floor</title>
+<line x1="94.374" y1="589.981" x2="94.374" y2="533.088" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 91.874 589.981 h 5 M 91.874 533.088 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.374" cy="567.704" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="62"><title>feta cheese: Q=0.2011; 95% interval=0.1398–0.2927; prevalence=0.0137; decision=uncertain</title>
+<line x1="98.418" y1="534.752" x2="98.418" y2="462.263" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 95.918 534.752 h 5 M 95.918 462.263 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="98.418" cy="505.662" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="63"><title>fish sauce: Q=0.3407; 95% interval=0.2783–0.4156; prevalence=0.0364; decision=included</title>
+<line x1="122.331" y1="469.065" x2="122.331" y2="404.013" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 119.831 469.065 h 5 M 119.831 404.013 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="122.331" cy="439.521" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="64"><title>flour: Q=0.4459; 95% interval=0.4070–0.4845; prevalence=0.1268; decision=included</title>
+<line x1="217.632" y1="408.066" x2="217.632" y2="371.333" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 215.132 408.066 h 5 M 215.132 371.333 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="217.632" cy="389.659" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="65"><title>flour tortillas: Q=0.2259; 95% interval=0.1652–0.3108; prevalence=0.0173; decision=uncertain</title>
+<line x1="102.286" y1="522.717" x2="102.286" y2="453.679" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.786 522.717 h 5 M 99.786 453.679 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="102.286" cy="493.912" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="66"><title>french bread: Q=0.1719; 95% interval=0.1025–0.2799; prevalence=0.0100; decision=uncertain</title>
+<line x1="94.550" y1="552.421" x2="94.550" y2="468.329" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.050 552.421 h 5 M 92.050 468.329 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.550" cy="519.499" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="67"><title>garam masala: Q=0.3616; 95% interval=0.3043–0.4342; prevalence=0.0362; decision=included</title>
+<line x1="122.155" y1="456.763" x2="122.155" y2="395.189" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 119.655 456.763 h 5 M 119.655 395.189 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="122.155" cy="429.579" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="68"><title>garlic: Q=0.6220; 95% interval=0.5994–0.6473; prevalence=0.3968; decision=included</title>
+<line x1="502.303" y1="316.888" x2="502.303" y2="294.199" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 499.803 316.888 h 5 M 499.803 294.199 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="502.303" cy="306.149" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="69"><title>garlic clove: Q=0.0428; 95% interval=0.0298–0.0657; prevalence=0.0155; decision=below_quality_floor</title>
+<line x1="100.352" y1="586.898" x2="100.352" y2="569.858" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 97.852 586.898 h 5 M 97.852 569.858 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="100.352" cy="580.708" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="70"><title>garlic powder: Q=0.1328; 95% interval=0.1070–0.1691; prevalence=0.0447; decision=below_quality_floor</title>
+<line x1="131.123" y1="550.275" x2="131.123" y2="520.868" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 128.623 550.275 h 5 M 128.623 520.868 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="131.123" cy="538.067" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="71"><title>ginger: Q=0.4430; 95% interval=0.4062–0.4817; prevalence=0.1231; decision=included</title>
+<line x1="213.764" y1="408.455" x2="213.764" y2="372.658" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 211.264 408.455 h 5 M 211.264 372.658 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="213.764" cy="391.036" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="72"><title>ginger ground: Q=0.0642; 95% interval=0.0342–0.1272; prevalence=0.0150; decision=below_quality_floor</title>
+<line x1="99.825" y1="584.782" x2="99.825" y2="540.718" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 97.325 584.782 h 5 M 97.325 540.718 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="99.825" cy="570.580" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="73"><title>greek yogurt: Q=0.1790; 95% interval=0.1350–0.2459; prevalence=0.0250; decision=uncertain</title>
+<line x1="110.375" y1="537.033" x2="110.375" y2="484.461" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 107.875 537.033 h 5 M 107.875 484.461 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="110.375" cy="516.147" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="74"><title>green beans: Q=0.2899; 95% interval=0.1982–0.4102; prevalence=0.0128; decision=uncertain</title>
+<line x1="97.539" y1="507.050" x2="97.539" y2="406.553" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 95.039 507.050 h 5 M 95.039 406.553 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="97.539" cy="463.576" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="75"><title>green bell pepper: Q=0.1470; 95% interval=0.1066–0.2118; prevalence=0.0220; decision=uncertain</title>
+<line x1="107.210" y1="550.468" x2="107.210" y2="500.610" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 104.710 550.468 h 5 M 104.710 500.610 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="107.210" cy="531.345" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="76"><title>green onion: Q=0.2875; 95% interval=0.2465–0.3391; prevalence=0.0637; decision=included</title>
+<line x1="151.168" y1="484.176" x2="151.168" y2="440.262" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 148.668 484.176 h 5 M 148.668 440.262 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="151.168" cy="464.704" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="77"><title>heavy cream: Q=0.1704; 95% interval=0.1295–0.2248; prevalence=0.0289; decision=uncertain</title>
+<line x1="114.419" y1="539.612" x2="114.419" y2="494.463" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 111.919 539.612 h 5 M 111.919 494.463 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="114.419" cy="520.244" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="78"><title>hoisin sauce: Q=0.1113; 95% interval=0.0770–0.1733; prevalence=0.0117; decision=below_quality_floor</title>
+<line x1="96.308" y1="564.516" x2="96.308" y2="518.875" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 93.808 564.516 h 5 M 93.808 518.875 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="96.308" cy="548.266" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="79"><title>honey: Q=0.1747; 95% interval=0.1391–0.2212; prevalence=0.0494; decision=uncertain</title>
+<line x1="136.046" y1="535.062" x2="136.046" y2="496.150" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 133.546 535.062 h 5 M 133.546 496.150 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="136.046" cy="518.211" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="80"><title>hot pepper food product: Q=0.0877; 95% interval=0.0504–0.1509; prevalence=0.0155; decision=below_quality_floor</title>
+<line x1="100.352" y1="577.090" x2="100.352" y2="529.488" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 97.852 577.090 h 5 M 97.852 529.488 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="100.352" cy="559.427" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="81"><title>hot sauce: Q=0.0616; 95% interval=0.0272–0.1118; prevalence=0.0122; decision=below_quality_floor</title>
+<line x1="96.836" y1="588.085" x2="96.836" y2="548.019" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 94.336 588.085 h 5 M 94.336 548.019 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="96.836" cy="571.784" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="82"><title>italian seasoning: Q=0.1548; 95% interval=0.1090–0.2287; prevalence=0.0187; decision=uncertain</title>
+<line x1="103.693" y1="549.340" x2="103.693" y2="492.575" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 101.193 549.340 h 5 M 101.193 492.575 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="103.693" cy="527.641" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="83"><title>jalapeno chilies: Q=0.1901; 95% interval=0.1425–0.2516; prevalence=0.0310; decision=uncertain</title>
+<line x1="116.705" y1="533.454" x2="116.705" y2="481.762" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 114.205 533.454 h 5 M 114.205 481.762 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="116.705" cy="510.893" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="84"><title>ketchup: Q=0.1274; 95% interval=0.0809–0.2037; prevalence=0.0142; decision=uncertain</title>
+<line x1="98.946" y1="562.659" x2="98.946" y2="504.437" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 96.446 562.659 h 5 M 96.446 504.437 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="98.946" cy="540.604" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="85"><title>lemon: Q=0.1257; 95% interval=0.0932–0.1723; prevalence=0.0375; decision=below_quality_floor</title>
+<line x1="123.562" y1="556.830" x2="123.562" y2="519.348" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 121.062 556.830 h 5 M 121.062 519.348 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="123.562" cy="541.417" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="86"><title>lemon juice: Q=0.2141; 95% interval=0.1849–0.2517; prevalence=0.0821; decision=uncertain</title>
+<line x1="170.509" y1="513.355" x2="170.509" y2="481.696" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 168.009 513.355 h 5 M 168.009 481.696 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="170.509" cy="499.508" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="87"><title>lemon zest: Q=0.0981; 95% interval=0.0510–0.1877; prevalence=0.0135; decision=below_quality_floor</title>
+<line x1="98.242" y1="576.826" x2="98.242" y2="512.037" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 95.742 576.826 h 5 M 95.742 512.037 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="98.242" cy="554.515" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="88"><title>lemongrass food product: Q=0.1180; 95% interval=0.0690–0.2098; prevalence=0.0108; decision=uncertain</title>
+<line x1="95.429" y1="568.314" x2="95.429" y2="501.536" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.929 568.314 h 5 M 92.929 501.536 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.429" cy="545.059" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="89"><title>lettuce: Q=0.1114; 95% interval=0.0683–0.1819; prevalence=0.0102; decision=below_quality_floor</title>
+<line x1="94.726" y1="568.610" x2="94.726" y2="514.758" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.226 568.610 h 5 M 92.226 514.758 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.726" cy="548.186" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="90"><title>lime: Q=0.2889; 95% interval=0.2443–0.3468; prevalence=0.0524; decision=included</title>
+<line x1="139.211" y1="485.217" x2="139.211" y2="436.606" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 136.711 485.217 h 5 M 136.711 436.606 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="139.211" cy="464.057" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="91"><title>lime juice: Q=0.2548; 95% interval=0.2147–0.2978; prevalence=0.0635; decision=included</title>
+<line x1="150.992" y1="499.217" x2="150.992" y2="459.822" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 148.492 499.217 h 5 M 148.492 459.822 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="150.992" cy="480.229" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="92"><title>lime wedges: Q=0.2667; 95% interval=0.1759–0.3698; prevalence=0.0147; decision=uncertain</title>
+<line x1="99.473" y1="517.643" x2="99.473" y2="425.718" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 96.973 517.643 h 5 M 96.973 425.718 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="99.473" cy="474.595" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="93"><title>maple syrup: Q=0.1477; 95% interval=0.0819–0.2379; prevalence=0.0127; decision=uncertain</title>
+<line x1="97.363" y1="562.199" x2="97.363" y2="488.217" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 94.863 562.199 h 5 M 94.863 488.217 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="97.363" cy="530.987" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="94"><title>mayonnaise: Q=0.2072; 95% interval=0.1602–0.2681; prevalence=0.0310; decision=uncertain</title>
+<line x1="116.705" y1="525.068" x2="116.705" y2="473.919" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 114.205 525.068 h 5 M 114.205 473.919 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="116.705" cy="502.774" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="95"><title>milk: Q=0.3458; 95% interval=0.2980–0.3991; prevalence=0.0804; decision=included</title>
+<line x1="168.751" y1="459.745" x2="168.751" y2="411.816" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 166.251 459.745 h 5 M 166.251 411.816 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="168.751" cy="437.080" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="96"><title>mint: Q=0.2644; 95% interval=0.2022–0.3469; prevalence=0.0295; decision=included</title>
+<line x1="115.122" y1="505.175" x2="115.122" y2="436.551" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 112.622 505.175 h 5 M 112.622 436.551 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="115.122" cy="475.681" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="97"><title>mirin: Q=0.2875; 95% interval=0.2100–0.3896; prevalence=0.0168; decision=included</title>
+<line x1="101.759" y1="501.460" x2="101.759" y2="416.339" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.259 501.460 h 5 M 99.259 416.339 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="101.759" cy="464.723" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="98"><title>mozzarella cheese: Q=0.1289; 95% interval=0.0761–0.2105; prevalence=0.0120; decision=uncertain</title>
+<line x1="96.660" y1="564.923" x2="96.660" y2="501.231" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 94.160 564.923 h 5 M 94.160 501.231 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="96.660" cy="539.900" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="99"><title>mushroom: Q=0.1346; 95% interval=0.0904–0.2046; prevalence=0.0208; decision=uncertain</title>
+<line x1="105.979" y1="558.166" x2="105.979" y2="504.006" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 103.479 558.166 h 5 M 103.479 504.006 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="105.979" cy="537.179" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="100"><title>nutmeg: Q=0.1112; 95% interval=0.0770–0.1636; prevalence=0.0218; decision=below_quality_floor</title>
+<line x1="107.034" y1="564.483" x2="107.034" y2="523.439" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 104.534 564.483 h 5 M 104.534 523.439 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="107.034" cy="548.314" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="101"><title>oil: Q=0.1977; 95% interval=0.1638–0.2356; prevalence=0.0552; decision=uncertain</title>
+<line x1="142.200" y1="523.346" x2="142.200" y2="489.336" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 139.700 523.346 h 5 M 139.700 489.336 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="142.200" cy="507.286" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="102"><title>olive oil: Q=0.3852; 95% interval=0.3582–0.4144; prevalence=0.2076; decision=included</title>
+<line x1="302.910" y1="431.220" x2="302.910" y2="404.595" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 300.410 431.220 h 5 M 300.410 404.595 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="302.910" cy="418.422" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="103"><title>olive oil extra virgin: Q=0.2281; 95% interval=0.1973–0.2641; prevalence=0.0887; decision=uncertain</title>
+<line x1="177.542" y1="507.490" x2="177.542" y2="475.806" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 175.042 507.490 h 5 M 175.042 475.806 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="177.542" cy="492.904" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="104"><title>onion: Q=0.4851; 95% interval=0.4547–0.5168; prevalence=0.2095; decision=included</title>
+<line x1="304.844" y1="385.478" x2="304.844" y2="356.031" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 302.344 385.478 h 5 M 302.344 356.031 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="304.844" cy="371.068" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="105"><title>onion powder: Q=0.0752; 95% interval=0.0513–0.1213; prevalence=0.0172; decision=below_quality_floor</title>
+<line x1="102.111" y1="576.670" x2="102.111" y2="543.494" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.611 576.670 h 5 M 99.611 543.494 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="102.111" cy="565.336" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="106"><title>orange juice: Q=0.1091; 95% interval=0.0593–0.1922; prevalence=0.0130; decision=below_quality_floor</title>
+<line x1="97.715" y1="572.900" x2="97.715" y2="509.889" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 95.215 572.900 h 5 M 95.215 509.889 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="97.715" cy="549.308" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="107"><title>oregano: Q=0.2398; 95% interval=0.2035–0.2848; prevalence=0.0680; decision=included</title>
+<line x1="155.739" y1="504.521" x2="155.739" y2="465.997" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 153.239 504.521 h 5 M 153.239 465.997 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="155.739" cy="487.342" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="108"><title>oyster sauce: Q=0.1791; 95% interval=0.1334–0.2617; prevalence=0.0150; decision=uncertain</title>
+<line x1="99.825" y1="537.749" x2="99.825" y2="476.958" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 97.325 537.749 h 5 M 97.325 476.958 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="99.825" cy="516.126" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="109"><title>panko breadcrumbs: Q=0.5604; 95% interval=0.4914–0.6309; prevalence=0.0380; decision=included</title>
+<line x1="124.090" y1="368.055" x2="124.090" y2="301.940" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 121.590 368.055 h 5 M 121.590 301.940 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="124.090" cy="335.354" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="110"><title>paprika: Q=0.1187; 95% interval=0.0847–0.1648; prevalence=0.0297; decision=below_quality_floor</title>
+<line x1="115.298" y1="560.847" x2="115.298" y2="522.898" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 112.798 560.847 h 5 M 112.798 522.898 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="115.298" cy="544.750" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="111"><title>parmesan cheese food product: Q=0.1085; 95% interval=0.0677–0.1909; prevalence=0.0165; decision=below_quality_floor</title>
+<line x1="101.407" y1="568.889" x2="101.407" y2="510.516" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 98.907 568.889 h 5 M 98.907 510.516 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="101.407" cy="549.588" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="112"><title>parsley: Q=0.2751; 95% interval=0.2413–0.3127; prevalence=0.0851; decision=included</title>
+<line x1="173.674" y1="486.609" x2="173.674" y2="452.784" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 171.174 486.609 h 5 M 171.174 452.784 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="173.674" cy="470.585" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="113"><title>pasta: Q=0.1223; 95% interval=0.0861–0.1867; prevalence=0.0118; decision=below_quality_floor</title>
+<line x1="96.484" y1="560.177" x2="96.484" y2="512.525" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 93.984 560.177 h 5 M 93.984 512.525 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="96.484" cy="543.046" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="114"><title>pea: Q=0.4435; 95% interval=0.3403–0.5610; prevalence=0.0160; decision=included</title>
+<line x1="100.880" y1="439.688" x2="100.880" y2="335.075" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 98.380 439.688 h 5 M 98.380 335.075 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="100.880" cy="390.763" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="115"><title>peanut: Q=0.2319; 95% interval=0.1687–0.3257; prevalence=0.0170; decision=uncertain</title>
+<line x1="101.935" y1="521.016" x2="101.935" y2="446.628" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.435 521.016 h 5 M 99.435 446.628 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="101.935" cy="491.103" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="116"><title>peanut oil: Q=0.1001; 95% interval=0.0684–0.1534; prevalence=0.0157; decision=below_quality_floor</title>
+<line x1="100.528" y1="568.582" x2="100.528" y2="528.276" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 98.028 568.582 h 5 M 98.028 528.276 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="100.528" cy="553.561" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="117"><title>pepper: Q=0.5913; 95% interval=0.5686–0.6137; prevalence=0.3986; decision=included</title>
+<line x1="504.237" y1="331.502" x2="504.237" y2="310.120" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 501.737 331.502 h 5 M 501.737 310.120 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="504.237" cy="320.744" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="118"><title>plum tomato: Q=0.0747; 95% interval=0.0463–0.1362; prevalence=0.0130; decision=below_quality_floor</title>
+<line x1="97.715" y1="579.071" x2="97.715" y2="536.459" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 95.215 579.071 h 5 M 95.215 536.459 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="97.715" cy="565.573" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="119"><title>pork: Q=0.1282; 95% interval=0.0860–0.1954; prevalence=0.0177; decision=below_quality_floor</title>
+<line x1="102.638" y1="560.246" x2="102.638" y2="508.397" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 100.138 560.246 h 5 M 100.138 508.397 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="102.638" cy="540.232" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="120"><title>potato: Q=0.2115; 95% interval=0.1483–0.2968; prevalence=0.0210; decision=uncertain</title>
+<line x1="106.155" y1="530.705" x2="106.155" y2="460.308" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 103.655 530.705 h 5 M 103.655 460.308 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="106.155" cy="500.749" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="121"><title>red bell pepper: Q=0.2767; 95% interval=0.2305–0.3331; prevalence=0.0484; decision=included</title>
+<line x1="134.991" y1="491.747" x2="134.991" y2="443.112" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 132.491 491.747 h 5 M 132.491 443.112 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="134.991" cy="469.840" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="122"><title>red onion: Q=0.3708; 95% interval=0.3204–0.4205; prevalence=0.0674; decision=included</title>
+<line x1="155.036" y1="449.137" x2="155.036" y2="401.676" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 152.536 449.137 h 5 M 152.536 401.676 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="155.036" cy="425.232" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="123"><title>red wine vinegar: Q=0.1650; 95% interval=0.1173–0.2353; prevalence=0.0237; decision=uncertain</title>
+<line x1="108.968" y1="545.386" x2="108.968" y2="489.473" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 106.468 545.386 h 5 M 106.468 489.473 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="108.968" cy="522.812" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="124"><title>rice: Q=0.1090; 95% interval=0.0736–0.1742; prevalence=0.0195; decision=below_quality_floor</title>
+<line x1="104.572" y1="566.103" x2="104.572" y2="518.436" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 102.072 566.103 h 5 M 102.072 518.436 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="104.572" cy="549.352" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="125"><title>rice vinegar: Q=0.2670; 95% interval=0.2179–0.3379; prevalence=0.0357; decision=included</title>
+<line x1="121.628" y1="497.707" x2="121.628" y2="440.820" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 119.128 497.707 h 5 M 119.128 440.820 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="121.628" cy="474.449" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="126"><title>roma tomato: Q=0.1534; 95% interval=0.0755–0.2873; prevalence=0.0103; decision=uncertain</title>
+<line x1="94.902" y1="565.229" x2="94.902" y2="464.820" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.402 565.229 h 5 M 92.402 464.820 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.902" cy="528.293" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="127"><title>rosemary food product: Q=0.1047; 95% interval=0.0731–0.1625; prevalence=0.0175; decision=below_quality_floor</title>
+<line x1="102.462" y1="566.328" x2="102.462" y2="523.969" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.962 566.328 h 5 M 99.962 523.969 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="102.462" cy="551.395" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="128"><title>sake: Q=0.2561; 95% interval=0.1644–0.3722; prevalence=0.0112; decision=uncertain</title>
+<line x1="95.781" y1="523.054" x2="95.781" y2="424.578" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 93.281 523.054 h 5 M 93.281 424.578 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.781" cy="479.628" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="129"><title>salsa: Q=0.2146; 95% interval=0.1588–0.2910; prevalence=0.0225; decision=uncertain</title>
+<line x1="107.737" y1="525.713" x2="107.737" y2="463.060" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 105.237 525.713 h 5 M 105.237 463.060 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="107.737" cy="499.276" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="130"><title>salt: Q=0.7380; 95% interval=0.7209–0.7560; prevalence=0.6261; decision=included</title>
+<line x1="744.071" y1="259.308" x2="744.071" y2="242.662" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 741.571 259.308 h 5 M 741.571 242.662 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="744.071" cy="251.192" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="131"><title>scallion: Q=0.2825; 95% interval=0.2484–0.3229; prevalence=0.0789; decision=included</title>
+<line x1="167.168" y1="483.235" x2="167.168" y2="447.928" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 164.668 483.235 h 5 M 164.668 447.928 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="167.168" cy="467.079" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="132"><title>sesame oil: Q=0.3326; 95% interval=0.2896–0.3854; prevalence=0.0595; decision=included</title>
+<line x1="146.772" y1="463.727" x2="146.772" y2="418.334" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 144.272 463.727 h 5 M 144.272 418.334 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="146.772" cy="443.361" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="133"><title>sesame seed: Q=0.2232; 95% interval=0.1537–0.3302; prevalence=0.0168; decision=uncertain</title>
+<line x1="101.759" y1="528.154" x2="101.759" y2="444.474" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.259 528.154 h 5 M 99.259 444.474 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="101.759" cy="495.205" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="134"><title>shallot: Q=0.1303; 95% interval=0.1102–0.1609; prevalence=0.0490; decision=below_quality_floor</title>
+<line x1="135.694" y1="548.767" x2="135.694" y2="524.754" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 133.194 548.767 h 5 M 133.194 524.754 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="135.694" cy="539.250" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="135"><title>shaoxing wine: Q=0.1685; 95% interval=0.1117–0.2618; prevalence=0.0103; decision=uncertain</title>
+<line x1="94.902" y1="548.045" x2="94.902" y2="476.920" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.402 548.045 h 5 M 92.402 476.920 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.902" cy="521.137" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="136"><title>shiitake mushroom: Q=0.2124; 95% interval=0.1399–0.3179; prevalence=0.0130; decision=uncertain</title>
+<line x1="97.715" y1="534.695" x2="97.715" y2="450.325" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 95.215 534.695 h 5 M 95.215 450.325 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="97.715" cy="500.309" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="137"><title>shrimp food product: Q=0.4253; 95% interval=0.3470–0.5084; prevalence=0.0290; decision=included</title>
+<line x1="114.595" y1="436.535" x2="114.595" y2="360.001" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 112.095 436.535 h 5 M 112.095 360.001 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="114.595" cy="399.412" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="138"><title>smoked paprika: Q=0.0858; 95% interval=0.0513–0.1484; prevalence=0.0160; decision=below_quality_floor</title>
+<line x1="100.880" y1="576.665" x2="100.880" y2="530.675" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 98.380 576.665 h 5 M 98.380 530.675 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="100.880" cy="560.348" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="139"><title>sour cream: Q=0.2854; 95% interval=0.2291–0.3562; prevalence=0.0402; decision=included</title>
+<line x1="126.375" y1="492.389" x2="126.375" y2="432.166" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 123.875 492.389 h 5 M 123.875 432.166 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="126.375" cy="465.698" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="140"><title>soy sauce: Q=0.6374; 95% interval=0.5983–0.6788; prevalence=0.1177; decision=included</title>
+<line x1="208.137" y1="317.426" x2="208.137" y2="279.269" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 205.637 317.426 h 5 M 205.637 279.269 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="208.137" cy="298.891" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="141"><title>spinach: Q=0.2412; 95% interval=0.1620–0.3343; prevalence=0.0185; decision=uncertain</title>
+<line x1="103.517" y1="524.221" x2="103.517" y2="442.529" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 101.017 524.221 h 5 M 101.017 442.529 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="103.517" cy="486.674" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="142"><title>sriracha: Q=0.1372; 95% interval=0.0843–0.2187; prevalence=0.0155; decision=uncertain</title>
+<line x1="100.352" y1="561.038" x2="100.352" y2="497.342" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 97.852 561.038 h 5 M 97.852 497.342 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="100.352" cy="535.961" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="143"><title>strawberry: Q=0.4491; 95% interval=0.3196–0.5866; prevalence=0.0098; decision=included</title>
+<line x1="94.374" y1="449.510" x2="94.374" y2="322.955" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 91.874 449.510 h 5 M 91.874 322.955 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.374" cy="388.150" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="144"><title>sugar: Q=0.5845; 95% interval=0.5544–0.6123; prevalence=0.1901; decision=included</title>
+<line x1="284.448" y1="338.235" x2="284.448" y2="310.746" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 281.948 338.235 h 5 M 281.948 310.746 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="284.448" cy="323.944" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="145"><title>sweet potato: Q=0.1117; 95% interval=0.0729–0.1896; prevalence=0.0127; decision=below_quality_floor</title>
+<line x1="97.363" y1="566.434" x2="97.363" y2="511.139" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 94.863 566.434 h 5 M 94.863 511.139 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="97.363" cy="548.034" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="146"><title>thyme food product: Q=0.1940; 95% interval=0.1577–0.2459; prevalence=0.0480; decision=uncertain</title>
+<line x1="134.639" y1="526.273" x2="134.639" y2="484.462" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 132.139 526.273 h 5 M 132.139 484.462 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="134.639" cy="509.054" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="147"><title>tomato: Q=0.3988; 95% interval=0.3648–0.4390; prevalence=0.1191; decision=included</title>
+<line x1="209.544" y1="428.108" x2="209.544" y2="392.902" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 207.044 428.108 h 5 M 207.044 392.902 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="209.544" cy="411.969" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="148"><title>tomato paste: Q=0.1357; 95% interval=0.1059–0.1851; prevalence=0.0285; decision=below_quality_floor</title>
+<line x1="114.067" y1="550.819" x2="114.067" y2="513.252" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 111.567 550.819 h 5 M 111.567 513.252 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="114.067" cy="536.678" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="149"><title>tomato sauce: Q=0.1854; 95% interval=0.1324–0.2647; prevalence=0.0195; decision=uncertain</title>
+<line x1="104.572" y1="538.227" x2="104.572" y2="475.542" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 102.072 538.227 h 5 M 102.072 475.542 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="104.572" cy="513.136" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="150"><title>turmeric: Q=0.4813; 95% interval=0.4231–0.5454; prevalence=0.0530; decision=included</title>
+<line x1="139.914" y1="400.465" x2="139.914" y2="342.502" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 137.414 400.465 h 5 M 137.414 342.502 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="139.914" cy="372.850" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="151"><title>vanilla bean food product: Q=0.2534; 95% interval=0.1866–0.3466; prevalence=0.0172; decision=uncertain</title>
+<line x1="102.111" y1="512.540" x2="102.111" y2="436.732" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 99.611 512.540 h 5 M 99.611 436.732 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="102.111" cy="480.894" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="152"><title>vanilla extract: Q=0.3981; 95% interval=0.3442–0.4663; prevalence=0.0400; decision=included</title>
+<line x1="126.200" y1="437.840" x2="126.200" y2="379.992" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 123.700 437.840 h 5 M 123.700 379.992 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="126.200" cy="412.278" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="153"><title>vegetable broth: Q=0.0439; 95% interval=0.0244–0.1018; prevalence=0.0105; decision=below_quality_floor</title>
+<line x1="95.077" y1="589.413" x2="95.077" y2="552.758" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.577 589.413 h 5 M 92.577 552.758 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.077" cy="580.214" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="154"><title>vegetable oil: Q=0.1977; 95% interval=0.1727–0.2287; prevalence=0.0866; decision=uncertain</title>
+<line x1="175.257" y1="519.158" x2="175.257" y2="492.619" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 172.757 519.158 h 5 M 172.757 492.619 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="175.257" cy="507.282" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="155"><title>water food product: Q=0.3096; 95% interval=0.2817–0.3369; prevalence=0.1626; decision=included</title>
+<line x1="255.436" y1="467.451" x2="255.436" y2="441.299" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 252.936 467.451 h 5 M 252.936 441.299 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="255.436" cy="454.229" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="156"><title>welsh onion: Q=0.0770; 95% interval=0.0310–0.1521; prevalence=0.0102; decision=below_quality_floor</title>
+<line x1="94.726" y1="586.282" x2="94.726" y2="528.892" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.226 586.282 h 5 M 92.226 528.892 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.726" cy="564.495" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="157"><title>white onion: Q=0.0866; 95% interval=0.0599–0.1329; prevalence=0.0178; decision=below_quality_floor</title>
+<line x1="102.814" y1="572.615" x2="102.814" y2="537.991" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 100.314 572.615 h 5 M 100.314 537.991 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="102.814" cy="559.961" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="158"><title>white sugar: Q=0.1820; 95% interval=0.1162–0.2833; prevalence=0.0148; decision=uncertain</title>
+<line x1="99.649" y1="545.924" x2="99.649" y2="466.700" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 97.149 545.924 h 5 M 97.149 466.700 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="99.649" cy="514.724" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="159"><title>white wine: Q=0.0555; 95% interval=0.0317–0.1112; prevalence=0.0103; decision=below_quality_floor</title>
+<line x1="94.902" y1="585.965" x2="94.902" y2="548.298" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 92.402 585.965 h 5 M 92.402 548.298 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="94.902" cy="574.688" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="160"><title>white wine vinegar: Q=0.0980; 95% interval=0.0357–0.1970; prevalence=0.0112; decision=below_quality_floor</title>
+<line x1="95.781" y1="584.096" x2="95.781" y2="507.601" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 93.281 584.096 h 5 M 93.281 507.601 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="95.781" cy="554.545" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="161"><title>worcestershire sauce: Q=0.1489; 95% interval=0.0913–0.2237; prevalence=0.0185; decision=uncertain</title>
+<line x1="103.517" y1="557.726" x2="103.517" y2="494.984" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 101.017 557.726 h 5 M 101.017 494.984 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="103.517" cy="530.428" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="162"><title>yellow onion: Q=0.0903; 95% interval=0.0726–0.1159; prevalence=0.0382; decision=below_quality_floor</title>
+<line x1="124.265" y1="566.586" x2="124.265" y2="546.058" stroke="#667d94" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 121.765 566.586 h 5 M 121.765 546.058 h 5" stroke="#667d94" stroke-opacity="0.42" fill="none"/>
+<circle cx="124.265" cy="558.218" r="3.4" fill="#667d94" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="163"><title>yogurt food product: Q=0.2485; 95% interval=0.2017–0.3058; prevalence=0.0470; decision=included</title>
+<line x1="133.584" y1="505.415" x2="133.584" y2="456.066" stroke="#167c69" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 131.084 505.415 h 5 M 131.084 456.066 h 5" stroke="#167c69" stroke-opacity="0.42" fill="none"/>
+<circle cx="133.584" cy="483.209" r="3.4" fill="#167c69" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<g data-class-index="164"><title>zucchini food product: Q=0.2631; 95% interval=0.1881–0.3425; prevalence=0.0259; decision=uncertain</title>
+<line x1="111.254" y1="511.828" x2="111.254" y2="438.666" stroke="#b67a0b" stroke-opacity="0.42" stroke-width="1.2"/>
+<path d="M 108.754 511.828 h 5 M 108.754 438.666 h 5" stroke="#b67a0b" stroke-opacity="0.42" fill="none"/>
+<circle cx="111.254" cy="476.284" r="3.4" fill="#b67a0b" fill-opacity="0.84" stroke="#ffffff" stroke-width="0.55"/></g>
+<rect x="84" y="127" width="738" height="474" fill="none" stroke="#8c99a4"/>
+<text x="453.000" y="653" text-anchor="middle" font-size="14">Validation prevalence (constant-score AP)</text>
+<text x="24" y="364.000" transform="rotate(-90 24 364.000)" text-anchor="middle" font-size="14">Median checkpoint AP (Q)</text>
+<text x="865" y="150" font-size="16" font-weight="700">Complete D6 decision</text>
+<circle cx="872" cy="175" r="5" fill="#167c69"/>
+<text x="887" y="179" font-size="13">Eligible: 59</text>
+<circle cx="872" cy="204" r="5" fill="#b67a0b"/>
+<text x="887" y="208" font-size="13">Uncertain: 60</text>
+<circle cx="872" cy="233" r="5" fill="#667d94"/>
+<text x="887" y="237" font-size="13">Below quality floor: 46</text>
+<line x1="866" y1="279" x2="898" y2="279" stroke="#303e4a" stroke-width="1.5" stroke-dasharray="7 4"/>
+<text x="907" y="283" font-size="12">Quality floor Q = 0.20</text>
+<line x1="866" y1="304" x2="898" y2="304" stroke="#98a3ac" stroke-dasharray="3 4"/>
+<text x="907" y="308" font-size="12">Q = prevalence</text>
+<text x="865" y="365" font-size="16" font-weight="700">Fixed floor sensitivity</text>
+<text x="866" y="390" font-size="12">Q floor 0.15: 82 eligible</text>
+<rect x="866.000" y="398" width="119.273" height="13" fill="#167c69"/>
+<rect x="985.273" y="398" width="97.455" height="13" fill="#b67a0b"/>
+<rect x="1082.727" y="398" width="23.273" height="13" fill="#667d94"/>
+<text x="866" y="446" font-size="12">Q floor 0.20: 59 eligible</text>
+<rect x="866.000" y="454" width="85.818" height="13" fill="#167c69"/>
+<rect x="951.818" y="454" width="87.273" height="13" fill="#b67a0b"/>
+<rect x="1039.091" y="454" width="66.909" height="13" fill="#667d94"/>
+<text x="866" y="502" font-size="12">Q floor 0.25: 41 eligible</text>
+<rect x="866.000" y="510" width="59.636" height="13" fill="#167c69"/>
+<rect x="925.636" y="510" width="78.545" height="13" fill="#b67a0b"/>
+<rect x="1004.182" y="510" width="101.818" height="13" fill="#667d94"/>
+<text x="865" y="579" font-size="12">Sensitivity does not choose the floor.</text>
+<text x="84" y="686" font-size="12">Vertical bars: nominal 95% paired image-cluster bootstrap intervals for Q.</text>
+<text x="84" y="707" font-size="12">Colors also require paired Q − prevalence and IQR gates; plot coordinates alone do not determine eligibility.</text>
+<text x="84" y="728" font-size="12">Exploratory post-P4 amendment · no test results · eligibility evidence, not the final P6 vocabulary.</text>
+</g></svg>

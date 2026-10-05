@@ -1,7 +1,7 @@
 # Ingredient-selection workflow
 
 **Created:** 2026-09-24
-**Last updated:** 2026-10-04
+**Last updated:** 2026-10-05
 
 ## Purpose and scope
 
@@ -12,10 +12,12 @@ while the operational sequence and current status remain owned by the
 [ingredient-selection plan](../plans/recognizable_ingredient_selection.md).
 
 The implementation ran the v3 selector campaign and provides deterministic,
-blind-gated analysis. P3 numerical gates are stored in `profile_rule.json` and
+blind-gated original analysis plus separately versioned D6 inclusion review.
+P3 numerical gates are stored in `profile_rule.json` and
 owned methodologically by [Phase 3-D4](../project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule).
 The [pilot result](../experiment_results/phase3_d1_v3_pilot.md) owns observed
-outcomes; no final selected vocabulary exists yet.
+outcomes. [D6](../project_objective/model_comparison_methodology.md#phase-3-d6--held-out-quality-inclusion-policy)
+owns the adopted post-P4 inclusion policy; P6's final projection is separate.
 
 ## Maintained components
 
@@ -32,6 +34,9 @@ outcomes; no final selected vocabulary exists yet.
 | `src/ingredient_selection/artifacts.py` | Writes the manifest, cohort, tidy metrics, compressed validation scores, and bootstrap output atomically while rejecting duplicate audit keys. |
 | `src/ingredient_selection/analysis.py` | Validates provenance and audit cadence, derives controls and profile evidence, exposes only the 24-label pilot before a hashed rule exists, writes `validation_summary.json`, and classifies only the archived pilot on demand after the rule freeze. |
 | `src/ingredient_selection/reporting.py` | Revalidates a completed full profile against the rule, pilot decisions, class order, evidence hash and trajectory table; writes named provisional groups and deterministic SVG/PNG diagnostic figures. |
+| `src/ingredient_selection/inclusion.py` | Validates retained D4, campaign/snapshot/metadata/score provenance, hashes validation-only image groups, freezes D6 separately and produces a write-once revised report without importing the training stack. |
+| `src/ingredient_selection/inclusion_statistics.py` | Computes paired image-cluster bootstrap intervals for median-of-five AP and its excess over resampled prevalence; applies independent D6 evidence axes. |
+| `src/ingredient_selection/inclusion_reporting.py` | Renders a deterministic SVG from existing D6 decisions and intervals; plotting does not determine membership. |
 | `src/ingredient_selection/observability.py` | Uses only the standard library to validate the completed P4 inputs, sample a blind P5 validation-image pilot, verify/harden the packet, render two independently ordered review forms, and score completed human responses without choosing a vocabulary. |
 | `scripts/ingredient_selection/` | Provides thin campaign, analysis, pilot/full-report, and historical-reproduction commands. |
 | `scripts/launch_exps/ingredient_selection/train_selector.py` | Rerunnable launcher: descending short OOM probes or a full-epoch resource gate followed by the fresh campaign. |
@@ -142,6 +147,72 @@ or a bootstrap interval overlapping either decision boundary yields
 `uncertain`; fixed-0.5 F1 never affects classification. The bootstrap is a
 record-resampling interval for final AP, not a formal interval for a late
 median or AP difference, and not training-seed uncertainty.
+
+## D6 saved-score inclusion review
+
+Run the versioned amended analysis with the existing NumPy environment:
+
+```bash
+python scripts/ingredient_selection/review_inclusion.py \
+  analysis_outputs/ingredient_selection/phase3-d1-v3
+```
+
+The command reads only train/validation metadata, retained original D4/P4
+artifacts, the complete audit metric table and validation score archives at
+epochs 32/34/36/38/40. It does not construct a model, perform inference,
+read test metadata/images or change the base vocabulary. It verifies the
+completed v3 identity, class order, metadata/supports, training ZIP and all
+source members, original classifier/pilot hashes, full-analysis evidence,
+every score/target/record alignment and saved per-checkpoint AP parity.
+
+Validation image bytes are hashed to recover exact-image groups in the frozen
+record order. Each bootstrap draw samples G groups G times uniformly, carrying
+all their records with multiplicity. The same draw is used for every checkpoint
+AP and validation prevalence; Q is the median of the five separate APs, not
+an ensemble score. Weighted tied-rank AP avoids repeatedly sorting each
+resample and is tested against sklearn and explicit record replication.
+There are 1,000 valid draws per label with seed `42000 + class_index`, at most
+10,000 attempts, invalid-class draw accounting and nominal 95% percentile
+intervals. Missing/invalid evidence cannot promote a label.
+
+`classify_inclusion` requires Q and its lower bound at least 0.20, a strictly
+positive lower bound for paired Q minus prevalence, and IQR at most 0.03.
+All applicable reasons and per-axis states survive; a stable valid interval
+wholly below the quality floor is `below_quality_floor`, otherwise non-passing
+evidence is `uncertain`. Train support/gain/AP/gap and cuisine comparisons are
+retained diagnostics only. The fixed 0.15/0.20/0.25 panel is descriptive.
+
+Outputs live only in `inclusion_d6_v1/` under the campaign:
+
+- `inclusion_rule.json`: adopted policy, exact source inventory/snapshot hash,
+  input hashes, image-group hash, environment and Git base revision;
+- `source_snapshot.zip`: deterministic archive of the analysis modules and CLI;
+- `validation_image_groups.json`: validation-only ordered ID/image/hash inventory;
+- `inclusion_report.json`: full statistics, independent decisions/diagnostics,
+  D4 membership changes, fixed sensitivity and limitations;
+- `inclusion_evidence.csv`: compact per-label inspectable summary;
+- `inclusion_decision_map.svg`: derived AP/interval/prevalence figure.
+
+The rule is written before resampling. Re-execution accepts identical bytes
+only, preserves the original Git base revision after later commits, and rejects
+changed inputs, source or environment. Exclusive atomic file publication avoids
+partial artifacts; source/input/image hashes are rechecked before report
+publication. Neither original `profile_rule.json` nor `metrics.py` is changed.
+The report records eligibility, not a P6 metadata projection or new default.
+
+The original campaign did not hash every score archive or image at launch.
+D6 hashes their retained bytes now and checks score/metric parity; it cannot
+retroactively prove launch-time byte identity. Its post-outcome policy and
+nominal per-label intervals do not establish seed robustness, simultaneous
+coverage, unbiased selected-set performance or direct visibility.
+
+Verification on 2026-10-05: 26 new synthetic tests and all 100 repository tests
+pass; two full D6 executions reproduce all six artifacts byte-for-byte. The
+repository suite includes a pre-existing encoder check that reads test metadata
+only for vocabulary compatibility, not test predictions or predictive metrics.
+That check is separate from D6's train/validation-only selection I/O and did
+not inform the policy. Exact outcomes, artifact hashes and the verification
+boundary are recorded in the [reviewed D6 result](../experiment_results/phase3_d1_v3_d6_profile.md).
 
 ## Historical reproduction
 
@@ -282,11 +353,15 @@ discovery; this does not constitute a test failure of the new review module.
 - P3 inspected only the blind 24-label pilot; P4 subsequently applied its
   frozen rule to the other 141 outcomes without another selector training.
 - The single campaign does not estimate seed or configuration stability.
-- Bootstrap intervals describe validation-record uncertainty only.
+- D4 intervals describe final-checkpoint record uncertainty; D6 estimates
+  five-checkpoint median/paired-baseline uncertainty using exact-image groups.
+  Neither estimates training-seed uncertainty.
 - The cuisine prior is a mechanism diagnostic, not an image-model competitor.
 - Checkpoints and generated outputs remain outside durable documentation.
 
-P3 and P4 are complete. Mandatory P5 review is superseded, with its unannotated
+P3 and the original P4 application are retained. The revised P4 checkpoint is
+tracked in the [active plan](../plans/recognizable_ingredient_selection.md).
+Mandatory P5 review is superseded, with its unannotated
 packet and tools retained as an optional appendix. P6 owns the shared
 numerical-profile-based vocabulary freeze and can proceed without reviewers;
 no current report establishes direct visibility or a published final

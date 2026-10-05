@@ -1,8 +1,8 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-10-04
-**Status:** Active and binding design; 4B-D1 and Phase 3-D1–D3 fixed the selector and campaign, and Phase 3-D4 now fixes the numerical profile rule from only the blind pilot. The later benchmark also requires the independent Subphase 4A model portfolio.
+**Last updated:** 2026-10-05
+**Status:** Active and binding design through D6. D4 remains the immutable original pilot-frozen profile; D6 adopts the reviewed, outcome-informed inclusion policy without changing the training campaign or default vocabulary. P6 separately owns the final projection. The later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
 
@@ -20,8 +20,9 @@ It applies to Macro-section 3, Subphases 4A and 4B, and Macro-sections 6 and 7 o
 Macro-section 3 and its operational plan. Training implementation, hyperparameter
 optimization (HPO), and final result production remain owned by Macro-sections 6
 and 7. It prescribes the model-side `M_ref` protocol under 4B-D1 and its
-campaign-side protocol under Phase 3-D1. It does not prescribe the numerical
-ingredient promotion gates, Phase 6 HPO budget, or final selected vocabulary.
+campaign-side protocol under Phase 3-D1, and the original numerical profile
+gates under D4 and the revised inclusion policy under D6; the Phase 6 HPO
+budget and final selected vocabulary are not fixed here yet.
 
 ## Research questions
 
@@ -393,6 +394,102 @@ They are therefore outside the primary selection and comparison protocol.
 The former P5 dependency is retained in dated planning history as superseded;
 it is not a current completion gate for Macro-sections 3, 6 or 7.
 
+<a id="post-p4-inclusion-policy-review--proposed-amendment"></a>
+
+#### Phase 3-D6 — Held-out-quality inclusion policy
+
+**Reviewed:** 2026-10-04–2026-10-05. **Adopted:** 2026-10-05 by explicit user
+approval of the proposed policy, before its corrected resampling is executed.
+This outcome-informed amendment supersedes D4's inclusion vetoes, not its
+historical profile or original evidence. It does not itself export a vocabulary.
+The user requested a check of policy correctness against the project objective,
+explicitly allowing a small vocabulary if justified. The
+[reviewed audit](../experiment_results/phase3_d1_v3_inclusion_policy_audit.md)
+owns the measurements and sensitivity results. D4 and its original outputs
+remain reproducible without alteration.
+
+The selected task is **recipe ingredients with sufficiently strong,
+sustained held-out ranking under the fixed reference-selector protocol**.
+Image-derived dish/context information is valid for this task. Acquisition on
+train, held-out ranking, and possible signal mechanisms remain separate axes.
+The selection is not a census of every label showing any learning, a direct
+visibility test, or evidence that excluded labels cannot be learned by another
+model. There is no target cardinality.
+
+| Evidence | Adopted inclusion role | Reason |
+| --- | --- | --- |
+| Complete, finite, class-aligned evidence with both classes represented and valid resampling | Required | An uninterpretable estimate cannot support inclusion. |
+| Late validation AP | Retain `0.20` as the inherited operational quality floor; require the lower bound for that **same statistic** to reach it. | This defines a sufficiently strong ranking subset. It is not a literature-standard learnability boundary or 20% ingredient-prediction accuracy. Values below it may still represent real learning. |
+| Advantage over a constant image-independent score | Require a positive lower bound for paired `late_validation_AP - validation_prevalence`. | An absolute AP level alone can reward common labels. Recompute AP and prevalence on the same resample; a point prevalence subtracted from an unrelated AP interval is not that interval. |
+| Late validation AP IQR | Retain the existing `0.03` dispersion screen; flag failures as uncertain. | It limits within-run oscillation at the fixed budget, not variation between seeds. Keep nearby-window sensitivity visible without choosing a new window per label. |
+| Train AP gain, absolute train AP and train–validation gap | Report as optimization/overfit diagnostics, without independent membership vetoes. | Stronger fitting of train examples must not disqualify an otherwise equally useful held-out predictor. Report weak train evidence explicitly rather than inventing an absence-of-learning claim. |
+| Cuisine-prior AP and its `0.10` advantage screen | Retain as diagnostics of the comparison with privileged metadata, without a membership veto. | Ground-truth cuisine is unavailable to the image-only model. Failing the margin neither disproves image-based prediction nor identifies the model's causal mechanism. |
+| Additional final-train support cutoff of 500 | Report support continuously and retain the low-support flag; do not repeat it as a second hard vocabulary filter. | The base vocabulary already passed the Data support policy. Sampling precision and validity should control evidence quality; the final-filter support cliff is not a biological or statistical boundary. No replacement cutoff is chosen from observed counts. |
+
+For the primary statistic, retain D3's five late checkpoints
+`{32,34,36,38,40}` and define `Q_l` as the median of their separate validation
+AP values. Do not average their logits into an undeclared ensemble. Estimate
+intervals by resampling the **same validation units across all five
+checkpoints**, recomputing each AP, their median, and the constant-score AP
+(the resampled positive prevalence). Use the original 1,000 valid draws,
+95% percentile convention, deterministic per-label seed, and invalid-draw
+reporting. Where exact-image groups contain multiple validation records, use
+those groups as the resampling unit and carry all their records together.
+No new model inference or training is needed to use the saved scores; validation
+image bytes may need to be hashed to recover exact-image groups.
+
+The rule promotes a label only when all required evidence and the
+validation-dispersion screen pass, `Q_l >= 0.20`, `lower_95(Q_l) >= 0.20`, and
+`lower_95(Q_l - prevalence_l) > 0`. Intervals crossing either boundary remain
+uncertain; an upper bound below the quality floor means *below the declared
+quality floor*, not *unlearnable*. Retain all applicable reasons per axis,
+even when another gate has already failed. These are nominal per-label
+screening intervals, not simultaneous guarantees, seed uncertainty or unbiased
+post-selection performance estimates.
+
+The `0.20` floor is adopted because it preserves the existing absolute
+quality requirement while removing conceptually unrelated vetoes. Its practical
+adequacy is a project convention, not established by the pilot or cited papers.
+Report the fixed exploratory sensitivity panel at `0.15`, `0.20`, and `0.25`
+without picking the value that yields a preferred count, ingredient list, or
+later model result. A prevalence-adjusted AP can accompany the report, but
+replacing the floor by a new normalized cutoff would introduce another
+convention and does not automatically establish usefulness.
+
+All 165 label outcomes have already been exposed. Consequently this is an
+**outcome-informed exploratory amendment**, not a new blind pilot. Before P6,
+implement statistic-consistent resampling and multidimensional reasons,
+report membership/sensitivity changes against D4, and freeze the resulting
+rule/report separately under `inclusion_d6_v1/`. The earlier legacy-interval
+counterfactual counts are not that artifact. The original training campaign,
+full-vocabulary benchmark, test isolation, common-task comparison and optional
+appendix boundaries stay applicable. No additional training or manual review
+is required by this decision.
+
+The executable convention uses 1,000 valid draws with at most 10,000 attempts,
+NumPy PCG64 seed `42000 + original_class_index`, equal-probability draws of
+as many exact-image groups as observed groups, and all records of every drawn
+group with their multiplicity. Group order is first occurrence in the frozen
+validation record order. Percentile bounds use linear interpolation at 2.5%
+and 97.5%. Scores preserve the original float64 sigmoid/tie semantics. A draw
+without positives or negatives is invalid and reported; insufficient valid
+draws or invalid evidence cannot promote a label. Inclusion is conjunctive,
+with independent reasons retained for every axis. Valid, stable evidence with
+an upper quality bound strictly below the floor is `below_quality_floor`;
+otherwise a non-passing or conflicting profile is `uncertain`. Equality at
+the quality lower bound passes; equality at the excess lower bound does not.
+These conventions do not introduce new tuned parameters or a count target.
+
+The adopted executable rule is
+[`inclusion_d6_v1/inclusion_rule.json`](../../analysis_outputs/ingredient_selection/phase3-d1-v3/inclusion_d6_v1/inclusion_rule.json),
+policy ID `phase3-d6-held-out-quality-v1`, canonical artifact hash
+`851c52cc485279895cf369368fe62076ad3be7318a80e9d3109a20b186dbbcdc`.
+It binds the retained campaign/D4 identity, exact analysis sources and snapshot,
+input hashes, validation image groups and environment. The
+[reviewed D6 result](../experiment_results/phase3_d1_v3_d6_profile.md) owns the
+resulting counts, membership changes, sensitivity and verification limitations.
+P6 remains responsible for publishing the named projection.
+
 ### 3. Tune each model category once on the full common task
 
 For every approved model category m, Macro-section 6 performs one bounded HPO
@@ -518,7 +615,7 @@ vocabulary decisions as uncertain.
 | --- | --- | --- |
 | Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Done: established pair and custom P2-S adopted in the [portfolio](experimental_model_portfolio.md); the [completed 4A plan](../plans/experimental_model_research.md) hands implementation gates to Phase 5. Q1–Q4 are unchanged. |
 | Subphase 4B | Choose, verify, and freeze M_ref. | Done: 4B-D1 freezes the EfficientNetV2-S model-side selector and [`reference_selector_research.md`](../plans/reference_selector_research.md) records the completed evidence and handoff. |
-| Macro-section 3 | Implement the frozen 4B-D1/Phase 3-D1 workflow and produce versioned V_selected evidence. | P1 and P2 are done; P3 runs the sealed campaign and may inspect only the 24-label pilot under [`recognizable_ingredient_selection.md`](../plans/recognizable_ingredient_selection.md). |
+| Macro-section 3 | Implement the frozen selector workflow and produce versioned V_selected evidence. | P1–P4 are complete, including the versioned D6 policy and matching uncertainty. Original D4 evidence remains retained. P6's named projection is next; the [active plan](../plans/recognizable_ingredient_selection.md) owns execution. |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
 

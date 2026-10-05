@@ -1,12 +1,19 @@
 # Phase 3-D1 v3 full numerical profile
 
 **Created:** 2026-09-28
-**Last updated:** 2026-10-04
+**Last updated:** 2026-10-05
 **Status:** Provisional, full train/validation profile; not a selected vocabulary or test result.
 
 ## Purpose and boundary
 
 Phase 3 P4 applies the [pilot-frozen D4 numerical rule](../project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule) once to all 165 `v5` labels from the *same* completed `phase3-d1-v3` selector campaign. This report reviews that application. It does not revise a gate, train another selector, assess human observability, select a final ingredient tier, or use the test split. The [24-label pilot record](phase3_d1_v3_pilot.md) remains the separate pre-P4 evidence that fixed the rule.
+
+**Review update, 2026-10-05:** the original execution and numbers below remain
+unchanged. A separate [inclusion-policy audit](phase3_d1_v3_inclusion_policy_audit.md)
+motivated the adopted D6 inclusion amendment. The separate
+[D6 result](phase3_d1_v3_d6_profile.md) reports the revised policy with matching
+uncertainty, while P6's final projection remains pending. Original D4 numbers,
+groups and provenance below are unchanged.
 
 ## Inputs and reproducibility
 
@@ -41,4 +48,4 @@ The reviewed figures show the two decisive held-out dimensions, support dependen
 
 The labels are conditional on one pretrained selector, one split, one training configuration and seed, the fixed 40-epoch budget and D4's pilot-chosen absolute screens. The epoch-40 validation bootstrap is record-resampling uncertainty, not a formal interval for late-window median AP, model-minus-prior AP, training-seed variation or configuration stability. The cuisine prior uses metadata unavailable to the image-only model and is a mechanism diagnostic, not a fair deployable competitor. Neither image advantage nor AP establishes literal ingredient visibility. No selected-vocabulary retraining or matched random-reduction control was run; those belong to Macro-section 6 after a vocabulary is frozen.
 
-P4 closes the numerical learnability study, not Macro-section 3. [Phase 3-D5](../project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix), adopted on 2026-10-04, supersedes the former mandatory P5 semantic/observability gate. The prepared review is retained as an optional interpretation appendix and cannot affect membership or primary rankings. P6 now defines the shared numerical-profile-based projection without changing the default `v5` vocabulary or consulting test outcomes. This changes the downstream scope only; all reported P4 values, groups and provenance remain unchanged.
+The original P4 application is complete. [Phase 3-D5](../project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix), adopted on 2026-10-04, supersedes the former mandatory P5 semantic/observability gate. The prepared review remains an optional interpretation appendix. The subsequent [inclusion-policy audit](phase3_d1_v3_inclusion_policy_audit.md) led to the separately versioned [D6 policy and numerical review](phase3_d1_v3_d6_profile.md), now the P6 handoff. All reported original P4 values, groups and provenance remain unchanged; test outcomes and manual review cannot inform the projection.

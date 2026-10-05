@@ -1,7 +1,7 @@
 # Recognizable ingredient selection plan
 
 **Created:** 2026-08-10
-**Last updated:** 2026-10-04
+**Last updated:** 2026-10-05
 
 This plan is the operational source of truth for Macro-section 3, **Ingredient selection**, in [`general_plan.md`](../general_plan.md). It preserves the November 2024 ResNet selection as a historical baseline and replaces its exploratory workflow with a reproducible, research-informed decision-profile study over the frozen FoodOn-first `v5` vocabulary. Macro-section 3 owns the resulting selected vocabulary and now executes against the frozen Subphase 4B reference selector. The independent Subphase 4A experiment-model shortlist is not a Phase 3 gate.
 
@@ -19,8 +19,8 @@ decision.
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** P5's mandatory manual review is superseded under Phase 3-D5; its prepared material is retained as an optional interpretation appendix.
-**Next action:** Execute P6: specify and publish the deterministic mapping from the unchanged numerical profile to one shared versioned vocabulary. Manual review is not a dependency; the 25 candidates are not yet a frozen projection or a direct-visibility claim.
+**Current task:** P4 complete, including the adopted D6 inclusion policy and corrected paired uncertainty. The revised report is frozen separately; original D4 evidence remains unchanged and mandatory P5 remains superseded.
+**Next action:** P6: export the shared versioned projection from the [D6 eligibility report](../experiment_results/phase3_d1_v3_d6_profile.md), retaining original indices, hashes and independent reasons. Do not retrain, choose a desired label count, restore manual review or replace the full-vocabulary default.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -28,16 +28,16 @@ decision.
 | P1 | Freeze the new selection question and experimental contract | **Done** | [Phase 3-D1](../project_objective/model_comparison_methodology.md#phase-3-d1--frozen-selector-campaign-and-measurement-protocol) fixes one seed-42 AdamW/warm-up/cosine configuration, 20 epochs, deterministic two-epoch audits, AP windows, fixed-0.5 F1 diagnostics, bootstrap uncertainty, low-cost controls, a sealed support-stratified pilot cohort, and the output boundary. No new selector outcome informed the decision. |
 | P2 | Implement the selector integration, deterministic historical reproduction, and reusable analysis | **Done** | Added the exact EfficientNetV2-S/full-frame adapter, train/validation-only data boundary, weighted BCE and AdamW schedule, fixed-state AP/F1 audits, bootstrap and controls, hashed blind gate, manifests, thin CLIs, and read-only historical regression. All 64 repository tests pass; the real batch-8 FP32 gate passed at 3,632.20 MiB allocated and 5,362.00 MiB reserved. See the [implementation contract](../implementation_details/ingredient_selection.md). |
 | P3 | Run and validate a bounded `v5` pilot | **Done** | The full 40-epoch v3 campaign completed at 14:36 UTC on 2026-09-28. Blind analysis validated all 21 audit points and exposed only 24 labels; all 24 final AP bootstraps are valid. [D4](../project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule) froze simple absolute gates plus a bootstrap overlap band, bound to the campaign, cohort, pilot evidence and classifier source hashes. The [reviewed result](../experiment_results/phase3_d1_v3_pilot.md) reports 5 numeric candidates, 5 optimization-only, 1 contextual and 13 uncertain, without claiming a selected vocabulary. |
-| P4 | Apply the frozen profile to the full `v5` campaign evidence | **Done** | Separately authorized on 2026-09-28. The same v3 run yielded 165 validated rows with unchanged D4 gates and all 24 pilot decisions reproduced: 25 numerical candidates, 40 optimization-only, 13 context-predictable, 4 without sustained optimization and 83 uncertain. The [reviewed P4 result](../experiment_results/phase3_d1_v3_full_profile.md), machine-readable named groups and deterministic figures retain provenance and the single-run limit; no test or reduced-vocabulary training was used. |
+| P4 | Apply the numerical profile and verify its inclusion interpretation | **Done** | Original D4 application retained. The user-approved [D6 result](../experiment_results/phase3_d1_v3_d6_profile.md) now has statistic-consistent paired image-cluster uncertainty, independent reasons and fixed sensitivity: 59 eligible, 60 uncertain, 46 below the operational floor. Two full runs reproduce all artifacts; 100 repository tests pass with the documented generic metadata-test caveat. |
 | P5 | Former mandatory semantic and visual-observability review | **Superseded** | [D5](../project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix) moves both manual reviews to an [optional appendix](../project_objective/ingredient_observability_protocol.md). The unannotated 64-pair packet and source are retained; no reviewer results are claimed. |
-| P6 | Freeze the shared numerical-profile-based vocabulary and exploratory groups | **Pending** | Define a deterministic outcome-to-membership rule, publish one shared versioned `V_selected`, and retain excluded/uncertain groups with reasons. No manual review gate remains; the final projection has not been published. |
+| P6 | Freeze the shared numerical-profile-based vocabulary and exploratory groups | **Pending** | Publish one shared versioned `V_selected` from the frozen D6 eligibility decisions, with original class order/indices, rule/report hashes and excluded/uncertain reasons. No manual review or further threshold tuning is required. |
 | P7 | Integrate the workflow and retire superseded scripts safely | **Deferred** | Connect training and analysis to canonical APIs, verify parity, document current behavior, then clean legacy notebooks and launchers only after retention gates pass. |
 
 ## Objective
 
 Determine which ingredients in the standard `ingredients_target_v5_metadata.json` vocabulary provide a reproducible learning target for image-based models. Using the frozen 4B-D1 `M_ref`, identify optimization and validation signals and produce a shared numerical-profile-based projection without creating a second implicit default vocabulary. Manual relevance and observability judgments are optional interpretation outside selection under D5.
 
-The result is not a claim that every retained ingredient is literally visible. A label may be directly visible, inferable from dish context, or learnable mainly through dataset priors. Those cases must remain distinguishable in the evidence and final tiers.
+The result is not a claim that every retained ingredient is literally visible. A label may be directly visible, inferable from dish context, or learnable mainly through dataset priors. Relevant diagnostics remain visible, but numerical metrics alone do not identify those causal mechanisms or establish visual tiers.
 
 ## Scope
 
@@ -99,6 +99,12 @@ every conclusion is conditional on the frozen `v5` split, declared `M_ref`
 protocol, training budget, and annotation regime. The profile replaces the
 legacy maximum-train-F1 rule; it does not yet freeze a final ingredient tier.
 
+**Current inclusion policy:** [D6](../project_objective/model_comparison_methodology.md#phase-3-d6--held-out-quality-inclusion-policy)
+supersedes the original D4 membership vetoes after the reviewed objective-alignment
+audit. Held-out quality, paired excess over prevalence and validation dispersion
+govern eligibility; train acquisition/support/gap and cuisine remain independent
+diagnostics. The original framework and dated D4 checkpoints below remain history.
+
 ### Evidence dimensions
 
 The final inclusion decision must not collapse these dimensions into one unexplained score:
@@ -113,17 +119,18 @@ The final inclusion decision must not collapse these dimensions into one unexpla
 ### Operational profile outputs
 
 The analysis must assign evidence and a reasoned provisional outcome rather
-than a percentile rank or a forced binary class. Under D5, P6 maps these
-unchanged outcomes to the shared projection without manual relevance or
-observability screening. Optional appendix judgments do not establish a causal
-signal mechanism or literal visibility from predictive metrics.
+than a percentile rank or a forced binary class. The table below preserves
+the original D4 profile. The adopted D6 review uses separate inclusion and
+diagnostic axes; these names alone must not determine final membership.
+Optional appendix judgments do not establish a causal signal mechanism or
+literal visibility from predictive metrics.
 
 | Provisional outcome | Minimum evidence pattern | Required action |
 | --- | --- | --- |
-| `no_sustained_optimization` | No stable improvement in train AP under the declared budget. | Inspect support and annotations; do not call the label intrinsically impossible. |
+| `no_sustained_optimization` | Train gain or absolute train AP below D4's gate. | The actual four cases gained train AP but failed its absolute floor; do not interpret the identifier as no learning or intrinsic impossibility. |
 | `optimization_only` | Sustained train AP but weak or unstable validation AP. | Investigate overfit, split, support, regularisation, and label ambiguity. |
 | `generalizable_candidate` | Sustained train and validation AP, sufficient support, image-model advantage, and no contradiction from the declared temporal or configuration checks. | Carry numerical evidence to P6's projection rule; report that it is neither seed-validated nor certified directly visible. |
-| `context_predictable` | Stable validation AP but a strong contextual/non-visual baseline or contextual evidence. | Keep distinct from direct visual-recognition claims; decide its research use explicitly. |
+| `context_predictable` | Held-out AP passes earlier D4 screens but the cuisine-prior margin is below its gate. | A comparison with privileged metadata does not identify the model's mechanism; D6 keeps this diagnostic out of primary inclusion. |
 | `uncertain` | Low support, unstable late-window behaviour, configuration sensitivity, conflicting controls, or incomplete evidence. | Gather evidence, report uncertainty, or defer the decision. |
 
 The profile labels are evidence summaries, not permanent metadata fields. A
@@ -291,7 +298,7 @@ Plots must label the split, statistic, aggregation window, declared random seed,
 This plan is complete only when:
 
 - the historical 40-label result is reproduced by maintained read-only code;
-- the `v5` selection protocol, controls, declared seed, numerical profile gates, and decision rule are frozen before the full analysis;
+- the original `v5` protocol and D4 freeze are preserved; any post-P4 inclusion amendment is explicitly versioned as outcome-informed, with its rationale and sensitivity recorded before downstream vocabulary experiments;
 - the full campaign produces deterministic reports with complete provenance;
 - every provisional profile outcome and final projection has explicit numerical evidence across optimization, generalization, support, temporal checks and declared controls, with unavailable seed/configuration sensitivity and the single-run limitation explicit; manual annotation is not required;
 - headline and exploratory tiers are versioned named projections, not a replacement default vocabulary;
@@ -408,6 +415,9 @@ must remain outside Git and must not alter the recipe targets.
 
 ## P5 scope amendment and P6 handoff — 2026-10-04
 
+**Dated handoff:** the later inclusion-policy review below reopens P4 before
+this P6 export. The removal of manual review remains applicable.
+
 The user moved both manual semantic-relevance and visual-observability reviews
 outside the main study. [D5](../project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix)
 owns the decision: selection assesses the model's learning on the existing
@@ -429,6 +439,55 @@ P6 is **Pending** and no longer waits for reviewers. Its bounded tasks are:
 
 This amendment does not publish `V_selected` or run P6. No appendix annotation
 is required for plan completion, and no literal-visibility claim is introduced.
+
+## P4 inclusion-policy review — 2026-10-05
+
+The user requested policy correctness against the project objective, explicitly
+without requiring more than 25 ingredients. The completed
+[read-only audit](../experiment_results/phase3_d1_v3_inclusion_policy_audit.md)
+reproduces all D4 outcomes, reports independent failures and shows that the
+cuisine gate, train gap and second support cutoff answer additional questions
+beyond held-out recipe prediction. The source-bound original classifier and
+artifacts are unchanged. Counterfactual counts of 55/58/60 and the 0.15/0.20/0.25
+floor sensitivity are diagnostics, not selected-vocabulary candidates chosen
+by size.
+
+P4 is reopened with the following bounded remaining work:
+
+1. Record the adopted version of the [concrete proposal](../project_objective/model_comparison_methodology.md#post-p4-inclusion-policy-review--proposed-amendment), including the operational quality definition. Preserve D4 and explicitly identify the amendment as post-outcome.
+2. Validate the validation-only resampling units, then compute uncertainty for the fixed five-checkpoint median and paired excess over the constant baseline from saved scores. Never treat an epoch-40-only interval as an interval for that median.
+3. Report all independent evidence axes, changed membership and the fixed floor-sensitivity panel without choosing a desired count, ingredient list or favourable later result.
+4. Freeze that reviewed rule/report and hand the deterministic projection to P6. Keep train acquisition and contextual diagnostics, the original full-vocabulary benchmark, and the single-run limitation visible.
+
+This checkpoint completes the requested conceptual/quantitative review, not
+the revised numerical analysis or P6. No training, test access, manual review,
+artifact rewrite or commit was performed for it.
+
+## D6 adoption and reopened P4 completion — 2026-10-05
+
+The user approved the proposed policy without a retained-count target.
+[D6](../project_objective/model_comparison_methodology.md#phase-3-d6--held-out-quality-inclusion-policy)
+records the binding operational quality definition and its post-outcome status.
+The maintained `review_inclusion.py` command validates the original artifacts,
+recovers 5,847 validation image groups from 5,996 records, and computes matching
+five-checkpoint-median and paired prevalence-excess intervals without training
+or inference. D4's rule, classifier source and outputs remain unchanged.
+
+The [reviewed result](../experiment_results/phase3_d1_v3_d6_profile.md) records
+59 eligible, 60 uncertain and 46 below-floor labels; all original 25 candidates
+remain eligible. The fixed sensitivity panel gives 82/59/41 eligible at
+0.15/0.20/0.25. Two complete executions reproduce all six D6 artifacts exactly.
+There are 26 new synthetic tests and 100 passing repository tests. The result
+record explicitly distinguishes D6's test-isolated I/O from the existing
+generic encoder test's metadata-only test-split compatibility check; no test
+predictions or predictive metrics informed the policy or membership.
+
+P4 and Work packages 3.2–3.3 are **Done**. P6 is **Pending**, with no metadata
+projection exported yet. Its active mapping is D6 `included` to shared
+eligibility; keep the 60 uncertain and 46 below-floor labels out of that
+primary projection, preserve their reasons, and retain all 165 default outputs
+for the full-task comparison. P7 integration and any cleanup remain deferred.
+No extra selector run, manual review, test evaluation or commit was performed.
 
 ## Decision log
 
@@ -456,6 +515,8 @@ is required for plan completion, and no literal-visibility claim is introduced.
 | 2026-09-28 | Completed P4 under separate authorization without changing D4 | Applied the frozen rule to the same 165-label run, confirmed exact pilot parity and deterministic full reports/figures, and retained 83 uncertain outcomes rather than forcing a target count. The numerical candidates require P5 relevance/observability evidence before P6 can freeze named tiers. |
 | 2026-09-29 | Began P5 with a blind two-reviewer pilot | Adopted a separate semantic and visual rubric, generated a source-hashed 64-pair validation-only packet, and implemented deterministic preparation and agreement scoring. Human review and the main panel remain pending. |
 | 2026-10-04 | Superseded mandatory P5 and retained an optional interpretation appendix | By user decision, manual relevance and observability judgments are outside the model-learnability selection objective and may introduce subjective membership bias. D5 removes reviewer dependencies, preserves D4/P4 evidence, and releases P6 numerical projection work without claiming a completed human review. |
+| 2026-10-05 | Reopened P4 inclusion interpretation after the user's objective-alignment review | The audit reproduces D4 but identifies privileged cuisine, train-gap, support and interval-statistic concerns. A concrete held-out-quality proposal and bounded sensitivity are documented; amendment adoption, matching uncertainty and P6 freeze remain pending. No retained-count target is introduced. |
+| 2026-10-05 | Adopted D6 and completed the reopened P4 review | User-approved held-out-quality policy, paired image-cluster intervals and independent diagnostics produce a separately frozen, twice-reproduced report. Original D4 evidence is retained, no cardinality target is used, and P6 export is next. |
 
 ## Related documentation
 

@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-10-04
+**Last updated:** 2026-10-05
 **Overall status:** In progress  
 **Current macro-phase:** Data and Ingredient selection
-**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and prepare Ingredient selection P6's shared numerical-profile-based vocabulary freeze. Former P5 manual review is an optional interpretation appendix and no longer blocks selection.
+**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and publish the shared ingredient projection in P6. The D6 inclusion policy and corrected paired uncertainty are complete; original D4 evidence is retained. Former P5 manual review stays an optional appendix.
 
 ## Purpose
 
@@ -33,7 +33,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
-| 3 | Ingredient selection | **In progress** | P4 completed the 165-label numerical profile; Work package 3.3 is done. Mandatory P5/3.4 is superseded; P6's shared numerical projection is next without reviewer dependencies. |
+| 3 | Ingredient selection | **In progress** | Work packages 3.2–3.3 are complete under the adopted D6 policy and corrected uncertainty, with original D4 evidence retained. Mandatory P5/3.4 remains superseded; the shared projection is next. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Deferred** | All three 4A research handoffs are available; prepare their implementation plan after the remaining DataModule readiness checks. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
@@ -153,10 +153,10 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 | Work package | Status | Next action |
 | --- | --- | --- |
 | 3.1 Preliminary evidence and historical reconstruction | **Done** | Retain the exact max-Q3 intersection as a read-only baseline and regression fixture. |
-| 3.2 Selection criteria and experimental protocol | **Done** | 4B-D1 and Phase 3-D1 with the D2/D3 amendments freeze the model, single seed-42 AdamW campaign, 40-epoch schedule, deterministic audits, AP/F1 policy, controls, uncertainty, sealed pilot, and provenance/output boundary. Numerical profile gates remain a P3 pilot output. |
-| 3.3 Reproducible `v5` learnability study | **Done** | The same completed 40-epoch v3 campaign supplied P3's 24-label D4 freeze and P4's validated 165-label [numerical profile](experiment_results/phase3_d1_v3_full_profile.md). Its 25 candidates are provisional, not a final selected vocabulary. |
+| 3.2 Selection criteria and experimental protocol | **Done** | [D6](project_objective/model_comparison_methodology.md#phase-3-d6--held-out-quality-inclusion-policy) adopts the reviewed held-out-quality inclusion policy without a count target, preserving the selector/campaign and original D4 decision. |
+| 3.3 Reproducible `v5` learnability study | **Done** | The [D6 result](experiment_results/phase3_d1_v3_d6_profile.md) has matching paired image-cluster uncertainty, independent reasons and fixed sensitivity. Two executions agree exactly; original D4/P4 evidence remains unchanged. |
 | 3.4 Former mandatory relevance and visual-observability validation | **Superseded** | Retain the rubric, source and unannotated packet as an [optional interpretation appendix](project_objective/ingredient_observability_protocol.md). No human review is required for vocabulary selection or comparison. |
-| 3.5 Final numerical-profile-based vocabulary and integration | **Pending** | Define and freeze one shared versioned projection from D4/P4 numerical evidence, retain excluded/uncertain groups, and integrate it. Legacy cleanup remains subject to parity and retention gates. |
+| 3.5 Final numerical-profile-based vocabulary and integration | **Pending** | After the inclusion-policy review, freeze one shared versioned projection with per-axis reasons and uncertainty, then integrate it. Legacy cleanup remains subject to parity and retention gates. |
 
 ### Completed evidence
 
@@ -177,6 +177,7 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 - [x] Amended execution before per-label inspection under Phase 3-D2/D3: main-workspace launcher and source snapshots, effective batch 128, and a 40-epoch horizon; the extended 72-test suite verifies the current batch, schedule, final windows and analysis contract.
 - [x] Completed the fresh 40-epoch v3 selector campaign, exposed only the sealed 24-label pilot, and froze [Phase 3-D4](project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule) with absolute AP/support/stability/advantage gates and a conservative bootstrap overlap band. The [reviewed pilot record](experiment_results/phase3_d1_v3_pilot.md) is provisional, not a selected vocabulary.
 - [x] Applied the unchanged D4 rule to all 165 labels in P4, confirmed all 24 pilot decisions exactly, and produced deterministic named provisional groups and scientific figures. The [reviewed full-profile record](experiment_results/phase3_d1_v3_full_profile.md) does not certify direct visibility or a final vocabulary.
+- [x] Adopted D6 after the objective-alignment review and completed corrected saved-score analysis: 59 eligible, 60 uncertain and 46 below the operational quality floor, with paired image-cluster intervals, deterministic artifacts and an explicit outcome-informed boundary. The [reviewed result](experiment_results/phase3_d1_v3_d6_profile.md) records verification and limitations.
 
 ### Active after the Subphase 4B protocol freeze and handoff
 
@@ -186,16 +187,17 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 - [x] Add Phase 3 support/prevalence and non-visual controls, and preserve the matching fields needed for Macro-section 6's later matched-size vocabulary controls. No reduced-vocabulary or random-control training claim is made in P4.
 - [x] Implement deterministic historical reproduction and `v5` analysis in a dedicated source package, with plot-ready evidence generated from validated manifests rather than notebook state.
 - [x] Superseded mandatory manual relevance and observability review under D5; retain the prepared material as an optional future-results appendix without selection effects.
-- [ ] Specify a deterministic projection rule from the unchanged numerical profile, including support and uncertainty handling, without subjective membership judgments.
+- [x] Audited original inclusion gates against recipe-ingredient prediction, reproduced D4 outcomes and recorded bounded counterfactual sensitivity without a retained-count target.
+- [x] Recorded D6 and matching validation uncertainty separately, retaining D4 as the original pilot-frozen result.
 - [ ] Freeze named headline and exploratory projections of the shared `v5` vocabulary without using test outcomes.
 
 ### Completion gate
 
-The historical rule is reproduced by maintained read-only code; the `v5` campaign and analysis are deterministic with complete provenance; the final shared projection is versioned and justified by the unchanged numerical profile, with support, uncertainty and single-run limitations explicit; integration and retention gates pass; and no test outcome or manual review influences selection. An annotation report is not required.
+The historical rule is reproduced by maintained read-only code; the `v5` campaign and analysis are deterministic with complete provenance; the final shared projection is justified by an explicit versioned inclusion rule and matching uncertainty, with original D4 evidence and the post-outcome amendment boundary preserved; integration and retention gates pass; and no test outcome or manual review influences selection. Support and single-run limitations remain explicit. An annotation report is not required.
 
 ### Next action
 
-Maintain P3's frozen [numerical rule](project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule), [pilot result](experiment_results/phase3_d1_v3_pilot.md) and [P4 full profile](experiment_results/phase3_d1_v3_full_profile.md). P6 is next under the [active plan](plans/recognizable_ingredient_selection.md): specify and publish the numerical-profile-to-vocabulary mapping without manual review. The optional appendix does not block selection, training or comparisons. Continue the remaining Data 2.4 runtime smoke checks independently; retained interrupted runs and the documented gate-device limitation remain unchanged.
+Execute P6 under the [active plan](plans/recognizable_ingredient_selection.md): export the shared projection from the frozen [D6 eligibility evidence](experiment_results/phase3_d1_v3_d6_profile.md), preserving original indices, rule/report hashes and independent exclusion reasons. Keep the full 165-label task as the default and comparison anchor. Manual review remains optional. Continue Data 2.4 runtime smoke checks independently; retained interrupted runs and the documented gate-device limitation remain unchanged.
 
 ## 4. Model research
 
@@ -539,6 +541,8 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-09-28 | Ingredient-selection P4 full profile | After separate authorization, applied the unchanged D4 gates to all 165 labels from the same v3 campaign; verified pilot parity, deterministic full report and figures, and no test access. The 25 numerical candidates remain subject to relevance and observability review. | P4 and Work package 3.3 **Done**; 3.4/P5 **Deferred** | [P4 result](experiment_results/phase3_d1_v3_full_profile.md), [feature-plan checkpoint](plans/recognizable_ingredient_selection.md#p4-full-profile-completion--2026-09-28) |
 | 2026-09-29 | Ingredient-selection P5 pilot preparation | Adopted the separate semantic/visual rubric, generated a deterministic 64-pair blind validation packet for two human reviewers, and implemented agreement scoring. No reviewer result or selected vocabulary exists yet. | Work package 3.4/P5 **In progress** | [P5 protocol](project_objective/ingredient_observability_protocol.md), [feature-plan checkpoint](plans/recognizable_ingredient_selection.md#p5-preparation-and-pilot-packet--2026-09-29) |
 | 2026-10-04 | Ingredient-selection scope amendment | Adopted D5: manual relevance and visual-observability reviews are outside model-learnability selection and retained as an optional future-results appendix. D4 gates and P4 evidence are unchanged; no human annotation or final vocabulary is claimed. | Work package 3.4/P5 **Superseded**; 3.5/P6 **Pending** without reviewer dependencies | [D5 decision](project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix), [optional appendix](project_objective/ingredient_observability_protocol.md), [active plan](plans/recognizable_ingredient_selection.md) |
+| 2026-10-05 | Ingredient-inclusion policy review | Reviewed the user's objective-alignment concern without assuming the vocabulary must grow. Retained original D4/P4 results and documented gate effects, uncertainty mismatch, sensitivity and a concrete proposed amendment; no replacement vocabulary is frozen. | Work packages 3.2–3.3 **In progress** (reopened); 3.5 **Pending** | [Reviewed audit](experiment_results/phase3_d1_v3_inclusion_policy_audit.md), [methodology proposal](project_objective/model_comparison_methodology.md#post-p4-inclusion-policy-review--proposed-amendment), [active plan](plans/recognizable_ingredient_selection.md) |
+| 2026-10-05 | Ingredient-inclusion amendment and corrected analysis | Adopted user-approved D6 and completed the separate saved-score profile with paired image-cluster uncertainty, independent diagnostics, fixed sensitivity and exact rerun verification. Original D4 evidence and full-vocabulary default remain unchanged; no final projection is exported. | Work packages 3.2–3.3 **Done**; 3.5 **Pending** | [D6 decision](project_objective/model_comparison_methodology.md#phase-3-d6--held-out-quality-inclusion-policy), [reviewed result](experiment_results/phase3_d1_v3_d6_profile.md), [active plan](plans/recognizable_ingredient_selection.md) |
 
 ## Tracker maintenance rules
 
