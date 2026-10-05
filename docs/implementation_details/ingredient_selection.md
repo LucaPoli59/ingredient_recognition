@@ -37,6 +37,8 @@ owns the adopted post-P4 inclusion policy; P6's final projection is separate.
 | `src/ingredient_selection/inclusion.py` | Validates retained D4, campaign/snapshot/metadata/score provenance, hashes validation-only image groups, freezes D6 separately and produces a write-once revised report without importing the training stack. |
 | `src/ingredient_selection/inclusion_statistics.py` | Computes paired image-cluster bootstrap intervals for median-of-five AP and its excess over resampled prevalence; applies independent D6 evidence axes. |
 | `src/ingredient_selection/inclusion_reporting.py` | Renders a deterministic SVG from existing D6 decisions and intervals; plotting does not determine membership. |
+| `src/ingredient_selection/projection.py` | Publishes the approved D6 membership as a write-once, versioned vocabulary definition without loading data, predictions or the training stack. |
+| `src/ingredient_selection/resources/` | Stores the portable shared P6 definition with ordered names, original indices, excluded groups/reasons and source/evidence hashes. |
 | `src/ingredient_selection/observability.py` | Uses only the standard library to validate the completed P4 inputs, sample a blind P5 validation-image pilot, verify/harden the packet, render two independently ordered review forms, and score completed human responses without choosing a vocabulary. |
 | `scripts/ingredient_selection/` | Provides thin campaign, analysis, pilot/full-report, and historical-reproduction commands. |
 | `scripts/launch_exps/ingredient_selection/train_selector.py` | Rerunnable launcher: descending short OOM probes or a full-epoch resource gate followed by the fresh campaign. |
@@ -214,6 +216,69 @@ That check is separate from D6's train/validation-only selection I/O and did
 not inform the policy. Exact outcomes, artifact hashes and the verification
 boundary are recorded in the [reviewed D6 result](../experiment_results/phase3_d1_v3_d6_profile.md).
 
+## P6 frozen projection
+
+The explicit resource
+[`ingredients_selected_v5_d6_v1.json`](../../src/ingredient_selection/resources/ingredients_selected_v5_d6_v1.json)
+defines 59 selected labels. It is a vocabulary definition, **not** a new split
+metadata generation or an automatically active training setting. The full
+165-label `ingredients_target` vocabulary remains the default. The binding
+[P6 handoff](../project_objective/model_comparison_methodology.md#p6-shared-projection-freeze--2026-10-05)
+keeps all models on the same selected task and retains the outcome-informed,
+single-selector limitation.
+
+Regenerate from the repository root, with only the Python standard library:
+
+```bash
+python scripts/ingredient_selection/export_projection.py \
+  analysis_outputs/ingredient_selection/phase3-d1-v3
+```
+
+The default destination is the resource above; `--output PATH` supports a
+separate write-once verification copy. Existing different bytes are refused.
+The exporter reads only the completed campaign manifest, approved D6 rule and
+report, D6 source ZIP and its own source files. It verifies canonical identities,
+the exact approved rule/report hashes, manifest/ZIP byte hashes and every ZIP
+member. It checks every row's original identity, eligibility, aggregate counts
+and selected-name agreement, then packages decisions without recomputing gates,
+AP or uncertainty. No metadata, images, score arrays, model or test split is
+opened. Input and exporter source hashes are rechecked before atomic publication.
+
+Schema version 1 contains:
+
+- `projection_id`, `policy_id`, freeze date and interpretation;
+- `base_vocabulary`: the full class order/hash, original metadata filename and
+  target field, and frozen train/validation metadata hashes;
+- `class_order`, `class_order_hash`, `label_count` and `base_class_indices`:
+  selected column `j` corresponds to original column `base_class_indices[j]`;
+- `groups_base_indices`: exhaustive, disjoint `included`, `uncertain` and
+  `below_quality_floor` groups in base order;
+- `excluded_decisions`: all 106 exclusions, with original indices, independent
+  reasons and axis statuses copied from D6. Exact statistics, support/prevalence
+  and optimization/context diagnostics remain in the hash-bound report at
+  `labels[base_class_index]`;
+- `evidence`: campaign, rule/report and D6 source-snapshot identities;
+- `export_source_inventory`, usage boundaries, limitations, and a canonical
+  `artifact_hash` over the object without its own hash field.
+
+P7 must use this saved class order explicitly, intersect existing targets with
+the selected names, preserve all records/splits/order (including all-zero
+projected targets), and slice full-model predictions by the original indices.
+It must not refit the vocabulary independently per split, discard empty rows,
+or change the default. The exporter does not implement that runtime wiring.
+Phase 6 still owns random-control generation/training and any reduced-task HPO.
+
+Verification on 2026-10-05: repeated exports are byte-identical; all 13 focused tests
+and 113 repository tests pass. Focused tests cover ordering/column projection,
+empty-target retention in the handoff, independent reasons, identity and tamper
+rejection, write-once behavior, mid-export source/input changes, and an explicit
+file-read allowlist, snapshot-member validation and the published resource's
+agreement with approved evidence/current exporter sources. Import does not
+load NumPy, Torch or Lightning. The generic
+suite retains the metadata-only test-split compatibility caveat documented
+above; no test predictions or predictive metrics are computed. Exact published
+identities are in the [reviewed P6 handoff](../experiment_results/phase3_d1_v3_d6_profile.md#p6-publication--2026-10-05).
+
 ## Historical reproduction
 
 `scripts/ingredient_selection/reproduce_historical.py` delegates to the
@@ -362,10 +427,10 @@ discovery; this does not constitute a test failure of the new review module.
 P3 and the original P4 application are retained. The revised P4 checkpoint is
 tracked in the [active plan](../plans/recognizable_ingredient_selection.md).
 Mandatory P5 review is superseded, with its unannotated
-packet and tools retained as an optional appendix. P6 owns the shared
-numerical-profile-based vocabulary freeze and can proceed without reviewers;
-no current report establishes direct visibility or a published final
-projection. The incomplete v2 capacity gate was
+packet and tools retained as an optional appendix. P6 has published the shared
+numerical-profile-based vocabulary definition; P7 runtime integration and
+retention-gated cleanup remain separate. No current report establishes direct
+visibility. The incomplete v2 capacity gate was
 interrupted before any v2 campaign started. The interrupted v1's artifacts
 remain in the original report/experiment directories and are excluded from
 replacement learnability evidence. The post-fit gate's CPU validation

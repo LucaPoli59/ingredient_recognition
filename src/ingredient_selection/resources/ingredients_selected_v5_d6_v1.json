@@ -1,0 +1,2025 @@
+{
+  "artifact_hash": "c8e9c88fc240dd3a27cfe527289e691ecdd579595776b71c5837c67a003e9767",
+  "base_class_indices": [
+    1,
+    4,
+    5,
+    7,
+    8,
+    10,
+    14,
+    15,
+    18,
+    23,
+    27,
+    28,
+    29,
+    30,
+    31,
+    33,
+    34,
+    37,
+    38,
+    40,
+    45,
+    46,
+    49,
+    50,
+    57,
+    63,
+    64,
+    67,
+    68,
+    71,
+    76,
+    90,
+    91,
+    95,
+    96,
+    97,
+    102,
+    104,
+    107,
+    109,
+    112,
+    114,
+    117,
+    121,
+    122,
+    125,
+    130,
+    131,
+    132,
+    137,
+    139,
+    140,
+    143,
+    144,
+    147,
+    150,
+    152,
+    155,
+    163
+  ],
+  "base_vocabulary": {
+    "class_order": [
+      "almond",
+      "avocado",
+      "baby spinach",
+      "bacon food product",
+      "baking powder",
+      "baking soda",
+      "balsamic vinegar",
+      "banana",
+      "basil",
+      "bay leaf",
+      "beansprouts",
+      "beef",
+      "beef ground",
+      "bell pepper",
+      "black olive",
+      "black turtle bean",
+      "bread",
+      "brown sugar",
+      "butter",
+      "buttermilk food product",
+      "cabbage",
+      "canola oil",
+      "caper food product",
+      "carrot",
+      "cauliflower",
+      "cayenne pepper",
+      "celery",
+      "cheese",
+      "cherry tomatoes",
+      "chicken",
+      "chicken broth",
+      "chickpea",
+      "chili",
+      "chili pepper",
+      "chili powder",
+      "chinese five spice powder",
+      "chive leaf raw",
+      "cilantro",
+      "cinnamon",
+      "cinnamon stick",
+      "coconut milk",
+      "coconut oil",
+      "cooking spray",
+      "coriander",
+      "coriander seed whole or pieces",
+      "corn",
+      "corn starch",
+      "corn tortillas",
+      "cream cheese",
+      "cucumber",
+      "cumin",
+      "cumin seed",
+      "curry leaves",
+      "curry powder",
+      "dijon mustard",
+      "dill food product",
+      "dry white wine",
+      "egg food product",
+      "egg whites",
+      "egg yolks",
+      "eggplant",
+      "fennel seed",
+      "feta cheese",
+      "fish sauce",
+      "flour",
+      "flour tortillas",
+      "french bread",
+      "garam masala",
+      "garlic",
+      "garlic clove",
+      "garlic powder",
+      "ginger",
+      "ginger ground",
+      "greek yogurt",
+      "green beans",
+      "green bell pepper",
+      "green onion",
+      "heavy cream",
+      "hoisin sauce",
+      "honey",
+      "hot pepper food product",
+      "hot sauce",
+      "italian seasoning",
+      "jalapeno chilies",
+      "ketchup",
+      "lemon",
+      "lemon juice",
+      "lemon zest",
+      "lemongrass food product",
+      "lettuce",
+      "lime",
+      "lime juice",
+      "lime wedges",
+      "maple syrup",
+      "mayonnaise",
+      "milk",
+      "mint",
+      "mirin",
+      "mozzarella cheese",
+      "mushroom",
+      "nutmeg",
+      "oil",
+      "olive oil",
+      "olive oil extra virgin",
+      "onion",
+      "onion powder",
+      "orange juice",
+      "oregano",
+      "oyster sauce",
+      "panko breadcrumbs",
+      "paprika",
+      "parmesan cheese food product",
+      "parsley",
+      "pasta",
+      "pea",
+      "peanut",
+      "peanut oil",
+      "pepper",
+      "plum tomato",
+      "pork",
+      "potato",
+      "red bell pepper",
+      "red onion",
+      "red wine vinegar",
+      "rice",
+      "rice vinegar",
+      "roma tomato",
+      "rosemary food product",
+      "sake",
+      "salsa",
+      "salt",
+      "scallion",
+      "sesame oil",
+      "sesame seed",
+      "shallot",
+      "shaoxing wine",
+      "shiitake mushroom",
+      "shrimp food product",
+      "smoked paprika",
+      "sour cream",
+      "soy sauce",
+      "spinach",
+      "sriracha",
+      "strawberry",
+      "sugar",
+      "sweet potato",
+      "thyme food product",
+      "tomato",
+      "tomato paste",
+      "tomato sauce",
+      "turmeric",
+      "vanilla bean food product",
+      "vanilla extract",
+      "vegetable broth",
+      "vegetable oil",
+      "water food product",
+      "welsh onion",
+      "white onion",
+      "white sugar",
+      "white wine",
+      "white wine vinegar",
+      "worcestershire sauce",
+      "yellow onion",
+      "yogurt food product",
+      "zucchini food product"
+    ],
+    "class_order_hash": "121a9b67a1d4f9fd85101f5c69ebe5b85aa7bed56ff6cc6dace1f4b55e84de38",
+    "metadata_filename": "ingredients_target_v5_metadata.json",
+    "metadata_sha256": {
+      "train": "30fa8d1aec04ca951c5a498f4c08c7f458b8bdfa754dd3a1fb839c9d898c221b",
+      "val": "67ea919607e34ef249553b4fcf9c2851e4dc341a064a23bd405175c83f8ce3f6"
+    },
+    "target_field": "ingredients_target"
+  },
+  "class_order": [
+    "avocado",
+    "baking powder",
+    "baking soda",
+    "banana",
+    "basil",
+    "beansprouts",
+    "black olive",
+    "black turtle bean",
+    "butter",
+    "carrot",
+    "cheese",
+    "cherry tomatoes",
+    "chicken",
+    "chicken broth",
+    "chickpea",
+    "chili pepper",
+    "chili powder",
+    "cilantro",
+    "cinnamon",
+    "coconut milk",
+    "corn",
+    "corn starch",
+    "cucumber",
+    "cumin",
+    "egg food product",
+    "fish sauce",
+    "flour",
+    "garam masala",
+    "garlic",
+    "ginger",
+    "green onion",
+    "lime",
+    "lime juice",
+    "milk",
+    "mint",
+    "mirin",
+    "olive oil",
+    "onion",
+    "oregano",
+    "panko breadcrumbs",
+    "parsley",
+    "pea",
+    "pepper",
+    "red bell pepper",
+    "red onion",
+    "rice vinegar",
+    "salt",
+    "scallion",
+    "sesame oil",
+    "shrimp food product",
+    "sour cream",
+    "soy sauce",
+    "strawberry",
+    "sugar",
+    "tomato",
+    "turmeric",
+    "vanilla extract",
+    "water food product",
+    "yogurt food product"
+  ],
+  "class_order_hash": "b2b5943cac5fb1f967feb4946304c1b0bdaae78a84252d90a727245359b5ff41",
+  "evidence": {
+    "campaign_identity_hash": "bb1c2e4145dbd895a62b705228b46b500072ba1d86ce04614ae169661a0423be",
+    "campaign_protocol_id": "phase3-d1-v3",
+    "campaign_relative_report": "inclusion_d6_v1/inclusion_report.json",
+    "campaign_relative_rule": "inclusion_d6_v1/inclusion_rule.json",
+    "d6_source_snapshot_sha256": "dbd08cb3e56e9d112c212038a9bb52d2a75c5267107210c61fb22a4aa3f980ff",
+    "inclusion_report_hash": "4f065e1bcdb2158d1c52e529970b4d47f2dd5165873e2bf03fbe599e5ca4861f",
+    "inclusion_rule_hash": "851c52cc485279895cf369368fe62076ad3be7318a80e9d3109a20b186dbbcdc",
+    "row_lookup": "labels[base_class_index]"
+  },
+  "excluded_decisions": [
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 0,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 2,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 3,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 6,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 9,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 11,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 12,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 13,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 16,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 17,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 19,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 20,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 21,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 22,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 24,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 25,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 26,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 32,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 35,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 36,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 39,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 41,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 42,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 43,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 44,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 47,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 48,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 51,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 52,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 53,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 54,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 55,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 56,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 58,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 59,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 60,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 61,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 62,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 65,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 66,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 69,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 70,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 72,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 73,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 74,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 75,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 77,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 78,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 79,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 80,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 81,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 82,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 83,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 84,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 85,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 86,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 87,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 88,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 89,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 92,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 93,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 94,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 98,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 99,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 100,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 101,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 103,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 105,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 106,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 108,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 110,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 111,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 113,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 115,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 116,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 118,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 119,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 120,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 123,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 124,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 126,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 127,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 128,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 129,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 133,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 134,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 135,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 136,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 138,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 141,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 142,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 145,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 146,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 148,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 149,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 151,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 153,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 154,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 156,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 157,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 158,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 159,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 160,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 161,
+      "outcome": "uncertain",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "below_floor",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 162,
+      "outcome": "below_quality_floor",
+      "reasons": [
+        "late_validation_ap_below_floor",
+        "quality_interval_below_floor",
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    },
+    {
+      "axis_status": {
+        "baseline_advantage": "pass",
+        "evidence": "valid",
+        "quality": "uncertain",
+        "temporal_dispersion": "pass"
+      },
+      "base_class_index": 164,
+      "outcome": "uncertain",
+      "reasons": [
+        "quality_floor_not_cleared_by_lower_bound"
+      ]
+    }
+  ],
+  "export_source_inventory": {
+    "scripts/ingredient_selection/export_projection.py": "e4cdf222dd2c37396e7446be308811fd6b86773edee7364a178e76e10ede8523",
+    "src/ingredient_selection/projection.py": "272fe230b934fc2aa33cdd34b536823a5fdb8ffd953748abab4e6220b3b7ba98"
+  },
+  "frozen_on": "2026-10-05",
+  "groups_base_indices": {
+    "below_quality_floor": [
+      0,
+      2,
+      6,
+      11,
+      13,
+      20,
+      21,
+      25,
+      26,
+      36,
+      41,
+      43,
+      48,
+      54,
+      56,
+      61,
+      69,
+      70,
+      72,
+      78,
+      80,
+      81,
+      85,
+      87,
+      89,
+      100,
+      105,
+      106,
+      110,
+      111,
+      113,
+      116,
+      118,
+      119,
+      124,
+      127,
+      134,
+      138,
+      145,
+      148,
+      153,
+      156,
+      157,
+      159,
+      160,
+      162
+    ],
+    "included": [
+      1,
+      4,
+      5,
+      7,
+      8,
+      10,
+      14,
+      15,
+      18,
+      23,
+      27,
+      28,
+      29,
+      30,
+      31,
+      33,
+      34,
+      37,
+      38,
+      40,
+      45,
+      46,
+      49,
+      50,
+      57,
+      63,
+      64,
+      67,
+      68,
+      71,
+      76,
+      90,
+      91,
+      95,
+      96,
+      97,
+      102,
+      104,
+      107,
+      109,
+      112,
+      114,
+      117,
+      121,
+      122,
+      125,
+      130,
+      131,
+      132,
+      137,
+      139,
+      140,
+      143,
+      144,
+      147,
+      150,
+      152,
+      155,
+      163
+    ],
+    "uncertain": [
+      3,
+      9,
+      12,
+      16,
+      17,
+      19,
+      22,
+      24,
+      32,
+      35,
+      39,
+      42,
+      44,
+      47,
+      51,
+      52,
+      53,
+      55,
+      58,
+      59,
+      60,
+      62,
+      65,
+      66,
+      73,
+      74,
+      75,
+      77,
+      79,
+      82,
+      83,
+      84,
+      86,
+      88,
+      92,
+      93,
+      94,
+      98,
+      99,
+      101,
+      103,
+      108,
+      115,
+      120,
+      123,
+      126,
+      128,
+      129,
+      133,
+      135,
+      136,
+      141,
+      142,
+      146,
+      149,
+      151,
+      154,
+      158,
+      161,
+      164
+    ]
+  },
+  "interpretation": "outcome-informed exploratory post-P4 amendment",
+  "label_count": 59,
+  "limitations": [
+    "Single seed/configuration; conditional on the reference selector.",
+    "Nominal per-label intervals; not simultaneous or post-selection guarantees.",
+    "Current image/score bytes hashed now, not at campaign launch.",
+    "No direct-visibility, intrinsic-unlearnability or final-test claim."
+  ],
+  "metadata_exported": false,
+  "outcome_counts": {
+    "below_quality_floor": 46,
+    "included": 59,
+    "uncertain": 60
+  },
+  "policy_id": "phase3-d6-held-out-quality-v1",
+  "projection_id": "ingredients_selected_v5_d6_v1",
+  "schema_version": 1,
+  "test_split_accessed": false,
+  "usage_contract": {
+    "below_floor_policy": "excluded from primary projection; below the operational floor, not unlearnable",
+    "full_model_comparison": "slice full-model output columns by base_class_indices in this order",
+    "random_controls": "Phase 6; match size/support using the linked evidence, not arbitrary label dropout",
+    "record_policy": "preserve original split, record order and all records, including empty projections",
+    "replaces_default": false,
+    "shared_across_model_categories": true,
+    "target_policy": "intersect existing ingredients_target with class_order; never refit vocabulary per split",
+    "training_integration": "P7; this artifact does not change runtime configuration",
+    "uncertain_policy": "excluded from primary projection; not evidence of unlearnability"
+  }
+}

@@ -19,8 +19,8 @@ decision.
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** P4 complete, including the adopted D6 inclusion policy and corrected paired uncertainty. The revised report is frozen separately; original D4 evidence remains unchanged and mandatory P5 remains superseded.
-**Next action:** P6: export the shared versioned projection from the [D6 eligibility report](../experiment_results/phase3_d1_v3_d6_profile.md), retaining original indices, hashes and independent reasons. Do not retrain, choose a desired label count, restore manual review or replace the full-vocabulary default.
+**Current task:** P6 complete: the shared D6 projection is published with original indices, hashes and independent exclusion reasons. Original D4 evidence remains unchanged and mandatory P5 remains superseded.
+**Next action:** P7: integrate the explicit projection with canonical training/analysis configuration, verify full/default and legacy parity, then assess retention-gated cleanup. Do not retrain the selector, change membership, restore manual review or replace the full-vocabulary default.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -30,8 +30,8 @@ decision.
 | P3 | Run and validate a bounded `v5` pilot | **Done** | The full 40-epoch v3 campaign completed at 14:36 UTC on 2026-09-28. Blind analysis validated all 21 audit points and exposed only 24 labels; all 24 final AP bootstraps are valid. [D4](../project_objective/model_comparison_methodology.md#phase-3-d4--pilot-frozen-numerical-profile-rule) froze simple absolute gates plus a bootstrap overlap band, bound to the campaign, cohort, pilot evidence and classifier source hashes. The [reviewed result](../experiment_results/phase3_d1_v3_pilot.md) reports 5 numeric candidates, 5 optimization-only, 1 contextual and 13 uncertain, without claiming a selected vocabulary. |
 | P4 | Apply the numerical profile and verify its inclusion interpretation | **Done** | Original D4 application retained. The user-approved [D6 result](../experiment_results/phase3_d1_v3_d6_profile.md) now has statistic-consistent paired image-cluster uncertainty, independent reasons and fixed sensitivity: 59 eligible, 60 uncertain, 46 below the operational floor. Two full runs reproduce all artifacts; 100 repository tests pass with the documented generic metadata-test caveat. |
 | P5 | Former mandatory semantic and visual-observability review | **Superseded** | [D5](../project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix) moves both manual reviews to an [optional appendix](../project_objective/ingredient_observability_protocol.md). The unannotated 64-pair packet and source are retained; no reviewer results are claimed. |
-| P6 | Freeze the shared numerical-profile-based vocabulary and exploratory groups | **Pending** | Publish one shared versioned `V_selected` from the frozen D6 eligibility decisions, with original class order/indices, rule/report hashes and excluded/uncertain reasons. No manual review or further threshold tuning is required. |
-| P7 | Integrate the workflow and retire superseded scripts safely | **Deferred** | Connect training and analysis to canonical APIs, verify parity, document current behavior, then clean legacy notebooks and launchers only after retention gates pass. |
+| P6 | Freeze the shared numerical-profile-based vocabulary and exploratory groups | **Done** | Published [`ingredients_selected_v5_d6_v1`](../../src/ingredient_selection/resources/ingredients_selected_v5_d6_v1.json): 59 selected, with 60 uncertain and 46 below-floor exclusions, original indices, independent reasons and source/evidence hashes. Repeated exports agree exactly; 13 focused and 113 repository tests pass. No metadata, model, score archive or test split is opened by the exporter. |
+| P7 | Integrate the workflow and retire superseded scripts safely | **Pending** | Connect the explicit projection to canonical training/analysis configuration, preserve all records including empty projected targets, verify full/default and legacy parity, then clean legacy notebooks and launchers only after retention gates pass. No P7 implementation or deletion is included in P6. |
 
 ## Objective
 
@@ -489,6 +489,38 @@ primary projection, preserve their reasons, and retain all 165 default outputs
 for the full-task comparison. P7 integration and any cleanup remain deferred.
 No extra selector run, manual review, test evaluation or commit was performed.
 
+## P6 shared-projection completion — 2026-10-05
+
+After commit `a1d17bc` retained the D6 review, the user-authorized P6 published
+the shared [`ingredients_selected_v5_d6_v1`](../../src/ingredient_selection/resources/ingredients_selected_v5_d6_v1.json)
+definition from the exact approved rule/report. It selects D6 `included`
+only, preserves saved class order and original indices, and carries the
+60 uncertain/46 below-floor exclusions with all independent reasons and axes.
+No threshold, model, count target or human exception was added.
+
+The [maintained exporter](../../scripts/ingredient_selection/export_projection.py)
+uses standard-library-only artifact I/O and writes an immutable resource rather
+than a second metadata generation. Two exports produce identical bytes.
+Thirteen synthetic/unit checks and all 113 repository tests pass, including
+class/column identity, reasons, empty-target handoff, approved-hash validation,
+test/data-path isolation, write-once conflict handling and source/input changes
+before publication. The full suite's existing test-metadata compatibility check
+remains distinct from P6; no predictive test evaluation occurred.
+
+The [reviewed P6 publication](../experiment_results/phase3_d1_v3_d6_profile.md#p6-publication--2026-10-05)
+owns the artifact hashes; the [methodological handoff](../project_objective/model_comparison_methodology.md#p6-shared-projection-freeze--2026-10-05)
+and [implementation contract](../implementation_details/ingredient_selection.md#p6-frozen-projection)
+explain use and limitations. The full 165-label default, D4/D6 inputs and
+user-owned training/IDE edits are unchanged. No selector training, metadata
+rewrite, random-control experiment or cleanup was performed.
+
+P6 is **Done** and P7 is **Pending**. Work package 3.5 remains **In progress**
+because runtime integration and retention/parity gates are separate. P7 must
+consume the saved selected order without independently fitting it per split,
+retain every original record even when projection is empty, and keep opt-in
+selection distinct from the default full task. Phase 6 owns later training and
+matched-random controls. No P7 action is authorized by this completion record.
+
 ## Decision log
 
 | Date | Decision or change | Rationale |
@@ -517,6 +549,7 @@ No extra selector run, manual review, test evaluation or commit was performed.
 | 2026-10-04 | Superseded mandatory P5 and retained an optional interpretation appendix | By user decision, manual relevance and observability judgments are outside the model-learnability selection objective and may introduce subjective membership bias. D5 removes reviewer dependencies, preserves D4/P4 evidence, and releases P6 numerical projection work without claiming a completed human review. |
 | 2026-10-05 | Reopened P4 inclusion interpretation after the user's objective-alignment review | The audit reproduces D4 but identifies privileged cuisine, train-gap, support and interval-statistic concerns. A concrete held-out-quality proposal and bounded sensitivity are documented; amendment adoption, matching uncertainty and P6 freeze remain pending. No retained-count target is introduced. |
 | 2026-10-05 | Adopted D6 and completed the reopened P4 review | User-approved held-out-quality policy, paired image-cluster intervals and independent diagnostics produce a separately frozen, twice-reproduced report. Original D4 evidence is retained, no cardinality target is used, and P6 export is next. |
+| 2026-10-05 | Completed P6 shared-vocabulary freeze | Published the approved D6 `included` subsequence as a versioned, write-once definition with original indices and explicit excluded groups/reasons. Reproduction and 113 tests pass; the full default stays unchanged and P7 runtime integration is next. |
 
 ## Related documentation
 

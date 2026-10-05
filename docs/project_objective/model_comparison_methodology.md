@@ -2,7 +2,7 @@
 
 **Created:** 2026-08-12
 **Last updated:** 2026-10-05
-**Status:** Active and binding design through D6. D4 remains the immutable original pilot-frozen profile; D6 adopts the reviewed, outcome-informed inclusion policy without changing the training campaign or default vocabulary. P6 separately owns the final projection. The later benchmark also requires the independent Subphase 4A model portfolio.
+**Status:** Active and binding design through D6 and its P6 projection freeze. D4 remains the immutable original pilot-frozen profile; D6 adopts the reviewed, outcome-informed inclusion policy without changing the training campaign or default vocabulary. P6 publishes one shared selected vocabulary. The later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
 
@@ -21,8 +21,8 @@ Macro-section 3 and its operational plan. Training implementation, hyperparamete
 optimization (HPO), and final result production remain owned by Macro-sections 6
 and 7. It prescribes the model-side `M_ref` protocol under 4B-D1 and its
 campaign-side protocol under Phase 3-D1, and the original numerical profile
-gates under D4 and the revised inclusion policy under D6; the Phase 6 HPO
-budget and final selected vocabulary are not fixed here yet.
+gates under D4 and the revised inclusion policy under D6. P6 freezes the
+shared selected vocabulary below; the Phase 6 HPO budget remains a later decision.
 
 ## Research questions
 
@@ -488,7 +488,35 @@ It binds the retained campaign/D4 identity, exact analysis sources and snapshot,
 input hashes, validation image groups and environment. The
 [reviewed D6 result](../experiment_results/phase3_d1_v3_d6_profile.md) owns the
 resulting counts, membership changes, sensitivity and verification limitations.
-P6 remains responsible for publishing the named projection.
+P6 publishes the named projection in the separate freeze below.
+
+#### P6 shared projection freeze — 2026-10-05
+
+The user authorized P6 after the D6 policy/report were completed and committed.
+`V_selected` is the versioned
+[`ingredients_selected_v5_d6_v1`](../../src/ingredient_selection/resources/ingredients_selected_v5_d6_v1.json)
+definition, containing exactly the labels marked `included` in the approved D6
+report. Keep `uncertain` and `below_quality_floor` out of the primary projection
+while preserving their independent reasons. There are no manual exceptions,
+new thresholds, sensitivity-derived alternatives or category-specific lists.
+The [reviewed publication](../experiment_results/phase3_d1_v3_d6_profile.md#p6-publication--2026-10-05)
+records membership counts and artifact identities; the
+[implementation contract](../implementation_details/ingredient_selection.md#p6-frozen-projection)
+owns serialization and reproduction.
+
+The selected output order is the subsequence of the frozen `V_base` class order,
+with original indices retained for projecting full-model predictions. Selection
+changes output columns, not the image population: retain the same splits and
+all records, including recipes whose projected target vector is all zero.
+Do not filter such recipes independently in selected and full-task runs.
+Runtime integration is P7, and the 165-label task remains the default and Q1
+anchor. Matching control vocabularies and training remain Phase 6 work.
+
+This freeze fixes a common task; it does not eliminate reference-selector bias,
+establish seed stability or validate the subset on independent test outcomes.
+Do not use its selection-validation AP as unbiased final selected-task accuracy.
+Any later policy or membership change needs a new explicit version and record,
+not an edit to this artifact or a per-model reselection.
 
 ### 3. Tune each model category once on the full common task
 
@@ -615,7 +643,7 @@ vocabulary decisions as uncertain.
 | --- | --- | --- |
 | Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Done: established pair and custom P2-S adopted in the [portfolio](experimental_model_portfolio.md); the [completed 4A plan](../plans/experimental_model_research.md) hands implementation gates to Phase 5. Q1–Q4 are unchanged. |
 | Subphase 4B | Choose, verify, and freeze M_ref. | Done: 4B-D1 freezes the EfficientNetV2-S model-side selector and [`reference_selector_research.md`](../plans/reference_selector_research.md) records the completed evidence and handoff. |
-| Macro-section 3 | Implement the frozen selector workflow and produce versioned V_selected evidence. | P1–P4 are complete, including the versioned D6 policy and matching uncertainty. Original D4 evidence remains retained. P6's named projection is next; the [active plan](../plans/recognizable_ingredient_selection.md) owns execution. |
+| Macro-section 3 | Implement the frozen selector workflow and produce versioned V_selected evidence. | P1–P4 and P6 are complete, including D6 uncertainty and the shared projection. Original D4 evidence remains retained. P7 integration/retention work remains; the [active plan](../plans/recognizable_ingredient_selection.md) owns execution. |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
 

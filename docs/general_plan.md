@@ -4,7 +4,7 @@
 **Last updated:** 2026-10-05
 **Overall status:** In progress  
 **Current macro-phase:** Data and Ingredient selection
-**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and publish the shared ingredient projection in P6. The D6 inclusion policy and corrected paired uncertainty are complete; original D4 evidence is retained. Former P5 manual review stays an optional appendix.
+**Current focus:** Complete the remaining Data 2.4 runtime smoke checks and prepare P7 integration of the published shared ingredient projection. The D6 policy and P6 vocabulary freeze are complete; original D4 evidence is retained. Former P5 manual review stays an optional appendix.
 
 ## Purpose
 
@@ -33,7 +33,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
 | 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
-| 3 | Ingredient selection | **In progress** | Work packages 3.2–3.3 are complete under the adopted D6 policy and corrected uncertainty, with original D4 evidence retained. Mandatory P5/3.4 remains superseded; the shared projection is next. |
+| 3 | Ingredient selection | **In progress** | Work packages 3.2–3.3 and the shared-vocabulary freeze are complete under D6, with original D4 evidence retained. Work package 3.5 still requires runtime integration and retention/parity checks. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Deferred** | All three 4A research handoffs are available; prepare their implementation plan after the remaining DataModule readiness checks. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
@@ -156,7 +156,7 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 | 3.2 Selection criteria and experimental protocol | **Done** | [D6](project_objective/model_comparison_methodology.md#phase-3-d6--held-out-quality-inclusion-policy) adopts the reviewed held-out-quality inclusion policy without a count target, preserving the selector/campaign and original D4 decision. |
 | 3.3 Reproducible `v5` learnability study | **Done** | The [D6 result](experiment_results/phase3_d1_v3_d6_profile.md) has matching paired image-cluster uncertainty, independent reasons and fixed sensitivity. Two executions agree exactly; original D4/P4 evidence remains unchanged. |
 | 3.4 Former mandatory relevance and visual-observability validation | **Superseded** | Retain the rubric, source and unannotated packet as an [optional interpretation appendix](project_objective/ingredient_observability_protocol.md). No human review is required for vocabulary selection or comparison. |
-| 3.5 Final numerical-profile-based vocabulary and integration | **Pending** | After the inclusion-policy review, freeze one shared versioned projection with per-axis reasons and uncertainty, then integrate it. Legacy cleanup remains subject to parity and retention gates. |
+| 3.5 Final numerical-profile-based vocabulary and integration | **In progress** | The [shared D6 projection](experiment_results/phase3_d1_v3_d6_profile.md#p6-publication--2026-10-05) is frozen and reproducibly exported. Integrate the explicit definition with canonical runtime APIs; legacy cleanup remains subject to parity and retention gates. |
 
 ### Completed evidence
 
@@ -189,7 +189,7 @@ The 2024 ResNet selection has been reconstructed as a historical baseline: it in
 - [x] Superseded mandatory manual relevance and observability review under D5; retain the prepared material as an optional future-results appendix without selection effects.
 - [x] Audited original inclusion gates against recipe-ingredient prediction, reproduced D4 outcomes and recorded bounded counterfactual sensitivity without a retained-count target.
 - [x] Recorded D6 and matching validation uncertainty separately, retaining D4 as the original pilot-frozen result.
-- [ ] Freeze named headline and exploratory projections of the shared `v5` vocabulary without using test outcomes.
+- [x] Freeze the named shared `v5` projection and retain the uncertain/below-floor groups without using test outcomes; runtime integration remains separate.
 
 ### Completion gate
 
@@ -197,7 +197,7 @@ The historical rule is reproduced by maintained read-only code; the `v5` campaig
 
 ### Next action
 
-Execute P6 under the [active plan](plans/recognizable_ingredient_selection.md): export the shared projection from the frozen [D6 eligibility evidence](experiment_results/phase3_d1_v3_d6_profile.md), preserving original indices, rule/report hashes and independent exclusion reasons. Keep the full 165-label task as the default and comparison anchor. Manual review remains optional. Continue Data 2.4 runtime smoke checks independently; retained interrupted runs and the documented gate-device limitation remain unchanged.
+Execute P7 under the [active plan](plans/recognizable_ingredient_selection.md): integrate the published shared projection as an explicit configuration choice, preserve the full 165-label default and identical record population, and verify runtime/legacy parity before any cleanup. Manual review remains optional. Continue Data 2.4 runtime smoke checks independently; retained interrupted runs and the documented gate-device limitation remain unchanged.
 
 ## 4. Model research
 
@@ -543,6 +543,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-04 | Ingredient-selection scope amendment | Adopted D5: manual relevance and visual-observability reviews are outside model-learnability selection and retained as an optional future-results appendix. D4 gates and P4 evidence are unchanged; no human annotation or final vocabulary is claimed. | Work package 3.4/P5 **Superseded**; 3.5/P6 **Pending** without reviewer dependencies | [D5 decision](project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix), [optional appendix](project_objective/ingredient_observability_protocol.md), [active plan](plans/recognizable_ingredient_selection.md) |
 | 2026-10-05 | Ingredient-inclusion policy review | Reviewed the user's objective-alignment concern without assuming the vocabulary must grow. Retained original D4/P4 results and documented gate effects, uncertainty mismatch, sensitivity and a concrete proposed amendment; no replacement vocabulary is frozen. | Work packages 3.2–3.3 **In progress** (reopened); 3.5 **Pending** | [Reviewed audit](experiment_results/phase3_d1_v3_inclusion_policy_audit.md), [methodology proposal](project_objective/model_comparison_methodology.md#post-p4-inclusion-policy-review--proposed-amendment), [active plan](plans/recognizable_ingredient_selection.md) |
 | 2026-10-05 | Ingredient-inclusion amendment and corrected analysis | Adopted user-approved D6 and completed the separate saved-score profile with paired image-cluster uncertainty, independent diagnostics, fixed sensitivity and exact rerun verification. Original D4 evidence and full-vocabulary default remain unchanged; no final projection is exported. | Work packages 3.2–3.3 **Done**; 3.5 **Pending** | [D6 decision](project_objective/model_comparison_methodology.md#phase-3-d6--held-out-quality-inclusion-policy), [reviewed result](experiment_results/phase3_d1_v3_d6_profile.md), [active plan](plans/recognizable_ingredient_selection.md) |
+| 2026-10-05 | Shared ingredient-vocabulary freeze | Published the versioned D6 selected projection with saved original indices, independent excluded/uncertain reasons and verified evidence/source hashes. Regeneration is exact; full vocabulary and split metadata remain unchanged. Runtime integration and retention/parity checks remain. | Work package 3.5 **In progress**; Ingredient selection **In progress** | [Published definition](../src/ingredient_selection/resources/ingredients_selected_v5_d6_v1.json), [reviewed publication](experiment_results/phase3_d1_v3_d6_profile.md#p6-publication--2026-10-05), [active plan](plans/recognizable_ingredient_selection.md) |
 
 ## Tracker maintenance rules
 

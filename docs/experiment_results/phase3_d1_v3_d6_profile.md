@@ -2,7 +2,7 @@
 
 **Created:** 2026-10-05
 **Last updated:** 2026-10-05
-**Status:** Reviewed, frozen exploratory post-P4 inclusion evidence; P6 projection pending.
+**Status:** Reviewed, frozen exploratory post-P4 inclusion evidence; P6 projection published separately below.
 
 ## Purpose and boundary
 
@@ -145,11 +145,50 @@ intrinsically different learnability.
   guarantees, training-seed uncertainty or unbiased post-selection performance.
   Near/late windows overlap four checkpoints and are not independent replicas.
 
-## Handoff
+## D6 review handoff
 
-The reopened P4 policy and numerical review are complete. P6 still owns the
+At completion of the D6 review, the reopened P4 policy and numerical review
+were complete, with P6 still responsible for the
 named, versioned projection and downstream contract: export the eligible
 names/original indices with rule/evidence hashes and explicit excluded/uncertain
 reasons, without changing the full 165-label default. P7 integration/cleanup,
 Macro-section 6 selected/random training and the final benchmark remain
-separate. No commit or final projection is produced by this review.
+separate. That review did not itself publish the final projection.
+
+## P6 publication — 2026-10-05
+
+After the D6 implementation and evidence were committed as `a1d17bc`, the
+separately authorized P6 exported
+[`ingredients_selected_v5_d6_v1.json`](../../src/ingredient_selection/resources/ingredients_selected_v5_d6_v1.json).
+It contains exactly the **59** D6-eligible names in original class order, their
+original indices, and the **60 uncertain / 46 below-floor** excluded groups
+with independent reasons and axes. No membership changed from the report.
+
+| Published identity | SHA-256 |
+| --- | --- |
+| Projection, canonical artifact hash | `c8e9c88fc240dd3a27cfe527289e691ecdd579595776b71c5837c67a003e9767` |
+| Ordered selected class names, canonical hash | `b2b5943cac5fb1f967feb4946304c1b0bdaae78a84252d90a727245359b5ff41` |
+
+The resource also binds the exact D6 rule/report hashes above, campaign identity,
+original metadata/class-order hashes and exporter source inventory. Reproduction:
+
+```bash
+python scripts/ingredient_selection/export_projection.py \
+  analysis_outputs/ingredient_selection/phase3-d1-v3
+```
+
+Repeated exports agree byte-for-byte. Thirteen focused packaging tests and 113
+repository tests pass. The exporter reads only the retained manifest, D6
+rule/report/source ZIP and its own source files, not metadata, images or scores.
+It validates approved identities and refuses changed existing output. The
+generic suite's metadata-only test-split compatibility caveat above remains
+applicable; no new predictive test evaluation or model training was performed.
+
+This is the **frozen shared vocabulary definition**, not a second metadata
+generation, a change of runtime defaults or an unbiased final performance
+result. All D6 interpretation limits remain. The
+[methodological handoff](../project_objective/model_comparison_methodology.md#p6-shared-projection-freeze--2026-10-05)
+requires identical original record populations, including recipes with empty
+projected targets. P7 owns runtime integration and retention-gated cleanup;
+Phase 6 owns later selected/random vocabulary training. No such work was
+performed during publication.
