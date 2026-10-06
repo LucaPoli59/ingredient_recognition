@@ -7,7 +7,7 @@ This directory contains the execution plans for concrete project implementations
 
 ## Active plans
 
-No implementation plan is currently active. The next planning handoff is Phase 5 additional-model implementation, following the completed research and Data readiness gates.
+- [`additional_model_implementation.md`](additional_model_implementation.md) is the operational Phase 5 plan for experimental EfficientNetV2-S, MaxViT-T and custom P2-S. It covers the shared contract, adapters, custom integration checkpoints and bounded engineering qualification. Execution is **Pending**; 5.1 is next. Research, Data 2.4 and P7 prerequisites are complete, but no model implementation or campaign has started.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 
@@ -37,6 +37,7 @@ docs/plans/
 ├── custom_attention_model.md
 ├── reference_selector_research.md
 ├── recognizable_ingredient_selection.md
+├── additional_model_implementation.md
 └── <implementation_name>.md
 ```
 

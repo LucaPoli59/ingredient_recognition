@@ -1,7 +1,7 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-10-05
+**Last updated:** 2026-10-06
 **Status:** Active and binding design through D6 and its P6 projection freeze. D4 remains the immutable original pilot-frozen profile; D6 adopts the reviewed, outcome-informed inclusion policy without changing the training campaign or default vocabulary. P6 publishes one shared selected vocabulary. The later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
@@ -643,7 +643,8 @@ vocabulary decisions as uncertain.
 | --- | --- | --- |
 | Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Done: established pair and custom P2-S adopted in the [portfolio](experimental_model_portfolio.md); the [completed 4A plan](../plans/experimental_model_research.md) hands implementation gates to Phase 5. Q1–Q4 are unchanged. |
 | Subphase 4B | Choose, verify, and freeze M_ref. | Done: 4B-D1 freezes the EfficientNetV2-S model-side selector and [`reference_selector_research.md`](../plans/reference_selector_research.md) records the completed evidence and handoff. |
-| Macro-section 3 | Implement the frozen selector workflow and produce versioned V_selected evidence. | P1–P4 and P6 are complete, including D6 uncertainty and the shared projection. Original D4 evidence remains retained. P7 integration/retention work remains; the [active plan](../plans/recognizable_ingredient_selection.md) owns execution. |
+| Macro-section 3 | Implement the frozen selector workflow and produce versioned V_selected evidence. | Done through P7: D6 uncertainty, shared projection, opt-in runtime integration and retention checks are complete. Original D4 evidence and the full default remain preserved; the [completed plan](../plans/recognizable_ingredient_selection.md) owns the execution record. |
+| Macro-section 5 | Implement and technically qualify the adopted experiment-model protocols. | [Implementation plan](../plans/additional_model_implementation.md) prepared; execution is Pending. Data 2.4/P7 prerequisites are complete, but each model's runtime/resource gates and the later benchmark-policy/evaluation gates remain. |
 | Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
 

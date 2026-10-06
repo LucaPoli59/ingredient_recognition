@@ -3,8 +3,8 @@
 **Created:** 2026-08-02  
 **Last updated:** 2026-10-06
 **Overall status:** In progress  
-**Current macro-phase:** Additional model implementation — planning handoff
-**Current focus:** Data 2.4 and the Data macro-section are complete. Prepare the Phase 5 implementation plan for the adopted established pair and custom topology; no new implementation or training campaign has started. Ingredient selection is complete through P7: the shared projection is opt-in, the full default and original evidence are preserved, and historical scripts are retained rather than deleted. Former P5 manual review stays an optional appendix.
+**Current macro-phase:** Additional model implementation — plan ready
+**Current focus:** The Phase 5 implementation plan is prepared for EfficientNetV2-S, MaxViT-T and P2-S. Start Work package 5.1's shared implementation contract next; model implementation and training have not started. Data and ingredient selection through P7 are complete. Preserve the opt-in projection, full default, selector evidence and historical scripts; former P5 manual review remains an optional appendix.
 
 ## Purpose
 
@@ -35,7 +35,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 2 | Data | **Done** | Historical compatibility and all data gates pass, including bounded real CUDA training, exact checkpoint reload and dashboard verification for 2.4. |
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
-| 5 | Additional model implementation | **Pending** | Research and data-readiness dependencies are satisfied; prepare the implementation plan for EfficientNetV2-S, MaxViT-T and P2-S. |
+| 5 | Additional model implementation | **Pending** | [Implementation plan](plans/additional_model_implementation.md) ready; begin 5.1's common contract, followed by the three adapters and bounded qualification. No model execution has started. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
@@ -274,7 +274,7 @@ This subphase asks which single model protocol is a sufficiently sensitive, inte
 
 This macro-section covers architectures selected by Subphase 4A that are not already implemented in the repository.
 
-The [experimental portfolio](project_objective/experimental_model_portfolio.md) now provides research handoffs for the established pair and P2-S custom design. All are selected but not integrated; the custom handoff includes explicit visualization-capability and measured-resource gates.
+The [experimental portfolio](project_objective/experimental_model_portfolio.md) provides the binding handoff for the established pair and P2-S custom design. Their 4A experimental protocols are selected but not integrated; the existing 384-pixel Phase 3 selector is a separate role, not the experimental EfficientNet adapter. The [operational implementation plan](plans/additional_model_implementation.md) now defines the shared contract, adapters, custom checkpoints and measured qualification gates. Creating this plan does not start implementation or comparative training.
 
 ### Existing foundation
 
@@ -284,15 +284,17 @@ The [experimental portfolio](project_objective/experimental_model_portfolio.md) 
 
 Existing models are historical baselines, not evidence that the additional-model phase is complete.
 
-### Pending implementation
+### First-level work packages
 
-- [ ] Write an implementation contract for each shortlisted model.
-- [ ] Add the architecture using existing abstractions where appropriate.
-- [ ] Add shape, forward-pass, serialization, checkpoint, and transform tests.
-- [ ] Add launcher and configuration support without duplicating the training pipeline.
-- [ ] Verify frozen and fine-tuned modes where relevant.
-- [ ] Document architecture-specific assumptions, memory use, and limitations.
-- [ ] Run a small overfit or smoke test before full training.
+All execution detail and lower-level custom checkpoints belong to the [feature plan](plans/additional_model_implementation.md).
+
+| Work package | Status | Dependency | Completion gate and next action |
+| --- | --- | --- | --- |
+| 5.1 Shared implementation contract and foundations | **Pending** | Completed 4A portfolio, Data 2.4 and P7 | Resolve/test exact shared preprocessing, configuration identity, initialization and bounded resource policy; start here. |
+| 5.2 Experimental EfficientNetV2-S | **Pending** | 5.1 | Distinct 224-pixel pooled-head adapter passes interface, full/frozen state and persistence tests; then qualify through 5.5. |
+| 5.3 Experimental MaxViT-T | **Pending** | 5.1 | Intact backbone/common readout passes interface, normalization-state and persistence tests; then qualify through 5.5. |
+| 5.4 P2-S custom model | **Pending** | 5.1 and reusable 5.2 foundations | Adopted dual-scale query/context graph passes numerical, label-identity, initialization, persistence and capability-aware diagnostic tests; then qualify through 5.5. |
+| 5.5 Measured qualification and Phase 6 handoff | **Pending** | Each model's implementation gates | All three pass reproducible bounded resource/train/restore/consumer checks and affected regressions; hand off measured capabilities and unresolved comparison-policy choices. |
 
 ### Resume gate
 
@@ -300,11 +302,11 @@ Subphase 4A approved the portfolio and Data 2.4 verified the canonical data cont
 
 ### Completion gate
 
-Every selected model passes its tests, integrates with the canonical training path, is documented, and can complete a reproducible small run.
+Every selected experimental model passes its interface, state, persistence, vocabulary and diagnostic-capability tests, integrates with the canonical training path, and has reproducible bounded measured resource/runtime evidence. Adopted fallbacks and comparison consequences are explicit, current documentation is synchronized and affected legacy compatibility is preserved. This gate does not complete the later metric suite, HPO policy or final test evaluation.
 
 ### Next action
 
-Prepare an implementation plan for the adopted established pair and custom topology. Research selection and Data readiness are complete; implementation, per-model resource smoke tests and final training remain subject to their own gates. This handoff does not start those activities automatically.
+Execute [5.1](plans/additional_model_implementation.md#51--shared-contract-and-foundations), then the experimental EfficientNet adapter. The plan keeps the selector unchanged and starts the custom at S, with only the adopted same-topology frozen-encoder fallback. Research selection and Data readiness are complete; this planning step has not run models, tests or training.
 
 ## 6. Training and hyperparameter tuning
 
@@ -458,7 +460,7 @@ Create the thesis outline and claim map as soon as the institutional template an
 
 ```text
 project foundation [Done] -> data [Done]
-data -> 4A experimental-model research [Done] -> additional models [Pending: implementation plan]
+data -> 4A experimental-model research [Done] -> additional models [Pending: plan ready, 5.1 next]
 data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
 additional models + ingredient selection -> training and HTuning [Deferred] -> results comparison [Deferred] -> thesis completion
@@ -547,6 +549,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-05 | Shared ingredient-vocabulary freeze | Published the versioned D6 selected projection with saved original indices, independent excluded/uncertain reasons and verified evidence/source hashes. Regeneration is exact; full vocabulary and split metadata remain unchanged. Runtime integration and retention/parity checks remain. | Work package 3.5 **In progress**; Ingredient selection **In progress** | [Published definition](../src/ingredient_selection/resources/ingredients_selected_v5_d6_v1.json), [reviewed publication](experiment_results/phase3_d1_v3_d6_profile.md#p6-publication--2026-10-05), [active plan](plans/recognizable_ingredient_selection.md) |
 | 2026-10-06 | Shared-vocabulary runtime integration | Completed P7 opt-in configuration, fixed selected order, checkpoint guards and analysis projection. All 140 tests, real train/validation parity and historical retention/restore checks pass. Historical scripts are deprecated for new work but retained unchanged; no physical cleanup or new campaign. | Work package 3.5 and Ingredient selection **Done**; independent Data 2.4 gates remain | [P7 checkpoint](plans/recognizable_ingredient_selection.md#p7-integration-and-retirement-checkpoint--2026-10-06), [runtime and retention contract](implementation_details/ingredient_selection.md#p7-runtime-projection) |
 | 2026-10-06 | Data runtime completion | Closed 2.4 with four real CUDA updates, exact full-checkpoint reload and actual dashboard/browser smoke verification. Model-specific dashboard preprocessing is preserved; 149 repository tests pass. Metadata, user edits and retained experiments remain unchanged. | Work package 2.4 and Data **Done**; Additional model implementation **Pending** | [Runtime contract and evidence](implementation_details/image_data_loading.md), [completed Data plan](plans/data_ingredient_refactor/yummly_data_phase.md) |
+| 2026-10-06 | Additional-model planning | Created the operational Phase 5 plan from the completed portfolio and a read-only runtime/design survey. Five first-level packages cover shared foundations, the established pair, P2-S and bounded measured qualification; the selector and scientific decisions remain unchanged. | Macro-section 5 and Work packages 5.1–5.5 **Pending**; plan ready, 5.1 next | [Implementation plan](plans/additional_model_implementation.md), [binding portfolio](project_objective/experimental_model_portfolio.md) |
 
 ## Tracker maintenance rules
 
@@ -574,6 +577,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 - [`plans/recognizable_ingredient_selection.md`](plans/recognizable_ingredient_selection.md) is the completed implementation plan for Macro-section 3 and the maintained home of the historical discrepancy resolutions.
 - [`plans/experimental_model_research.md`](plans/experimental_model_research.md) is the operational plan for Subphase 4A broad discovery, candidate deep research, selection of two established families, and the separately planned custom attention-model research.
 - [`plans/custom_attention_model.md`](plans/custom_attention_model.md) retains the completed 4A.4 research subphases, three-proposal decision and custom implementation handoff.
+- [`plans/additional_model_implementation.md`](plans/additional_model_implementation.md) is the operational Phase 5 plan for the three adopted experimental models, their shared contract and engineering acceptance gates.
 - [`plans/reference_selector_research.md`](plans/reference_selector_research.md) is the operational research and decision plan for Subphase 4B.
 - [`research/topics/label_learnability/learnability_assessment.md`](research/topics/label_learnability/learnability_assessment.md) provides the reusable evidence behind the Phase 3 decision-profile framework.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.
