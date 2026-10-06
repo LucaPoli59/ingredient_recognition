@@ -13,7 +13,7 @@ For machine-learning details, network internals, and the relevant research, see 
 
 ## Common contract: `BaseModel`
 
-The [experimental-model contract](experimental_model_contract.md) owns opt-in 224 preprocessing/identity, deterministic head initialization, exact accumulation and strict offline persistence. `EfficientNetV2SExperiment` and `ExperimentalLGNM` are implemented; MaxViT-T/P2-S and measured CUDA/real-consumer qualification remain pending. Legacy/default vocabulary and selector behavior are unchanged; a 4A adapter must use the explicit experimental Lightning path.
+The [experimental-model contract](experimental_model_contract.md) owns opt-in 224 preprocessing/identity, deterministic head initialization, exact accumulation and strict offline persistence. `EfficientNetV2SExperiment`, `MaxViTTExperiment` and `ExperimentalLGNM` are implemented; P2-S and measured CUDA/real-consumer qualification remain pending. Legacy/default vocabulary and selector behavior are unchanged; a 4A adapter must use the explicit experimental Lightning path.
 
 `BaseModel` is the common interface for all vision models. It stores `num_classes`, the square input size, and the transform builders; it also exposes `transform_aug` and `transform_plain`, used by the DataModule for training and validation/inference respectively. The transforms are therefore part of the model's serializable configuration rather than an external detail of the run.
 
@@ -104,6 +104,12 @@ constant that guarantees memory feasibility on every device.
 [`EfficientNetV2SExperiment`](../../src/models/experimental_efficientnet.py) retains TorchVision's intact features and global pool, replacing its entire stock readout with seeded biased `Linear(1280,L)` and no classifier dropout. The shared full-frame input is 224 pixels, not the selector's 384. Full and persistent-eval frozen-encoder modes preserve input-gradient diagnostics; configuration records the exact original ImageNet enum, primitive contract and adaptation. Widths 1/50/59/165 and the 20,388,853-parameter count at165 are verified with no-network fixtures.
 
 [`ExperimentalLGNM`](../../src/lightning/experimental_lgn.py) integrates exact batching, sample-weighted final/truncated accumulation groups, ordered classes and full/light checkpoint guards through canonical construction. The [owning contract](experimental_model_contract.md#experimental-efficientnet-and-canonical-runtime--52) records interfaces, tests and limits. CPU fixture evidence is not actual ImageNet artifact verification, a CUDA cap or completed real dashboard qualification; these remain 5.5.
+
+## MaxViT-T 4A experiment
+
+[`MaxViTTExperiment`](../../src/models/experimental_maxvit.py) retains TorchVision's intact stem and MaxViT blocks with a new GAP/flatten/biased `Linear(512,L)` readout. The whole stock normalization/projection/Tanh classifier is removed. It shares EfficientNet's 224 full-frame transform and seeded head policy; the saved contract explicitly validates partition-seven geometry and BatchNorm epsilon 1e-3/momentum 0.01, preserving pretrained running statistics. Full/frozen behavior covers both stem and blocks, and frozen state remains eval while input gradients work.
+
+The traversed final block provides `[B,512,7,7]` diagnostic features; the final linear supplies the complete classifier for pooled image/concept vectors. Counts, class identity, strict full/light offline restoration and production Grad-CAM/factorization helpers are verified with synthetic CPU fixtures. The actual approved artifact and retained backbone state are also verified. The [owning record](experimental_model_contract.md#experimental-maxvit-and-artifact-provenance--53) records exact hashes, notices, normalization rationale and limits. Actual CUDA capacity and real dashboard acceptance remain 5.5.
 
 ## Torchvision ResNet wrapper
 

@@ -47,6 +47,15 @@ class ExperimentalModelContract:
         architecture = {"readout": "gap_biased_linear", "added_dropout": 0.0}
         initialization = {"policy": "xavier_uniform_gain1_zero_bias_v1", "seed": self.head_seed,
                           "order": "pretrained_encoder_then_new_modules"}
+        if self.model_id == "maxvit_t":
+            architecture |= {
+                "input_size": [224, 224], "partition_size": 7,
+                "block_grid_sizes": [[56, 56], [28, 28], [14, 14], [7, 7]],
+                "normalization": {
+                    "batch_norm_eps": 1e-3, "batch_norm_momentum": 0.01,
+                    "pretrained_running_statistics": "preserve",
+                },
+            }
         if self.model_id == "p2_s":
             architecture = {
                 "readout": "dual_scale_query_plus_pooled_context", "scale": "S",

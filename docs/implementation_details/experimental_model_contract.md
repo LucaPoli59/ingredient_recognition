@@ -1,13 +1,13 @@
-# Experimental model foundations
+# Experimental models and runtime
 
 **Created:** 2026-10-06
 **Last updated:** 2026-10-06
 
 ## Purpose and verified boundary
 
-This document owns the implemented shared foundations for the [Phase 5 portfolio](../project_objective/experimental_model_portfolio.md), not the architectures or their resource qualification. The [feature plan](../plans/additional_model_implementation.md) owns execution; the portfolio continues to own 4A-D1/4A-D2. No scientific selection rule, vocabulary membership, comparative augmentation policy or benchmark hyperparameter has changed.
+This document owns the implemented adapters, shared foundations and runtime for the [Phase 5 portfolio](../project_objective/experimental_model_portfolio.md). The [feature plan](../plans/additional_model_implementation.md) owns execution; the portfolio owns the binding architectures and 4A-D1/4A-D2 decisions. Measured resource qualification is a separate gate. No scientific selection rule, vocabulary membership, comparative augmentation policy or benchmark hyperparameter has changed.
 
-Verified code consists of [`ExperimentalFitPad224`](../../src/data_processing/experimental_transforms.py), [`ExperimentalModelContract`](../../src/models/experimental_contract.py), deterministic head/offline helpers, [`ExactBatchPlan`](../../src/training/batching.py), the [experimental EfficientNet adapter](../../src/models/experimental_efficientnet.py), [`ExperimentalLGNM`](../../src/lightning/experimental_lgn.py) and its [canonical construction boundary](../../src/training/experimental_runtime.py). These are opt-in: full/default vocabulary and legacy/selector behavior remain unchanged. MaxViT-T, P2-S and measured CUDA caps remain pending. The new BaseLGNM guard prevents a 4A adapter from silently taking the legacy approximate-batch path.
+Verified code consists of [`ExperimentalFitPad224`](../../src/data_processing/experimental_transforms.py), [`ExperimentalModelContract`](../../src/models/experimental_contract.py), deterministic head/offline helpers, [`ExactBatchPlan`](../../src/training/batching.py), the [experimental EfficientNet](../../src/models/experimental_efficientnet.py) and [MaxViT](../../src/models/experimental_maxvit.py) adapters, [`ExperimentalLGNM`](../../src/lightning/experimental_lgn.py) and its [canonical construction boundary](../../src/training/experimental_runtime.py). These are opt-in: full/default vocabulary and legacy/selector behavior remain unchanged. P2-S and measured CUDA caps remain pending. The BaseLGNM guard prevents a 4A adapter from silently taking the legacy approximate-batch path.
 
 The Phase 3 selector remains the separate 384-pixel, stock-dropout-retaining instrument in [`efficientnet.py`](../../src/models/efficientnet.py). Its trained state, source inventory and measured cap eight must not be reused as experimental initialization, modified, or interpreted as a cap for the new 224 protocols.
 
@@ -18,10 +18,10 @@ The Phase 3 selector remains the separate 384-pixel, stock-dropout-retaining ins
 | Contract `model_id` | Original weight identity | Adapter and availability |
 | --- | --- | --- |
 | `efficientnet_v2_s` | `EfficientNet_V2_S_Weights.IMAGENET1K_V1` | Implemented `EfficientNetV2SExperiment`, `src/models/experimental_efficientnet.py`; CUDA qualification pending |
-| `maxvit_t` | `MaxVit_T_Weights.IMAGENET1K_V1` | Planned `MaxViTTExperiment`, `src/models/experimental_maxvit.py` |
+| `maxvit_t` | `MaxVit_T_Weights.IMAGENET1K_V1` | Implemented `MaxViTTExperiment`, `src/models/experimental_maxvit.py`; CUDA qualification pending |
 | `p2_s` | `EfficientNet_V2_S_Weights.IMAGENET1K_V1` | Planned `IngredientQueryP2S`, `src/models/ingredient_query.py` |
 
-Only `full` and `frozen_encoder` are accepted. Positive integer `num_classes` is not a hardcoded vocabulary: actual class order and the selected projection remain owned by the [P7 runtime contract](ingredient_selection.md#p7-runtime-projection). A model-width match alone is insufficient to accept an encoder or checkpoint. Saved P7 hashes, base indices and exact ordered classes must still be checked by the eventual consumers.
+Only `full` and `frozen_encoder` are accepted. Positive integer `num_classes` is not a hardcoded vocabulary: actual class order and the selected projection remain owned by the [P7 runtime contract](ingredient_selection.md#p7-runtime-projection). A model-width match alone is insufficient to accept an encoder or checkpoint. Canonical consumers validate saved P7 hashes, base indices and exact ordered classes.
 
 `from_config()` reconstructs the contract and rejects missing, unknown, altered or inconsistent fields rather than silently accepting a different version, transform, weight enum or topology. The P2 payload fixes S, taps 5/7, row-major 196+49 tokens, width 128, four heads, one block, ratio-four GELU FFN, normalization epsilon, bias policies, no added dropout/self-attention/positions/per-block memory normalization and fixed unit fusion coefficients. This is a serialized specification, not evidence of an implemented attention graph; 5.4 must verify its realization against 4A-D2.
 
@@ -128,3 +128,43 @@ Training validates one finite ordinary single-device DataLoader, fixed matching 
 Verification commands remain the two above. **57 focused tests and 206 repository tests pass.** Added evidence is [`test_experimental_efficientnet.py`](../../tests/test_experimental_efficientnet.py) and [`test_experimental_lightning.py`](../../tests/test_experimental_lightning.py): real weights-none architecture checks, synthetic full/frozen state and complete offline restoration, actual tiny CPU Lightning fits/checkpoint saves, full/light weighted/unweighted restores and epoch-boundary resume. Effective128/physical8/accumulation16 SGD matches direct sample-mean updates for 221 records (128+93) and a 22-microbatch horizon (128+48), with unscaled logged losses. Published 59-label order is checked without reading recipe images.
 
 Repository regressions retain the existing metadata-only real test-split compatibility check; this is not predictive test evaluation. No pretrained experimental artifact was downloaded or qualified, no CUDA experimental step/physical-cap probe or benchmark/HPO campaign ran, and selector/data/projection artifacts plus the user's launcher/configuration remain unchanged. Real artifact hashes/notices, actual canonical GPU and dashboard/analysis acceptance, resource qualification and the later model adapters remain open; 5.2 completion must not be presented as Phase 5 readiness.
+
+## Experimental MaxViT and artifact provenance — 5.3
+
+At Git base `0aec11b` plus the 5.3 changes on 2026-10-06, `MaxViTTExperiment` builds the intact 1000-way TorchVision `maxvit_t` with `MaxVit_T_Weights.IMAGENET1K_V1`, then replaces the whole stock classifier: GAP, flatten, LayerNorm, biased 512-to-512 projection, Tanh and biasless 1000-class projection. The common readout is **GAP → flatten → seeded biased `Linear(512,L)`**. The stem, four blocks, internal attention/stochastic operations and original buffers are preserved. Actual module counts are **30,143,944 backbone parameters + 513L new parameters**, yielding **30,228,589 at L=165**.
+
+Input is strictly `[B,3,224,224]`, B>0, with the same shared transform and head initialization as EfficientNet. The MaxViT-specific contract records input size 224, partition size seven, block grids 56/28/14/7 and the normalization policy. Construction validates those grids and the 22 partition-attention layers. A pre-adapter MaxViT payload without these fields is incomplete and rejected; the already implemented EfficientNet and planned P2 payloads are unchanged.
+
+Full adaptation trains stem, blocks and the new readout. Frozen mode keeps both stem and blocks in eval across parent `.train()` calls, fixes their parameters and retains input-gradient diagnostics; the head trains. The final traversed block is the visual target `[B,512,7,7]`. The classifier/factorization target is the final linear layer, which scores both pooled image representations and two-dimensional concept vectors. The inherited factorization interface therefore exposes the complete scoring operation.
+
+### Explicit normalization policy
+
+Use the installed TorchVision constructor's **BatchNorm epsilon 1e-3 and momentum 0.01** during full adaptation. Preserve all pretrained running means, variances and counters when replacing the readout. Frozen adaptation uses their saved eval state. Constructor validation rejects a library realization with a different policy instead of resetting statistics or silently accepting drift.
+
+The [versioned model documentation](https://docs.pytorch.org/vision/0.23/models/generated/torchvision.models.maxvit_t.html) records **0.99 for historical pretraining**. The [pinned constructor source](https://github.com/pytorch/vision/blob/824e8c8726b65fd9d5abdc9702f81c2b0c4c0dc8/torchvision/models/maxvit.py) sets runtime momentum 0.01; loading the weights changes classes/input size and state, not momentum. The chosen policy retains this maintained runtime realization without outcome-based selection. Momentum is configuration rather than a state-dict buffer, so it is part of the validated experimental architecture payload. Accumulation preserves effective gradient weighting but does not reproduce BatchNorm statistics from a larger physical batch.
+
+### Original artifact and notices
+
+The official artifact was absent from cache, downloaded through the explicit enum URL and inspected on CPU using `weights_only=True`. Library hash-prefix verification was supplemented with a complete SHA-256 calculation:
+
+| Provenance field | Verified value |
+| --- | --- |
+| Original enum/file | `MaxVit_T_Weights.IMAGENET1K_V1` / `maxvit_t-bc5ab103.pth` |
+| Official URL | [TorchVision MaxViT-T artifact](https://download.pytorch.org/models/maxvit_t-bc5ab103.pth) |
+| File size / SHA-256 | 124,538,661 bytes / `bc5ab103d47a7c6c02dc35bf65796b3a6cccf3d51bce330326dbdc634a3ac0e1` |
+| Torch version / source revision | `2.8.0+cu129` / `a1cb3cc05d46d198467bebbb6e8fba50a325d4e7` |
+| TorchVision version / source revision | `0.23.0+cu129` / `824e8c8726b65fd9d5abdc9702f81c2b0c4c0dc8` |
+| Installed `torchvision/models/maxvit.py` SHA-256 | `73abc5ac42dd021446d573ab5e8c13249a76e4589f76abba4de2a02133b83ea6`; byte-matches the pinned upstream file |
+| Installed TorchVision LICENSE SHA-256 | `6502f676851cfe25f8af75531dfb32375b7325b73c37e7b43741fa422893e71d` |
+
+TorchVision's [BSD-3-Clause notice](https://github.com/pytorch/vision/blob/824e8c8726b65fd9d5abdc9702f81c2b0c4c0dc8/LICENSE) names Soumith Chintala, 2016, and requires preserving copyright, conditions and disclaimer on redistribution, including non-endorsement. The installed package retains that notice; this adapter imports library operators and copies no upstream model implementation. The [TorchVision README](https://github.com/pytorch/vision/blob/v0.23.0/README.md) and [model documentation](https://docs.pytorch.org/vision/0.23/models.html) distinguish source licensing from potentially dataset-derived pretrained-weight terms. The source license is not independent clearance of ImageNet-derived weights. No Google TensorFlow implementation or converted Google weights are used.
+
+### Restoration and verification boundary
+
+MaxViT uses the existing experimental Lightning and canonical helper without another training implementation. Full/light checkpoint identities include the explicit geometry and normalization policy, output order and projection, exact batch plan and encoded training configuration. Strict complete restoration retains every relative-position index buffer. A recursive adapter load hook also checks their **exact canonical values, dtype and shape**: ordinary `strict=True` alone would accept same-shaped corrupt indices. Missing state, malformed geometry, altered normalization or incompatible saved identities fail closed.
+
+The original artifact contains 582 entries, including 22 relative-position buffers. A separate CPU check with the actual approved initialization compares all 577 non-classifier entries against the downloaded artifact after readout replacement; synthetic-image logits are finite and complete offline model restoration reproduces all state and logits exactly. This verifies original initialization and reconstruction. It establishes neither a physical GPU batch cap nor benchmark performance.
+
+The verification commands above now pass **73 focused experimental tests and all 222 repository tests**. The 16 new tests are [`test_experimental_maxvit.py`](../../tests/test_experimental_maxvit.py) and [`test_experimental_maxvit_runtime.py`](../../tests/test_experimental_maxvit_runtime.py). Real TorchVision weights-none fixtures cover widths 1/50/59/165, exact counts, backbone-state retention, shared-head/transform identity, full/frozen gradients and normalization/stochastic buffers, actual forward hooks, strict primitive configurations and complete canonical offline full/light restoration. The production Grad-CAM and feature-factorization helpers execute on synthetic CPU images with a frozen real MaxViT graph. Full/light save-hook payloads are serialized and restored; these are not actual MaxViT `Trainer.fit` runs. Existing tiny CPU Lightning fits separately verify the shared runtime mechanics.
+
+Repository regressions include the existing metadata-only real test-split vocabulary check, not predictive evaluation. No selector/data/projection evidence or user-owned training files changed. No MaxViT CUDA optimizer step, physical-cap probe, real-food dashboard acceptance, HPO or benchmark campaign ran. Those measured resource and real-consumer gates remain 5.5; the P2 adapter remains future 5.4 work. Phase 5.3 is complete at its implementation gate, not a declaration that Phase 5 is ready for comparative training.
