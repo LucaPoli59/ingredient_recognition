@@ -7,7 +7,7 @@ This directory contains the execution plans for concrete project implementations
 
 ## Active plans
 
-- [`additional_model_implementation.md`](additional_model_implementation.md) is the operational Phase 5 plan for experimental EfficientNetV2-S, MaxViT-T and custom P2-S. Execution is **In progress**: 5.1's shared foundations are tested and complete; 5.2's distinct EfficientNet adapter is next. Architecture implementation, canonical consumer wiring and bounded CUDA qualification remain; no new campaign has started.
+- [`additional_model_implementation.md`](additional_model_implementation.md) is the operational Phase 5 plan for experimental EfficientNetV2-S, MaxViT-T and custom P2-S. Execution is **In progress**: 5.1 foundations and 5.2 EfficientNet/experimental Lightning integration are complete; 5.3 MaxViT-T is next. Remaining adapters, actual artifact/real-consumer acceptance and bounded CUDA qualification are open; no campaign has started.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 

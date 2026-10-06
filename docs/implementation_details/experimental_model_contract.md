@@ -7,7 +7,7 @@
 
 This document owns the implemented shared foundations for the [Phase 5 portfolio](../project_objective/experimental_model_portfolio.md), not the architectures or their resource qualification. The [feature plan](../plans/additional_model_implementation.md) owns execution; the portfolio continues to own 4A-D1/4A-D2. No scientific selection rule, vocabulary membership, comparative augmentation policy or benchmark hyperparameter has changed.
 
-Verified code consists of [`ExperimentalFitPad224`](../../src/data_processing/experimental_transforms.py), [`ExperimentalModelContract`](../../src/models/experimental_contract.py), a deterministic linear-head initializer, a construction/identity-check helper and [`ExactBatchPlan`](../../src/training/batching.py). These are opt-in foundations. The experimental adapters, their canonical Lightning/checkpoint/dashboard wiring and measured CUDA caps do **not** yet exist. Existing `BaseModel`, `BaseLGNM`, default configurations and selector sources are unchanged.
+Verified code consists of [`ExperimentalFitPad224`](../../src/data_processing/experimental_transforms.py), [`ExperimentalModelContract`](../../src/models/experimental_contract.py), deterministic head/offline helpers, [`ExactBatchPlan`](../../src/training/batching.py), the [experimental EfficientNet adapter](../../src/models/experimental_efficientnet.py), [`ExperimentalLGNM`](../../src/lightning/experimental_lgn.py) and its [canonical construction boundary](../../src/training/experimental_runtime.py). These are opt-in: full/default vocabulary and legacy/selector behavior remain unchanged. MaxViT-T, P2-S and measured CUDA caps remain pending. The new BaseLGNM guard prevents a 4A adapter from silently taking the legacy approximate-batch path.
 
 The Phase 3 selector remains the separate 384-pixel, stock-dropout-retaining instrument in [`efficientnet.py`](../../src/models/efficientnet.py). Its trained state, source inventory and measured cap eight must not be reused as experimental initialization, modified, or interpreted as a cap for the new 224 protocols.
 
@@ -15,11 +15,11 @@ The Phase 3 selector remains the separate 384-pixel, stock-dropout-retaining ins
 
 `ExperimentalModelContract` is immutable and emits only primitive configuration values. Schema version 1 records role `4a_experiment`, model and architecture identity, output count, raw-logit semantics, exact original weight enum, adaptation, complete transform specification and new-head initialization metadata. Supported identities and reserved adapter names are:
 
-| Contract `model_id` | Original weight identity | Planned adapter and module, not available yet |
+| Contract `model_id` | Original weight identity | Adapter and availability |
 | --- | --- | --- |
-| `efficientnet_v2_s` | `EfficientNet_V2_S_Weights.IMAGENET1K_V1` | `EfficientNetV2SExperiment`, `src/models/experimental_efficientnet.py` |
-| `maxvit_t` | `MaxVit_T_Weights.IMAGENET1K_V1` | `MaxViTTExperiment`, `src/models/experimental_maxvit.py` |
-| `p2_s` | `EfficientNet_V2_S_Weights.IMAGENET1K_V1` | `IngredientQueryP2S`, `src/models/ingredient_query.py` |
+| `efficientnet_v2_s` | `EfficientNet_V2_S_Weights.IMAGENET1K_V1` | Implemented `EfficientNetV2SExperiment`, `src/models/experimental_efficientnet.py`; CUDA qualification pending |
+| `maxvit_t` | `MaxVit_T_Weights.IMAGENET1K_V1` | Planned `MaxViTTExperiment`, `src/models/experimental_maxvit.py` |
+| `p2_s` | `EfficientNet_V2_S_Weights.IMAGENET1K_V1` | Planned `IngredientQueryP2S`, `src/models/ingredient_query.py` |
 
 Only `full` and `frozen_encoder` are accepted. Positive integer `num_classes` is not a hardcoded vocabulary: actual class order and the selected projection remain owned by the [P7 runtime contract](ingredient_selection.md#p7-runtime-projection). A model-width match alone is insufficient to accept an encoder or checkpoint. Saved P7 hashes, base indices and exact ordered classes must still be checked by the eventual consumers.
 
@@ -54,7 +54,7 @@ Seed defaults to 42 and is persisted. The same seed at different output counts d
 
 The original weight enum remains in the contract when operational download is disabled. Random tiny fixtures establish this helper behavior only; they are neither approved benchmark initializations nor the frozen-pretrained fallback. Exact original artifact URL, complete hash, package/source versions and notices must be verified with the actual adapters in 5.2/5.3/5.4/5.5.
 
-`validate_checkpoint_contract()` checks a top-level `experimental_model_contract` payload against the requested contract. The existing light-checkpoint callback leaves this top-level field intact while pruning hyperparameter sections; a unit test verifies that property. The future experimental checkpoint hooks must actually write/check the key, including before shape-compatible state restoration. This helper does not change legacy checkpoint acceptance or currently repair canonical offline reconstruction: `BaseLGNM.load_from_config()` and dashboard reconstruction still need the new adapters' operational restore path.
+`validate_checkpoint_contract()` checks a top-level `experimental_model_contract` payload against the requested contract. `ExperimentalLGNM` now writes and checks this key; full/light callback behavior is verified. Canonical training, dashboard checkpoint selection and best-trial restoration use `load_model_for_experiment()` for the new path. Legacy reconstruction retains its original initialization/loading behavior. Generic inherited `LightningModule.load_from_checkpoint()` is explicitly rejected for experimental models: use the complete saved experiment configuration and the maintained helper instead.
 
 ## Exact effective batching and tail weighting
 
@@ -67,7 +67,7 @@ The existing `BaseLGNM` rounding can exceed the request (for example, request 12
 
 CPU analytic gradient/update tests cover 221 records with effective 128/physical 8/accumulation 16 (groups 128 and 93), a 16-microbatch horizon (128 records), and a 22-microbatch horizon (176 records, groups 128 and 48). The helper assumes a finite conventional single-device, fixed-size, non-dropping loader without custom sampling; distributed/sampled/early-stop horizons must not reuse that arithmetic without a verified extension. Accumulation reproduces sample-mean gradient weighting, **not** large-physical-batch BatchNorm statistics or identical stochastic model trajectories.
 
-No current training path consumes these helpers yet. Experimental Lightning wiring must verify effective-plan persistence, actual optimizer update counts, supported horizons and unchanged logged-loss semantics in 5.2/5.5.
+`ExperimentalLGNM` now consumes these helpers; its supported finite-loader horizon, update/record checks and CPU runtime evidence are described below. This does not change legacy `BaseLGNM` arithmetic or the selector's separate batching.
 
 ## Predeclared engineering smoke policy
 
@@ -98,4 +98,33 @@ python -m unittest discover -s tests
 
 Use the project's ML environment. **28 focused tests and all 177 repository tests pass.** Sources are [`test_experimental_model_contract.py`](../../tests/test_experimental_model_contract.py) and [`test_experimental_batching.py`](../../tests/test_experimental_batching.py). Focused checks are synthetic CPU/no-network; repository regressions include existing tiny CPU Lightning fits and one existing metadata-only real test-split vocabulary check, not predictive test evaluation or a CUDA qualification. No selector evidence, data/metadata, published projection or user-owned launcher/configuration was changed.
 
-5.1 is complete at the foundation boundary. Next, 5.2 must implement `EfficientNetV2SExperiment`, extend its actual model configuration and experimental Lightning/checkpoint/restore path, and consume the exact-batch helper. Later steps must verify real full/frozen encoder state, intact weights, output/projection identity, actual dashboard/analysis restoration, diagnostics and measured CUDA execution. Those gates remain open and cannot be inferred from these fixture tests.
+This is the retained 5.1 completion evidence. Subsequent 5.2 implementation evidence follows; actual approved-artifact verification, real dashboard diagnostics and measured CUDA execution remain 5.5 gates.
+
+## Experimental EfficientNet and canonical runtime — 5.2
+
+At base `4b00726` plus the 5.2 source changes on 2026-10-06, `EfficientNetV2SExperiment` constructs the intact 1000-way TorchVision model using the explicit approved enum before replacing its **whole** stock classifier with the seeded biased `Linear(1280,L)`. The original `features` and adaptive pool are retained, without a stock dropout or classifier weight. Input must be `[B,3,224,224]`; outputs are ordered raw `[B,L]` logits. Real TorchVision weights-none fixtures verify 20,177,488 feature parameters plus 1,281L head parameters: **20,388,853 at L=165**, and output widths 1/50/59/165. This proves structure/count, not the downloaded ImageNet artifact's provenance.
+
+Full adaptation trains the features and head. Frozen mode fixes every feature parameter and holds the complete feature stack in eval across parent `.train()` calls; the head remains trainable. No unconditional `no_grad()` disables input-gradient diagnostics. The visual hook is the traversed last feature stage and the complete classifier hook is the new linear head. Hook/input-gradient tests pass; actual dashboard Grad-CAM/factorization execution is still a 5.5 acceptance gate.
+
+Use the explicit `ExperimentalLGNM` class rather than the default legacy Lightning type. A configuration example, **not a launch or qualified batch recommendation**, is:
+
+```python
+contract = ExperimentalModelContract("efficientnet_v2_s", 165)
+config = ExpConfig(hp_lgn_model_type=ExperimentalLGNM,
+                   tm_type=EfficientNetV2SExperiment, tm_num_classes=165,
+                   tm_experimental_contract=contract.to_config(), hp_batch_size=128)
+```
+
+For the selected task, construct the 59-output contract and explicitly add the published P7 projection; do not mutate/slice a full-task checkpoint. Numeric optimizer/loss/augmentation values in a new ExpConfig remain its existing defaults unless explicitly declared; this example does not freeze Phase 6 choices. Mean `BCEWithLogitsLoss`, weighted or unweighted, is the supported experimental accumulation loss. No protocol-specific physical cap exists yet; explicit `physical_batch_size`/`max_physical_batch_size` are configuration inputs, not automatically measured facts.
+
+`prepare_experimental_config()` verifies a fitted strict `MultiLabelBinarizer`, class count, exact name-to-column mapping and projection identity before persisting encoder, `output_class_order` and `exact_batch_plan`. Explicit mismatches are rejected, not overwritten. Canonical training uses it; HPO's external trial configuration is enriched **before** saving, without running an HPO study. Variable-only HPO logging filters cannot remove the experimental restoration metadata. Default full output remains unchanged; selected order must match the published projection exactly and no row is dropped.
+
+Experimental checkpoints retain four top-level identities even when light callbacks prune generic hyperparameters: `experimental_model_contract`, `experimental_batch_plan`, `experimental_output_class_order`, and encoded `experimental_training_config`. Full checkpoints also cross-check duplicate generic model/batch/loss/projection fields. Changes to output order, adaptation, transforms, batch plan, optimizer/LR/scheduler or other saved training settings are rejected. A light checkpoint needs its original external experiment configuration; its retained training identity is not a complete replacement DataModule configuration.
+
+`load_model_for_experiment(config,checkpoint_path=...)` verifies protocol/nonempty saved state, constructs operationally offline and strictly restores **all** module state, including a coherent weighted-BCE `pos_weight` buffer. Arbitrary dropped fields, missing model parameters or incompatible loss buffers are rejected. Fresh construction still requests the original ImageNet enum; the operational false flag is never saved as scientific initialization. Saved positive weights are checked against the supplied DataModule at startup, including repeated startup. Optimizer/scheduler construction preserves their configured classes and operates on trainable parameters only.
+
+Training validates one finite ordinary single-device DataLoader, fixed matching physical batch/accumulation, no custom/replacement sampler, no dropped rows and a verified integer/fractional batch limit. Returned backward loss is corrected; logged mean loss is not scaled. Actual optimizer updates **and consumed records** must match the planned horizon. Unsupported dynamic cuts/fast-dev-run or custom sampling fail closed. Resume is supported at epoch boundaries only: Lightning 2.6.1 may skip epoch-start hooks for a partial-epoch restore, so saved batch progress is checked at train start before any batch. Partial-epoch checkpoints remain readable for weight-only inference, not continuation of this training protocol.
+
+Verification commands remain the two above. **57 focused tests and 206 repository tests pass.** Added evidence is [`test_experimental_efficientnet.py`](../../tests/test_experimental_efficientnet.py) and [`test_experimental_lightning.py`](../../tests/test_experimental_lightning.py): real weights-none architecture checks, synthetic full/frozen state and complete offline restoration, actual tiny CPU Lightning fits/checkpoint saves, full/light weighted/unweighted restores and epoch-boundary resume. Effective128/physical8/accumulation16 SGD matches direct sample-mean updates for 221 records (128+93) and a 22-microbatch horizon (128+48), with unscaled logged losses. Published 59-label order is checked without reading recipe images.
+
+Repository regressions retain the existing metadata-only real test-split compatibility check; this is not predictive test evaluation. No pretrained experimental artifact was downloaded or qualified, no CUDA experimental step/physical-cap probe or benchmark/HPO campaign ran, and selector/data/projection artifacts plus the user's launcher/configuration remain unchanged. Real artifact hashes/notices, actual canonical GPU and dashboard/analysis acceptance, resource qualification and the later model adapters remain open; 5.2 completion must not be presented as Phase 5 readiness.

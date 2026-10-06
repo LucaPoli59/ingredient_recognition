@@ -21,6 +21,7 @@ from torchvision.transforms import v2
 from settings.config import EXPERIMENTS_PATH, HTUNER_CONFIG_FILE, BLANK_IMG_PATH, HTUNING_TRIAL_CONFIG_FILE
 from src.dashboards._commons import recursive_listdir, DASH_CACHE, dash_get_asset_url
 from src.dashboards.runtime import load_visualization_datamodule
+from src.training.experimental_runtime import load_model_for_experiment
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
 from src.data_processing.images_recipes import LightImagesRecipesDataset
 from src.data_processing.transformations import transform_plain_base
@@ -380,8 +381,8 @@ def _load_exp_from_select(select_value, selected_htrial, device=DEVICE) -> Tuple
             raise ValueError("No checkpoint found in the selected experiment")
 
         exp_config = ExpConfig.load_from_ckpt_data(torch.load(ckpt_path, weights_only=False))
-        model = exp_config.lgn_model['lgn_model_type'].load_from_config(exp_config.lgn_model).to(device)
-        model.load_weights_from_checkpoint(ckpt_path, drop_fields=['loss_fn.pos_weight'])
+        model = load_model_for_experiment(exp_config, checkpoint_path=ckpt_path,
+                                          legacy_drop_fields=['loss_fn.pos_weight']).to(device)
 
         output = f"Loaded experiment from {os.path.basename(ckpt_path)}"
 
@@ -395,8 +396,8 @@ def _load_exp_from_select(select_value, selected_htrial, device=DEVICE) -> Tuple
             raise ValueError(f"Trial Config file not found in {selected_htrial}")
 
         exp_config = HTunerExpConfig.load_from_file(str(config_path))
-        model = exp_config.lgn_model['lgn_model_type'].load_from_config(exp_config.lgn_model).to(device)
-        model.load_weights_from_checkpoint(ckpt_weights_path, drop_fields=['loss_fn.pos_weight'])
+        model = load_model_for_experiment(exp_config, checkpoint_path=ckpt_weights_path,
+                                          legacy_drop_fields=['loss_fn.pos_weight']).to(device)
 
         output = (f"Loaded experiment from "
                   f"{os.path.join(os.path.basename(selected_htrial), os.path.basename(ckpt_weights_path))}")

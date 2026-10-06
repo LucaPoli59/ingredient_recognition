@@ -18,6 +18,7 @@ from src.ingredient_selection.runtime import projection_config, resolve_projecti
 
 
 class BaseLGNM(lgn.LightningModule):
+    SUPPORTS_EXPERIMENTAL_CONTRACT = False
     def __init__(self, model: BaseModel, lr: float, batch_size: int, optimizer: Type[torch.optim.Optimizer],
                  loss_fn: torch.nn.Module, weighted_loss: bool = False, momentum: Optional[float] = None,
                  weight_decay: Optional[float] = None, use_swa: bool = False,
@@ -44,6 +45,8 @@ class BaseLGNM(lgn.LightningModule):
         :param hparams_to_register:
         """
         super().__init__()
+        if hasattr(model, "experimental_contract") and not self.SUPPORTS_EXPERIMENTAL_CONTRACT:
+            raise ValueError("4A adapters require the explicit ExperimentalLGNM exact-batch path")
         self.prepared = False
         self._ingredient_projection = None
         self._projection_bound = False

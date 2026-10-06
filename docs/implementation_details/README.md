@@ -14,7 +14,7 @@ Implementation-detail documents describe verified current behavior. They must id
 ## Files
 
 - [`models.md`](models.md) describes the vision-model implementations available under `src/models` and their training-pipeline contracts.
-- [`experimental_model_contract.md`](experimental_model_contract.md) defines the implemented opt-in Phase 5 foundations: versioned 224 preprocessing/model identity, head initialization, offline construction helpers, exact effective batching and the predeclared engineering-smoke policy. Actual portfolio adapters and CUDA qualification remain separate gates.
+- [`experimental_model_contract.md`](experimental_model_contract.md) defines opt-in Phase 5 preprocessing/identity, initialization, exact batching and engineering policy, plus the implemented EfficientNet adapter and strict experimental Lightning/full-light restoration contract. Remaining adapters and measured CUDA/real-consumer qualification are separate gates.
 - [`ingredient_mapping_rules.md`](ingredient_mapping_rules.md) is the long-term authority for custom `ingredients` to `ingredients_target` mappings, exclusions, multi-target expansions, retained distinctions, and collision boundaries.
 - [`experiment_artifacts.md`](experiment_artifacts.md) records the audited target-v5 experiment artifacts, scalar/histogram semantics, restart and checkpoint-selection behavior, and offline analysis limits.
 - [`experiment_comparison.md`](experiment_comparison.md) defines the optional Lightning-model per-ingredient logging contract and the maintained local N-experiment JSON/HTML comparison command.

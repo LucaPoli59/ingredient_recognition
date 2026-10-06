@@ -8,6 +8,7 @@ import torch
 import lightning as lgn
 
 from src.lightning.lgn_models import BaseLGNM
+from src.training.experimental_runtime import is_experimental_config, load_model_for_experiment, prepare_experimental_config
 from settings.config import OPTUNA_JOURNAL_PATH
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
 from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
@@ -34,6 +35,11 @@ def model_training(exp_config: ExpConfig, data_module: Optional[BaseDataModule] 
         trainer_kwargs = {}
 
     exp_config.validate_ingredient_projection()
+    experimental = is_experimental_config(exp_config)
+    if experimental:
+        if data_module is None:
+            data_module = load_datamodule(exp_config)
+        prepare_experimental_config(exp_config, data_module, lgn_model_kwargs)
     requested_projection = exp_config.datamodule.get("ingredient_projection")
     supplied_projection = getattr(data_module, "projection_config", None)
     if requested_projection is not None or supplied_projection is not None:
@@ -48,7 +54,11 @@ def model_training(exp_config: ExpConfig, data_module: Optional[BaseDataModule] 
     resuming = ckpt_path is None
     model_config, trainer_config = exp_config.lgn_model, exp_config.trainer
 
-    lgn_model: BaseLGNM = model_config['lgn_model_type'].load_from_config(model_config, lgn_model_kwargs=lgn_model_kwargs)
+    if experimental:
+        lgn_model = load_model_for_experiment(exp_config, checkpoint_path=ckpt_path, lgn_model_kwargs=lgn_model_kwargs)
+        exp_config.update_config(hp_exact_batch_plan=lgn_model.exact_batch_plan.to_config())
+    else:
+        lgn_model = model_config['lgn_model_type'].load_from_config(model_config, lgn_model_kwargs=lgn_model_kwargs)
     trainer = trainer_config['type'].load_from_config(trainer_config, grad_accum=lgn_model.grad_accum, **trainer_kwargs)
 
     if data_module is None:

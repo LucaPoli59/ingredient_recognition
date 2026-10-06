@@ -19,6 +19,7 @@ from src.commons.utils import extract_name_trial_dir
 from settings.config import (EXPERIMENTS_PATH, DEF_BATCH_SIZE, HGEN_CONFIG_FILE, OPTUNA_JOURNAL_FILENAME,
                              HTUNER_CONFIG_FILE, OPTUNA_JOURNAL_PATH, HTUNING_TRIAL_CONFIG_FILE)
 from src.training.commons import set_torch_constants, model_training, init_optuna_storage, load_datamodule
+from src.training.experimental_runtime import is_experimental_config, load_model_for_experiment, prepare_experimental_config
 
 from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
 from src.lightning.lgn_trainers import TrainerInterface, OptunaTrainer
@@ -230,16 +231,20 @@ def save_best_trial(study: optuna.study.Study, save_dir: str | os.PathLike
     best_trial_config = HTunerExpConfig.load_from_file(
         os.path.join(best_trial_path_out, HTUNING_TRIAL_CONFIG_FILE)
     )
-    model: BaseLGNM = best_trial_config.lgn_model["lgn_model_type"].load_from_config(
-        best_trial_config.lgn_model
-    )
+    experimental = is_experimental_config(best_trial_config)
+    checkpoint_path = os.path.join(best_trial_path_out, "best_model.ckpt")
+    if experimental:
+        model = load_model_for_experiment(best_trial_config, checkpoint_path=checkpoint_path)
+    else:
+        model = best_trial_config.lgn_model["lgn_model_type"].load_from_config(best_trial_config.lgn_model)
     trainer = best_trial_config.trainer["type"].load_from_config(
         best_trial_config.trainer,
         grad_accum=model.grad_accum,
         trial=study.best_trial,
     )
 
-    model.load_weights_from_checkpoint(os.path.join(best_trial_path_out, "best_model.ckpt"))
+    if not experimental:
+        model.load_weights_from_checkpoint(checkpoint_path)
     return trainer, model
 
 
@@ -260,6 +265,8 @@ def _objective_wrapper(trial: optuna.Trial, exp_config: ExpConfig, data_module: 
 
     # Update the configuration with the generated hyperparameters and the trial
     trial_config.update_config(**hparams, tr_trial=trial, tr_save_dir=trial_path)
+    if is_experimental_config(trial_config):
+        prepare_experimental_config(trial_config, data_module)
     trial_config.save_to_file(os.path.join(trial_path, HTUNING_TRIAL_CONFIG_FILE))
 
     # Run the experiment

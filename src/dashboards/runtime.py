@@ -13,5 +13,9 @@ def load_visualization_datamodule(exp_config, model):
     if datamodule.get_num_classes() != model.num_classes:
         raise ValueError("dashboard encoder and model output dimensions disagree")
     model.bind_ingredient_projection(getattr(datamodule, "projection_config", None))
+    if hasattr(model, "bind_output_encoder"):
+        model.bind_output_encoder(datamodule.label_encoder)
+    elif hasattr(model, "bind_output_class_order"):
+        model.bind_output_class_order(list(datamodule.label_encoder.classes))
     datamodule.setup("fit")
     return datamodule

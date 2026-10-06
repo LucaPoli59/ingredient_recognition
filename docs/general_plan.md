@@ -3,8 +3,8 @@
 **Created:** 2026-08-02  
 **Last updated:** 2026-10-06
 **Overall status:** In progress  
-**Current macro-phase:** Additional model implementation — shared foundations complete
-**Current focus:** Work package 5.1 is complete with tested opt-in preprocessing, identity, initialization, offline-construction and exact-batch helpers. Next is 5.2's distinct experimental EfficientNetV2-S adapter and its actual canonical integration. The three architectures and measured CUDA qualification are not yet implemented-ready; no campaign has started. Data and ingredient selection through P7 are complete. Preserve the opt-in projection, full default, selector evidence and historical scripts; former P5 manual review remains an optional appendix.
+**Current macro-phase:** Additional model implementation — experimental EfficientNet implementation complete
+**Current focus:** Work packages 5.1–5.2 are complete: shared foundations, distinct 224-pixel EfficientNet and tested opt-in Lightning/offline persistence. Next is 5.3's MaxViT-T adapter. Actual artifact/real-consumer/CUDA acceptance remains 5.5 and the custom model is pending; no campaign has started. Completed Data/selection, full default, projection and historical evidence stay unchanged.
 
 ## Purpose
 
@@ -35,7 +35,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 2 | Data | **Done** | Historical compatibility and all data gates pass, including bounded real CUDA training, exact checkpoint reload and dashboard verification for 2.4. |
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
-| 5 | Additional model implementation | **In progress** | [5.1 foundations](implementation_details/experimental_model_contract.md) complete with 177 repository tests passing; 5.2's experimental EfficientNet adapter is next. Actual adapters, consumer integration and CUDA qualification remain. |
+| 5 | Additional model implementation | **In progress** | [5.1–5.2 foundations/EfficientNet](implementation_details/experimental_model_contract.md) complete with 206 repository tests; 5.3 MaxViT-T is next. Remaining adapters and actual artifact/real-consumer/CUDA qualification stay open. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
@@ -274,7 +274,7 @@ This subphase asks which single model protocol is a sufficiently sensitive, inte
 
 This macro-section covers architectures selected by Subphase 4A that are not already implemented in the repository.
 
-The [experimental portfolio](project_objective/experimental_model_portfolio.md) provides the binding handoff for the established pair and P2-S custom design. Their 4A protocols are selected but not integrated; the existing 384-pixel Phase 3 selector is a separate role. The [operational plan](plans/additional_model_implementation.md) tracks adapters and measured qualification. [5.1's shared foundations](implementation_details/experimental_model_contract.md) are implemented and tested; that completion does not qualify a new architecture or start comparative training.
+The [experimental portfolio](project_objective/experimental_model_portfolio.md) provides the binding established-pair/P2-S handoff; the 384-pixel selector stays separate. The [operational plan](plans/additional_model_implementation.md) tracks implementation and qualification. [5.1–5.2](implementation_details/experimental_model_contract.md) now supply common foundations, experimental EfficientNet and tested opt-in Lightning/configuration restoration. MaxViT/P2 and actual artifact/resource/consumer acceptance remain; implementation completion does not launch comparative training.
 
 ### Existing foundation
 
@@ -291,7 +291,7 @@ All execution detail and lower-level custom checkpoints belong to the [feature p
 | Work package | Status | Dependency | Completion gate and next action |
 | --- | --- | --- | --- |
 | 5.1 Shared implementation contract and foundations | **Done** | Completed 4A portfolio, Data 2.4 and P7 | Versioned preprocessing/identity, initialization/offline construction and exact batching are tested; engineering policy declared. 28 focused and 177 repository tests pass. Actual adapter/consumer integration remains subsequent work. |
-| 5.2 Experimental EfficientNetV2-S | **Pending** | 5.1 | Distinct 224-pixel pooled-head adapter passes interface, full/frozen state and persistence tests; then qualify through 5.5. |
+| 5.2 Experimental EfficientNetV2-S | **Done** | 5.1 | Distinct 224-pixel pooled head, full/frozen state and strict exact-batch/full-light persistence pass; 57 focused/206 repository tests. Actual qualification remains 5.5. |
 | 5.3 Experimental MaxViT-T | **Pending** | 5.1 | Intact backbone/common readout passes interface, normalization-state and persistence tests; then qualify through 5.5. |
 | 5.4 P2-S custom model | **Pending** | 5.1 and reusable 5.2 foundations | Adopted dual-scale query/context graph passes numerical, label-identity, initialization, persistence and capability-aware diagnostic tests; then qualify through 5.5. |
 | 5.5 Measured qualification and Phase 6 handoff | **Pending** | Each model's implementation gates | All three pass reproducible bounded resource/train/restore/consumer checks and affected regressions; hand off measured capabilities and unresolved comparison-policy choices. |
@@ -306,7 +306,7 @@ Every selected experimental model passes its interface, state, persistence, voca
 
 ### Next action
 
-Execute [5.2](plans/additional_model_implementation.md#52--experimental-efficientnetv2-s), consuming the completed shared foundations and testing the actual configuration/Lightning/offline restore and exact-batch paths. Keep the selector unchanged and the custom at S, with only the adopted same-topology frozen-encoder fallback. No Phase 5 CUDA model run or benchmark campaign has started.
+Execute [5.3](plans/additional_model_implementation.md#53--experimental-maxvit-t), reusing the completed common/experimental Lightning contracts and verifying MaxViT's intact backbone, common readout and normalization state. Keep the selector unchanged and custom at S, with only the adopted same-topology frozen fallback. Actual artifact/real-consumer/CUDA acceptance remains 5.5; no Phase 5 CUDA run or benchmark campaign has started.
 
 ## 6. Training and hyperparameter tuning
 
@@ -460,7 +460,7 @@ Create the thesis outline and claim map as soon as the institutional template an
 
 ```text
 project foundation [Done] -> data [Done]
-data -> 4A experimental-model research [Done] -> additional models [In progress: 5.1 Done, 5.2 next]
+data -> 4A experimental-model research [Done] -> additional models [In progress: 5.1–5.2 Done, 5.3 next]
 data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
 additional models + ingredient selection -> training and HTuning [Deferred] -> results comparison [Deferred] -> thesis completion
@@ -551,6 +551,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-06 | Data runtime completion | Closed 2.4 with four real CUDA updates, exact full-checkpoint reload and actual dashboard/browser smoke verification. Model-specific dashboard preprocessing is preserved; 149 repository tests pass. Metadata, user edits and retained experiments remain unchanged. | Work package 2.4 and Data **Done**; Additional model implementation **Pending** | [Runtime contract and evidence](implementation_details/image_data_loading.md), [completed Data plan](plans/data_ingredient_refactor/yummly_data_phase.md) |
 | 2026-10-06 | Additional-model planning | Created the operational Phase 5 plan from the completed portfolio and a read-only runtime/design survey. Five first-level packages cover shared foundations, the established pair, P2-S and bounded measured qualification; the selector and scientific decisions remain unchanged. | Macro-section 5 and Work packages 5.1–5.5 **Pending**; plan ready, 5.1 next | [Implementation plan](plans/additional_model_implementation.md), [binding portfolio](project_objective/experimental_model_portfolio.md) |
 | 2026-10-06 | Shared experimental-model foundations | Completed versioned 224 preprocessing/identity, deterministic head initialization, offline-construction checks, exact batch/tail arithmetic and declared engineering policy; 28 focused and 177 repository tests pass. Existing interfaces, selector and evidence remain unchanged; no CUDA qualification or campaign. | Work package 5.1 **Done**; Macro-section 5 **In progress**; 5.2 next | [Foundation contract](implementation_details/experimental_model_contract.md), [feature checkpoint](plans/additional_model_implementation.md#51-completion-checkpoint--2026-10-06) |
+| 2026-10-06 | Experimental EfficientNet implementation | Completed the distinct 224 adapter, full/frozen state, exact experimental Lightning and strict full/light offline/class-order persistence; 57 focused/206 repository tests pass. Legacy/selector/data stay unchanged; actual artifact/real-consumer/CUDA acceptance remains. | Work package 5.2 **Done**; Macro-section 5 **In progress**; 5.3 next | [Runtime contract](implementation_details/experimental_model_contract.md#experimental-efficientnet-and-canonical-runtime--52), [feature checkpoint](plans/additional_model_implementation.md#52-completion-checkpoint--2026-10-06) |
 
 ## Tracker maintenance rules
 

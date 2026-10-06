@@ -13,7 +13,7 @@ For machine-learning details, network internals, and the relevant research, see 
 
 ## Common contract: `BaseModel`
 
-The new [experimental-model foundations](experimental_model_contract.md) are explicit opt-in helpers, not yet new `BaseModel` adapters. They supply versioned full-frame 224 preprocessing, primitive protocol identity, deterministic head initialization, offline construction checks and exact-batch arithmetic for the adopted 4A portfolio. EfficientNetV2-S experimental, MaxViT-T and P2-S implementations and canonical consumer/resource checks remain pending; none changes the selector below or the legacy base interfaces.
+The [experimental-model contract](experimental_model_contract.md) owns opt-in 224 preprocessing/identity, deterministic head initialization, exact accumulation and strict offline persistence. `EfficientNetV2SExperiment` and `ExperimentalLGNM` are implemented; MaxViT-T/P2-S and measured CUDA/real-consumer qualification remain pending. Legacy/default vocabulary and selector behavior are unchanged; a 4A adapter must use the explicit experimental Lightning path.
 
 `BaseModel` is the common interface for all vision models. It stores `num_classes`, the square input size, and the transform builders; it also exposes `transform_aug` and `transform_plain`, used by the DataModule for training and validation/inference respectively. The transforms are therefore part of the model's serializable configuration rather than an external detail of the run.
 
@@ -87,7 +87,7 @@ every backbone and head parameter remains trainable.
 Its model-owned transforms preserve the full frame through an exact
 long-side-384 round-half-up resize and ImageNet-mean center padding. Training
 adds only a horizontal flip; validation and audit transforms are deterministic.
-This wrapper is deliberately distinct from the future 4A EfficientNetV2-S
+This wrapper is deliberately distinct from the implemented 4A EfficientNetV2-S
 comparison implementation, whose role and input contract differ.
 
 The exact loss, optimizer, scheduler, audit cadence, blind-pilot gate, and
@@ -98,6 +98,12 @@ true-FP32 full-fine-tuning contract on the RTX 4060. The specialized Phase 3
 launcher requests effective 128 and resolves physical 8 with Lightning
 accumulation 16; the cap is hardware/protocol-specific, not an architecture
 constant that guarantees memory feasibility on every device.
+
+## EfficientNetV2-S 4A experiment
+
+[`EfficientNetV2SExperiment`](../../src/models/experimental_efficientnet.py) retains TorchVision's intact features and global pool, replacing its entire stock readout with seeded biased `Linear(1280,L)` and no classifier dropout. The shared full-frame input is 224 pixels, not the selector's 384. Full and persistent-eval frozen-encoder modes preserve input-gradient diagnostics; configuration records the exact original ImageNet enum, primitive contract and adaptation. Widths 1/50/59/165 and the 20,388,853-parameter count at165 are verified with no-network fixtures.
+
+[`ExperimentalLGNM`](../../src/lightning/experimental_lgn.py) integrates exact batching, sample-weighted final/truncated accumulation groups, ordered classes and full/light checkpoint guards through canonical construction. The [owning contract](experimental_model_contract.md#experimental-efficientnet-and-canonical-runtime--52) records interfaces, tests and limits. CPU fixture evidence is not actual ImageNet artifact verification, a CUDA cap or completed real dashboard qualification; these remain 5.5.
 
 ## Torchvision ResNet wrapper
 

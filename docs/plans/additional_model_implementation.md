@@ -13,13 +13,13 @@ This is an implementation plan, not another model-selection study or a training 
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** 5.1 complete: shared opt-in foundations and their synthetic/regression tests pass
-**Next action:** Execute 5.2: implement `EfficientNetV2SExperiment` and its actual configuration, exact-batch and offline restoration integration; retain the separate selector unchanged.
+**Current task:** 5.2 complete: experimental EfficientNet and opt-in Lightning/persistence pass implementation tests
+**Next action:** Execute 5.3's MaxViT-T adapter; preserve the selector. Actual artifact, CUDA and real-consumer acceptance remain 5.5.
 
 | # | Task | Status | Required result |
 | --- | --- | --- | --- |
 | 5.1 | Shared implementation contract and reusable foundations | **Done** | [Implemented contract](../implementation_details/experimental_model_contract.md), exact preprocessing/head/batch helpers; 28 focused and 177 repository tests pass. Adapter/consumer/CUDA gates remain in subsequent steps. |
-| 5.2 | Experimental EfficientNetV2-S adapter | **Pending** | Distinct 224-pixel pooled-head wrapper with full/frozen modes and interface/restore tests. |
+| 5.2 | Experimental EfficientNetV2-S adapter | **Done** | Distinct 224-pixel pooled head, full/frozen state, exact Lightning and strict full/light offline restoration; 57 focused/206 repository tests. Actual qualification remains 5.5. |
 | 5.3 | Experimental MaxViT-T adapter | **Pending** | Intact backbone with common readout, explicit normalization policy and interface/restore tests. |
 | 5.4.1 | P2-S tensor flow and attention readout | **Pending** | Once-only feature extraction, both logit paths and numerical/label-row invariants. |
 | 5.4.2 | P2-S initialization, adaptation and persistence | **Pending** | Intact pretrained state, full/frozen behavior, complete config and checkpoint round trips. |
@@ -92,6 +92,16 @@ Verify raw `(B,L)` logits, expected trainable parameters, complete readout repla
 
 **Completion:** A tested experimental wrapper exists without changing selector semantics or artifacts. Its remaining real resource/consumer checks are tracked in 5.5.
 
+### 5.2 completion checkpoint — 2026-10-06
+
+At base `4b00726`, implemented `EfficientNetV2SExperiment`, `ExperimentalLGNM` and `training/experimental_runtime.py`, with narrow canonical training, dashboard and best-trial construction/restore wiring. The [implementation owner](../implementation_details/experimental_model_contract.md#experimental-efficientnet-and-canonical-runtime--52) records exact fields, APIs and limits. Default full vocabulary and selector semantics remain unchanged; a 4A adapter cannot silently enter legacy approximate batching.
+
+Real no-network TorchVision fixtures verify intact feature state, widths 1/50/59/165 and the expected **20,388,853 parameters at 165**, with the stock readout/dropout replaced completely. Full/frozen state, persistent feature eval, active hooks/input gradients and strict model configuration pass. Full/light checkpoints retain protocol, exact batch, ordered classes and encoded training identity; complete offline restoration includes coherent positive-loss buffers. Fitted full/default encoder column mapping and selected P7 order are checked explicitly. The HPO config-save/filter path preserves mandatory restoration fields; no study ran.
+
+Actual tiny CPU Lightning fits verify sample-mean SGD parity for 221 records and a truncated 176-record horizon at effective 128/physical 8/accumulation 16, two updates per epoch and unscaled logging. Actual full/light checkpoint saves restore weighted/unweighted state and support epoch-boundary resume to step four. Partial-epoch training resume, unsupported loaders/cuts, changed mappings/configurations and incomplete states fail closed. This is engineering evidence, not convergence or ranking.
+
+`python -m unittest discover -s tests -p 'test_experimental_*.py'` passes **57 tests**; `python -m unittest discover -s tests` passes **206**. Generic regressions include the existing metadata-only real test-split compatibility check, not predictive test evaluation. No experimental weight download, CUDA step/cap probe, real dashboard diagnostic qualification or benchmark campaign occurred. Approved artifact hashes/notices, measured capacity and actual real GPU/consumer acceptance remain 5.5. 5.2 is **Done** at its implementation gate; 5.3 is next and Phase 5 stays **In progress**.
+
 ## 5.3 — Experimental MaxViT-T
 
 Implement the explicit TorchVision `maxvit_t` / `MaxVit_T_Weights.IMAGENET1K_V1` route. Retain the stem/blocks and their original buffers. Replace the **whole stock classifier**, including its intermediate normalization/projection/Tanh, with the common GAP/flatten/biased linear readout. Assert the approved 224 input and partition geometry rather than pretending arbitrary resolution is supported.
@@ -159,7 +169,7 @@ The accepted result is a measured engineering capability, not convergence or pre
 
 | Area | Expected change or artifact |
 | --- | --- |
-| `src/models/`, model transforms | Shared transform/identity helpers now exist. Planned `EfficientNetV2SExperiment`, `MaxViTTExperiment` and `IngredientQueryP2S` module names are fixed in the [foundation owner](../implementation_details/experimental_model_contract.md#model-and-configuration-identity); adapters remain pending and selector code/provenance remains separate. |
+| `src/models/`, model transforms | Shared helpers and `EfficientNetV2SExperiment` exist. Planned MaxViT/P2 names and implemented adapter/runtime are fixed in the [contract owner](../implementation_details/experimental_model_contract.md); remaining adapters/resource checks are pending and selector provenance stays separate. |
 | Configuration/checkpoint/training | Minimal extensions for custom fields, offline rebuild, adaptation and measured batch policy; reuse current output/vocabulary guards. |
 | Dashboard/analysis consumers | Model-aware transforms, real hooks, explicit unsupported diagnostic handling and preserved output/projection identity. |
 | `scripts/validation/`, `tests/` | Rerunnable bounded acceptance command(s), synthetic no-network tests and isolated resource/runtime evidence. No new HPO study. |
@@ -183,3 +193,4 @@ Phase 6 still must freeze augmentation, loss/weighting, HPO objective/spaces/bud
 | --- | --- | --- |
 | 2026-10-06 | Created the Phase 5 plan after Data 2.4/P7 completion, using a read-only code/design survey at base `5cdb080`. | Five first-level work packages, with three bounded custom checkpoints; implementation remains Pending. No research decision, selector artifact, source behavior or training campaign changed. |
 | 2026-10-06 | Completed 5.1 at base `d45b243` with opt-in preprocessing/identity/initialization/offline/batch helpers and declared smoke policy. | 28 focused and 177 repository tests pass; Phase 5 In progress, 5.2 next. Actual adapters, canonical integration and CUDA qualification remain future gates; no campaign or scientific policy change. |
+| 2026-10-06 | Completed 5.2 at base `4b00726` with the separate EfficientNet adapter, exact experimental Lightning and strict offline/full-light persistence. | 57 focused/206 repository tests pass; 5.3 next. Actual artifact/real-consumer/CUDA gates remain 5.5; no selector/vocabulary change or campaign. |
