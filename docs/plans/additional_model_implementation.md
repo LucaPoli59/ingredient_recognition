@@ -12,13 +12,13 @@ This is an implementation plan, not another model-selection study or a training 
 
 ## Progress tracker
 
-**Overall status:** Pending
-**Current task:** Implementation not started; planning and read-only integration survey complete
-**Next action:** Execute 5.1: resolve and test the common transform/configuration contract, then implement the distinct experimental EfficientNet wrapper in 5.2.
+**Overall status:** In progress
+**Current task:** 5.1 complete: shared opt-in foundations and their synthetic/regression tests pass
+**Next action:** Execute 5.2: implement `EfficientNetV2SExperiment` and its actual configuration, exact-batch and offline restoration integration; retain the separate selector unchanged.
 
 | # | Task | Status | Required result |
 | --- | --- | --- | --- |
-| 5.1 | Shared implementation contract and reusable foundations | **Pending** | Exact common preprocessing, model/config identity, initialization and engineering-smoke policy; tested minimal shared extensions. |
+| 5.1 | Shared implementation contract and reusable foundations | **Done** | [Implemented contract](../implementation_details/experimental_model_contract.md), exact preprocessing/head/batch helpers; 28 focused and 177 repository tests pass. Adapter/consumer/CUDA gates remain in subsequent steps. |
 | 5.2 | Experimental EfficientNetV2-S adapter | **Pending** | Distinct 224-pixel pooled-head wrapper with full/frozen modes and interface/restore tests. |
 | 5.3 | Experimental MaxViT-T adapter | **Pending** | Intact backbone with common readout, explicit normalization policy and interface/restore tests. |
 | 5.4.1 | P2-S tensor flow and attention readout | **Pending** | Once-only feature extraction, both logit paths and numerical/label-row invariants. |
@@ -71,6 +71,16 @@ Resolve the small remaining implementation choices before building adapters:
 Keep changes narrow. Reuse existing transformation and training facilities where compatible, but do not edit frozen selector sources merely to share a helper. New wrappers may reuse the same public library operators without sharing the selector's protocol.
 
 **Completion:** The shared choices are recorded in the implementation owner with tests for introduced behavior; configuration identity and backward compatibility are explicit. No comparative augmentation/loss/HPO decision is smuggled into constructor defaults.
+
+### 5.1 completion checkpoint — 2026-10-06
+
+At base `d45b243`, added `src/data_processing/experimental_transforms.py`, `src/models/experimental_contract.py` and `src/training/batching.py`, with two focused test files. The [implementation owner](../implementation_details/experimental_model_contract.md) records exact transform geometry/order/fill, primitive identity/schema, stable adapter names, private FP32 Xavier head initialization, P2-only initialization metadata, operational fresh/offline factory semantics, strict identity guards and the predeclared engineering policy. Existing model/training interfaces and selector sources are unchanged.
+
+Resolved exact effective batching using the largest fitting divisor, preserving the saved plan on restore. The tail-loss helper corrects sample-mean weighting against the actual consumed loader horizon, including integer/fractional limits; analytic tests cover full and final/truncated accumulation groups. This supplies a reusable foundation, **not** a claim that current `BaseLGNM` rounding or checkpoint/dashboard construction has changed. No model registry or architecture was implemented.
+
+Verification: `python -m unittest discover -s tests -p 'test_experimental_*.py'` passes **28 tests**; `python -m unittest discover -s tests` passes **177** in the project ML environment. Focused tests are CPU/no-network and verify primitive `ExpConfig` persistence, strict synthetic offline restoration, top-level identity survival through the existing light callback, transform compatibility/no extra DataModule normalization, and batching arithmetic. Generic regressions include existing CPU miniature Lightning fits and metadata-only test-split vocabulary checking; no predictive test access, real pretrained experiment or CUDA qualification occurred.
+
+5.1's completion gate is satisfied. The remaining canonical integration is explicitly assigned to adapters and 5.5: consume the extra config rather than the base whitelist, write/validate top-level checkpoint identity, provide actual offline construction in model/Lightning/dashboard paths, preserve P7 ordered output identity, integrate exact batching and verify optimizer updates. Actual weights, parameter counts, frozen state, diagnostic capabilities and useful GPU caps remain unmeasured. Next is 5.2; Phase 5 remains **In progress**, not implemented-ready.
 
 ## 5.2 — Experimental EfficientNetV2-S
 
@@ -149,7 +159,7 @@ The accepted result is a measured engineering capability, not convergence or pre
 
 | Area | Expected change or artifact |
 | --- | --- |
-| `src/models/`, model transforms | Two experimental established adapters, P2 modules and a shared explicit transform; selector code/provenance remains separate. Exact new class/file names are resolved in 5.1. |
+| `src/models/`, model transforms | Shared transform/identity helpers now exist. Planned `EfficientNetV2SExperiment`, `MaxViTTExperiment` and `IngredientQueryP2S` module names are fixed in the [foundation owner](../implementation_details/experimental_model_contract.md#model-and-configuration-identity); adapters remain pending and selector code/provenance remains separate. |
 | Configuration/checkpoint/training | Minimal extensions for custom fields, offline rebuild, adaptation and measured batch policy; reuse current output/vocabulary guards. |
 | Dashboard/analysis consumers | Model-aware transforms, real hooks, explicit unsupported diagnostic handling and preserved output/projection identity. |
 | `scripts/validation/`, `tests/` | Rerunnable bounded acceptance command(s), synthetic no-network tests and isolated resource/runtime evidence. No new HPO study. |
@@ -172,3 +182,4 @@ Phase 6 still must freeze augmentation, loss/weighting, HPO objective/spaces/bud
 | Date | Change | Consequence |
 | --- | --- | --- |
 | 2026-10-06 | Created the Phase 5 plan after Data 2.4/P7 completion, using a read-only code/design survey at base `5cdb080`. | Five first-level work packages, with three bounded custom checkpoints; implementation remains Pending. No research decision, selector artifact, source behavior or training campaign changed. |
+| 2026-10-06 | Completed 5.1 at base `d45b243` with opt-in preprocessing/identity/initialization/offline/batch helpers and declared smoke policy. | 28 focused and 177 repository tests pass; Phase 5 In progress, 5.2 next. Actual adapters, canonical integration and CUDA qualification remain future gates; no campaign or scientific policy change. |

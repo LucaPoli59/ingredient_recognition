@@ -1,7 +1,7 @@
 # Vision models
 
 **Created:** 2026-08-02
-**Last updated:** 2026-09-27
+**Last updated:** 2026-10-06
 
 This page describes the implementation of the models available in `src/models` and their contract with the training pipeline. The problem remains a multi-label classification task: each model outputs a vector of `num_classes` **logits**, with no final sigmoid. Converting logits to probabilities and applying `BCEWithLogitsLoss` are responsibilities of the Lightning module.
 
@@ -12,6 +12,8 @@ The documentation focuses on the integration aspects and architectural decisions
 For machine-learning details, network internals, and the relevant research, see [`docs/models_deepdive/`](../models_deepdive/). A deep dive on [DINOv2 ViT-B/14](../models_deepdive/dinov2.md) is currently available; deep dives on the remaining models will be added to the same directory.
 
 ## Common contract: `BaseModel`
+
+The new [experimental-model foundations](experimental_model_contract.md) are explicit opt-in helpers, not yet new `BaseModel` adapters. They supply versioned full-frame 224 preprocessing, primitive protocol identity, deterministic head initialization, offline construction checks and exact-batch arithmetic for the adopted 4A portfolio. EfficientNetV2-S experimental, MaxViT-T and P2-S implementations and canonical consumer/resource checks remain pending; none changes the selector below or the legacy base interfaces.
 
 `BaseModel` is the common interface for all vision models. It stores `num_classes`, the square input size, and the transform builders; it also exposes `transform_aug` and `transform_plain`, used by the DataModule for training and validation/inference respectively. The transforms are therefore part of the model's serializable configuration rather than an external detail of the run.
 

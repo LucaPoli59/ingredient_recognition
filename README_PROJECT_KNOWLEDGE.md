@@ -69,6 +69,16 @@ Tutti i modelli di visione discendono da `BaseModel`, che centralizza configuraz
 per il selettore 4B-D1, con head indipendente da 165 logit e full fine-tuning.
 Il contratto sperimentale 4A resta distinto dal protocollo selettore.
 
+Le fondamenta opt-in 4A sono in `src/models/experimental_contract.py`,
+`src/data_processing/experimental_transforms.py` e `src/training/batching.py`:
+identità primitive/versionate, RGB full-frame fit/pad 224, normalizzazione
+ImageNet, inizializzazione FP32 delle nuove head, costruzione offline esplicita
+e batch effettivo esatto con pesatura dei gruppi finali. Il contratto e i limiti
+verificati sono in [`docs/implementation_details/experimental_model_contract.md`](docs/implementation_details/experimental_model_contract.md).
+Sono helper testati, non ancora adapter di architettura né modifiche alla
+costruzione canonica Lightning/dashboard: i nuovi modelli devono integrarli
+esplicitamente. Default legacy, selettore e vocabolario completo restano invariati.
+
 Le direttive complete sulla collocazione delle informazioni, sulle fonti autorevoli, sul ciclo di vita e sulla conservazione a lungo termine sono in `docs/README_DOCS_ORGN.md`. Deve essere letto insieme a `docs/README.md` prima di creare, spostare o modificare sostanzialmente un documento.
 
 La struttura, la lingua e la metodologia di scrittura della documentazione sono definite in `docs/README.md`. Tutti i documenti sotto `docs/` devono essere scritti in inglese. Per approfondimenti tecnici sulle architetture e sulla ricerca di riferimento, consultare `docs/models_deepdive/`. Al momento è disponibile `docs/models_deepdive/dinov2.md`, dedicato a DINOv2 ViT-B/14; la panoramica dei modelli è in `docs/implementation_details/models.md`. Il contratto permanente e autorevole dei mapping custom da `ingredients` a `ingredients_target`, incluse esclusioni, espansioni multi-target e collisioni vietate, è `docs/implementation_details/ingredient_mapping_rules.md`; deve essere aggiornato insieme allo standardizzatore e ai relativi test.
@@ -87,7 +97,7 @@ Aggiornamento 2.4 del 6 ottobre 2026: anche gli smoke reali sono completati. Lo 
 
 La metodologia del benchmark usa uno split Yummly unico e congelato, stratificato sugli ingredienti e sulle cucine e vincolato dai soli gruppi di immagini SHA-256 identiche; non usa uno split randomico puro. La ricerca generale e le fonti sono in `docs/research/topics/dataset_splitting/split_strategy.md`, mentre contratto, garanzie e limiti dell'implementazione Yummly sono in `docs/technical_details/data/yummly_benchmark_split/explaination.md`; ogni confronto standard tra modelli deve usare gli stessi metadata `v5` e mantenere il test fuori dalle decisioni di selezione.
 
-Il piano operativo per implementare i tre protocolli sperimentali adottati in 4A è [`docs/plans/additional_model_implementation.md`](docs/plans/additional_model_implementation.md). Separa contratto comune, EfficientNetV2-S, MaxViT-T, P2-S e qualificazione tecnica misurata. Conserva distinto il wrapper del selettore e riusa la pipeline canonica; non avvia tuning, controlli randomici o valutazione test. Le funzionalità pianificate non sono ancora disponibili: per il runtime verificato fanno fede codice e contratti di implementazione.
+Il piano operativo per implementare i tre protocolli sperimentali adottati in 4A è [`docs/plans/additional_model_implementation.md`](docs/plans/additional_model_implementation.md). Separa contratto comune, EfficientNetV2-S, MaxViT-T, P2-S e qualificazione tecnica misurata. Conserva distinto il wrapper del selettore e riusa la pipeline canonica; non avvia tuning, controlli randomici o valutazione test. Le fondamenta condivise sono verificate, ma adapter e qualificazione dei tre modelli non sono ancora disponibili: per il runtime fanno fede codice e contratti di implementazione. La policy di smoke dichiarata non fissa gli hyperparametri del benchmark né un cap GPU misurato.
 
 ## Tracker obbligatorio dello stato di avanzamento
 
@@ -266,7 +276,7 @@ Il file `.env` non è stato ispezionato perché può contenere segreti. I grandi
 
 ## Punti da approfondire o verificare
 
-- Eseguire il piano [`docs/plans/additional_model_implementation.md`](docs/plans/additional_model_implementation.md), iniziando dal contratto condiviso 5.1. EfficientNetV2-S sperimentale, MaxViT-T e P2-S richiedono ancora implementazione e verifiche proprie; il selettore già presente non ne sostituisce i gate.
+- Eseguire i rimanenti adapter e gate del piano [`docs/plans/additional_model_implementation.md`](docs/plans/additional_model_implementation.md). Le fondamenta condivise sono disponibili, ma EfficientNetV2-S sperimentale, MaxViT-T e P2-S richiedono ancora implementazione, integrazione canonica e verifiche proprie; il selettore già presente non ne sostituisce i gate.
 - Mantenere il contratto Data e rilanciare lo smoke isolato quando cambiano i consumer runtime; il piano Data e i gate 2.1c/2.4 sono completi.
 - P7 è conclusa in `docs/plans/recognizable_ingredient_selection.md`: usare la proiezione esplicita nei futuri esperimenti autorizzati, senza modificare D4/D6, il default completo o la popolazione. Un'eventuale pulizia fisica necessita una decisione separata; le revisioni manuali del precedente P5 restano facoltative. Gli smoke reali indipendenti Data 2.4 sono ora verificati.
 - Verificare e, se necessario, uniformare alcuni import che dipendono dalla directory di avvio (`config`, `models`, `data_processing` vs `settings.config`, `src.*`).
