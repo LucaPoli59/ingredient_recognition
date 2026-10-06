@@ -7,13 +7,14 @@ This directory contains the execution plans for concrete project implementations
 
 ## Active plans
 
-- [`data_ingredient_refactor/`](data_ingredient_refactor/README.md) contains the active Yummly Data plan and its controlled-vocabulary evaluation for Work packages 2.1b–2.4.
-- [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the completed Macro-section 3 plan for the EfficientNetV2-S campaign, historical reproduction, numerical `v5` profile, shared vocabulary freeze and P7 opt-in runtime integration. Legacy code is retained as evidence but retired from active use; physical cleanup needs separate review. Former mandatory P5 manual review remains an optional appendix.
+No implementation plan is currently active. The next planning handoff is Phase 5 additional-model implementation, following the completed research and Data readiness gates.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 
 ## Completed plans
 
+- [`data_ingredient_refactor/`](data_ingredient_refactor/README.md) retains the completed Yummly Data plan for Work packages 2.1b–2.4 and its controlled-vocabulary evidence. Real training, checkpoint and dashboard runtime gates passed on 2026-10-06.
+- [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the completed Macro-section 3 plan for the EfficientNetV2-S campaign, historical reproduction, numerical `v5` profile, shared vocabulary freeze and P7 opt-in runtime integration. Legacy code is retained as evidence but retired from active use; physical cleanup needs separate review. Former mandatory P5 manual review remains an optional appendix.
 - [`experiment_comparison.md`](experiment_comparison.md) is the completed Work package 7.1 plan for optional Lightning-model ingredient logging and offline intra/inter-experiment comparison with JSON/HTML reports.
 - [`experimental_model_research.md`](experimental_model_research.md) retains the completed 4A discovery, five-candidate research, established-pair selection and custom-design decision. The portfolio hands three categories to Phase 5; 4B remains independent.
 - [`custom_attention_model.md`](custom_attention_model.md) retains all four completed 4A.4 research subphases, the three-topology comparison and the selected P2-S implementation handoff. Completion does not certify runtime feasibility.

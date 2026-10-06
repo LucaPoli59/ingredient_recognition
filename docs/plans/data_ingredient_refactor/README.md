@@ -1,14 +1,15 @@
 # Data ingredient refactor
 
 **Created:** 2026-08-04  
-**Last updated:** 2026-08-12
+**Last updated:** 2026-10-06
 
-This directory contains the active implementation plan and its durable, project-specific research evidence for the Yummly ingredient-data refactor.
+This directory retains the completed implementation plan and its durable, project-specific research evidence for the Yummly ingredient-data refactor. All Data gates, including real training, checkpoint reload and dashboard smoke checks, passed by 2026-10-06.
 
 ## Files
 
-- [`yummly_data_phase.md`](yummly_data_phase.md) is the operational source of truth for Data Work packages 2.1b–2.4, their progress, dependencies, implementation tasks, and completion gates. Work package 2.1c defines the minimum retained November 2024 ingredient-selection evidence and executable compatibility anchors; its gate is closed by [`validate_legacy_experiments.py`](../../../scripts/validate_legacy_experiments.py) and the generated [`retention_manifest.json`](../../../src_scratches/ingredient_selection_reconstruction/retention_manifest.json).
+- [`yummly_data_phase.md`](yummly_data_phase.md) retains the execution history, decisions and satisfied completion gates for Data Work packages 2.1b–2.4. Work package 2.1c defines the minimum retained November 2024 ingredient-selection evidence and executable compatibility anchors; its gate is closed by [`validate_legacy_experiments.py`](../../../scripts/validate_legacy_experiments.py) and the generated [`retention_manifest.json`](../../../src_scratches/ingredient_selection_reconstruction/retention_manifest.json).
 - [`controlled_vocabulary_evaluation.md`](controlled_vocabulary_evaluation.md) records the Yummly-specific Work package 2.2c experiment, findings, and the contract implemented by Work package 2.2d.
+- The current loader, target and dashboard contract and the reproducible 2.4 smoke are owned by [`image_data_loading.md`](../../implementation_details/image_data_loading.md).
 
 ## Working rule
 

@@ -9,9 +9,9 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 
 ## Progress tracker
 
-**Overall status:** In progress  
-**Current task:** Finish the remaining Work package 2.4 runtime smoke checks in the working WSL ML environment.
-**Next action:** Complete the bounded training smoke run, then execute checkpoint-reload and dashboard smoke tests; the historical 2.1c retention gate is closed.
+**Overall status:** Done
+**Current task:** All Data gates are satisfied, including the real CUDA training, checkpoint-reload and dashboard checks completed on 2026-10-06.
+**Next action:** Maintain the verified data contract; prepare the separate Phase 5 model implementation plan under the general-plan handoff.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -25,8 +25,8 @@ The plan avoids persistent intermediate artifacts that are not consumed by the p
 | P4c | Research and select a controlled ingredient vocabulary | **Done** | [`controlled_vocabulary_evaluation.md`](controlled_vocabulary_evaluation.md) selects pinned FoodOn as the primary association lexicon, retained local concepts, and no automatic hierarchy traversal. Exact association runs before local fallback standardization; bounded fuzzy recovery is rejected after empirical evaluation. The selected standard filtering policy is train support >= 500 and at least three retained targets per recipe. |
 | P4d | Implement the controlled-vocabulary target-generation pipeline | **Done** | `scripts/build_yummly_foodon_metadata.py` generated `ingredients_target_v5_metadata.json` with the pinned offline FoodOn index, exact-plus-fallback association, train-only support >= 500, and >= 3 targets per retained recipe. |
 | P5 | Implement deterministic exact-duplicate-aware splitting and metadata generation | **Done** | `v4` remains the validated baseline; the same validator also passed the FoodOn-first `v5` generation as 47,965/5,996/5,996 records with no exact-image leakage. |
-| P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **In progress** | Code and regression tests are complete: new configurations use `v5`, `ingredients_target`, and a strict 165-class encoder without `<UNK>`; legacy robust encoders retain `<UNK>`. The WSL ML environment now starts the ResNet smoke run, and the platform-aware pinned-memory policy avoids the observed pin-memory-thread OOM. Training completion, checkpoint reload, and dashboard checks remain. |
-| P7 | Run all data checks and freeze the first new metadata generation | **Done** | The `v5` apply run passed image decoding, SHA-256, uniqueness, ratio, distribution, vocabulary, and deterministic builder assertions. Runtime DataModule smoke testing remains part of in-progress 2.4; the compatible WSL run is active and still requires training completion, checkpoint reload, and dashboard validation. |
+| P6 | Integrate the new target default and remove `<UNK>` from new multi-label outputs | **Done** | The strict 165-class default, legacy encoder compatibility and platform-aware pinned memory pass regression checks. The bounded CUDA run, exact checkpoint reload and actual dashboard checks pass; see the [runtime contract and evidence](../../implementation_details/image_data_loading.md). |
+| P7 | Run all data checks and freeze the first new metadata generation | **Done** | The `v5` apply run passed image decoding, SHA-256, uniqueness, ratio, distribution, vocabulary, and deterministic builder assertions. Data 2.4 now also passes real runtime checks without changing the frozen metadata or using predictive test outcomes. |
 
 ## Accepted design
 
@@ -110,11 +110,11 @@ Additional source fields may be preserved. Split and image-root paths are not re
 
 ## Verified implementation findings
 
-### Current loader coupling
+### Historical loader coupling before Work package 2.1b
 
-[`../../../src/data_processing/images_recipes.py`](../../../src/data_processing/images_recipes.py) currently uses the same stage directory both to open `metadata_filename` and to resolve `record["image"]`. `ImagesRecipesBaseDataModule` builds `data_dir/<split>` and `images_recipes_processing()` passes it to both operations. The path contract must therefore be separated before moving any image.
+The initial survey of [`images_recipes.py`](../../../src/data_processing/images_recipes.py) found the same stage directory used both to open `metadata_filename` and to resolve `record["image"]`. `ImagesRecipesBaseDataModule` built `data_dir/<split>` and `images_recipes_processing()` passed it to both operations. Work package 2.1b separated these paths; this paragraph records the original problem, not current behavior.
 
-The experiment configuration currently persists `data_dir`, `metadata_filename`, and `feature_label`, but it has no common-image-directory setting. A relative `images_subdir`, defaulting to `imgs/standard`, is preferred over another absolute path because `data_dir` already has Windows/WSL remapping logic.
+The original experiment configuration persisted `data_dir`, `metadata_filename`, and `feature_label`, but had no common-image-directory setting. The implemented relative `images_subdir`, defaulting to `imgs/standard`, reuses `data_dir` Windows/WSL remapping. The [current runtime contract](../../implementation_details/image_data_loading.md) owns the supported behavior.
 
 ### Current metadata generations
 
@@ -259,7 +259,7 @@ The manifest and hashes cover the minimum retention set; maintained code reprodu
 
 ## Work package 2.2 — improved ingredient-target standardization
 
-**Status:** In progress
+**Status:** Done
 
 ### Purpose
 
@@ -282,7 +282,7 @@ Attempt 1 is the correct historical starting point; attempt 2 is a separate cate
 9. Add regression tests for the confirmed legacy collisions and for every retained rule borrowed from attempt 1.
 10. Emit concise aggregate console statistics so the effect of a generation can be inspected without another permanent artifact.
 
-The exact standardization rules, support threshold, minimum retained targets, and desired level of ingredient generalization are intentionally left for a focused follow-up discussion.
+At the initial planning checkpoint, the exact rules and filtering policy were left for focused follow-up. Work packages 2.2a–2.2d subsequently resolved them and froze the FoodOn-first v5 generation; their decisions and historical alternatives remain below.
 
 ### Completion gate
 
@@ -515,7 +515,7 @@ The selected `v4` metadata files pass all automatic assertions, have no exact-im
 
 ## Work package 2.4 — runtime target integration and `<UNK>` decision
 
-**Status:** In progress
+**Status:** Done
 
 ### Required implementation
 
@@ -535,13 +535,16 @@ The selected `v4` metadata files pass all automatic assertions, have no exact-im
 - Alternative and legacy fields continue to default to `MultiLabelBinarizerRobust`, while serialized legacy encoder configurations reconstruct their saved classes, `<UNK>` index, and output dimension.
 - Unknown labels presented to the strict encoder now fail explicitly instead of being silently assigned to the last real class.
 - `compute_img_stats.py` now defaults to the selected Yummly metadata and resolves images through `imgs/standard`; its dataset root, metadata, target field, and image subdirectory remain configurable.
-- Sixteen unit and data-contract tests pass, including full train/validation/test transformation against `v5`.
+- The initial runtime-policy checkpoint passed sixteen unit/data-contract tests, including metadata target transformation across all v5 splits; this was not predictive test evaluation.
 - The image DataModule now persists a portable `pin_memory` policy: automatic mode enables it only on native Windows and disables it on WSL and other systems, while explicit Boolean overrides remain supported. Five focused policy tests cover platform resolution, all loaders, overrides, validation, and configuration loading.
-- The WSL ML environment is operational and a ResNet smoke run advances after disabling pinned memory automatically. Training completion, checkpoint reload, and dashboard validation remain pending; this is no longer blocked by the previous Windows dependency mismatch.
+- On 2026-10-06 the old smoke was confirmed incomplete and retained unchanged. The replacement bounded run `data24-20261006` completed four real CUDA optimizer updates, finite losses, parameter changes and exact-logit checkpoint reload, with 165 outputs and no `<UNK>`.
+- Dashboard reconstruction now uses the loaded model's preprocessing instead of generic transforms. Actual callbacks and browser controls pass shared-image loading, saved class order, direct-inference parity, Grad-CAM and feature factorization checks.
+- The maintained [smoke launcher](../../../scripts/validation/data_runtime_smoke.py) isolates artifacts/cache/scratch and prohibits test/predict loader use. Canonical preparation still reads test metadata; no test image inference or metric was computed. All metadata and retained checkpoints remain unchanged.
+- The complete repository suite passes 149 tests, including nine new dashboard and pinned-memory regression tests. Exact commands, resource measurements, artifact provenance and limitations are owned by the [runtime implementation record](../../implementation_details/image_data_loading.md#verified-checkpoint--2026-10-06).
 
 ### Completion gate
 
-New experiments default to `ingredients_target` and omit `<UNK>` from their multi-label outputs, alternative feature labels remain supported, retained historical experiments preserve their semantics, and the policy is covered by tests.
+New experiments default to `ingredients_target` and omit `<UNK>` from their multi-label outputs, alternative feature labels remain supported, retained historical experiments preserve their semantics, and the policy is covered by tests. Real bounded training, checkpoint reload and dashboard smoke checks also pass. **This gate is satisfied on 2026-10-06.**
 
 ## Ordered delivery sequence
 
@@ -607,6 +610,11 @@ decision even after the compatibility checks pass.
 
 ## Decision log
 
+The independent Data 2.4 checkpoint later on 2026-10-06 completed the remaining
+real-runtime and dashboard gates described above. The earlier P7 checkpoint
+remains accurate for its own narrower scope. This closes the Data plan without
+predictive test evaluation, metadata regeneration or historical cleanup.
+
 | Date | Decision or change | Rationale |
 | --- | --- | --- |
 | 2026-08-02 | Created the initial Data implementation plan | Data layout and benchmark construction required one coordinated plan |
@@ -642,3 +650,4 @@ decision even after the compatibility checks pass.
 | 2026-08-12 | Closed Work package 2.1c with a maintained read-only validator and retention manifest | The validator passed artifact hashes, historical selection reproduction, shared-image metadata smoke checks, checkpoint-anchor loads, and saved H2 configuration evidence. No cleanup or legacy rewrite was performed. |
 | 2026-08-16 | Made image DataLoader pinned memory platform-aware | Automatic mode now enables pinned memory only on native Windows and disables it on WSL and other systems. This removes the observed WSL pin-memory-thread OOM while preserving explicit overrides and cross-platform configuration portability; the remaining 2.4 smoke checks continue. |
 | 2026-10-06 | Revalidated 2.1c retention and recorded the P7 runtime handoff | Selected-vocabulary integration preserves original records/metadata and legacy restore semantics. Retention and parity checks pass without cleanup; Data 2.4 real runtime/dashboard gates remain independent. |
+| 2026-10-06 | Closed Work package 2.4 and the Data plan | A rerunnable bounded CUDA smoke verifies the full 165-label default, exact checkpoint reload and the actual dashboard. Model-specific dashboard preprocessing is fixed; 149 tests pass. The old incomplete smoke, metadata and legacy artifacts remain unchanged; no predictive test evaluation or new benchmark campaign occurred. |

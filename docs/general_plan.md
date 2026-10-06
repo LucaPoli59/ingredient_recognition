@@ -3,8 +3,8 @@
 **Created:** 2026-08-02  
 **Last updated:** 2026-10-06
 **Overall status:** In progress  
-**Current macro-phase:** Data
-**Current focus:** Complete the remaining Data 2.4 runtime smoke checks before the next implementation/training gates. Ingredient selection is complete through P7: the shared projection is opt-in, the full default and original evidence are preserved, and historical scripts are retained rather than deleted. Former P5 manual review stays an optional appendix.
+**Current macro-phase:** Additional model implementation — planning handoff
+**Current focus:** Data 2.4 and the Data macro-section are complete. Prepare the Phase 5 implementation plan for the adopted established pair and custom topology; no new implementation or training campaign has started. Ingredient selection is complete through P7: the shared projection is opt-in, the full default and original evidence are preserved, and historical scripts are retained rather than deleted. Former P5 manual review stays an optional appendix.
 
 ## Purpose
 
@@ -32,10 +32,10 @@ A macro-section may remain **In progress** while some of its work packages are *
 | # | Macro-section | Status | Current outcome or next action |
 | --- | --- | --- | --- |
 | 1 | Project foundation | **Done** | Maintain the objective and documentation when decisions change. |
-| 2 | Data | **In progress** | Historical compatibility 2.1c is closed; complete the active WSL training smoke run, checkpoint reload, and dashboard checks for 2.4. |
+| 2 | Data | **Done** | Historical compatibility and all data gates pass, including bounded real CUDA training, exact checkpoint reload and dashboard verification for 2.4. |
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
-| 5 | Additional model implementation | **Deferred** | All three 4A research handoffs are available; prepare their implementation plan after the remaining DataModule readiness checks. |
+| 5 | Additional model implementation | **Pending** | Research and data-readiness dependencies are satisfied; prepare the implementation plan for EfficientNetV2-S, MaxViT-T and P2-S. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
@@ -73,11 +73,11 @@ Reopen this section only when the thesis objective, scope, or binding methodolog
 
 ## 2. Data
 
-**Status:** In progress
+**Status:** Done
 
 The Data macro-section covers source understanding, shared image storage, historical compatibility, deterministic target standardization, split generation, and runtime integration. Persistent outputs are intentionally limited to the common image collection and one selected metadata file in each split.
 
-The entries below are intentionally limited to first-level Data work packages. Lower-level implementation tasks, decisions, and verification evidence are maintained in the active Data implementation plan and linked durable documents.
+The entries below are intentionally limited to first-level Data work packages. Lower-level implementation tasks, decisions, and verification evidence are retained in the completed Data implementation plan and linked durable documents.
 
 ### First-level work-package status
 
@@ -86,7 +86,7 @@ The entries below are intentionally limited to first-level Data work packages. L
 | 2.1 Yummly data understanding, storage, and compatibility | **Done** | Audit, shared image store, retention manifest, historical reproduction, and read-only anchor smoke checks are complete. |
 | 2.2 `ingredients_target` standardization and vocabulary | **Done** | FoodOn-first `v5` generation, exact-plus-fallback association, mapping rules, and support policy are frozen. |
 | 2.3 Deterministic metadata generation and split | **Done** | `v4` remains the baseline; `v5` also passed all automatic image, split, leakage, distribution, vocabulary, and cardinality checks. |
-| 2.4 Runtime target integration and `<UNK>` removal | **In progress** | Code and data-contract tests pass; the WSL ML environment is operational with platform-aware pinned memory, and training completion, checkpoint reload, and dashboard smoke checks remain. |
+| 2.4 Runtime target integration and `<UNK>` removal | **Done** | Full-default and legacy contracts pass; real CUDA training, checkpoint reload and dashboard checks complete, with 149 repository tests passing. |
 
 ### 2.1 Yummly data understanding, storage, and compatibility
 
@@ -98,7 +98,7 @@ The Yummly audit, lineage reconstruction, quality analysis, shared image store, 
 
 **Completion gate:** The selected retention manifest is verified, maintained code reproduces the historical 40-label intersection, and the retained checkpoint anchors load through the shared image layout without rewriting saved semantics.
 
-**Next action:** Maintain the retention manifest and compatibility validator; any cleanup proposal requires a separate reviewed decision. The active Data dependency is now Work package 2.4 runtime smoke validation.
+**Next action:** Maintain the retention manifest and compatibility validator; any cleanup proposal requires a separate reviewed decision.
 
 ### 2.2 Improved `ingredients_target` standardization
 
@@ -126,19 +126,19 @@ The benchmark builder validates images automatically, groups only byte-identical
 
 ### 2.4 Runtime target integration and `<UNK>` removal
 
-**Status:** In progress
+**Status:** Done
 
-The runtime defaults new experiments to `ingredients_target`, derives the vocabulary from training metadata, omits `<UNK>` from new multi-label outputs, and preserves the serialized legacy encoder contract. Code and data-contract tests pass. The WSL environment now starts the ResNet smoke run with pinned memory disabled automatically outside native Windows; training completion, checkpoint reload, and dashboard validation remain pending.
+The runtime defaults new experiments to `ingredients_target`, derives the vocabulary from training metadata, omits `<UNK>` from new multi-label outputs, and preserves the serialized legacy encoder contract. The rerunnable bounded WSL smoke completed four CUDA updates, exact-logit checkpoint reload and actual dashboard checks. Dashboard reconstruction now preserves model-specific preprocessing. All 149 repository tests pass. Metadata and retained experiments are unchanged; no predictive test evaluation occurred.
 
 **Evidence:** [`plans/data_ingredient_refactor/yummly_data_phase.md`](plans/data_ingredient_refactor/yummly_data_phase.md), [`implementation_details/image_data_loading.md`](implementation_details/image_data_loading.md), [`../tests/test_multilabel_encoder_contract.py`](../tests/test_multilabel_encoder_contract.py), and [`../tests/test_images_recipes_dataloader.py`](../tests/test_images_recipes_dataloader.py).
 
-**Completion gate:** New experiments use the selected target field and output contract, retained historical experiments preserve their semantics, and the remaining smoke validations pass.
+**Completion gate:** New experiments use the selected target field and output contract, retained historical experiments preserve their semantics, and real training, checkpoint and dashboard smoke validations pass. Satisfied on 2026-10-06.
 
-**Next action:** Complete the active bounded WSL training run, then execute checkpoint-reload and dashboard smoke tests.
+**Next action:** Maintain the contract and rerunnable smoke when runtime consumers change; proceed to the separate Phase 5 planning handoff.
 
 ### Data macro-section completion gate
 
-The Data macro-section is **Done** only when shared image loading, legacy compatibility, deterministic target generation, exact-duplicate-safe splitting, runtime integration, and the `<UNK>` decision all pass their completion gates.
+Shared image loading, legacy compatibility, deterministic target generation, exact-duplicate-safe splitting, runtime integration, and the `<UNK>` decision all pass their completion gates. **Satisfied on 2026-10-06.** This is engineering readiness, not completed benchmark training or test evaluation.
 
 ## 3. Ingredient selection
 
@@ -198,7 +198,7 @@ The historical rule is reproduced by maintained read-only code; the `v5` campaig
 
 ### Next action
 
-The [P7 completion checkpoint](plans/recognizable_ingredient_selection.md#p7-integration-and-retirement-checkpoint--2026-10-06) closes this macro-section. Later training/comparison consumes the shared projection under the frozen methodology; this does not itself authorize a new campaign. Continue the independent Data 2.4 runtime smoke checks. Manual review remains optional, physical cleanup requires a separate reviewed decision, and retained interrupted runs plus the documented gate-device limitation remain unchanged.
+The [P7 completion checkpoint](plans/recognizable_ingredient_selection.md#p7-integration-and-retirement-checkpoint--2026-10-06) closes this macro-section. Later training/comparison consumes the shared projection under the frozen methodology; this does not itself authorize a new campaign. The independent Data 2.4 checks are now also complete. Manual review remains optional, physical cleanup requires a separate reviewed decision, and retained interrupted runs plus the documented gate-device limitation remain unchanged.
 
 ## 4. Model research
 
@@ -212,7 +212,7 @@ Broad discoveries, primary-source catalogs, implementation audits, and resource 
 
 | Subphase | Status | Owned outcome | Next action |
 | --- | --- | --- | --- |
-| 4A Experimental-model research | **Done** | EfficientNetV2-S and MaxViT-T plus P2-S dual-scale ingredient-query readout with pooled context, with source-linked hypotheses and implementation gates. | Use [4A-D1/4A-D2](project_objective/experimental_model_portfolio.md) and the [completed plans](plans/README.md#completed-plans) for the Phase 5 handoff after data readiness. |
+| 4A Experimental-model research | **Done** | EfficientNetV2-S and MaxViT-T plus P2-S dual-scale ingredient-query readout with pooled context, with source-linked hypotheses and implementation gates. | Use [4A-D1/4A-D2](project_objective/experimental_model_portfolio.md) and the [completed plans](plans/README.md#completed-plans) for the Phase 5 handoff; data readiness is satisfied. |
 | 4B Reference-selector research | **Done** | The binding 4B-D1 EfficientNetV2-S selector protocol and Phase 3 reproducibility/instrumentation handoff. | Maintain the decision and reopen it only through a versioned methodology revision if its implementation gate fails before outcome inspection. |
 
 ### 4A. Experimental-model research
@@ -270,7 +270,7 @@ This subphase asks which single model protocol is a sufficiently sensitive, inte
 
 ## 5. Additional model implementation
 
-**Status:** Deferred
+**Status:** Pending
 
 This macro-section covers architectures selected by Subphase 4A that are not already implemented in the repository.
 
@@ -284,7 +284,7 @@ The [experimental portfolio](project_objective/experimental_model_portfolio.md) 
 
 Existing models are historical baselines, not evidence that the additional-model phase is complete.
 
-### Pending after resume
+### Pending implementation
 
 - [ ] Write an implementation contract for each shortlisted model.
 - [ ] Add the architecture using existing abstractions where appropriate.
@@ -296,7 +296,7 @@ Existing models are historical baselines, not evidence that the additional-model
 
 ### Resume gate
 
-Resume when Subphase 4A approves at least one additional model and the DataModule contract needed by that model is stable.
+Subphase 4A approved the portfolio and Data 2.4 verified the canonical data contract. The planning resume gate is satisfied on 2026-10-06; each new model still requires its own implementation, resource and integration checks.
 
 ### Completion gate
 
@@ -304,7 +304,7 @@ Every selected model passes its tests, integrates with the canonical training pa
 
 ### Next action
 
-Complete the remaining DataModule readiness checks and prepare an implementation plan for the adopted established pair and custom topology. Research selection is complete; implementation, resource smoke tests and final training remain subject to their own gates.
+Prepare an implementation plan for the adopted established pair and custom topology. Research selection and Data readiness are complete; implementation, per-model resource smoke tests and final training remain subject to their own gates. This handoff does not start those activities automatically.
 
 ## 6. Training and hyperparameter tuning
 
@@ -457,9 +457,9 @@ Create the thesis outline and claim map as soon as the institutional template an
 ## Cross-phase dependency flow
 
 ```text
-project foundation [Done] -> data [In progress]
-data -> 4A experimental-model research [Done] -> additional models [Deferred: Data 2.4 readiness]
-data -> 4B reference-selector research [Done] -> ingredient selection [In progress]
+project foundation [Done] -> data [Done]
+data -> 4A experimental-model research [Done] -> additional models [Pending: implementation plan]
+data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
 additional models + ingredient selection -> training and HTuning [Deferred] -> results comparison [Deferred] -> thesis completion
 
@@ -546,6 +546,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-05 | Ingredient-inclusion amendment and corrected analysis | Adopted user-approved D6 and completed the separate saved-score profile with paired image-cluster uncertainty, independent diagnostics, fixed sensitivity and exact rerun verification. Original D4 evidence and full-vocabulary default remain unchanged; no final projection is exported. | Work packages 3.2–3.3 **Done**; 3.5 **Pending** | [D6 decision](project_objective/model_comparison_methodology.md#phase-3-d6--held-out-quality-inclusion-policy), [reviewed result](experiment_results/phase3_d1_v3_d6_profile.md), [active plan](plans/recognizable_ingredient_selection.md) |
 | 2026-10-05 | Shared ingredient-vocabulary freeze | Published the versioned D6 selected projection with saved original indices, independent excluded/uncertain reasons and verified evidence/source hashes. Regeneration is exact; full vocabulary and split metadata remain unchanged. Runtime integration and retention/parity checks remain. | Work package 3.5 **In progress**; Ingredient selection **In progress** | [Published definition](../src/ingredient_selection/resources/ingredients_selected_v5_d6_v1.json), [reviewed publication](experiment_results/phase3_d1_v3_d6_profile.md#p6-publication--2026-10-05), [active plan](plans/recognizable_ingredient_selection.md) |
 | 2026-10-06 | Shared-vocabulary runtime integration | Completed P7 opt-in configuration, fixed selected order, checkpoint guards and analysis projection. All 140 tests, real train/validation parity and historical retention/restore checks pass. Historical scripts are deprecated for new work but retained unchanged; no physical cleanup or new campaign. | Work package 3.5 and Ingredient selection **Done**; independent Data 2.4 gates remain | [P7 checkpoint](plans/recognizable_ingredient_selection.md#p7-integration-and-retirement-checkpoint--2026-10-06), [runtime and retention contract](implementation_details/ingredient_selection.md#p7-runtime-projection) |
+| 2026-10-06 | Data runtime completion | Closed 2.4 with four real CUDA updates, exact full-checkpoint reload and actual dashboard/browser smoke verification. Model-specific dashboard preprocessing is preserved; 149 repository tests pass. Metadata, user edits and retained experiments remain unchanged. | Work package 2.4 and Data **Done**; Additional model implementation **Pending** | [Runtime contract and evidence](implementation_details/image_data_loading.md), [completed Data plan](plans/data_ingredient_refactor/yummly_data_phase.md) |
 
 ## Tracker maintenance rules
 

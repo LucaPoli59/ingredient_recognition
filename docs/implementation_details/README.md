@@ -17,7 +17,7 @@ Implementation-detail documents describe verified current behavior. They must id
 - [`ingredient_mapping_rules.md`](ingredient_mapping_rules.md) is the long-term authority for custom `ingredients` to `ingredients_target` mappings, exclusions, multi-target expansions, retained distinctions, and collision boundaries.
 - [`experiment_artifacts.md`](experiment_artifacts.md) records the audited target-v5 experiment artifacts, scalar/histogram semantics, restart and checkpoint-selection behavior, and offline analysis limits.
 - [`experiment_comparison.md`](experiment_comparison.md) defines the optional Lightning-model per-ingredient logging contract and the maintained local N-experiment JSON/HTML comparison command.
-- [`image_data_loading.md`](image_data_loading.md) defines the image DataModule's platform-aware pinned-memory policy, configuration persistence, and worker-setting boundaries.
+- [`image_data_loading.md`](image_data_loading.md) defines shared-image and target loading, saved encoder compatibility, platform-aware pinned memory, model-specific dashboard preprocessing, and the rerunnable real CUDA/checkpoint/dashboard smoke that closed Data 2.4.
 - [`ingredient_selection.md`](ingredient_selection.md) defines the maintained Phase 3 selector, blind-pilot/D4 analysis, D6 saved-score inclusion review, P6 frozen projection/export and P7 opt-in runtime/checkpoint/analysis contract, parity checks and historical retention dispositions, alongside the rerunnable launcher, effective batching and measured capacity.
 
 When a new implementation contract is added, use a focused descriptive filename, add it to this index, and link it from the relevant plan or project-objective document when it changes a tracked decision or completion gate.
