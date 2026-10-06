@@ -19,6 +19,8 @@ def trial_signature(config: dict[str, Any]) -> dict[str, Any]:
         "category": dm.get("category"),
         "label_count": labels["count"],
         "label_order_sha256": labels["sha256"],
+        "projection_id": labels["projection_id"],
+        "projection_artifact_hash": labels["projection_artifact_hash"],
         "loss_fn": class_name(hp.get("loss_fn")),
         "weighted_loss": hp.get("weighted_loss", hp.get("weight_loss")),
         "model_type": class_name(torch_model.get("type")),
@@ -29,12 +31,12 @@ def trial_signature(config: dict[str, Any]) -> dict[str, Any]:
 
 def comparison_cohort(signature: dict[str, Any]) -> str:
     return "|".join(str(signature.get(key)) for key in (
-        "metadata_filename", "feature_label", "label_order_sha256", "loss_fn", "weighted_loss"
+        "metadata_filename", "feature_label", "label_order_sha256", "projection_artifact_hash", "loss_fn", "weighted_loss"
     ))
 
 
 def compare_signatures(left: dict[str, Any], right: dict[str, Any]) -> dict[str, Any]:
-    required = ("metadata_filename", "feature_label", "label_count", "label_order_sha256")
+    required = ("metadata_filename", "feature_label", "label_count", "label_order_sha256", "projection_artifact_hash")
     objective = ("loss_fn", "weighted_loss", "metric_contract")
     required_mismatches = [key for key in required if left.get(key) != right.get(key)]
     objective_mismatches = [key for key in objective if left.get(key) != right.get(key)]

@@ -13,6 +13,8 @@ from src.commons.utils import register_hparams
 from src.commons.visualizations import gradcam
 from src.models.commons import BaseModel
 from src.data_processing.common import BaseDataModule
+from src.commons.config_enc_dec import decode_config
+from src.ingredient_selection.runtime import projection_config, resolve_projection
 
 
 class BaseLGNM(lgn.LightningModule):
@@ -43,6 +45,8 @@ class BaseLGNM(lgn.LightningModule):
         """
         super().__init__()
         self.prepared = False
+        self._ingredient_projection = None
+        self._projection_bound = False
         self._model = model
         self._lr = lr
         self._batch_size = batch_size
@@ -95,9 +99,38 @@ class BaseLGNM(lgn.LightningModule):
             self.test_per_ingredient_metrics = per_ingredient_metrics.clone()
 
     def startup_model(self, datamodule: BaseDataModule):
+        self.bind_ingredient_projection(getattr(datamodule, "projection_config", None))
         if not self.prepared:
             self._startup(datamodule)
             self.prepared = True
+
+    def bind_ingredient_projection(self, value=None):
+        resolved = resolve_projection(value)
+        normalized = None if resolved is None else resolved.to_config()
+        if resolved is not None and self.num_classes != len(resolved.class_order):
+            raise ValueError("model output size differs from the selected vocabulary")
+        if self._projection_bound and normalized != self._ingredient_projection:
+            raise ValueError("model is already bound to a different ingredient vocabulary")
+        self._ingredient_projection = normalized
+        self._projection_bound = True
+        if normalized is not None:
+            self.hparams["ingredient_projection"] = normalized
+
+    def on_save_checkpoint(self, checkpoint):
+        # LightModelCheckpoint removes both hyperparameter sections, not this identity.
+        checkpoint["ingredient_projection"] = self._ingredient_projection
+
+    def on_load_checkpoint(self, checkpoint):
+        saved = projection_config(checkpoint.get("ingredient_projection"))
+        if saved != self._ingredient_projection:
+            raise ValueError("checkpoint vocabulary differs from the model ingredient projection")
+        for section in ("hyper_parameters", "datamodule_hyper_parameters"):
+            params = checkpoint.get(section, {})
+            value = params.get("ingredient_projection")
+            if isinstance(value, (list, tuple)):
+                value = decode_config({"ingredient_projection": value})["ingredient_projection"]
+            if section in checkpoint and projection_config(value) != saved:
+                raise ValueError("checkpoint ingredient projection fields disagree")
 
     def _startup(self, datamodule: BaseDataModule):
         self._init_loss(datamodule)
@@ -347,11 +380,14 @@ class BaseLGNM(lgn.LightningModule):
         lgn_model = cls(torch_model, lr, batch_size, optimizer, loss_fn, momentum=momentum, weighted_loss=weighted_loss,
                         weight_decay=weight_decay, use_swa=use_swa, metrics=metrics,
                         log_per_ingredient_metrics=log_per_ingredient_metrics, **lgn_model_kwargs)
+        lgn_model.bind_ingredient_projection(config.get('ingredient_projection'))
         return lgn_model
 
     def load_weights_from_checkpoint(self, checkpoint_path: str, weights_only: bool = True,
                                      drop_fields: Optional[List[str]] = None):
-        state_dict = torch.load(checkpoint_path, weights_only=weights_only)['state_dict']
+        checkpoint = torch.load(checkpoint_path, weights_only=weights_only)
+        self.on_load_checkpoint(checkpoint)
+        state_dict = checkpoint['state_dict']
         if drop_fields is not None:
             state_dict = {k: v for k, v in state_dict.items() if k not in drop_fields}
 

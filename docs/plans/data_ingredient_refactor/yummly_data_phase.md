@@ -1,7 +1,7 @@
 # Yummly data-phase implementation plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-08-16
+**Last updated:** 2026-10-06
 
 This plan translates the Data macro-section of [`general_plan.md`](../../general_plan.md) into a deliberately small implementation sequence. It covers the shared-image-store prerequisite, compatibility with historical experiments, generation of `ingredients_target`, deterministic split construction, and runtime integration.
 
@@ -587,6 +587,24 @@ The plan is complete when:
 - the `<UNK>` decision has been investigated, documented, implemented, and tested;
 - the first new metadata generation passes all automatic checks and a minimal runtime smoke test.
 
+## P7 cross-phase verification — 2026-10-06
+
+Ingredient selection P7 adds an explicit runtime projection without replacing
+the v5 metadata or 165-label default. Its read-only check verifies original
+record order and full-column parity on train/validation; all-zero projected
+rows remain present. The 2.1c validator again passes all 72 retained artifacts
+and three checkpoint anchors. Additional canonical CPU restores preserve the
+legacy encoders and finite synthetic model outputs without checkpoint writes.
+See the [P7 implementation and retention contract](../../implementation_details/ingredient_selection.md#p7-runtime-projection)
+for exact scope, counts and limitations.
+
+This checkpoint does **not** close Data 2.4: P7's bounded synthetic CPU
+fit/reload/resume does not substitute for the remaining real runtime and
+dashboard smoke checks. No predictive test evaluation, metadata migration or
+physical cleanup took place. Historical notebooks and launchers remain
+byte-identical retained evidence; deletion still needs a separate reviewed
+decision even after the compatibility checks pass.
+
 ## Decision log
 
 | Date | Decision or change | Rationale |
@@ -623,3 +641,4 @@ The plan is complete when:
 | 2026-08-10 | Removed old DenseNet schema translation from the 2.1c completion gate | DenseNet experiments were not part of the selected ingredient-selection evidence. Compatibility may be added later only if a separate retention decision selects a DenseNet artifact. |
 | 2026-08-12 | Closed Work package 2.1c with a maintained read-only validator and retention manifest | The validator passed artifact hashes, historical selection reproduction, shared-image metadata smoke checks, checkpoint-anchor loads, and saved H2 configuration evidence. No cleanup or legacy rewrite was performed. |
 | 2026-08-16 | Made image DataLoader pinned memory platform-aware | Automatic mode now enables pinned memory only on native Windows and disables it on WSL and other systems. This removes the observed WSL pin-memory-thread OOM while preserving explicit overrides and cross-platform configuration portability; the remaining 2.4 smoke checks continue. |
+| 2026-10-06 | Revalidated 2.1c retention and recorded the P7 runtime handoff | Selected-vocabulary integration preserves original records/metadata and legacy restore semantics. Retention and parity checks pass without cleanup; Data 2.4 real runtime/dashboard gates remain independent. |

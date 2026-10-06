@@ -1,7 +1,7 @@
 # Recognizable ingredient selection plan
 
 **Created:** 2026-08-10
-**Last updated:** 2026-10-05
+**Last updated:** 2026-10-06
 
 This plan is the operational source of truth for Macro-section 3, **Ingredient selection**, in [`general_plan.md`](../general_plan.md). It preserves the November 2024 ResNet selection as a historical baseline and replaces its exploratory workflow with a reproducible, research-informed decision-profile study over the frozen FoodOn-first `v5` vocabulary. Macro-section 3 owns the resulting selected vocabulary and now executes against the frozen Subphase 4B reference selector. The independent Subphase 4A experiment-model shortlist is not a Phase 3 gate.
 
@@ -18,9 +18,9 @@ decision.
 
 ## Progress tracker
 
-**Overall status:** In progress
-**Current task:** P6 complete: the shared D6 projection is published with original indices, hashes and independent exclusion reasons. Original D4 evidence remains unchanged and mandatory P5 remains superseded.
-**Next action:** P7: integrate the explicit projection with canonical training/analysis configuration, verify full/default and legacy parity, then assess retention-gated cleanup. Do not retrain the selector, change membership, restore manual review or replace the full-vocabulary default.
+**Overall status:** Done
+**Current task:** P7 complete: the frozen D6 projection is opt-in in canonical training/analysis, with unchanged full default and verified record/column/checkpoint compatibility. Historical code is retired from the active workflow but retained as evidence. Original D4 evidence is unchanged and mandatory P5 remains superseded.
+**Next action:** Hand the shared projection to later model training/comparison; complete the independent Data 2.4 runtime smoke gates before releasing the relevant project stages. No further selector run, membership change or physical legacy cleanup is part of this completion.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
@@ -31,7 +31,7 @@ decision.
 | P4 | Apply the numerical profile and verify its inclusion interpretation | **Done** | Original D4 application retained. The user-approved [D6 result](../experiment_results/phase3_d1_v3_d6_profile.md) now has statistic-consistent paired image-cluster uncertainty, independent reasons and fixed sensitivity: 59 eligible, 60 uncertain, 46 below the operational floor. Two full runs reproduce all artifacts; 100 repository tests pass with the documented generic metadata-test caveat. |
 | P5 | Former mandatory semantic and visual-observability review | **Superseded** | [D5](../project_objective/model_comparison_methodology.md#phase-3-d5--numerical-selection-and-optional-interpretation-appendix) moves both manual reviews to an [optional appendix](../project_objective/ingredient_observability_protocol.md). The unannotated 64-pair packet and source are retained; no reviewer results are claimed. |
 | P6 | Freeze the shared numerical-profile-based vocabulary and exploratory groups | **Done** | Published [`ingredients_selected_v5_d6_v1`](../../src/ingredient_selection/resources/ingredients_selected_v5_d6_v1.json): 59 selected, with 60 uncertain and 46 below-floor exclusions, original indices, independent reasons and source/evidence hashes. Repeated exports agree exactly; 13 focused and 113 repository tests pass. No metadata, model, score archive or test split is opened by the exporter. |
-| P7 | Integrate the workflow and retire superseded scripts safely | **Pending** | Connect the explicit projection to canonical training/analysis configuration, preserve all records including empty projected targets, verify full/default and legacy parity, then clean legacy notebooks and launchers only after retention gates pass. No P7 implementation or deletion is included in P6. |
+| P7 | Integrate the workflow and retire superseded scripts safely | **Done** | Explicit runtime projection, saved output identity/order, checkpoint guards and projection-aware comparison are integrated. All 140 tests pass; real train/validation column parity and 72-artifact legacy retention checks pass. Superseded launchers/notebooks are deprecated for active use and retained byte-identically; physical cleanup needs a separate reviewed decision. |
 
 ## Objective
 
@@ -521,6 +521,36 @@ retain every original record even when projection is empty, and keep opt-in
 selection distinct from the default full task. Phase 6 owns later training and
 matched-random controls. No P7 action is authorized by this completion record.
 
+## P7 integration and retirement checkpoint — 2026-10-06
+
+Following separate user authorization, P7 connected the P6 resource to canonical
+`ExpConfig`, `ImagesRecipesBaseDataModule`, training startup, checkpoint restore
+and experiment comparison. The [implementation contract](../implementation_details/ingredient_selection.md#p7-runtime-projection)
+owns the opt-in API, saved identities, rejection rules and verification commands.
+The full 165-label vocabulary remains the default. Every selected column has
+its saved base index; no split independently fits a vocabulary. Empty targets,
+original records and metadata bytes are preserved.
+
+All 140 repository tests pass, including 27 new integration tests and a bounded
+synthetic CPU fit/full-light reload/resume. A read-only real-data check confirms
+exact column parity for 47,965 train and 5,996 validation records, retaining
+176 and 18 all-zero projected rows. The 72-artifact Data 2.1c validator and
+three current-runtime synthetic legacy checkpoint forwards pass. The existing
+generic suite's metadata-only real test compatibility check is not predictive
+test evaluation; the new parity command reads only train/validation.
+
+The [retirement disposition](../implementation_details/ingredient_selection.md#historical-retirement-and-retention)
+retains historical launchers, notebooks and evidence byte-identically and
+routes new work to maintained commands. Passing the gates does not authorize
+deletion: any physical cleanup remains a separate reviewed scope. No scientific
+gate, membership, original D4/D6 evidence, user-owned launcher edit or split
+metadata was changed; no new experiment campaign was started.
+
+P7, Work package 3.5 and Macro-section 3 are **Done** with this retention-aware
+logical retirement. Independent Data 2.4 runtime/dashboard validation and
+later training/comparison remain outside this closure. There is no new claim
+of selected-task improvement, direct visibility or seed stability.
+
 ## Decision log
 
 | Date | Decision or change | Rationale |
@@ -550,6 +580,7 @@ matched-random controls. No P7 action is authorized by this completion record.
 | 2026-10-05 | Reopened P4 inclusion interpretation after the user's objective-alignment review | The audit reproduces D4 but identifies privileged cuisine, train-gap, support and interval-statistic concerns. A concrete held-out-quality proposal and bounded sensitivity are documented; amendment adoption, matching uncertainty and P6 freeze remain pending. No retained-count target is introduced. |
 | 2026-10-05 | Adopted D6 and completed the reopened P4 review | User-approved held-out-quality policy, paired image-cluster intervals and independent diagnostics produce a separately frozen, twice-reproduced report. Original D4 evidence is retained, no cardinality target is used, and P6 export is next. |
 | 2026-10-05 | Completed P6 shared-vocabulary freeze | Published the approved D6 `included` subsequence as a versioned, write-once definition with original indices and explicit excluded groups/reasons. Reproduction and 113 tests pass; the full default stays unchanged and P7 runtime integration is next. |
+| 2026-10-06 | Completed P7 runtime integration and retention-aware retirement | Opt-in canonical configuration, strict saved order, checkpoint identity and analysis projection pass 140 tests, real train/validation parity and historical retention/restore checks. Legacy notebooks/launchers remain immutable evidence and are deprecated for new work; deletion still needs a separate reviewed decision. |
 
 ## Related documentation
 

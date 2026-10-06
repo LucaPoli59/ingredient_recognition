@@ -1,7 +1,7 @@
 # Experiment comparison and per-ingredient logging
 
 **Created:** 2026-09-14
-**Last updated:** 2026-09-14
+**Last updated:** 2026-10-06
 
 ## Purpose and scope
 
@@ -82,6 +82,24 @@ Trial objectives are aggregated only for complete trials, or for trials with unk
 Hyperparameter results use Spearman association for varying numeric parameters and count/mean/median objective summaries for categorical parameters. These are descriptive conditional HPO observations, not causal estimates or seed-level uncertainty.
 
 Optional ingredient analysis reports label-index/name mapping, coverage, final-value summaries, and contributor-counted trajectories. General reports remain available when ingredient data is absent.
+
+### Explicit selected-vocabulary identity
+
+P7 adds the frozen projection ID and artifact hash to the label contract.
+The reader validates the saved DataModule/model markers and any saved encoder
+order against the registered resource. It can recover the selected class order
+when an HPO trial omits its encoder, without importing recorded model classes.
+Projection artifact hash participates in objective cohorts and compatibility:
+full- and selected-task objectives are not pooled even with identical metadata
+filenames. Historical configurations without a projection keep their prior
+label-contract behavior.
+
+The separate [runtime projection helper](ingredient_selection.md#analysis-handoff)
+verifies the full-model class order before slicing outputs into selected
+columns. The comparator does not automatically recompute historical metrics
+on a different vocabulary or claim that reducing labels improves performance.
+P7 identity/order/cohort checks are covered by
+[test_ingredient_selection_runtime.py](../../tests/test_ingredient_selection_runtime.py).
 
 ## W&B histogram analysis
 

@@ -6,6 +6,7 @@ import json
 from typing import Any
 
 from .readers.config import class_name
+from src.ingredient_selection.runtime import resolve_projection
 
 
 def flatten_config(value: Any, prefix: str = "") -> dict[str, Any]:
@@ -29,12 +30,24 @@ def label_contract(config: dict[str, Any]) -> dict[str, Any]:
     classes = encoder.get("classes") if isinstance(encoder, dict) else None
     if not isinstance(classes, list):
         classes = None
+    projection = resolve_projection(datamodule.get("ingredient_projection"))
+    model_projection = resolve_projection(config_section(config, "hyper_parameters").get("ingredient_projection"))
+    if model_projection != projection:
+        raise ValueError("analysis configuration has conflicting ingredient projections")
+    if projection is not None:
+        projection.validate_data_config(datamodule.get("metadata_filename"), datamodule.get("feature_label"),
+                                        datamodule.get("category"))
+        if classes is not None and classes != list(projection.class_order):
+            raise ValueError("analysis encoder order conflicts with the frozen projection")
+        classes = list(projection.class_order)
     encoded = json.dumps(classes, ensure_ascii=False, separators=(",", ":")) if classes is not None else None
     return {
         "classes": classes,
         "count": len(classes) if classes is not None else None,
         "sha256": hashlib.sha256(encoded.encode()).hexdigest() if encoded is not None else None,
         "mapping_status": "available" if classes is not None else "unavailable",
+        "projection_id": None if projection is None else projection.projection_id,
+        "projection_artifact_hash": None if projection is None else projection.artifact_hash,
     }
 
 

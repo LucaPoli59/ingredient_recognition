@@ -18,6 +18,7 @@ from src.commons.utils import register_hparams
 from src.data_processing.common import BaseDataModule
 from src.data_processing.transformations import t_transform
 from src.data_processing.labels_encoders import MultiLabelBinarizerRobust, LabelEncoderInterface, MultiLabelBinarizer, TextIntEncoder
+from src.ingredient_selection.runtime import resolve_projection
 
 
 def _resolve_pin_memory(pin_memory: bool | None, os_name: str | None = None) -> bool:
@@ -273,6 +274,7 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
             transform_aug: Optional[t_transform] = None,
             transform_plain: Optional[t_transform] = None,
             pin_memory: bool | None = None,
+            ingredient_projection: str | dict | None = None,
     ):
         super().__init__(images_stats_path, batch_size=batch_size, transform_aug=transform_aug,
                          transform_plain=transform_plain)  # Setting parameters
@@ -282,11 +284,13 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
         self.batch_size, self.num_workers = batch_size, num_workers
         self.pin_memory = pin_memory
         self.label_encoder, self.category = label_encoder, category
+        self.ingredient_projection = resolve_projection(ingredient_projection)
         self._set_def_params()
 
         register_hparams(self, ["data_dir", "metadata_filename", "images_subdir", "category", "feature_label",
                                 {"label_encoder": self.label_encoder.to_config()}, {"type": self.__class__},
-                                {"num_workers": self.num_workers}, {"pin_memory": self.pin_memory}, {}],
+                                {"num_workers": self.num_workers}, {"pin_memory": self.pin_memory},
+                                {"ingredient_projection": self.projection_config}],
                          log=False)
 
         self._stage_data_dir = {}  # Local metadata paths for each stage
@@ -314,6 +318,33 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
 
         if self.num_workers is None:
             self.num_workers = os.cpu_count()
+
+        self._validate_projection_encoder()
+
+    @property
+    def projection_config(self):
+        return None if self.ingredient_projection is None else self.ingredient_projection.to_config()
+
+    def _validate_projection_encoder(self):
+        projection = self.ingredient_projection
+        if projection is None:
+            return
+        projection.validate_data_config(self.metadata_filename, self.recipe_feature_label, self.category)
+        encoder = self.label_encoder
+        if type(encoder) is not MultiLabelBinarizer:
+            raise ValueError("ingredient projection requires the strict MultiLabelBinarizer")
+        names = list(projection.class_order)
+        expected_map = {name: index for index, name in enumerate(names)}
+        if encoder.classes is not None and list(encoder.classes) != names:
+            raise ValueError("encoder classes differ from the frozen selected order")
+        if encoder.fitted:
+            if encoder.classes is None or encoder.encode_map != expected_map:
+                raise ValueError("fitted encoder mapping differs from the frozen selected order")
+        else:
+            if encoder.encode_map not in (None, expected_map):
+                raise ValueError("unfitted encoder contains a conflicting mapping")
+            encoder.classes = names
+            encoder.fit()
 
     def _check_paths_and_set_locals(self):
         """Checks if the global images and recipes directories exist and sets the local paths for each stage"""
@@ -376,10 +407,14 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
     def prepare_data(
             self):  # todo: fare il sistema che salva i risultati in un file, in modo che non vengano ricalcolati ogni volta (e che si possano rimuovere volendo dal checkpointing)
         """Prepares the data for the datasets by processing the images and recipes data."""
+        self._validate_projection_encoder()
+        if self.ingredient_projection is not None:
+            self.ingredient_projection.verify_metadata(self.data_dir)
         for stage in ['train', 'val', 'test', 'predict']:
             res = images_recipes_processing(
                 self._stage_data_dir[stage], self.metadata_filename, self.category, self.label_encoder,
                 self.recipe_feature_label, images_dir=self.images_dir,
+                ingredient_projection=self.ingredient_projection,
             )
             self._images_paths[stage], self._label_data[stage], self.label_encoder = res
 
@@ -446,6 +481,7 @@ class ImagesRecipesBaseDataModule(BaseDataModule):
                    batch_size=batch_size, feature_label=feature_label,
                    images_subdir=images_subdir, num_workers=num_workers, pin_memory=pin_memory,
                    label_encoder=label_encoder,
+                   ingredient_projection=config.get('ingredient_projection'),
                    transform_plain=transform_plain, transform_aug=transform_aug, **kwargs)
 
 
@@ -477,6 +513,7 @@ def images_recipes_processing(
         data_dir: os.path, metadata_filename: str = METADATA_FILENAME, category: str | None = None,
         label_encoder: LabelEncoderInterface = None, recipe_feature_label: str = "ingredients_ok",
         image_field: str = "image", encoding: bool=True, images_dir: str | os.PathLike | None = None,
+        ingredient_projection=None,
 ) -> Tuple[List[pathlib.Path], ndarray, LabelEncoderInterface]:
     """Function that processes the images and recipes data, filtering them by category, encoding the recipes and
     returning the images paths, the label data and the label encoder."""
@@ -484,6 +521,8 @@ def images_recipes_processing(
     recipes, label_data_raw = _load_recipes_data(data_dir, recipe_feature_label, metadata_filename, category)
 
     images_paths = _compute_images_paths(recipes, images_dir or data_dir, image_field)
+    if ingredient_projection is not None:
+        label_data_raw = ingredient_projection.project_targets(label_data_raw)
     label_data, label_encoder = _encode_recipes(label_data_raw, label_encoder, recipe_feature_label, transform=encoding)
 
     return images_paths, label_data, label_encoder

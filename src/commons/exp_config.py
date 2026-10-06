@@ -18,6 +18,7 @@ from src.lightning.lgn_trainers import BaseTrainer
 from src.data_processing.labels_encoders import MultiLabelBinarizer
 from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
 from src.commons.utils import MyMLAccuracy
+from src.ingredient_selection.runtime import projection_config, resolve_projection
 
 DEF_METRIC_INIT_P = {
     "task": "multilabel",
@@ -85,6 +86,7 @@ DEF_EXP_CONFIG = {
         "images_subdir": os.path.join("imgs", "standard"),
         "category": None,
         "feature_label": "ingredients_target",
+        "ingredient_projection": None,
         "num_workers": os.cpu_count(),
         "label_encoder": {
             "type": MultiLabelBinarizer,
@@ -143,6 +145,8 @@ class ExpConfig:
 
         if update_kwargs:
             self.update_config(**update_kwargs)
+        else:
+            self.validate_ingredient_projection()
 
     def update_config(self, **kwargs) -> None:
         """Function that takes some kwargs to update the default configuration.
@@ -177,6 +181,39 @@ class ExpConfig:
                         key = prefix + "_" + key  # in case the prefix is not recognized with have to use the starting key
 
                     prefix_config[key] = value
+
+        self.validate_ingredient_projection()
+
+    def validate_ingredient_projection(self):
+        dm = self._config.get("datamodule_hyper_parameters", {})
+        hp = self._config.get("hyper_parameters", {})
+        projection = resolve_projection(dm.get("ingredient_projection"))
+        saved_model_projection = hp.get("ingredient_projection")
+        if projection is None:
+            if saved_model_projection is not None:
+                raise ValueError("model projection requires the matching DataModule projection")
+            return
+        projection.validate_data_config(dm.get("metadata_filename"), dm.get("feature_label"), dm.get("category"))
+        normalized = projection.to_config()
+        if saved_model_projection is not None and projection_config(saved_model_projection) != normalized:
+            raise ValueError("model and DataModule ingredient projections disagree")
+        num_classes = hp.get("torch_model", {}).get("num_classes")
+        if num_classes is not None and num_classes != len(projection.class_order):
+            raise ValueError("model output size differs from the selected vocabulary")
+        encoder = dm.get("label_encoder") or {}
+        if encoder:
+            if encoder.get("type") is not MultiLabelBinarizer:
+                raise ValueError("selected vocabulary requires the strict encoder")
+            names = encoder.get("classes")
+            if names is not None and list(names) != list(projection.class_order):
+                raise ValueError("saved encoder order differs from the selected vocabulary")
+            expected = {name: i for i, name in enumerate(projection.class_order)}
+            if encoder.get("encode_map") not in (None, expected):
+                raise ValueError("saved encoder mapping differs from the selected vocabulary")
+            if encoder.get("fitted") and (names is None or encoder.get("encode_map") != expected):
+                raise ValueError("fitted selected encoder is incomplete")
+        dm["ingredient_projection"] = normalized
+        hp["ingredient_projection"] = dict(normalized)
 
     @property
     def trainer(self) -> Dict[str, Any]:
@@ -266,9 +303,13 @@ class ExpConfig:
         config = {k: decode_config(v) for k, v in ckpt_data.items() if k in exp_config._config.keys()}
         config_edit = exp_config._convert_dict_to_update_kwargs(config)
         exp_config.update_config(**config_edit)
+        if projection_config(ckpt_data.get("ingredient_projection")) != projection_config(
+                exp_config.datamodule.get("ingredient_projection")):
+            raise ValueError("checkpoint and experiment ingredient projections disagree")
         return exp_config
 
     def save_to_file(self, file_path: str | os.PathLike) -> None:
+        self.validate_ingredient_projection()
         with open(file_path, "w") as file:
             json.dump(encode_config(self._config), file, indent=4)
 

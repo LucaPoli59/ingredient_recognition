@@ -1,7 +1,7 @@
 # Ingredient-selection workflow
 
 **Created:** 2026-09-24
-**Last updated:** 2026-10-05
+**Last updated:** 2026-10-06
 
 ## Purpose and scope
 
@@ -39,6 +39,8 @@ owns the adopted post-P4 inclusion policy; P6's final projection is separate.
 | `src/ingredient_selection/inclusion_reporting.py` | Renders a deterministic SVG from existing D6 decisions and intervals; plotting does not determine membership. |
 | `src/ingredient_selection/projection.py` | Publishes the approved D6 membership as a write-once, versioned vocabulary definition without loading data, predictions or the training stack. |
 | `src/ingredient_selection/resources/` | Stores the portable shared P6 definition with ordered names, original indices, excluded groups/reasons and source/evidence hashes. |
+| `src/ingredient_selection/runtime.py` | Resolves the approved opt-in vocabulary, validates saved identity/order and base targets, and projects targets or verified full-model output columns. It never reselects labels. |
+| `scripts/ingredient_selection/verify_runtime.py` | Read-only train/validation encoding-parity check against the original 165 columns; no test metadata, image inference or output writes. |
 | `src/ingredient_selection/observability.py` | Uses only the standard library to validate the completed P4 inputs, sample a blind P5 validation-image pilot, verify/harden the packet, render two independently ordered review forms, and score completed human responses without choosing a vocabulary. |
 | `scripts/ingredient_selection/` | Provides thin campaign, analysis, pilot/full-report, and historical-reproduction commands. |
 | `scripts/launch_exps/ingredient_selection/train_selector.py` | Rerunnable launcher: descending short OOM probes or a full-epoch resource gate followed by the fresh campaign. |
@@ -374,6 +376,126 @@ assignment, the complete 40-epoch learning-rate sequence, optimizer/scheduler
 resume, eval-mode auditing, test-split isolation, rule-gated label exposure,
 and append-only historical retention.
 
+## P7 runtime projection
+
+The canonical opt-in for a **new, separately named** experiment is:
+
+```python
+from src.commons.exp_config import ExpConfig
+
+config = ExpConfig(dm_ingredient_projection="ingredients_selected_v5_d6_v1")
+```
+
+Leaving `dm_ingredient_projection=None` preserves the full 165-label default.
+Use the existing `src/training/` entry points with this configuration; P7 does
+not introduce another training pipeline. Auto-resuming an existing experiment
+uses its saved configuration: changing incoming options is not a vocabulary
+migration. Use a distinct experiment name for the selected task.
+
+`runtime.resolve_projection` accepts only the registered ID or its exact saved
+contract. It verifies the approved P6 canonical artifact hash, selected order,
+base order and index mapping. `ImagesRecipesBaseDataModule` then requires the
+original `ingredients_target_v5_metadata.json`, `ingredients_target`, and no
+cuisine/category restriction. It verifies the frozen train/validation metadata
+bytes. There is no new split generation or in-place metadata update.
+
+The strict `MultiLabelBinarizer` is fitted explicitly to the saved 59 names
+**without inferring classes from any split**. Each original target is checked
+against the full base vocabulary before intersection. Known but unselected
+labels are dropped; unknown base labels raise an error rather than disappearing.
+Record IDs, order and split membership are preserved, including all-zero
+selected targets. The generic DataModule still prepares train/val/test/predict
+metadata eagerly, as before; this runtime behavior is distinct from the
+train/validation-only selector and read-only verification command.
+
+`ExpConfig`, DataModule hyperparameters and the Lightning model persist the
+projection ID, canonical artifact hash, exact selected names/order/hash, base
+order hash and `base_class_indices`. Model construction uses 59 outputs.
+Configuration, startup and restore reject incompatible heads, encoders, orders
+or projection markers. Checkpoints also retain a top-level
+`ingredient_projection`, including light checkpoints that omit hyperparameter
+sections. A selected checkpoint cannot be restored as a full-task model (or
+vice versa). Legacy full/robust checkpoints without markers remain supported;
+their saved `<UNK>` behavior is not reinterpreted.
+
+### Analysis handoff
+
+Selected output column `j` corresponds to original
+`base_class_indices[j]`. For full-model logits, scores or targets:
+
+```python
+from src.ingredient_selection.runtime import project_output_columns
+
+selected = project_output_columns(full_values, saved_full_class_order)
+```
+
+The helper requires a two-dimensional 165-column NumPy/Torch array and the
+exact saved base class order. It preserves row order, dtype and Torch device
+and gradients. It does not infer column semantics from width alone or compute
+metrics. Compare full-model outputs restricted to the shared columns with
+selected-model outputs only under the later benchmark protocol.
+
+The maintained experiment comparator resolves selected label names even when
+HPO omits the trial encoder, validates saved projection markers, and includes
+projection hash in objective cohorts. Full- and selected-task losses are not
+pooled just because their metadata filename is the same. This is engineering
+support, not evidence that selection improves prediction.
+
+### Verification checkpoint — 2026-10-06
+
+From the main WSL repository, with the ML interpreter:
+
+```bash
+python -m unittest discover -s tests -q
+python scripts/ingredient_selection/verify_runtime.py
+python scripts/validate_legacy_experiments.py
+```
+
+- All **140 repository tests pass**, including 27 new
+  [runtime integration tests](../../tests/test_ingredient_selection_runtime.py).
+  They cover full/default behavior, exact selected columns, empty rows,
+  unknown labels, config and HPO serialization, checkpoint mismatch rejection,
+  comparator cohort separation, and synthetic split/metadata immutability.
+  A bounded synthetic CPU Lightning fit verifies full/light checkpoint reload
+  and a subsequent optimizer-step resume. No real-data model is trained.
+- The read-only parity command verifies all **47,965 train and 5,996 validation
+  records**, exactly matching their original 165-label encoding at the saved
+  selected indices. All **176 train and 18 validation all-zero selected rows**
+  are retained. These counts describe projection, not new inclusion criteria.
+  Input bytes are unchanged; the command opens no test metadata or image pixels.
+- The Data 2.1c validator passes all **72 retained artifacts**, exact historical
+  40-label reproduction, metadata compatibility and three executable checkpoint
+  anchors. The journal has only the allowed append-only extension; writes are
+  empty. An additional current-runtime CPU check loaded the saved H1 trial 21,
+  H2 trial 0 and H3 trial 64 configurations/weights with
+  `ExpConfig.load_from_file`/`load_from_ckpt_data`,
+  `BaseLGNM.load_from_config` and `load_weights_from_checkpoint`. Historical
+  HPO trial encoders were recovered from their saved parent `hparam_config.json`.
+  Synthetic zero-image forward passes produced finite 183/183/41 outputs;
+  all three checkpoint hashes stayed unchanged.
+- The full suite includes a **pre-existing metadata-only real test-split
+  vocabulary compatibility check**. The legacy validator also checks historical
+  metadata/sample loading. Neither is predictive test evaluation. New real-data
+  parity verification reads train/validation only; no test metric, campaign,
+  HPO run, matched-random control or human review was performed.
+
+### Historical retirement and retention
+
+P7 retires superseded code **from the active workflow**, not from the evidence
+archive. The verified Data 2.1c manifest remains authoritative:
+
+| Material | Disposition | Maintained replacement or reason |
+| --- | --- | --- |
+| Five historical `scripts/analize_exps/*.ipynb` notebooks | Retain byte-identically; deprecated as executable workflow | Historical reconstruction uses `reproduce.py`; the current campaign uses maintained analysis/report/D6 commands. |
+| H1–H4 launchers (`htuning_resnets.py`, `train_resnets_bs_f1_ings.py`, `htuning_resnets_sel_ings.py`, `test_best_for_f1.py`) | Retain byte-identically; not templates for new selection | Use `train_selector.py` for the frozen selector and canonical training configuration for the opt-in selected task. |
+| Retained metadata, configs, checkpoints, metrics, provenance and D4/D6/P6 inputs | Retain unchanged | Required reproducibility and compatibility evidence, not redundant runtime files. |
+| Other old checkpoints, profiling output or logs | Defer physical cleanup | A separate reviewed, exact-scope cleanup decision is still required; passing retention checks does not authorize deletion. |
+
+No historical file is deleted, moved or rewritten. Retention-aware logical
+retirement closes P7; disk cleanup is not a hidden dependency or permission.
+Broader Data 2.4 GPU-training/dashboard smoke checks and the documented future
+resource-gate device fix remain separate follow-ups.
+
 ## Optional appendix: retained former P5 blind review pilot
 
 The [appendix protocol](../project_objective/ingredient_observability_protocol.md)
@@ -427,9 +549,10 @@ discovery; this does not constitute a test failure of the new review module.
 P3 and the original P4 application are retained. The revised P4 checkpoint is
 tracked in the [active plan](../plans/recognizable_ingredient_selection.md).
 Mandatory P5 review is superseded, with its unannotated
-packet and tools retained as an optional appendix. P6 has published the shared
-numerical-profile-based vocabulary definition; P7 runtime integration and
-retention-gated cleanup remain separate. No current report establishes direct
+packet and tools retained as an optional appendix. P6 published the shared
+numerical-profile-based vocabulary definition and P7 integrated its explicit
+runtime use with parity and legacy checks. Superseded scripts are retained as
+evidence; physical cleanup requires a separate reviewed decision. No current report establishes direct
 visibility. The incomplete v2 capacity gate was
 interrupted before any v2 campaign started. The interrupted v1's artifacts
 remain in the original report/experiment directories and are excluded from

@@ -33,6 +33,18 @@ def model_training(exp_config: ExpConfig, data_module: Optional[BaseDataModule] 
     if trainer_kwargs is None:
         trainer_kwargs = {}
 
+    exp_config.validate_ingredient_projection()
+    requested_projection = exp_config.datamodule.get("ingredient_projection")
+    supplied_projection = getattr(data_module, "projection_config", None)
+    if requested_projection is not None or supplied_projection is not None:
+        if data_module is None:
+            data_module = load_datamodule(exp_config)
+        if data_module.projection_config != requested_projection:
+            raise ValueError("supplied DataModule and experiment ingredient projections disagree")
+        data_module._validate_projection_encoder()
+        exp_config.update_config(dm_label_encoder=data_module.label_encoder.to_config(),
+                                 tm_num_classes=data_module.get_num_classes())
+
     resuming = ckpt_path is None
     model_config, trainer_config = exp_config.lgn_model, exp_config.trainer
 
