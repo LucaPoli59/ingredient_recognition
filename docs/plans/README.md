@@ -1,13 +1,13 @@
 # Implementation plans
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-10-06
+**Last updated:** 2026-10-07
 
 This directory contains the execution plans for concrete project implementations. These plans translate work packages from the project-wide [`general_plan.md`](../general_plan.md) into bounded technical tasks, verification steps, dependencies, and completion criteria.
 
 ## Active plans
 
-- [`additional_model_implementation.md`](additional_model_implementation.md) is the operational Phase 5 plan for experimental EfficientNetV2-S, MaxViT-T and DICA-Net-S (historical P2-S). Execution is **In progress**: foundations, established adapters and the custom tensor graph are complete; 5.4.2 custom initialization/adaptation/persistence is next. The remaining custom integration, artifact/real-consumer acceptance and bounded CUDA qualification are open; no campaign has started.
+- [`additional_model_implementation.md`](additional_model_implementation.md) is the operational Phase 5 plan for experimental EfficientNetV2-S, MaxViT-T and DICA-Net-S (historical P2-S). Execution is **In progress**: foundations and all three adapters have verified initialization/adaptation/persistence; 5.4.3 capability-aware custom diagnostics and consumer integration is next. Real-consumer acceptance and bounded CUDA qualification remain open; Phase 5 has launched no campaign.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 

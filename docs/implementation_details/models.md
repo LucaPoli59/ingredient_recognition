@@ -1,7 +1,7 @@
 # Vision models
 
 **Created:** 2026-08-02
-**Last updated:** 2026-10-06
+**Last updated:** 2026-10-07
 
 This page describes the implementation of the models available in `src/models` and their contract with the training pipeline. The problem remains a multi-label classification task: each model outputs a vector of `num_classes` **logits**, with no final sigmoid. Converting logits to probabilities and applying `BCEWithLogitsLoss` are responsibilities of the Lightning module.
 
@@ -13,9 +13,9 @@ For machine-learning details, network internals, and the relevant research, see 
 
 ## Common contract: `BaseModel`
 
-The [experimental-model contract](experimental_model_contract.md) owns opt-in 224 preprocessing/identity, deterministic head initialization, exact accumulation and strict offline persistence. `EfficientNetV2SExperiment`, `MaxViTTExperiment` and `ExperimentalLGNM` are implemented. DICA-Net-S has a verified tensor core; its experiment adapter and all measured CUDA/real-consumer qualification remain pending. Legacy/default vocabulary and selector behavior are unchanged; a 4A adapter must use the explicit experimental Lightning path.
+The [experimental-model contract](experimental_model_contract.md) owns opt-in 224 preprocessing/identity, deterministic head initialization, exact accumulation and strict offline persistence. `EfficientNetV2SExperiment`, `MaxViTTExperiment`, `DICANetSExperiment` and `ExperimentalLGNM` are implemented. Custom diagnostic consumer integration and all measured CUDA/real-consumer qualification remain pending. Legacy/default vocabulary and selector behavior are unchanged; a 4A adapter must use the explicit experimental Lightning path.
 
-`BaseModel` is the common interface for vision models integrated with training. The DICA-Net tensor core is not yet such an adapter. `BaseModel` stores `num_classes`, the square input size, and the transform builders; it also exposes `transform_aug` and `transform_plain`, used by the DataModule for training and validation/inference respectively. The transforms are therefore part of the model's serializable configuration rather than an external detail of the run.
+`BaseModel` is the common interface for vision models integrated with training. `DICANetSExperiment` wraps its plain tensor core in this interface. `BaseModel` stores `num_classes`, the square input size, and the transform builders; it also exposes `transform_aug` and `transform_plain`, used by the DataModule for training and validation/inference respectively. The transforms are therefore part of the model's serializable configuration rather than an external detail of the run.
 
 Each subclass must expose `conv_target_layer` and `classifier_target_layer`. These hooks are consumed by the visualization dashboard (e.g. Grad-CAM) and must refer to modules actually traversed by the `forward`.
 
@@ -111,11 +111,15 @@ constant that guarantees memory feasibility on every device.
 
 The traversed final block provides `[B,512,7,7]` diagnostic features; the final linear supplies the complete classifier for pooled image/concept vectors. Counts, class identity, strict full/light offline restoration and production Grad-CAM/factorization helpers are verified with synthetic CPU fixtures. The actual approved artifact and retained backbone state are also verified. The [owning record](experimental_model_contract.md#experimental-maxvit-and-artifact-provenance--53) records exact hashes, notices, normalization rationale and limits. Actual CUDA capacity and real dashboard acceptance remain 5.5.
 
-## DICA-Net-S tensor core
+## DICA-Net-S 4A experiment
 
 [`DICANetSCore` and `DICAReadoutS`](../../src/models/dica_net.py) implement the user-named **Dual-scale Ingredient-query and Context Attention Network**, historically P2-S. The core consumes an intact EfficientNetV2-S feature stack once and combines ingredient-query attention over 14×14 and 7×7 maps with a pooled context branch. It returns raw ordered logits; S fixes width 128, four attention heads and one query/FFN block at every vocabulary size.
 
-CPU tensor tests verify both-path gradients, reference attention and label-row permutation/subsetting, including the published 59-label projection. The [owning contract](experimental_model_contract.md#dica-net-s-tensor-core--541) records counts, tolerances, interfaces and limitations. This core is a plain `nn.Module`; approved pretrained construction, full/frozen policy, `BaseModel` configuration and complete checkpoint acceptance remain 5.4.2. Diagnostic capabilities and canonical consumer integration remain 5.4.3. It must not be passed to a benchmark launcher as a completed experiment adapter.
+CPU tensor tests verify both-path gradients, reference attention and label-row permutation/subsetting, including the published 59-label projection. The [tensor contract](experimental_model_contract.md#dica-net-s-tensor-core--541) records counts and numerical tolerances.
+
+[`DICANetSExperiment`](../../src/models/experimental_dica_net.py) loads the approved original ImageNet encoder, verifies its complete artifact hash and retains every feature weight/buffer through custom initialization. It provides common 224 preprocessing, full or persistent-eval frozen adaptation, native BatchNorm epsilon 1e-3/momentum 0.1 with preserved statistics, strict configuration/provenance and complete offline full/light restoration through `ExperimentalLGNM`. The serialized identity remains `p2_s`. The [initialization/persistence owner](experimental_model_contract.md#dica-net-s-initialization-and-persistence--542) records original-artifact evidence, tests and limits.
+
+The diagnostic classifier is the complete two-scale readout, never the context-only linear. Standalone-concept factorization raises an explicit unsupported-operation error. Capability-aware dashboard handling and Grad-CAM acceptance remain 5.4.3; measured CUDA/real-runtime qualification remains 5.5. Interface/persistence completion does not authorize benchmark training.
 
 ## Torchvision ResNet wrapper
 
