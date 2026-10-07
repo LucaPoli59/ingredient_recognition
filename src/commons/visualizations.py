@@ -31,7 +31,6 @@ def gradcam(model: torch.nn.Module,
     :param imgs_show: images to show in the visualization (if None, it will use the input_x)
     :return: images with the gradcam masked, gradcam mask and the targets selected, and the output of the model
     """
-    cam = GradCAM(model=model, target_layers=[target_layer], reshape_transform=reshape_transform)
     input_x_cf, input_x_cl = _manage_input(input_x)
     # Grad-CAM needs gradients at the target layer.  A frozen backbone otherwise
     # produces detached activations because neither its parameters nor its input
@@ -48,7 +47,13 @@ def gradcam(model: torch.nn.Module,
             raise ValueError("The number of targets must be the same as the number of images")
 
         targets = [ClassifierOutputTarget(target) for target in targets]
-    cam_masks = cam(input_tensor=input_x_cf, targets=targets)
+    cam = GradCAM(model=model, target_layers=[target_layer], reshape_transform=reshape_transform)
+    try:
+        with torch.enable_grad():
+            cam_masks = cam(input_tensor=input_x_cf, targets=targets)
+    finally:
+        # Release hooks even on errors; the library context manager suppresses IndexError.
+        cam.activations_and_grads.release()
 
     imgs = np.array([show_cam_on_image(x.cpu().numpy(), cam_mask, use_rgb=True, image_weight=img_weight)
                      for x, cam_mask in zip(imgs_show, cam_masks)]) / 255
@@ -99,6 +104,10 @@ def feature_factorization(model: torch.nn.Module,
     :return: images with the factorization components masked
     """
 
+    if not getattr(model, "supports_feature_factorization", True):
+        raise NotImplementedError(getattr(model, "feature_factorization_unavailable_reason", None)
+                                  or "Standalone-concept feature factorization is unsupported")
+
     try:
         classifier_device = next(target_classifier.parameters()).device
     except StopIteration:
@@ -110,17 +119,19 @@ def feature_factorization(model: torch.nn.Module,
         # classifier device before the final projection.
         return target_classifier(concepts.to(classifier_device))
 
-    dff = DeepFeatureFactorization(model=model, target_layer=target_conv,
-                                   reshape_transform=reshape_transform,
-                                   computation_on_concepts=classify_concepts)
-
     input_x_cf, input_x_cl = _manage_input(input_x)
     if imgs_show is None:
         imgs_show = input_x_cl
     else:
         _, imgs_show = _manage_input(imgs_show)
 
-    concepts, batch_explanations, concept_outputs = dff(input_x_cf, n_components=n_components)
+    dff = DeepFeatureFactorization(model=model, target_layer=target_conv,
+                                   reshape_transform=reshape_transform,
+                                   computation_on_concepts=classify_concepts)
+    try:
+        concepts, batch_explanations, concept_outputs = dff(input_x_cf, n_components=n_components)
+    finally:
+        dff.activations_and_grads.release()
     concept_labels = _create_labels(concept_outputs, label_encoder=label_encoder, top_k=top_k)
     visualizations = np.array(
         [show_factorization_on_image(x.cpu().numpy(), batch_expl, concept_labels=concept_labels,

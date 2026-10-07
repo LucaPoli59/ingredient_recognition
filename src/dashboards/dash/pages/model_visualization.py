@@ -10,17 +10,18 @@ import numpy as np
 from dash_iconify import DashIconify
 from dash import html, dcc, callback, Input, Output, State
 import plotly.express as px
+import plotly.graph_objects as go
+from textwrap import wrap
 import pandas as pd
 import torch
 from PIL import Image
 import logging
 
 from dash.exceptions import PreventUpdate
-from torchvision.transforms import v2
 
 from settings.config import EXPERIMENTS_PATH, HTUNER_CONFIG_FILE, BLANK_IMG_PATH, HTUNING_TRIAL_CONFIG_FILE
 from src.dashboards._commons import recursive_listdir, DASH_CACHE, dash_get_asset_url
-from src.dashboards.runtime import load_visualization_datamodule
+from src.dashboards.runtime import load_visualization_datamodule, prepare_visualization_image
 from src.training.experimental_runtime import load_model_for_experiment
 from src.commons.exp_config import ExpConfig, HTunerExpConfig
 from src.data_processing.images_recipes import LightImagesRecipesDataset
@@ -312,12 +313,11 @@ def make_inference(_, target, img_index_data, imgs_data, img_weight, imgs_transf
     try:
         model = _load_model().to(device)
         imgs_transform = pickle.loads(codecs.decode(imgs_transform.encode(), "base64"))
-        imgs_transform_no_mean = v2.Compose(imgs_transform.transforms[:-1])
 
         img_path = imgs_data[img_index_data["curr"]]["img"]
         logger.info("Starting inference for image %s (target=%s, device=%s)", img_path, target, device)
-        img = imgs_transform(Image.open(img_path))
-        img_show = imgs_transform_no_mean(Image.open(img_path))
+        with Image.open(img_path) as source:
+            img, img_show = prepare_visualization_image(imgs_transform, source)
 
         label_encoder = jsonpickle.decode(label_encoder)
         targets = [label_encoder.get_index(target)] if target is not None else None
@@ -334,14 +334,19 @@ def make_inference(_, target, img_index_data, imgs_data, img_weight, imgs_transf
         if not isinstance(gradcam_target, str):
             gradcam_target = label_encoder.decode_labels([[int(gradcam_target)]])[0][0]
 
-        factors_img = feature_factorization(model, model.conv_target_layer, model.factorization_classifier_layer,
-                                            img.to(device), imgs_show=img_show.to(device), label_encoder=label_encoder,
-                                            img_weight=1 - img_weight,
-                                            reshape_transform=model.gradcam_reshape_transform)[0]
+        if model.supports_feature_factorization:
+            factors_img = feature_factorization(model, model.conv_target_layer, model.factorization_classifier_layer,
+                                                img.to(device), imgs_show=img_show.to(device), label_encoder=label_encoder,
+                                                img_weight=1 - img_weight,
+                                                reshape_transform=model.gradcam_reshape_transform)[0]
+            factors_img = _create_img_plot(correct_legend_factor(factors_img, ratio=0.75))
+            feedback, icon = "Inference completed", "success"
+        else:
+            factors_img = _unavailable_factorization_plot(model.feature_factorization_unavailable_reason)
+            feedback, icon = "Inference completed; feature factorization is unavailable for this model.", "info"
         gradcam_img = _create_img_plot(gradcam_img
                                        ).add_annotation(x=0.95, y=0.99, text=f"Target: {gradcam_target}", showarrow=False,
                                                         font_size=20, font_color="black", xref="paper", yref="paper")
-        factors_img = _create_img_plot(correct_legend_factor(factors_img, ratio=0.75))
         preds_table_df = _create_preds_table(torch.sigmoid(output).cpu().detach().numpy(), label_encoder=label_encoder)
 
         pred_ingr_sel = preds_table_df.loc[preds_table_df['Confidence'] >= 0.5, "Ingredients"].values.tolist()
@@ -349,7 +354,7 @@ def make_inference(_, target, img_index_data, imgs_data, img_weight, imgs_transf
 
         logger.info("Inference completed for image %s", img_path)
         return (gradcam_img, factors_img, IMG_LABELS_TABLE_COLS_DEF(pred_ingr_sel, pred_ing),
-                preds_table_df.to_dict(orient="records"), False, True, "Inference completed", "success")
+                preds_table_df.to_dict(orient="records"), False, True, feedback, icon)
     except Exception:
         logger.exception("Inference failed (image=%s, target=%s, device=%s)",
                          locals().get("img_path", "<not selected>"), target, device)
@@ -372,6 +377,14 @@ def select_gradcam_target_from_table(labels_cell, preds_cell):
 def _create_img_plot(img_array: np.ndarray):
     return px.imshow(img_array).update_layout(coloraxis_showscale=False, margin=dict(l=0, r=0, b=0, t=0)
                                               ).update_xaxes(showticklabels=False).update_yaxes(showticklabels=False)
+
+
+def _unavailable_factorization_plot(reason):
+    reason = reason or "Standalone-concept feature factorization is not supported by this model."
+    message = "<b>Feature factorization unavailable</b><br><br>" + "<br>".join(wrap(reason, 58))
+    return (go.Figure().add_annotation(text=message, x=.5, y=.5, xref="paper", yref="paper", showarrow=False)
+            .update_layout(template="plotly_white", margin=dict(l=20, r=20, b=20, t=20))
+            .update_xaxes(visible=False).update_yaxes(visible=False))
 
 
 def _load_exp_from_select(select_value, selected_htrial, device=DEVICE) -> Tuple[ExpConfig, torch.nn.Module, str]:
@@ -450,8 +463,8 @@ def _load_model():
         raise ValueError("The model does not have a convolution target layer for the visualization, "
                          "select another model")
 
-    if getattr(model, "classifier_target_layer", None) is None:
-        raise ValueError("The model does not have a classifier target layer for the visualization, "
+    if model.supports_feature_factorization and getattr(model, "factorization_classifier_layer", None) is None:
+        raise ValueError("The model does not have a classifier target layer for feature factorization, "
                          "select another model")
     return model
 

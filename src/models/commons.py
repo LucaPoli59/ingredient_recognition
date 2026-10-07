@@ -120,6 +120,15 @@ class BaseModel(ABC, torch.nn.Module):
         return None
 
     @property
+    def supports_feature_factorization(self):
+        """Whether standalone feature concepts can use the complete classifier."""
+        return True
+
+    @property
+    def feature_factorization_unavailable_reason(self):
+        return None
+
+    @property
     def factorization_classifier_layer(self):
         """Classifier used to score feature-factorization concepts."""
         return self.classifier_target_layer

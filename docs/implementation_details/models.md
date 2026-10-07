@@ -13,11 +13,13 @@ For machine-learning details, network internals, and the relevant research, see 
 
 ## Common contract: `BaseModel`
 
-The [experimental-model contract](experimental_model_contract.md) owns opt-in 224 preprocessing/identity, deterministic head initialization, exact accumulation and strict offline persistence. `EfficientNetV2SExperiment`, `MaxViTTExperiment`, `DICANetSExperiment` and `ExperimentalLGNM` are implemented. Custom diagnostic consumer integration and all measured CUDA/real-consumer qualification remain pending. Legacy/default vocabulary and selector behavior are unchanged; a 4A adapter must use the explicit experimental Lightning path.
+The [experimental-model contract](experimental_model_contract.md) owns opt-in 224 preprocessing/identity, deterministic head initialization, exact accumulation and strict offline persistence. `EfficientNetV2SExperiment`, `MaxViTTExperiment`, `DICANetSExperiment` and `ExperimentalLGNM` are implemented. Custom capability-aware diagnostics and the production prediction callback pass synthetic CPU checks; measured CUDA/real-consumer qualification remains pending. Legacy/default vocabulary and selector behavior are unchanged; a 4A adapter must use the explicit experimental Lightning path.
 
 `BaseModel` is the common interface for vision models integrated with training. `DICANetSExperiment` wraps its plain tensor core in this interface. `BaseModel` stores `num_classes`, the square input size, and the transform builders; it also exposes `transform_aug` and `transform_plain`, used by the DataModule for training and validation/inference respectively. The transforms are therefore part of the model's serializable configuration rather than an external detail of the run.
 
 Each subclass must expose `conv_target_layer` and `classifier_target_layer`. These hooks are consumed by the visualization dashboard (e.g. Grad-CAM) and must refer to modules actually traversed by the `forward`.
+
+`supports_feature_factorization` defaults to true to preserve existing behavior. An incompatible classifier overrides it to false with `feature_factorization_unavailable_reason`; the dashboard skips only that panel. A capability is not a blanket qualification of all legacy models. The [diagnostic contract](experimental_model_contract.md#dica-net-s-diagnostics-and-consumers--543) records supported paths and verification limits.
 
 ### Serialization and reconstruction
 
@@ -119,7 +121,7 @@ CPU tensor tests verify both-path gradients, reference attention and label-row p
 
 [`DICANetSExperiment`](../../src/models/experimental_dica_net.py) loads the approved original ImageNet encoder, verifies its complete artifact hash and retains every feature weight/buffer through custom initialization. It provides common 224 preprocessing, full or persistent-eval frozen adaptation, native BatchNorm epsilon 1e-3/momentum 0.1 with preserved statistics, strict configuration/provenance and complete offline full/light restoration through `ExperimentalLGNM`. The serialized identity remains `p2_s`. The [initialization/persistence owner](experimental_model_contract.md#dica-net-s-initialization-and-persistence--542) records original-artifact evidence, tests and limits.
 
-The diagnostic classifier is the complete two-scale readout, never the context-only linear. Standalone-concept factorization raises an explicit unsupported-operation error. Capability-aware dashboard handling and Grad-CAM acceptance remain 5.4.3; measured CUDA/real-runtime qualification remains 5.5. Interface/persistence completion does not authorize benchmark training.
+The diagnostic classifier is the complete two-scale readout, never the context-only linear. Standalone-concept factorization is explicitly unsupported; the dashboard shows its reason while retaining predictions and valid Grad-CAM. Synthetic CPU checks cover the real callback, full/frozen gradients at the final feature stage and exact full/selected class order after offline restoration. Display overlays invert the saved transform's normalization without re-running preprocessing. This is not localization-quality evidence; measured CUDA/real-runtime qualification remains 5.5. Implementation completion does not authorize benchmark training.
 
 ## Torchvision ResNet wrapper
 

@@ -169,9 +169,17 @@ class DICANetSExperiment(BaseModel):
         return self.model.readout
 
     @property
+    def supports_feature_factorization(self):
+        return False
+
+    @property
+    def feature_factorization_unavailable_reason(self):
+        return ("DICA-Net-S scores ingredient queries using both feature scales and pooled context. "
+                "Standalone feature concepts cannot be scored by its complete classifier.")
+
+    @property
     def factorization_classifier_layer(self):
-        raise NotImplementedError("DICA-Net requires both feature scales and ingredient queries; "
-                                  "standalone-concept factorization is unsupported")
+        raise NotImplementedError(self.feature_factorization_unavailable_reason)
 
     @property
     def transform_aug(self):

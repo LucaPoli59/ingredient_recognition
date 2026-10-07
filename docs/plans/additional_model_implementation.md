@@ -13,8 +13,8 @@ This is an implementation plan, not another model-selection study or a training 
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** 5.4.2 complete: DICA-Net-S approved initialization, full/frozen adapter and strict offline persistence verified
-**Next action:** Execute 5.4.3's capability-aware diagnostics and consumer integration. Actual CUDA and real-consumer acceptance remain 5.5.
+**Current task:** 5.4 complete: DICA-Net-S graph, initialization, persistence and capability-aware diagnostics verified
+**Next action:** 5.5 measured qualification: bounded canonical CUDA/resource/restore and real-consumer checks for the three implemented models. No qualification run has started.
 
 | # | Task | Status | Required result |
 | --- | --- | --- | --- |
@@ -23,7 +23,7 @@ This is an implementation plan, not another model-selection study or a training 
 | 5.3 | Experimental MaxViT-T adapter | **Done** | Intact backbone/common readout, explicit normalization/geometry, approved artifact and strict offline full/light persistence; CPU diagnostics verified, 73 focused/222 repository tests pass. Actual qualification remains 5.5. |
 | 5.4.1 | DICA-Net-S tensor flow and attention readout | **Done** | Once-only real feature traversal, both logit paths, reference attention and label-row invariants including the 59-label projection; 12 focused/234 repository tests pass. |
 | 5.4.2 | DICA-Net-S initialization, adaptation and persistence | **Done** | Approved original artifact and unchanged encoder state, full/frozen behavior, strict configuration and offline full/light round trips; 14 new tests and 258 repository tests pass. |
-| 5.4.3 | Capability-aware diagnostics and runtime integration | **Pending** | Predictions and valid Grad-CAM; unsupported feature factorization handled explicitly without breaking legacy models. |
+| 5.4.3 | Capability-aware diagnostics and runtime integration | **Done** | Full/frozen Grad-CAM and actual prediction callback verified on synthetic CPU inputs; factorization omitted with explanation for DICA-Net and retained for supported models. Eight new tests; 107 experimental tests pass. |
 | 5.5 | Measured qualification and Phase 6 handoff | **Pending** | Per-model bounded CUDA/resource/restore/dashboard evidence, regression checks and maintained documentation. |
 
 5.2 and 5.3 depend on 5.1; 5.4 reuses the EfficientNet foundations from 5.2. A model's 5.5 checks can run as soon as its implementation is ready; there is no need to postpone early failures until all three models exist. Only S is a required custom implementation/resource qualification. The larger custom presets remain retained design options, not mandatory campaigns.
@@ -176,6 +176,14 @@ Optional attention maps must preserve scale boundaries and carry the warning tha
 
 **5.4 completion:** All three custom checkpoints pass their unit/integration gates; S instantiates the adopted topology and preserves pretrained/label semantics. Actual resource and bounded real-runtime acceptance remains 5.5.
 
+### 5.4.3 completion checkpoint — 2026-10-07
+
+At base `b29e4c5`, implemented the minimal model capability and an explicit unavailable-factorization panel. The actual dashboard prediction callback retains DICA-Net's Grad-CAM and ordered predictions; the complete two-input classifier is never replaced by its context linear. Supported-model factorization and unrelated-error reporting remain intact. Shared diagnostic hooks are released on success/failure. The single-pass display helper handles the opaque experimental fit/pad transform and legacy normalization without altering the actual normalized input or taking another stochastic draw. Runtime semantics and interpretation limits are owned by the [diagnostic contract](../implementation_details/experimental_model_contract.md#dica-net-s-diagnostics-and-consumers--543).
+
+The [eight new synthetic tests](../../tests/test_experimental_dica_net_diagnostics.py) cover full165/full-adaptation and selected59/frozen-adaptation, real forward/input/readout gradients, unchanged buffers/logits, canonical offline light restoration, actual cached-model callback execution, ordered prediction tables, clear skip behavior, ResNet factorization and error paths, legacy/new display preprocessing and hook cleanup. Dash registration/discovery is isolated; these are real callback function tests, not browser, recipe-image or CUDA acceptance. The experimental suite passes **107 tests**, and the repository suite **266**. Existing regression fits use tiny synthetic CPU fixtures; the real test-split vocabulary check remains metadata-only, not predictive test evaluation.
+
+All 5.4 implementation checkpoints are **Done**. The topology, pretrained identity, normalization, transform, exact batching and ordered vocabulary contracts are unchanged. No DICA-Net training run, resource probe, benchmark campaign or predictive test evaluation was performed. 5.5 is the next **Pending** work package; Phase 5 stays **In progress** and does not yet release the benchmark training gate.
+
 ## 5.5 — Measured qualification and handoff
 
 Use one reusable, thin engineering CLI/configuration path for the new portfolio, built on [`src/training`](../../src/training/commons.py). The [Data smoke](../../scripts/validation/data_runtime_smoke.py) supplies reusable isolation and restore/dashboard checks; extend or factor it only when doing so preserves its maintained behavior. Do not duplicate a trainer in each family launcher or edit the user's one-shot script to run acceptance checks.
@@ -199,7 +207,7 @@ The accepted result is a measured engineering capability, not convergence or pre
 
 | Area | Expected change or artifact |
 | --- | --- |
-| `src/models/`, model transforms | Shared helpers, established adapters and `DICANetSExperiment` exist. The [contract owner](../implementation_details/experimental_model_contract.md) records verified initialization/adaptation/persistence; custom diagnostic integration and all measured resource checks remain pending. Selector provenance stays separate. |
+| `src/models/`, model transforms | Shared helpers, all three adapters and capability-aware diagnostics exist. The [contract owner](../implementation_details/experimental_model_contract.md) records verified initialization/adaptation/persistence and CPU consumer checks; measured resource and real-consumer checks remain pending. Selector provenance stays separate. |
 | Configuration/checkpoint/training | Minimal extensions for custom fields, offline rebuild, adaptation and measured batch policy; reuse current output/vocabulary guards. |
 | Dashboard/analysis consumers | Model-aware transforms, real hooks, explicit unsupported diagnostic handling and preserved output/projection identity. |
 | `scripts/validation/`, `tests/` | Rerunnable bounded acceptance command(s), synthetic no-network tests and isolated resource/runtime evidence. No new HPO study. |
@@ -227,3 +235,4 @@ Phase 6 still must freeze augmentation, loss/weighting, HPO objective/spaces/bud
 | 2026-10-06 | Completed 5.3 at base `0aec11b` with MaxViT's whole-readout replacement, explicit native normalization/geometry, approved artifact verification and strict offline persistence. | 73 focused/222 repository tests pass, covering CPU state, class identity and diagnostics; 5.4.1 next. Actual CUDA/real-consumer acceptance remains 5.5. |
 | 2026-10-06 | Adopted the user-approved name DICA-Net, retaining P2-S/`p2_s` traceability, and completed 5.4.1 at base `557c3d9` with the S tensor graph. | 12 focused/234 repository tests pass, including numerical attention and the published 59-row invariants; 5.4.2 next. 5.4/Phase 5 remain In progress, with no new campaign. |
 | 2026-10-07 | Completed 5.4.2 at base `9c76f86` with approved pretrained provenance, intact full/frozen encoder state and strict offline canonical persistence. | 14 new/258 repository tests pass; 5.4.3 diagnostics and consumer integration is next. 5.4/Phase 5 remain In progress; no CUDA qualification or benchmark campaign. |
+| 2026-10-07 | Completed 5.4.3 at base `b29e4c5`: valid full/frozen Grad-CAM, explicit factorization capability, actual callback/ordered-prediction checks and single-pass display preprocessing. | Eight new/107 experimental/266 repository tests pass; 5.4 Done. 5.5 remains Pending and Phase 5 In progress; no CUDA qualification, real-food acceptance or benchmark campaign. |

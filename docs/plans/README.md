@@ -7,7 +7,7 @@ This directory contains the execution plans for concrete project implementations
 
 ## Active plans
 
-- [`additional_model_implementation.md`](additional_model_implementation.md) is the operational Phase 5 plan for experimental EfficientNetV2-S, MaxViT-T and DICA-Net-S (historical P2-S). Execution is **In progress**: foundations and all three adapters have verified initialization/adaptation/persistence; 5.4.3 capability-aware custom diagnostics and consumer integration is next. Real-consumer acceptance and bounded CUDA qualification remain open; Phase 5 has launched no campaign.
+- [`additional_model_implementation.md`](additional_model_implementation.md) is the operational Phase 5 plan for experimental EfficientNetV2-S, MaxViT-T and DICA-Net-S (historical P2-S). Execution is **In progress**: 5.1–5.4 implementation, persistence and capability-aware CPU diagnostics are complete. Next is 5.5 measured CUDA/real-consumer qualification, still pending; Phase 5 has launched no campaign.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 
