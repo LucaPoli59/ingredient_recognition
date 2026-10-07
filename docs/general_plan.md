@@ -3,8 +3,8 @@
 **Created:** 2026-08-02  
 **Last updated:** 2026-10-07
 **Overall status:** In progress  
-**Current macro-phase:** Additional model implementation — implementations complete, measured qualification pending
-**Current focus:** Work packages 5.1–5.4 are complete. All three experimental models have verified interfaces, initialization/adaptation/persistence and supported diagnostic paths, including DICA-Net-S (historical P2-S). Next is 5.5 measured CUDA/real-consumer qualification; it remains pending and Phase 5 has launched no campaign. Completed Data/selection, full default, projection and historical evidence stay unchanged.
+**Current macro-phase:** Training/HPO protocol handoff — campaign execution remains deferred
+**Current focus:** Phase 5 is complete: all three additional models pass measured full/selected CUDA, offline restoration and real-consumer gates. Next is Phase 6 protocol planning, using the recorded resource/readiness matrix while freezing remaining scientific and evaluation prerequisites. No Phase 6 training/HPO or final test evaluation has started. Completed Data/selection, full default, projection and historical evidence stay unchanged.
 
 ## Purpose
 
@@ -35,8 +35,8 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 2 | Data | **Done** | Historical compatibility and all data gates pass, including bounded real CUDA training, exact checkpoint reload and dashboard verification for 2.4. |
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
-| 5 | Additional model implementation | **In progress** | [Foundations and all three adapters](implementation_details/experimental_model_contract.md) have verified interfaces, persistence and capability-aware CPU diagnostics. 5.1–5.4 Done; 5.5 measured real-consumer/CUDA qualification is next and still pending. |
-| 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
+| 5 | Additional model implementation | **Done** | [All three adapters and measured readiness](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) pass useful full/selected CUDA, strict offline restoration and real consumer checks; the completed plan hands off constraints without launching a benchmark. |
+| 6 | Training and hyperparameter tuning | **Deferred** | Data, selected vocabulary and model engineering are ready. Plan/freeze the remaining HPO/training/evaluation policy before campaigns. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
 
@@ -270,11 +270,11 @@ This subphase asks which single model protocol is a sufficiently sensitive, inte
 
 ## 5. Additional model implementation
 
-**Status:** In progress
+**Status:** Done
 
 This macro-section covers architectures selected by Subphase 4A that are not already implemented in the repository.
 
-The [experimental portfolio](project_objective/experimental_model_portfolio.md) provides the binding established-pair/DICA-Net-S handoff (historically P2-S); the 384-pixel selector stays separate. The [operational plan](plans/additional_model_implementation.md) tracks implementation and qualification. The [implementation contract](implementation_details/experimental_model_contract.md) records common foundations, all three adapters, opt-in Lightning/configuration restoration and capability-aware diagnostics. Original MaxViT/EfficientNet artifacts and DICA-Net initialization/adaptation/persistence are verified. The production DICA-Net callback passes synthetic CPU checks; measured resource and real-consumer acceptance remain. Implementation completion does not launch comparative training.
+The [experimental portfolio](project_objective/experimental_model_portfolio.md) provides the binding established-pair/DICA-Net-S handoff (historically P2-S); the 384-pixel selector stays separate. The [completed operational plan](plans/additional_model_implementation.md) retains implementation and qualification. The [implementation contract](implementation_details/experimental_model_contract.md) owns common foundations, all three adapters, original-artifact provenance, strict persistence and measured readiness. Separate fresh165/59 real CUDA smokes, production callbacks/HTTP and representative browser checks pass for every required model. Completion establishes engineering readiness, not convergence, predictive superiority or permission to launch comparative training.
 
 ### Existing foundation
 
@@ -290,23 +290,23 @@ All execution detail and lower-level custom checkpoints belong to the [feature p
 
 | Work package | Status | Dependency | Completion gate and next action |
 | --- | --- | --- | --- |
-| 5.1 Shared implementation contract and foundations | **Done** | Completed 4A portfolio, Data 2.4 and P7 | Versioned preprocessing/identity, initialization/offline construction and exact batching are tested; engineering policy declared. 28 focused and 177 repository tests pass. Actual adapter/consumer integration remains subsequent work. |
-| 5.2 Experimental EfficientNetV2-S | **Done** | 5.1 | Distinct 224-pixel pooled head, full/frozen state and strict exact-batch/full-light persistence pass; 57 focused/206 repository tests. Actual qualification remains 5.5. |
-| 5.3 Experimental MaxViT-T | **Done** | 5.1 | Intact backbone/common readout, explicit normalization/geometry, approved artifact, strict offline full/light restoration and CPU diagnostics pass; actual qualification remains 5.5. |
-| 5.4 DICA-Net-S custom model | **Done** | 5.1 and reusable 5.2 foundations | Graph, initialization, full/frozen adaptation, offline persistence and capability-aware diagnostics pass; actual callback checks use synthetic CPU fixtures. Measured qualification remains 5.5. |
-| 5.5 Measured qualification and Phase 6 handoff | **Pending** | Each model's implementation gates | All three pass reproducible bounded resource/train/restore/consumer checks and affected regressions; hand off measured capabilities and unresolved comparison-policy choices. |
+| 5.1 Shared implementation contract and foundations | **Done** | Completed 4A portfolio, Data 2.4 and P7 | Versioned preprocessing/identity, initialization/offline construction and exact batching are tested; engineering policy declared. 28 focused and 177 repository tests at this checkpoint; subsequent integrations are now complete. |
+| 5.2 Experimental EfficientNetV2-S | **Done** | 5.1 | Distinct 224-pixel pooled head, full/frozen state and strict exact-batch/full-light persistence pass; 57 focused/206 tests at this checkpoint. Measured acceptance completed in5.5. |
+| 5.3 Experimental MaxViT-T | **Done** | 5.1 | Intact backbone/common readout, explicit normalization/geometry, approved artifact, strict offline full/light restoration and CPU diagnostics pass. Measured acceptance completed in5.5. |
+| 5.4 DICA-Net-S custom model | **Done** | 5.1 and reusable 5.2 foundations | Graph, initialization, full/frozen adaptation, offline persistence and capability-aware diagnostics pass; CPU fixtures and real callback checks are retained. Measured acceptance completed in5.5. |
+| 5.5 Measured qualification and Phase 6 handoff | **Done** | Each model's implementation gates | All three pass useful full adaptation at measured physical32/16/32, effective128/trueFP32, full/selected offline restore and real-consumer checks; 276 tests pass. [Readiness matrix](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) retains exact provenance, conditions and open comparison policy. |
 
 ### Resume gate
 
-Subphase 4A approved the portfolio and Data 2.4 verified the canonical data contract. The planning resume gate is satisfied on 2026-10-06; each new model still requires its own implementation, resource and integration checks.
+Subphase 4A approved the portfolio and Data 2.4 verified the canonical data contract. The planning resume gate was satisfied on 2026-10-06; all required implementation, resource and integration checks subsequently passed on 2026-10-07.
 
 ### Completion gate
 
-Every selected experimental model passes its interface, state, persistence, vocabulary and diagnostic-capability tests, integrates with the canonical training path, and has reproducible bounded measured resource/runtime evidence. Adopted fallbacks and comparison consequences are explicit, current documentation is synchronized and affected legacy compatibility is preserved. This gate does not complete the later metric suite, HPO policy or final test evaluation.
+Met on 2026-10-07: every required model passes interface/state/persistence/vocabulary/diagnostic tests and reproducible bounded canonical resource/runtime checks. All use full adaptation; no frozen resource fallback or architecture change was needed. Documentation and affected regressions are synchronized. This gate does not complete the later metric suite, HPO policy or final test evaluation.
 
 ### Next action
 
-Proceed next to [5.5 measured qualification](plans/additional_model_implementation.md#55--measured-qualification-and-handoff): bounded canonical resource/train/restore and real-consumer checks for all three implemented models. The custom remains S with the adopted same-topology frozen fallback. 5.5 is still pending; no Phase 5 CUDA run or benchmark campaign has started.
+Maintain the [qualification CLI and contract](implementation_details/experimental_model_contract.md#reusable-measured-qualification--55) when runtime/workload/device conditions change. Hand the completed model readiness to Phase 6 protocol planning; no further Phase 5 implementation step or automatic benchmark launch remains.
 
 ## 6. Training and hyperparameter tuning
 
@@ -351,7 +351,7 @@ Historical runs remain useful engineering evidence but are **Superseded** for fi
 
 ### Resume gate
 
-Resume when the benchmark, selected ingredient vocabulary, data loader, evaluation implementation, and at least the required baseline models are ready.
+Data/vocabulary and required additional-model engineering gates are satisfied. Campaign execution still requires a frozen training/HPO protocol and usable predeclared validation/evaluation implementation; historical tooling does not automatically satisfy those remaining gates.
 
 ### Completion gate
 
@@ -359,7 +359,7 @@ Every required baseline and shortlisted model has comparable full-task and share
 
 ### Next action
 
-Do not launch final training or tuning on the legacy 182-label split. Resume after Subphase 4A freezes the experiment-model shortlist and Subphase 4B plus Macro-section 3 freeze `M_ref` and the shared selected vocabulary; small smoke tests remain allowed when clearly marked as engineering validation.
+Prepare a dedicated Phase 6 execution plan from the binding [methodology](project_objective/model_comparison_methodology.md) and [model readiness/constraints](implementation_details/experimental_model_contract.md#phase-6-comparison-constraints). Freeze augmentation/loss/HPO budgets/objectives/spaces/stopping/horizon, one-seed reporting, adaptation/physical-BatchNorm comparability and evaluation prerequisites before launching studies. Historical selected-task launchers remain a separate user-authorized follow-up, not `H_base(m)` or the final benchmark. No final campaign on the legacy182 task, or automatic transfer of smoke/selector hyperparameters, is authorized by Phase 5 completion.
 
 ## 7. Results comparison
 
@@ -468,7 +468,7 @@ Create the thesis outline and claim map as soon as the institutional template an
 
 ```text
 project foundation [Done] -> data [Done]
-data -> 4A experimental-model research [Done] -> additional models [In progress: 5.1–5.3 Done, 5.4 active]
+data -> 4A experimental-model research [Done] -> additional models [Done: 5.1–5.5]
 data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
 additional models + ingredient selection -> training and HTuning [Deferred] -> results comparison [Deferred] -> thesis completion
@@ -565,6 +565,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-07 | Selected-task baseline launcher preparation | Prepared rerunnable ResNet18/DINOv2 historical-configuration transfers to the shared 59-label D6 vocabulary, with fresh initialization, provenance and explicit resume guards. No training, HPO or predictive test evaluation was started; the user will launch the runs while Phase 5 proceeds. | Launcher preparation **Done**; final Macro-section 6 gate remains **Deferred** | [Launcher contract](implementation_details/selected_vocabulary_training.md), [commands](../scripts/launch_exps/selected_ingredients/README.md) |
 | 2026-10-07 | Custom model persistence | Verified DICA-Net-S original artifact, intact encoder state, full/frozen adaptation and strict offline full/light restoration; 258 repository tests pass. Capability-aware diagnostic integration is next; resource/real-consumer qualification remains. | Work package 5.4 and Macro-section 5 remain **In progress** | [Initialization/persistence contract](implementation_details/experimental_model_contract.md#dica-net-s-initialization-and-persistence--542), [custom execution plan](plans/additional_model_implementation.md#54--dica-net-s-custom-implementation) |
 | 2026-10-07 | Custom model diagnostic integration | Verified real full/frozen Grad-CAM and the production cached-model callback on synthetic CPU inputs; explicit unsupported factorization preserves predictions, supported-model factorization and ordered full/selected outputs. | Work package 5.4 **Done**; Macro-section 5 **In progress**; 5.5 **Pending** and next | [Diagnostic contract](implementation_details/experimental_model_contract.md#dica-net-s-diagnostics-and-consumers--543), [completion checkpoint](plans/additional_model_implementation.md#543-completion-checkpoint--2026-10-07) |
+| 2026-10-07 | Measured additional-model qualification | Completed the shared CLI, fresh useful full-adaptation probes and six full/selected CUDA smokes; strict offline restoration, real callbacks/HTTP and representative browser checks pass. 276 regressions pass; sources/data/checkpoints and historical evidence are preserved. | Work package 5.5 and Macro-section 5 **Done**; Macro-section 6 remains **Deferred** for protocol/evaluation gates, with planning as the next handoff | [Measured readiness/constraints](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix), [completed feature checkpoint](plans/additional_model_implementation.md#55-completion-checkpoint--2026-10-07) |
 
 ## Tracker maintenance rules
 

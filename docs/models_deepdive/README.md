@@ -1,6 +1,7 @@
 # Model deep dives
 
-**Creation date:** 2026-07-29
+**Created:** 2026-07-29
+**Last updated:** 2026-10-07
 
 This folder contains technical deep dives into the machine-learning architectures available in the project. Each document describes the model itself: internal representations, layers and forward flow, pretraining objectives when relevant, architectural choices, the role of the downstream head, and implications for the ingredient-recognition task.
 
@@ -16,10 +17,11 @@ docs/models_deepdive/<model_name>.md
 
 The name must be lowercase and descriptive, such as `dinov2.md`, `resnet.md`, or `densenet.md`.
 
-Each new deep dive must report its creation date immediately below the title, in the format:
+Each new deep dive must report its dates immediately below the title, following the common documentation convention:
 
 ```markdown
-**Creation date:** YYYY-MM-DD
+**Created:** YYYY-MM-DD
+**Last updated:** YYYY-MM-DD
 ```
 
 ## Expected content
@@ -39,3 +41,6 @@ Cross-cutting technical issues — such as a gradient error, a library limitatio
 ## Documents available
 
 - [`dinov2.md`](dinov2.md): ViT-B/14 with register token, DINO+iBOT pretraining, `_lc` head and multi-label pipeline integration.
+- [`efficientnet_v2_s.md`](efficientnet_v2_s.md): actual intact encoder, pooled ingredient readout, feature stages and adaptation/diagnostic limits; distinct from the selector.
+- [`maxvit_t.md`](maxvit_t.md): actual convolution/block/grid attention flow, whole-classifier replacement, partition/normalization semantics and interpretation limits.
+- [`dica_net_s.md`](dica_net_s.md): actual two-scale token/query/context graph, initialization and label-row semantics, adaptation and supported diagnostics.

@@ -12,19 +12,19 @@ This is an implementation plan, not another model-selection study or a training 
 
 ## Progress tracker
 
-**Overall status:** In progress
-**Current task:** 5.4 complete: DICA-Net-S graph, initialization, persistence and capability-aware diagnostics verified
-**Next action:** 5.5 measured qualification: bounded canonical CUDA/resource/restore and real-consumer checks for the three implemented models. No qualification run has started.
+**Overall status:** Done
+**Current task:** 5.5 complete: all three required models pass measured full/selected CUDA, restoration and real-consumer gates
+**Next action:** Hand the [readiness matrix and constraints](../implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) to Phase 6 protocol planning. Do not launch training/HPO until its remaining benchmark/evaluation gates are frozen.
 
 | # | Task | Status | Required result |
 | --- | --- | --- | --- |
-| 5.1 | Shared implementation contract and reusable foundations | **Done** | [Implemented contract](../implementation_details/experimental_model_contract.md), exact preprocessing/head/batch helpers; 28 focused and 177 repository tests pass. Adapter/consumer/CUDA gates remain in subsequent steps. |
-| 5.2 | Experimental EfficientNetV2-S adapter | **Done** | Distinct 224-pixel pooled head, full/frozen state, exact Lightning and strict full/light offline restoration; 57 focused/206 repository tests. Actual qualification remains 5.5. |
-| 5.3 | Experimental MaxViT-T adapter | **Done** | Intact backbone/common readout, explicit normalization/geometry, approved artifact and strict offline full/light persistence; CPU diagnostics verified, 73 focused/222 repository tests pass. Actual qualification remains 5.5. |
+| 5.1 | Shared implementation contract and reusable foundations | **Done** | [Implemented contract](../implementation_details/experimental_model_contract.md), exact preprocessing/head/batch helpers; 28 focused and 177 repository tests at this checkpoint. Subsequent adapter/consumer/CUDA gates are now complete. |
+| 5.2 | Experimental EfficientNetV2-S adapter | **Done** | Distinct 224-pixel pooled head, full/frozen state, exact Lightning and strict full/light offline restoration; 57 focused/206 repository tests at this checkpoint. Measured qualification is completed in 5.5. |
+| 5.3 | Experimental MaxViT-T adapter | **Done** | Intact backbone/common readout, explicit normalization/geometry, approved artifact and strict offline full/light persistence; CPU diagnostics verified, 73 focused/222 repository tests at this checkpoint. Measured qualification is completed in 5.5. |
 | 5.4.1 | DICA-Net-S tensor flow and attention readout | **Done** | Once-only real feature traversal, both logit paths, reference attention and label-row invariants including the 59-label projection; 12 focused/234 repository tests pass. |
 | 5.4.2 | DICA-Net-S initialization, adaptation and persistence | **Done** | Approved original artifact and unchanged encoder state, full/frozen behavior, strict configuration and offline full/light round trips; 14 new tests and 258 repository tests pass. |
 | 5.4.3 | Capability-aware diagnostics and runtime integration | **Done** | Full/frozen Grad-CAM and actual prediction callback verified on synthetic CPU inputs; factorization omitted with explanation for DICA-Net and retained for supported models. Eight new tests; 107 experimental tests pass. |
-| 5.5 | Measured qualification and Phase 6 handoff | **Pending** | Per-model bounded CUDA/resource/restore/dashboard evidence, regression checks and maintained documentation. |
+| 5.5 | Measured qualification and Phase 6 handoff | **Done** | All three full-adaptation protocols pass at measured physical32/16/32, effective128, true FP32; six fresh default165/selected59 smokes, strict full/light offline restore, production callback/HTTP and representative browser checks. 276 repository tests pass; scientific benchmark settings remain Phase 6. |
 
 5.2 and 5.3 depend on 5.1; 5.4 reuses the EfficientNet foundations from 5.2. A model's 5.5 checks can run as soon as its implementation is ready; there is no need to postpone early failures until all three models exist. Only S is a required custom implementation/resource qualification. The larger custom presets remain retained design options, not mandatory campaigns.
 
@@ -203,11 +203,23 @@ First try full adaptation. If it remains infeasible after the declared batch/res
 
 The accepted result is a measured engineering capability, not convergence or predictive superiority. No long overfit campaign, HPO or cross-seed repetition is required to close Phase 5.
 
+### 5.5 completion checkpoint — 2026-10-07
+
+At base `a4e2073` plus the exact archived local source inventory, added one [thin CLI](../../scripts/validation/experimental_model_smoke.py) and [shared qualification controller](../../src/training/experimental_qualification.py) using the existing canonical trainer/runtime. Accepted evidence is isolated in `experiments/runtime_smoke/phase55-20261007-a4/`; earlier harness failures/interruption remain retained and are not counted as accepted qualification. The [runtime owner](../implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) owns exact source/artifact hashes, numeric/memory conditions, timings, initialization/state verification and the compact Phase 6 handoff.
+
+EfficientNetV2-S and DICA-Net-S pass full adaptation at physical 32/accumulation 4; MaxViT-T passes at physical 16/accumulation 8. All preserve effective 128 and true FP32 within the measured 6841 MiB allowance on the RTX 4060. No frozen fallback, architecture substitution or precision reduction is needed. For every model, separate fresh 165/59 smokes complete four updates / 512 train records and explicitly assert CUDA validation before teardown. Every train/validation target row, record order and metadata hash is preserved, including 176/18 all-zero selected rows. Test/predict loaders are guarded; eager test metadata access remains metadata-only.
+
+All six checkpoints pass strict full/light offline reconstruction, exact same-backend CPU logits, saved output/projection identity, canonical transform parity and production dashboard/HTTP checks. Real validation-food CUDA Grad-CAM works for all; EfficientNet/MaxViT factorization runs and DICA's unsupported panel is explicit. Actual browser inspection covers three representative checkpoints (DICA selected59, EfficientNet/MaxViT full165), confirming photo/predictions/diagnostic rendering with no console errors; it is not six separate browser tests or localization-quality evidence. Existing NMF/Matplotlib/legend presentation limitations remain documented. The temporary server/tab were closed.
+
+Ten new orchestration/API tests and the proportionate full regression pass: **276 repository tests**, including 117 experimental checks. Prior no-network default/selected/mismatch/legacy/tail-weighting fixtures remain intact. Affected Markdown links, source/archive identity, original checkpoint and protected-file hashes are verified at handoff. [Three new architecture explanations](../models_deepdive/README.md) describe the actual adopted variants, not a new literature selection or predictive ranking.
+
+5.5 and this feature plan are **Done**, closing Macro-section 5. Phase 6 must still freeze augmentation/loss/HPO/stopping/horizon, calibration/evaluation prerequisites, one-seed reporting and adaptation/physical-BatchNorm comparability. The smoke's settings do not become `H_base(m)`. No Phase 6 campaign/HPO, final test evaluation, selector evidence change, data regeneration or historical deletion occurred. No new commit is part of this checkpoint without another user request.
+
 ## Affected components and durable outputs
 
 | Area | Expected change or artifact |
 | --- | --- |
-| `src/models/`, model transforms | Shared helpers, all three adapters and capability-aware diagnostics exist. The [contract owner](../implementation_details/experimental_model_contract.md) records verified initialization/adaptation/persistence and CPU consumer checks; measured resource and real-consumer checks remain pending. Selector provenance stays separate. |
+| `src/models/`, model transforms | Shared helpers, all three adapters and capability-aware diagnostics exist. The [contract owner](../implementation_details/experimental_model_contract.md) records verified initialization/adaptation/persistence, measured useful CUDA and real-consumer checks. Selector provenance stays separate. |
 | Configuration/checkpoint/training | Minimal extensions for custom fields, offline rebuild, adaptation and measured batch policy; reuse current output/vocabulary guards. |
 | Dashboard/analysis consumers | Model-aware transforms, real hooks, explicit unsupported diagnostic handling and preserved output/projection identity. |
 | `scripts/validation/`, `tests/` | Rerunnable bounded acceptance command(s), synthetic no-network tests and isolated resource/runtime evidence. No new HPO study. |
@@ -236,3 +248,4 @@ Phase 6 still must freeze augmentation, loss/weighting, HPO objective/spaces/bud
 | 2026-10-06 | Adopted the user-approved name DICA-Net, retaining P2-S/`p2_s` traceability, and completed 5.4.1 at base `557c3d9` with the S tensor graph. | 12 focused/234 repository tests pass, including numerical attention and the published 59-row invariants; 5.4.2 next. 5.4/Phase 5 remain In progress, with no new campaign. |
 | 2026-10-07 | Completed 5.4.2 at base `9c76f86` with approved pretrained provenance, intact full/frozen encoder state and strict offline canonical persistence. | 14 new/258 repository tests pass; 5.4.3 diagnostics and consumer integration is next. 5.4/Phase 5 remain In progress; no CUDA qualification or benchmark campaign. |
 | 2026-10-07 | Completed 5.4.3 at base `b29e4c5`: valid full/frozen Grad-CAM, explicit factorization capability, actual callback/ordered-prediction checks and single-pass display preprocessing. | Eight new/107 experimental/266 repository tests pass; 5.4 Done. 5.5 remains Pending and Phase 5 In progress; no CUDA qualification, real-food acceptance or benchmark campaign. |
+| 2026-10-07 | Completed 5.5 at base `a4e2073` plus the exact source ZIP/inventory: shared CLI, fresh full/selected CUDA smokes, offline restoration, real callbacks/HTTP and representative browser acceptance. | All three pass useful full adaptation at physical32/16/32, effective128/FP32; 276 tests pass. 5.5 and Phase 5 Done; Phase 6 protocol/evaluation gates and scientific settings remain open. |

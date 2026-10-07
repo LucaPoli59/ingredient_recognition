@@ -7,12 +7,13 @@ This directory contains the execution plans for concrete project implementations
 
 ## Active plans
 
-- [`additional_model_implementation.md`](additional_model_implementation.md) is the operational Phase 5 plan for experimental EfficientNetV2-S, MaxViT-T and DICA-Net-S (historical P2-S). Execution is **In progress**: 5.1–5.4 implementation, persistence and capability-aware CPU diagnostics are complete. Next is 5.5 measured CUDA/real-consumer qualification, still pending; Phase 5 has launched no campaign.
+No implementation plan is active at this checkpoint. Phase 6 protocol planning is the next handoff; its campaign/evaluation prerequisites remain open.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 
 ## Completed plans
 
+- [`additional_model_implementation.md`](additional_model_implementation.md) retains the completed Phase 5 foundations, three adapters and useful measured full/selected CUDA, offline restoration and real-consumer acceptance. The runtime owner supplies the Phase 6 readiness matrix; completion is not a training/HPO launch or model ranking.
 - [`data_ingredient_refactor/`](data_ingredient_refactor/README.md) retains the completed Yummly Data plan for Work packages 2.1b–2.4 and its controlled-vocabulary evidence. Real training, checkpoint and dashboard runtime gates passed on 2026-10-06.
 - [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the completed Macro-section 3 plan for the EfficientNetV2-S campaign, historical reproduction, numerical `v5` profile, shared vocabulary freeze and P7 opt-in runtime integration. Legacy code is retained as evidence but retired from active use; physical cleanup needs separate review. Former mandatory P5 manual review remains an optional appendix.
 - [`experiment_comparison.md`](experiment_comparison.md) is the completed Work package 7.1 plan for optional Lightning-model ingredient logging and offline intra/inter-experiment comparison with JSON/HTML reports.
