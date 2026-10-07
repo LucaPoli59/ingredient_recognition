@@ -2,7 +2,7 @@
 
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
-**Ultimo aggiornamento:** 6 ottobre 2026
+**Ultimo aggiornamento:** 7 ottobre 2026
 **Stato della ricognizione:** architettura e flusso principale verificati nel codice. `ingredients_target_v5_metadata.json` è il default runtime FoodOn-first, con 165 target e split Yummly 47.965/5.996/5.996 train/val/test; `v4` e le generazioni legacy restano disponibili. La compatibilità storica 2.1c e Data 2.4 sono chiuse: training CUDA minimo, checkpoint reload e dashboard sono verificati nel [contratto runtime](docs/implementation_details/image_data_loading.md). Il selettore 4B-D1 EfficientNetV2-S è implementato. La campagna Phase 3-D1/D2/D3 `phase3-d1-v3` ha completato 40 epoche con batch effettivo 128; D4 e la sua applicazione originale restano conservati. D5 rende facoltative le revisioni manuali. D6 adotta la politica di qualità validation con intervalli appaiati coerenti, mantenendo train e cuisine come diagnostiche. La proiezione condivisa `ingredients_selected_v5_d6_v1` è un artefatto esplicito e versionato, integrato in P7 come opzione a 59 label e non come nuovo default runtime. P7 chiude la macrofase 3 con parità e retention verificate; lo stato corrente è in `docs/general_plan.md`. Il confronto esplorativo storico `basic_v5` è conservato sotto `docs/experiment_results/` senza modificare il gate del benchmark finale.
 
 ## Scopo
@@ -240,6 +240,18 @@ Le run W&B sono prodotte offline. Per sincronizzarle, `scripts/sync_wandb_runs.p
 Le configurazioni sono oggetti `ExpConfig`, `HTunerExpConfig` e `HGeneratorConfig` in `src/commons/exp_config.py`. Consentono ai launcher di passare override con prefissi (ad esempio modello, trainer e DataModule) e di ricostruire esperimenti dai checkpoint.
 
 ## Launcher degli esperimenti
+
+`scripts/launch_exps/selected_ingredients/` raccoglie i launcher sul vocabolario
+condiviso D6 a 59 label e ospiterà quelli dei nuovi modelli dopo la qualificazione
+Phase 5. `train_resnet.py` e `train_dinov2.py` trasferiscono le configurazioni
+complete storiche dei trial 77 e 61, ma inizializzano nuovi modelli preaddestrati
+con nuove head: 40 epoche, batch logico 128, nessun nuovo tuning o test predittivo.
+Supportano `--dry-run`, nomi distinti e `--resume` esplicito con controlli di
+proiezione, contratto e sorgenti. Il modulo canonico è
+`src/training/selected_vocab.py`; non modifica né usa l'entry point one-shot.
+I default fisici sono 128 per ResNet e 32/accumulo 4 per DINO, senza una nuova
+misura di capacità CUDA. Comandi, persistenza e limiti metodologici sono nel
+[contratto dei launcher](docs/implementation_details/selected_vocabulary_training.md).
 
 Per creare o lanciare una nuova campagna sperimentale si aggiunge uno script in `scripts/launch_exps/`. Lo script definisce nome/directory dell'esperimento e i relativi override di configurazione, quindi richiama l'API pertinente di `src/training` (`make_one_shot_exp` oppure `make_htuning_exp`). Non costituisce una seconda pipeline di training.
 

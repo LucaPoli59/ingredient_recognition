@@ -1,7 +1,7 @@
 # Implementation details
 
 **Created:** 2026-08-06  
-**Last updated:** 2026-10-06
+**Last updated:** 2026-10-07
 
 This directory contains durable documentation of the repository's current implementation contracts. It explains what the code supports, how components integrate, which configuration defaults and invariants are relied on, and where the behavior is verified.
 
@@ -19,6 +19,7 @@ Implementation-detail documents describe verified current behavior. They must id
 - [`experiment_artifacts.md`](experiment_artifacts.md) records the audited target-v5 experiment artifacts, scalar/histogram semantics, restart and checkpoint-selection behavior, and offline analysis limits.
 - [`experiment_comparison.md`](experiment_comparison.md) defines the optional Lightning-model per-ingredient logging contract and the maintained local N-experiment JSON/HTML comparison command.
 - [`image_data_loading.md`](image_data_loading.md) defines shared-image and target loading, saved encoder compatibility, platform-aware pinned memory, model-specific dashboard preprocessing, and the rerunnable real CUDA/checkpoint/dashboard smoke that closed Data 2.4.
+- [`selected_vocabulary_training.md`](selected_vocabulary_training.md) defines the ResNet/DINO selected-task launcher folder, reviewed full-task configuration transfer, fresh initialization, resource settings, provenance and explicit resume guards; it is not the final benchmark contract.
 - [`ingredient_selection.md`](ingredient_selection.md) defines the maintained Phase 3 selector, blind-pilot/D4 analysis, D6 saved-score inclusion review, P6 frozen projection/export and P7 opt-in runtime/checkpoint/analysis contract, parity checks and historical retention dispositions, alongside the rerunnable launcher, effective batching and measured capacity.
 
 When a new implementation contract is added, use a focused descriptive filename, add it to this index, and link it from the relevant plan or project-objective document when it changes a tracked decision or completion gate.

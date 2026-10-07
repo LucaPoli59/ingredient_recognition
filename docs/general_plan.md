@@ -1,7 +1,7 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-10-06
+**Last updated:** 2026-10-07
 **Overall status:** In progress  
 **Current macro-phase:** Additional model implementation — custom DICA-Net integration in progress
 **Current focus:** Work packages 5.1–5.3 are complete. Work package 5.4 now implements DICA-Net-S (historical P2-S): its tensor/attention graph is verified; approved initialization, adaptation and persistence are next. Actual CUDA/real-consumer acceptance remains 5.5; no campaign has started. Completed Data/selection, full default, projection and historical evidence stay unchanged.
@@ -314,6 +314,14 @@ Continue [5.4](plans/additional_model_implementation.md#54--dica-net-s-custom-im
 
 This macro-section covers baseline training, controlled model training, hyperparameter search, run selection, and reproducibility under the frozen benchmark.
 
+The user-authorized parallel historical follow-up has prepared
+[selected-task ResNet/DINO launchers](implementation_details/selected_vocabulary_training.md)
+while Phase 5 proceeds. They transfer the reviewed full-task trial configurations
+to the shared D6 vocabulary, with fresh initialization and no new HPO. Preparation
+and dry-run verification are complete; the user will launch the runs. This does
+not release the final benchmark gate or redefine historical hyperparameters as
+the future `H_base(m)`.
+
 The binding design is in [`project_objective/model_comparison_methodology.md`](project_objective/model_comparison_methodology.md): tune each model category once on the common full vocabulary, use transferred hyperparameters for the shared selected-vocabulary ablation, use support-matched random vocabulary controls with the reference selector, and keep any selected-task local adaptation separate.
 
 ### Existing historical infrastructure
@@ -554,6 +562,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-06 | Experimental EfficientNet implementation | Completed the distinct 224 adapter, full/frozen state, exact experimental Lightning and strict full/light offline/class-order persistence; 57 focused/206 repository tests pass. Legacy/selector/data stay unchanged; actual artifact/real-consumer/CUDA acceptance remains. | Work package 5.2 **Done**; Macro-section 5 **In progress**; 5.3 next | [Runtime contract](implementation_details/experimental_model_contract.md#experimental-efficientnet-and-canonical-runtime--52), [feature checkpoint](plans/additional_model_implementation.md#52-completion-checkpoint--2026-10-06) |
 | 2026-10-06 | Experimental MaxViT implementation | Completed whole-readout replacement with intact pretrained state, explicit normalization/geometry, original-artifact verification and strict offline persistence; CPU diagnostics and regressions pass. Actual CUDA/real-consumer acceptance remains. | Work package 5.3 **Done**; Macro-section 5 **In progress**; 5.4 next | [Runtime and artifact contract](implementation_details/experimental_model_contract.md#experimental-maxvit-and-artifact-provenance--53), [feature checkpoint](plans/additional_model_implementation.md#53-completion-checkpoint--2026-10-06) |
 | 2026-10-06 | Custom model implementation | Adopted the user-approved DICA-Net name for historical P2 and implemented the S tensor graph with numerical attention, both-path gradients and label-row invariants; 234 repository tests pass. Custom persistence/integration and resource qualification remain. | Work package 5.4 **In progress**; Macro-section 5 **In progress** | [Tensor-core contract](implementation_details/experimental_model_contract.md#dica-net-s-tensor-core--541), [custom execution plan](plans/additional_model_implementation.md#54--dica-net-s-custom-implementation), [naming amendment](project_objective/experimental_model_portfolio.md#rationale-and-falsifiable-claim) |
+| 2026-10-07 | Selected-task baseline launcher preparation | Prepared rerunnable ResNet18/DINOv2 historical-configuration transfers to the shared 59-label D6 vocabulary, with fresh initialization, provenance and explicit resume guards. No training, HPO or predictive test evaluation was started; the user will launch the runs while Phase 5 proceeds. | Launcher preparation **Done**; final Macro-section 6 gate remains **Deferred** | [Launcher contract](implementation_details/selected_vocabulary_training.md), [commands](../scripts/launch_exps/selected_ingredients/README.md) |
 
 ## Tracker maintenance rules
 
