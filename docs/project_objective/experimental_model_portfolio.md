@@ -1,8 +1,8 @@
 # Experimental model portfolio
 
 **Created:** 2026-09-07
-**Last updated:** 2026-09-08
-**Status:** Active and binding portfolio selection; implementation unverified
+**Last updated:** 2026-10-06
+**Status:** Active and binding portfolio selection; engineering qualification in progress
 **Decisions:** 4A-D1 — established families; 4A-D2 — custom attention topology
 
 ## Decision and scope
@@ -14,7 +14,8 @@ respectively. Their expected value is a research hypothesis, not a prediction
 of which model will win on Yummly.
 
 ResNet and DINOv2 remain the already-used comparison anchors. The third new
-category is **P2-S, dual-scale ingredient-query readout with pooled context**,
+category is **DICA-Net-S, dual-scale ingredient-query readout with pooled context**
+(the research proposal **P2-S**),
 using an intact EfficientNetV2-S encoder under [4A-D2](#4a-d2--custom-attention-topology).
 It is a custom readout composition, not a newly pretrained backbone or a claim
 of scientific novelty. Swin V2 is the first alternative to reconsider if MaxViT fails its
@@ -184,6 +185,18 @@ candidate execution, HPO or validation/test outcome influenced it.
 
 ### Rationale and falsifiable claim
 
+**Naming amendment — 2026-10-06:** the user adopted **DICA-Net**,
+*Dual-scale Ingredient-query and Context Attention Network*, with **DICA-Net-S**
+for the selected S scale. The name describes the two feature scales, learned
+ingredient queries and parallel pooled context path. It changes no topology,
+scientific hypothesis, initialization or fallback. `P2`/`P2-S` remain the
+historical proposal identifiers in the completed research and decision history;
+the existing serialized `p2_s` identity remains stable. The current code-facing
+names and verified boundary are owned by the
+[implementation contract](../implementation_details/experimental_model_contract.md#dica-net-s-tensor-core--541).
+This is a project name, not a claim of an original backbone, demonstrated
+effectiveness, localization or exclusive use of the name in the literature.
+
 The question is whether ingredient-specific access to intermediate and coarse
 features adds useful ranking information beyond the same trunk's pooled
 readout. P2 retains separate scales and independently learned selection/value
@@ -212,7 +225,9 @@ No extra control campaign or P1/P3 training is mandated by this decision.
 The exact tensor equations are the [route-Q specification](../research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md#compatible-route-q-class-queries-with-a-pooled-context-path),
 instantiated by [P2](../research/topics/custom_attention_model_design/topology_proposals.md#p2--dual-scale-ingredient-query-readout-with-pooled-context)
 and the values below. These references specify planned behavior, not current
-implementation facts.
+implementation facts. Their current verification state is tracked in the
+[Phase 5 plan](../plans/additional_model_implementation.md); the dated research
+statements below do not replace that implementation record.
 
 | Field | Binding starting choice |
 | --- | --- |
@@ -351,3 +366,4 @@ and handoff, not a completed Phase 5 or benchmark.
 | --- | --- | --- |
 | 2026-09-07 | Adopted 4A-D1: EfficientNetV2-S and MaxViT-T, shared readout/input starting contract, explicit within-family fallback; retained Swin as first spatial reserve | Completed five-candidate research, current problem constraints, bounded official-source inspection, and portfolio complementarity |
 | 2026-09-08 | Adopted 4A-D2: P2-S dual-scale ingredient-query readout with pooled context, intact EfficientNetV2-S initialization and same-S frozen-encoder fallback; retained P1/P3 as research alternatives | Completed brief/component/compatibility evidence and exactly three topology proposals; qualitative O1 fit, bounded cost, explicit falsification and engineering handoff; no candidate performance used |
+| 2026-10-06 | Named the adopted custom model DICA-Net, with DICA-Net-S as the selected scale; retained historical P2-S and serialized `p2_s` identifiers | User-approved descriptive name; no architecture, hypothesis, protocol or fallback change. Current engineering evidence remains in the implementation owner and Phase 5 plan. |

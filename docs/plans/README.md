@@ -7,7 +7,7 @@ This directory contains the execution plans for concrete project implementations
 
 ## Active plans
 
-- [`additional_model_implementation.md`](additional_model_implementation.md) is the operational Phase 5 plan for experimental EfficientNetV2-S, MaxViT-T and custom P2-S. Execution is **In progress**: shared foundations and both established adapters are complete; 5.4.1 P2-S tensor/attention implementation is next. The MaxViT artifact is verified; P2, remaining artifact/real-consumer acceptance and bounded CUDA qualification are open; no campaign has started.
+- [`additional_model_implementation.md`](additional_model_implementation.md) is the operational Phase 5 plan for experimental EfficientNetV2-S, MaxViT-T and DICA-Net-S (historical P2-S). Execution is **In progress**: foundations, established adapters and the custom tensor graph are complete; 5.4.2 custom initialization/adaptation/persistence is next. The remaining custom integration, artifact/real-consumer acceptance and bounded CUDA qualification are open; no campaign has started.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 

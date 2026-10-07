@@ -3,8 +3,8 @@
 **Created:** 2026-08-02  
 **Last updated:** 2026-10-06
 **Overall status:** In progress  
-**Current macro-phase:** Additional model implementation — established experimental pair implemented
-**Current focus:** Work packages 5.1–5.3 are complete: shared foundations, 224-pixel EfficientNet and MaxViT, and tested opt-in Lightning/offline persistence. The approved MaxViT artifact is verified. Next is 5.4's custom P2-S implementation. Actual CUDA/real-consumer acceptance remains 5.5; no campaign has started. Completed Data/selection, full default, projection and historical evidence stay unchanged.
+**Current macro-phase:** Additional model implementation — custom DICA-Net integration in progress
+**Current focus:** Work packages 5.1–5.3 are complete. Work package 5.4 now implements DICA-Net-S (historical P2-S): its tensor/attention graph is verified; approved initialization, adaptation and persistence are next. Actual CUDA/real-consumer acceptance remains 5.5; no campaign has started. Completed Data/selection, full default, projection and historical evidence stay unchanged.
 
 ## Purpose
 
@@ -35,7 +35,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 2 | Data | **Done** | Historical compatibility and all data gates pass, including bounded real CUDA training, exact checkpoint reload and dashboard verification for 2.4. |
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
-| 5 | Additional model implementation | **In progress** | [Foundations and established pair](implementation_details/experimental_model_contract.md) are implemented and tested, with MaxViT artifact verification. 5.4 P2-S is next; remaining artifact/real-consumer/CUDA qualification stays open. |
+| 5 | Additional model implementation | **In progress** | [Foundations, established pair and DICA-Net-S tensor core](implementation_details/experimental_model_contract.md) are implemented. Continue 5.4's custom initialization/persistence/integration; remaining artifact/real-consumer/CUDA qualification stays open. |
 | 6 | Training and hyperparameter tuning | **Deferred** | Resume after the benchmark, selected ingredients, and model contracts are frozen. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
@@ -274,7 +274,7 @@ This subphase asks which single model protocol is a sufficiently sensitive, inte
 
 This macro-section covers architectures selected by Subphase 4A that are not already implemented in the repository.
 
-The [experimental portfolio](project_objective/experimental_model_portfolio.md) provides the binding established-pair/P2-S handoff; the 384-pixel selector stays separate. The [operational plan](plans/additional_model_implementation.md) tracks implementation and qualification. [5.1–5.3](implementation_details/experimental_model_contract.md) supply common foundations, experimental EfficientNet/MaxViT and tested opt-in Lightning/configuration restoration. MaxViT's original artifact is verified; P2 and remaining artifact/resource/consumer acceptance remain. Implementation completion does not launch comparative training.
+The [experimental portfolio](project_objective/experimental_model_portfolio.md) provides the binding established-pair/DICA-Net-S handoff (historically P2-S); the 384-pixel selector stays separate. The [operational plan](plans/additional_model_implementation.md) tracks implementation and qualification. [5.1–5.3](implementation_details/experimental_model_contract.md) supply common foundations, experimental EfficientNet/MaxViT and tested opt-in Lightning/configuration restoration. MaxViT's original artifact and DICA-Net's tensor graph are verified; custom initialization/persistence/integration and remaining artifact/resource/consumer acceptance remain. Implementation completion does not launch comparative training.
 
 ### Existing foundation
 
@@ -293,7 +293,7 @@ All execution detail and lower-level custom checkpoints belong to the [feature p
 | 5.1 Shared implementation contract and foundations | **Done** | Completed 4A portfolio, Data 2.4 and P7 | Versioned preprocessing/identity, initialization/offline construction and exact batching are tested; engineering policy declared. 28 focused and 177 repository tests pass. Actual adapter/consumer integration remains subsequent work. |
 | 5.2 Experimental EfficientNetV2-S | **Done** | 5.1 | Distinct 224-pixel pooled head, full/frozen state and strict exact-batch/full-light persistence pass; 57 focused/206 repository tests. Actual qualification remains 5.5. |
 | 5.3 Experimental MaxViT-T | **Done** | 5.1 | Intact backbone/common readout, explicit normalization/geometry, approved artifact, strict offline full/light restoration and CPU diagnostics pass; actual qualification remains 5.5. |
-| 5.4 P2-S custom model | **Pending** | 5.1 and reusable 5.2 foundations | Adopted dual-scale query/context graph passes numerical, label-identity, initialization, persistence and capability-aware diagnostic tests; then qualify through 5.5. |
+| 5.4 DICA-Net-S custom model | **In progress** | 5.1 and reusable 5.2 foundations | Tensor graph, numerical attention and label-row invariants pass. Complete approved initialization, adaptation, persistence and capability-aware integration, then qualify through 5.5. |
 | 5.5 Measured qualification and Phase 6 handoff | **Pending** | Each model's implementation gates | All three pass reproducible bounded resource/train/restore/consumer checks and affected regressions; hand off measured capabilities and unresolved comparison-policy choices. |
 
 ### Resume gate
@@ -306,7 +306,7 @@ Every selected experimental model passes its interface, state, persistence, voca
 
 ### Next action
 
-Execute [5.4](plans/additional_model_implementation.md#54--p2-s-custom-implementation), starting from the adopted P2-S tensor/attention graph and reusing the completed common/experimental Lightning contracts. Keep the selector unchanged and custom at S, with only the adopted same-topology frozen fallback. Actual real-consumer/CUDA acceptance remains 5.5; no Phase 5 CUDA run or benchmark campaign has started.
+Continue [5.4](plans/additional_model_implementation.md#54--dica-net-s-custom-implementation) with DICA-Net-S initialization, adaptation and persistence, reusing the verified tensor core and common/experimental Lightning contracts. The custom remains S with the adopted same-topology frozen fallback. Actual real-consumer/CUDA acceptance remains 5.5; no Phase 5 CUDA run or benchmark campaign has started.
 
 ## 6. Training and hyperparameter tuning
 
@@ -460,7 +460,7 @@ Create the thesis outline and claim map as soon as the institutional template an
 
 ```text
 project foundation [Done] -> data [Done]
-data -> 4A experimental-model research [Done] -> additional models [In progress: 5.1–5.3 Done, 5.4 next]
+data -> 4A experimental-model research [Done] -> additional models [In progress: 5.1–5.3 Done, 5.4 active]
 data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
 additional models + ingredient selection -> training and HTuning [Deferred] -> results comparison [Deferred] -> thesis completion
@@ -553,6 +553,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-06 | Shared experimental-model foundations | Completed versioned 224 preprocessing/identity, deterministic head initialization, offline-construction checks, exact batch/tail arithmetic and declared engineering policy; 28 focused and 177 repository tests pass. Existing interfaces, selector and evidence remain unchanged; no CUDA qualification or campaign. | Work package 5.1 **Done**; Macro-section 5 **In progress**; 5.2 next | [Foundation contract](implementation_details/experimental_model_contract.md), [feature checkpoint](plans/additional_model_implementation.md#51-completion-checkpoint--2026-10-06) |
 | 2026-10-06 | Experimental EfficientNet implementation | Completed the distinct 224 adapter, full/frozen state, exact experimental Lightning and strict full/light offline/class-order persistence; 57 focused/206 repository tests pass. Legacy/selector/data stay unchanged; actual artifact/real-consumer/CUDA acceptance remains. | Work package 5.2 **Done**; Macro-section 5 **In progress**; 5.3 next | [Runtime contract](implementation_details/experimental_model_contract.md#experimental-efficientnet-and-canonical-runtime--52), [feature checkpoint](plans/additional_model_implementation.md#52-completion-checkpoint--2026-10-06) |
 | 2026-10-06 | Experimental MaxViT implementation | Completed whole-readout replacement with intact pretrained state, explicit normalization/geometry, original-artifact verification and strict offline persistence; CPU diagnostics and regressions pass. Actual CUDA/real-consumer acceptance remains. | Work package 5.3 **Done**; Macro-section 5 **In progress**; 5.4 next | [Runtime and artifact contract](implementation_details/experimental_model_contract.md#experimental-maxvit-and-artifact-provenance--53), [feature checkpoint](plans/additional_model_implementation.md#53-completion-checkpoint--2026-10-06) |
+| 2026-10-06 | Custom model implementation | Adopted the user-approved DICA-Net name for historical P2 and implemented the S tensor graph with numerical attention, both-path gradients and label-row invariants; 234 repository tests pass. Custom persistence/integration and resource qualification remain. | Work package 5.4 **In progress**; Macro-section 5 **In progress** | [Tensor-core contract](implementation_details/experimental_model_contract.md#dica-net-s-tensor-core--541), [custom execution plan](plans/additional_model_implementation.md#54--dica-net-s-custom-implementation), [naming amendment](project_objective/experimental_model_portfolio.md#rationale-and-falsifiable-claim) |
 
 ## Tracker maintenance rules
 

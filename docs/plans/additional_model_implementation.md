@@ -6,23 +6,23 @@
 
 ## Objective and boundary
 
-Turn the adopted [4A-D1/4A-D2 portfolio](../project_objective/experimental_model_portfolio.md) into three reproducible implementations: **EfficientNetV2-S**, **MaxViT-T**, and **P2-S dual-scale ingredient-query readout with pooled context**. Each must work through the canonical data, Lightning, configuration, checkpoint, analysis and dashboard paths, and pass a bounded engineering run on the development GPU.
+Turn the adopted [4A-D1/4A-D2 portfolio](../project_objective/experimental_model_portfolio.md) into three reproducible implementations: **EfficientNetV2-S**, **MaxViT-T**, and **DICA-Net-S** (historical P2-S), the dual-scale ingredient-query readout with pooled context. Each must work through the canonical data, Lightning, configuration, checkpoint, analysis and dashboard paths, and pass a bounded engineering run on the development GPU.
 
 This is an implementation plan, not another model-selection study or a training campaign. The [completed 4A plan](experimental_model_research.md) and [custom research plan](custom_attention_model.md) own the retained research sequence; the portfolio owns architecture decisions. This plan owns execution and acceptance evidence. Planned behavior becomes a current implementation contract only after code and tests exist.
 
 ## Progress tracker
 
 **Overall status:** In progress
-**Current task:** 5.3 complete: experimental MaxViT, explicit normalization, artifact and offline restoration verified
-**Next action:** Execute 5.4.1's P2-S tensor/attention implementation. Actual CUDA and real-consumer acceptance remain 5.5.
+**Current task:** 5.4.1 complete: DICA-Net-S tensor/attention graph and label-row invariants verified
+**Next action:** Execute 5.4.2's approved initialization, adaptation and persistence adapter. Diagnostics/consumer integration remain 5.4.3; actual CUDA and real-consumer acceptance remain 5.5.
 
 | # | Task | Status | Required result |
 | --- | --- | --- | --- |
 | 5.1 | Shared implementation contract and reusable foundations | **Done** | [Implemented contract](../implementation_details/experimental_model_contract.md), exact preprocessing/head/batch helpers; 28 focused and 177 repository tests pass. Adapter/consumer/CUDA gates remain in subsequent steps. |
 | 5.2 | Experimental EfficientNetV2-S adapter | **Done** | Distinct 224-pixel pooled head, full/frozen state, exact Lightning and strict full/light offline restoration; 57 focused/206 repository tests. Actual qualification remains 5.5. |
 | 5.3 | Experimental MaxViT-T adapter | **Done** | Intact backbone/common readout, explicit normalization/geometry, approved artifact and strict offline full/light persistence; CPU diagnostics verified, 73 focused/222 repository tests pass. Actual qualification remains 5.5. |
-| 5.4.1 | P2-S tensor flow and attention readout | **Pending** | Once-only feature extraction, both logit paths and numerical/label-row invariants. |
-| 5.4.2 | P2-S initialization, adaptation and persistence | **Pending** | Intact pretrained state, full/frozen behavior, complete config and checkpoint round trips. |
+| 5.4.1 | DICA-Net-S tensor flow and attention readout | **Done** | Once-only real feature traversal, both logit paths, reference attention and label-row invariants including the 59-label projection; 12 focused/234 repository tests pass. |
+| 5.4.2 | DICA-Net-S initialization, adaptation and persistence | **Pending** | Intact pretrained state, full/frozen behavior, complete config and checkpoint round trips. |
 | 5.4.3 | Capability-aware diagnostics and runtime integration | **Pending** | Predictions and valid Grad-CAM; unsupported feature factorization handled explicitly without breaking legacy models. |
 | 5.5 | Measured qualification and Phase 6 handoff | **Pending** | Per-model bounded CUDA/resource/restore/dashboard evidence, regression checks and maintained documentation. |
 
@@ -122,9 +122,11 @@ The exact approved artifact was downloaded and its complete SHA-256, file size, 
 
 The new source/tests are linked in the implementation owner. `python -m unittest discover -s tests -p 'test_experimental_*.py'` passes **73 tests**; `python -m unittest discover -s tests` passes **222**. Existing regressions include the metadata-only real test-split vocabulary check, not predictive test evaluation. Actual CUDA/resource and real dashboard acceptance remain 5.5; P2 remains pending. 5.3 is **Done** at its implementation gate, Phase 5 stays **In progress**, and 5.4.1 is next.
 
-## 5.4 — P2-S custom implementation
+## 5.4 — DICA-Net-S custom implementation
 
 The [binding construction](../project_objective/experimental_model_portfolio.md#4a-d2--custom-attention-topology) and [route-Q equations](../research/topics/custom_attention_model_design/architecture_compatibility_synthesis.md#compatible-route-q-class-queries-with-a-pooled-context-path) remain authoritative. The following checkpoints translate them into code/tests rather than redesigning the network.
+
+On 2026-10-06 the user named this model **DICA-Net** (*Dual-scale Ingredient-query and Context Attention Network*). **DICA-Net-S** is the selected scale, previously P2-S. The historical research labels and existing serialized `p2_s` identity remain stable. Current code names and availability are recorded in the [implementation owner](../implementation_details/experimental_model_contract.md#dica-net-s-tensor-core--541).
 
 ### 5.4.1 — Tensor flow and numerical attention
 
@@ -135,6 +137,14 @@ Implement S with `D=128`, four heads and one pre-norm cross-attention/ratio-four
 Do not add query self-attention, per-block memory normalization, positions, a spatial mixer, content mask, label grouping/graph/text, sigmoid fusion or custom-module dropout. Preserve original backbone operations. S/M/L tuples remain the recorded scaling rule, not a tuning dimension; larger-size runtime qualification is outside this required work.
 
 Test B1 and `L=1/50/165`, plus the actual 59-output projection. `L=50` is a shape fixture, not a replacement vocabulary. Cover once-only traversal, both-branch gradients, finite forward/backward, token ordering, reference softmax attention versus the actual backend within declared tolerances, and label-row permutation/subsetting with shared weights. The latter must only permute/restrict deterministic outputs; it is not selected-task training.
+
+### 5.4.1 completion checkpoint — 2026-10-06
+
+At base `557c3d9`, added [`DICANetSCore` and `DICAReadoutS`](../../src/models/dica_net.py), following the unchanged 4A-D2 graph. The supplied intact EfficientNet feature stages run once, yield the required F16/F32 maps and feed the separate query and pooled-context paths. New-module initialization follows the declared order without visiting the supplied trunk. Actual S counts match **20,814,874 total / 637,386 new** at 165 labels. The core is a plain tensor module; approved-artifact construction, adaptation policy and canonical persistence are still the next checkpoint.
+
+The [12 new tests](../../tests/test_experimental_dica_net.py) pass on CPU without network or recipe data: B1 and 1/50/59/165 outputs, once-only traversal, token ordering and scale ranges, finite branch/encoder/input gradients, raw unit fusion, explicit attention forward/backward reference at FP32/FP64, row permutation/subsetting and absent cross-label coupling. Shared-row restriction to the actual published 59-label projection matches full-model columns; this is an algebraic fixture, not a selected-task training API. The [implementation record](../implementation_details/experimental_model_contract.md#dica-net-s-tensor-core--541) states exact tolerances, limitations and reproduction commands.
+
+`python -m unittest discover -s tests` passes **234 tests**, including the 12 new checks. Existing regressions include metadata-only real test-split compatibility, not predictive evaluation. No pretrained download, CUDA qualification, optimizer run for DICA-Net or benchmark campaign occurred. User edits, selector evidence, metadata, projection and prior experimental adapters are unchanged. 5.4.1 is **Done**; 5.4 and Phase 5 remain **In progress**. Next is 5.4.2, reusing this core rather than duplicating the tensor graph.
 
 ### 5.4.2 — Initialization, state and persistence
 
@@ -179,7 +189,7 @@ The accepted result is a measured engineering capability, not convergence or pre
 
 | Area | Expected change or artifact |
 | --- | --- |
-| `src/models/`, model transforms | Shared helpers, `EfficientNetV2SExperiment` and `MaxViTTExperiment` exist. The planned P2 name and implemented adapter/runtime are fixed in the [contract owner](../implementation_details/experimental_model_contract.md); P2/resource checks are pending and selector provenance stays separate. |
+| `src/models/`, model transforms | Shared helpers, established adapters and the DICA-Net-S tensor core exist. The [contract owner](../implementation_details/experimental_model_contract.md) records the reserved `DICANetSExperiment` adapter; its initialization/persistence/integration and resource checks remain pending. Selector provenance stays separate. |
 | Configuration/checkpoint/training | Minimal extensions for custom fields, offline rebuild, adaptation and measured batch policy; reuse current output/vocabulary guards. |
 | Dashboard/analysis consumers | Model-aware transforms, real hooks, explicit unsupported diagnostic handling and preserved output/projection identity. |
 | `scripts/validation/`, `tests/` | Rerunnable bounded acceptance command(s), synthetic no-network tests and isolated resource/runtime evidence. No new HPO study. |
@@ -205,3 +215,4 @@ Phase 6 still must freeze augmentation, loss/weighting, HPO objective/spaces/bud
 | 2026-10-06 | Completed 5.1 at base `d45b243` with opt-in preprocessing/identity/initialization/offline/batch helpers and declared smoke policy. | 28 focused and 177 repository tests pass; Phase 5 In progress, 5.2 next. Actual adapters, canonical integration and CUDA qualification remain future gates; no campaign or scientific policy change. |
 | 2026-10-06 | Completed 5.2 at base `4b00726` with the separate EfficientNet adapter, exact experimental Lightning and strict offline/full-light persistence. | 57 focused/206 repository tests pass; 5.3 next. Actual artifact/real-consumer/CUDA gates remain 5.5; no selector/vocabulary change or campaign. |
 | 2026-10-06 | Completed 5.3 at base `0aec11b` with MaxViT's whole-readout replacement, explicit native normalization/geometry, approved artifact verification and strict offline persistence. | 73 focused/222 repository tests pass, covering CPU state, class identity and diagnostics; 5.4.1 next. Actual CUDA/real-consumer acceptance remains 5.5. |
+| 2026-10-06 | Adopted the user-approved name DICA-Net, retaining P2-S/`p2_s` traceability, and completed 5.4.1 at base `557c3d9` with the S tensor graph. | 12 focused/234 repository tests pass, including numerical attention and the published 59-row invariants; 5.4.2 next. 5.4/Phase 5 remain In progress, with no new campaign. |
