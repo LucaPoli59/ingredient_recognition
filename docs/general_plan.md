@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-10-07
+**Last updated:** 2026-10-13
 **Overall status:** In progress  
-**Current macro-phase:** Training/HPO protocol handoff — campaign execution remains deferred
-**Current focus:** Phase 5 is complete: all three additional models pass measured full/selected CUDA, offline restoration and real-consumer gates. Next is Phase 6 protocol planning, using the recorded resource/readiness matrix while freezing remaining scientific and evaluation prerequisites. No Phase 6 training/HPO or final test evaluation has started. Completed Data/selection, full default, projection and historical evidence stay unchanged.
+**Current macro-phase:** Training and hyperparameter tuning — protocol planning
+**Current focus:** Phase 6 planning is active under its dedicated execution plan. Work package 6.1 assesses historical ResNet/DINOv2 reuse, the experiment matrix and an affordable comparable budget, then freezes the training/selection protocol. The canonical pipeline and completed Phase 5 qualification are accepted foundations; no standalone requalification stage is planned. Campaign execution awaits 6.1; no new benchmark training or final test evaluation has started.
 
 ## Purpose
 
@@ -36,7 +36,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Done** | [All three adapters and measured readiness](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) pass useful full/selected CUDA, strict offline restoration and real consumer checks; the completed plan hands off constraints without launching a benchmark. |
-| 6 | Training and hyperparameter tuning | **Deferred** | Data, selected vocabulary and model engineering are ready. Plan/freeze the remaining HPO/training/evaluation policy before campaigns. |
+| 6 | Training and hyperparameter tuning | **In progress** | [6.1 planning](plans/training_hyperparameter_tuning.md) covers historical reuse, matrix and budget/protocol freeze. Campaign execution remains deferred; generic pipeline qualification is omitted. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
 
@@ -310,7 +310,7 @@ Maintain the [qualification CLI and contract](implementation_details/experimenta
 
 ## 6. Training and hyperparameter tuning
 
-**Status:** Deferred
+**Status:** In progress — planning; campaign execution deferred
 
 This macro-section covers baseline training, controlled model training, hyperparameter search, run selection, and reproducibility under the frozen benchmark.
 
@@ -332,34 +332,31 @@ The binding design is in [`project_objective/model_comparison_methodology.md`](p
 - [x] CSV, TensorBoard, and offline W&B logging paths exist.
 - [x] Historical experiments and plots exist for legacy data and configurations.
 
-Historical runs remain useful engineering evidence but are **Superseded** for final comparison by the future benchmark protocol.
+Historical runs remain reviewed evidence. They are not automatically final common-protocol results; 6.1 explicitly decides reuse, validation-only re-evaluation or fresh comparable training for each anchor. Preserving the old nominal budget alone does not close that decision.
 
-### Pending after resume
+### First-level work packages
 
-- [ ] Freeze one declared seed per configuration, budgets, stopping rules, transforms, metrics, logging requirements, and the single-run reporting limitation.
-- [ ] Run prevalence and cuisine-prior non-visual baselines.
-- [ ] Run a simple supervised convolutional baseline.
-- [ ] Run a frozen pretrained visual encoder with a linear multilabel head.
-- [ ] Define model-specific hyperparameter spaces before opening each study.
-- [ ] Verify Optuna study isolation, resumption behavior, and trial traceability.
-- [ ] Run one bounded `V_base` tuning study per approved model category using validation only and fixed comparable budgets.
-- [ ] Train the shared selected-vocabulary ablation with each category's unchanged full-task hyperparameters, then evaluate the paired full-task predictions on the same selected labels.
-- [ ] Run the reference-selector selected-versus-support-matched-random vocabulary controls under unchanged full-task hyperparameters.
-- [ ] If selected-task optimized results are required, run the same predeclared small local-adaptation panel around each category's full-task configuration; keep its results separate from the vocabulary-effect ablation.
-- [ ] Calibrate and select thresholds using validation only after model selection.
-- [ ] Preserve configurations, checkpoints, metrics, environment information, and run identifiers.
+The [training/HPO plan](plans/training_hyperparameter_tuning.md) owns lower-level decisions, the matrix, budget scenarios, artifacts and task acceptance. The earlier discussion's standalone 6.2 pipeline-verification proposal is omitted by user request; the numbering below assigns 6.2 to actual full-task tuning. Completed Data/Phase 5 runtime evidence is reused, with focused work only for newly adopted metric/configuration behavior.
+
+| Work package | Status | Completion gate and next action |
+| --- | --- | --- |
+| 6.1 Historical reuse, matrix and budget/protocol freeze | **In progress** | Initial saved-config inventory and planning handoff complete. Resolve anchor reuse/reruns and the separate reference-control cost; freeze affordable search/training/selection policy before studies. |
+| 6.2 Full-vocabulary baselines and tuning | **Deferred** | Requires 6.1. Produce required prior/visual baselines, traceable comparable studies and `H_base(m)` with retained checkpoint identities and consumed costs. |
+| 6.3 Selected-vocabulary transfers and random controls | **Deferred** | Requires relevant full-task selections and the frozen control design. Complete matched same-label full/reduced comparisons and reference-model random-vocabulary gains. |
+| 6.4 Optional selected-task local adaptation | **Deferred** | Only if funded in 6.1. Apply the same bounded opportunity to participating categories and keep Q4 separate; otherwise record omission without blocking required work. |
+| 6.5 Operating-point freeze and Phase 7 handoff | **Deferred** | Requires mandatory campaign outputs. Freeze validation-only calibration/thresholds and the complete artifact/comparison ledger before final test evaluation. |
 
 ### Resume gate
 
-Data/vocabulary and required additional-model engineering gates are satisfied. Campaign execution still requires a frozen training/HPO protocol and usable predeclared validation/evaluation implementation; historical tooling does not automatically satisfy those remaining gates.
+Data/vocabulary and required additional-model engineering gates are satisfied, and planning has resumed. Campaign execution requires 6.1's frozen matrix, reuse dispositions, affordable budget and training/selection settings. Any implementation delta is limited to the chosen protocol, such as connecting the benchmark metric to HPO/checkpoint selection; there is no new general training-pipeline acceptance phase.
 
 ### Completion gate
 
-Every required baseline and shortlisted model has comparable full-task and shared selected-task runs under the frozen protocol; the reference-selector random controls and any local-adaptation results are separately identified; no test set was used during selection.
+Every required baseline and shortlisted model in the adopted matrix has accounted-for full-task and shared selected-task evidence under its declared comparison/reuse policy; the reference-model random controls and any local-adaptation results are separately identified. Validation operating points and artifact identities are frozen for Phase 7, and no test set was used during selection. Omission of the optional local-adaptation panel is recorded rather than concealed.
 
 ### Next action
 
-Prepare a dedicated Phase 6 execution plan from the binding [methodology](project_objective/model_comparison_methodology.md) and [model readiness/constraints](implementation_details/experimental_model_contract.md#phase-6-comparison-constraints). Freeze augmentation/loss/HPO budgets/objectives/spaces/stopping/horizon, one-seed reporting, adaptation/physical-BatchNorm comparability and evaluation prerequisites before launching studies. Historical selected-task launchers remain a separate user-authorized follow-up, not `H_base(m)` or the final benchmark. No final campaign on the legacy182 task, or automatic transfer of smoke/selector hyperparameters, is authorized by Phase 5 completion.
+Complete 6.1 in the [dedicated plan](plans/training_hyperparameter_tuning.md), using the [methodology](project_objective/model_comparison_methodology.md), [historical study evidence](experiment_results/basic_v5_resnet_dinov2.md) and [model readiness constraints](implementation_details/experimental_model_contract.md#phase-6-comparison-constraints). Decide whether old anchors are contextual baselines or require fresh common-budget studies; price the reference controls and freeze the recipe. Numerical scenarios are not launch settings, and historical selected-task launchers remain distinct until their reuse disposition is recorded.
 
 ## 7. Results comparison
 
@@ -471,7 +468,7 @@ project foundation [Done] -> data [Done]
 data -> 4A experimental-model research [Done] -> additional models [Done: 5.1–5.5]
 data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
-additional models + ingredient selection -> training and HTuning [Deferred] -> results comparison [Deferred] -> thesis completion
+additional models + ingredient selection -> training and HTuning [In progress: 6.1 planning; campaigns deferred] -> results comparison [Deferred] -> thesis completion
 
 Thesis outline and stable chapters may progress in parallel.
 ```
@@ -566,6 +563,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-07 | Custom model persistence | Verified DICA-Net-S original artifact, intact encoder state, full/frozen adaptation and strict offline full/light restoration; 258 repository tests pass. Capability-aware diagnostic integration is next; resource/real-consumer qualification remains. | Work package 5.4 and Macro-section 5 remain **In progress** | [Initialization/persistence contract](implementation_details/experimental_model_contract.md#dica-net-s-initialization-and-persistence--542), [custom execution plan](plans/additional_model_implementation.md#54--dica-net-s-custom-implementation) |
 | 2026-10-07 | Custom model diagnostic integration | Verified real full/frozen Grad-CAM and the production cached-model callback on synthetic CPU inputs; explicit unsupported factorization preserves predictions, supported-model factorization and ordered full/selected outputs. | Work package 5.4 **Done**; Macro-section 5 **In progress**; 5.5 **Pending** and next | [Diagnostic contract](implementation_details/experimental_model_contract.md#dica-net-s-diagnostics-and-consumers--543), [completion checkpoint](plans/additional_model_implementation.md#543-completion-checkpoint--2026-10-07) |
 | 2026-10-07 | Measured additional-model qualification | Completed the shared CLI, fresh useful full-adaptation probes and six full/selected CUDA smokes; strict offline restoration, real callbacks/HTTP and representative browser checks pass. 276 regressions pass; sources/data/checkpoints and historical evidence are preserved. | Work package 5.5 and Macro-section 5 **Done**; Macro-section 6 remains **Deferred** for protocol/evaluation gates, with planning as the next handoff | [Measured readiness/constraints](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix), [completed feature checkpoint](plans/additional_model_implementation.md#55-completion-checkpoint--2026-10-07) |
+| 2026-10-13 | Training/HPO planning | Opened the dedicated Phase 6 plan with historical ResNet/DINOv2 reuse and budget scenarios, an explicit reference-control accounting boundary and five operational packages. Omitted standalone pipeline requalification by user request; retained focused changes for newly adopted protocol behavior. No campaign or budget freeze. | Macro-section 6 and Work package 6.1 **In progress**; campaign packages **Deferred** | [Training/HPO plan](plans/training_hyperparameter_tuning.md), [methodology handoff](project_objective/model_comparison_methodology.md#execution-dependencies-and-open-decisions) |
 
 ## Tracker maintenance rules
 
@@ -594,6 +592,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 - [`plans/experimental_model_research.md`](plans/experimental_model_research.md) is the operational plan for Subphase 4A broad discovery, candidate deep research, selection of two established families, and the separately planned custom attention-model research.
 - [`plans/custom_attention_model.md`](plans/custom_attention_model.md) retains the completed 4A.4 research subphases, three-proposal decision and custom implementation handoff.
 - [`plans/additional_model_implementation.md`](plans/additional_model_implementation.md) is the operational Phase 5 plan for the three adopted experimental models, their shared contract and engineering acceptance gates.
+- [`plans/training_hyperparameter_tuning.md`](plans/training_hyperparameter_tuning.md) is the Phase 6 execution owner for historical reuse, experiment matrix/budget/protocol freeze, full-task tuning, selected/random transfers, optional local adaptation and the Phase 7 handoff.
 - [`plans/reference_selector_research.md`](plans/reference_selector_research.md) is the operational research and decision plan for Subphase 4B.
 - [`research/topics/label_learnability/learnability_assessment.md`](research/topics/label_learnability/learnability_assessment.md) provides the reusable evidence behind the Phase 3 decision-profile framework.
 - [`research/README.md`](research/README.md) defines where model discovery and topic research must be stored.

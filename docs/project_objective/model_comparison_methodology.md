@@ -1,7 +1,7 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-10-06
+**Last updated:** 2026-10-13
 **Status:** Active and binding design through D6 and its P6 projection freeze. D4 remains the immutable original pilot-frozen profile; D6 adopts the reviewed, outcome-informed inclusion policy without changing the training campaign or default vocabulary. P6 publishes one shared selected vocabulary. The later benchmark also requires the independent Subphase 4A model portfolio.
 
 ## Purpose and scope
@@ -639,13 +639,31 @@ vocabulary decisions as uncertain.
 
 ## Execution dependencies and open decisions
 
+**Phase 6 planning handoff — 2026-10-13:** data, vocabulary and Phase 5
+engineering gates are complete. The dedicated
+[training/HPO plan](../plans/training_hyperparameter_tuning.md) now owns the
+historical ResNet/DINOv2 reuse assessment, experiment matrix, cost scenarios and
+execution sequence. The user omitted a standalone pipeline-requalification
+stage; existing canonical training remains the foundation, with only changes
+required by the adopted protocol receiving focused checks. This does not
+replace the threshold-free selection and validation-only operating-point rules.
+
+The plan's numerical budget alternatives are proposals, not a new scientific
+freeze. In particular, a historical 100-trial/40-epoch cap does not by itself
+establish equal search opportunity, and historical loss-selected checkpoints
+do not automatically become `H_base(m)` under a different objective. The exact
+384-pixel `M_ref` remains distinct from the 224-pixel experimental EfficientNet;
+any cheaper reference-control design requires an explicit amendment before
+control outcomes. Q1–Q4, the published vocabulary and Phase 3 evidence remain
+unchanged. Record adopted Phase 6 budget/protocol choices here when 6.1 closes.
+
 | Owner | Required decision or artifact | Status |
 | --- | --- | --- |
 | Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Done: established pair and custom P2-S adopted in the [portfolio](experimental_model_portfolio.md); the [completed 4A plan](../plans/experimental_model_research.md) hands implementation gates to Phase 5. Q1–Q4 are unchanged. |
 | Subphase 4B | Choose, verify, and freeze M_ref. | Done: 4B-D1 freezes the EfficientNetV2-S model-side selector and [`reference_selector_research.md`](../plans/reference_selector_research.md) records the completed evidence and handoff. |
 | Macro-section 3 | Implement the frozen selector workflow and produce versioned V_selected evidence. | Done through P7: D6 uncertainty, shared projection, opt-in runtime integration and retention checks are complete. Original D4 evidence and the full default remain preserved; the [completed plan](../plans/recognizable_ingredient_selection.md) owns the execution record. |
-| Macro-section 5 | Implement and technically qualify the adopted experiment-model protocols. | [Implementation plan](../plans/additional_model_implementation.md) prepared; execution is Pending. Data 2.4/P7 prerequisites are complete, but each model's runtime/resource gates and the later benchmark-policy/evaluation gates remain. |
-| Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | Deferred until the selected vocabulary and models are available. |
+| Macro-section 5 | Implement and technically qualify the adopted experiment-model protocols. | Done on 2026-10-07: all three protocols passed measured full/selected CUDA, persistence and consumer gates. The [completed plan](../plans/additional_model_implementation.md) and [readiness constraints](../implementation_details/experimental_model_contract.md#phase-6-comparison-constraints) supply the handoff. |
+| Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | In progress at [6.1 planning](../plans/training_hyperparameter_tuning.md); historical reuse and budget/protocol decisions remain open. Campaign execution is deferred until that freeze. |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
 
 ## Related documentation
@@ -657,4 +675,5 @@ vocabulary decisions as uncertain.
 - [experimental_model_research.md](../plans/experimental_model_research.md)
 - [reference_selector_research.md](../plans/reference_selector_research.md)
 - [recognizable_ingredient_selection.md](../plans/recognizable_ingredient_selection.md)
+- [training_hyperparameter_tuning.md](../plans/training_hyperparameter_tuning.md)
 - [label_learnability/README.md](../research/topics/label_learnability/README.md)

@@ -1,13 +1,13 @@
 # Implementation plans
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-10-07
+**Last updated:** 2026-10-13
 
 This directory contains the execution plans for concrete project implementations. These plans translate work packages from the project-wide [`general_plan.md`](../general_plan.md) into bounded technical tasks, verification steps, dependencies, and completion criteria.
 
 ## Active plans
 
-No implementation plan is active at this checkpoint. Phase 6 protocol planning is the next handoff; its campaign/evaluation prerequisites remain open.
+- [`training_hyperparameter_tuning.md`](training_hyperparameter_tuning.md) owns Phase 6 planning and execution: historical ResNet/DINOv2 reuse, experiment matrix and budget/protocol freeze, full-task HPO, selected/random transfers, optional local adaptation and the Phase 7 handoff. Planning is active; campaign execution awaits the 6.1 freeze. The accepted training foundation has no separate requalification stage.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 
@@ -39,6 +39,7 @@ docs/plans/
 ├── reference_selector_research.md
 ├── recognizable_ingredient_selection.md
 ├── additional_model_implementation.md
+├── training_hyperparameter_tuning.md
 └── <implementation_name>.md
 ```
 
