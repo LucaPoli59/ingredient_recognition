@@ -16,6 +16,8 @@ _WEIGHTS = {
     "efficientnet_v2_s": "EfficientNet_V2_S_Weights.IMAGENET1K_V1",
     "maxvit_t": "MaxVit_T_Weights.IMAGENET1K_V1",
     "p2_s": "EfficientNet_V2_S_Weights.IMAGENET1K_V1",
+    "resnet18_anchor": "ResNet18_Weights.IMAGENET1K_V1",
+    "dinov2_b14_anchor": "dinov2_vitb14_reg4_pretrain",
 }
 
 
@@ -38,6 +40,10 @@ class ExperimentalModelContract:
         _positive_int(self.num_classes, "num_classes")
         if self.adaptation not in ("full", "frozen_encoder"):
             raise ValueError("unsupported experimental adaptation")
+        if self.model_id == "resnet18_anchor" and self.adaptation != "full":
+            raise ValueError("the benchmark ResNet anchor uses full adaptation")
+        if self.model_id == "dinov2_b14_anchor" and self.adaptation != "frozen_encoder":
+            raise ValueError("the benchmark DINO anchor is a frozen linear probe")
         if type(self.head_seed) is not int or not 0 <= self.head_seed < 2**63:
             raise ValueError("head_seed must be an integer in [0,2**63)")
         transform = ExperimentalFitPad224(self.horizontal_flip_probability)
@@ -79,8 +85,12 @@ class ExperimentalModelContract:
                 "block_module_order": ["query_norm", "q_projection", "k_projection", "v_projection",
                                        "attention_output", "ffn_norm", "ffn_input", "ffn_output"],
             }
+        if self.model_id == "dinov2_b14_anchor":
+            architecture = {"readout": "last_four_cls_and_final_mean_patch_biased_linear",
+                            "input_features": 3840, "register_tokens": 4, "added_dropout": 0.0,
+                            "attention_execution": "official_mem_eff_cuda_official_sdpa_cpu"}
         return {
-            "schema_version": 1, "role": "4a_experiment", "model_id": self.model_id,
+            "schema_version": 1, "role": "benchmark_anchor" if self.model_id.endswith("_anchor") else "4a_experiment", "model_id": self.model_id,
             "architecture_version": 1, "architecture": architecture,
             "num_classes": self.num_classes, "output": "ordered_raw_logits",
             "weights_enum": _WEIGHTS[self.model_id], "adaptation": self.adaptation,

@@ -4,13 +4,13 @@
 
 **Last updated:** 2026-10-13
 
-**Status:** In progress — planning; campaign execution deferred
+**Status:** In progress — protocol frozen; campaign not started
 
 ## Purpose and scope
 
 This is the execution owner for [Macro-section 6](../general_plan.md#6-training-and-hyperparameter-tuning). Turn the completed data, vocabulary and model work into a bounded training campaign that answers the [Q1–Q4 comparison questions](../project_objective/model_comparison_methodology.md#research-questions), accounts for the existing ResNet/DINOv2 investment, and hands frozen models and operating points to Phase 7.
 
-The plan does not reopen the selected 59-label vocabulary, the three-model portfolio, or the single-seed constraint. It does not launch experiments, promote historical validation winners to final benchmark winners, or access predictive test results. Numerical budget scenarios below are planning alternatives, not adopted training settings.
+The plan does not reopen the selected 59-label vocabulary, the three-model portfolio, or the single-seed constraint. Historical budget alternatives are retained below as dated planning evidence; the adopted [Phase 6-D1 protocol](../project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol) and its executable configuration supersede their open choices. No campaign or predictive test evaluation has started.
 
 The user explicitly removed the previously proposed standalone pipeline-qualification stage on 2026-10-13: the canonical training code and Phase 5 qualification are accepted foundations. The five stages below are renumbered; **6.2 now means full-vocabulary tuning**, not another validation of the training infrastructure. Any work required by a newly adopted metric, monitor or experiment configuration is scoped to that change within 6.1, rather than a repeat of Phase 5.
 
@@ -18,16 +18,16 @@ The user explicitly removed the previously proposed standalone pipeline-qualific
 
 **Overall status:** In progress
 
-**Current task:** 6.1 — historical reuse, experiment matrix and budget/protocol freeze
+**Current task:** 6.1 complete — await the separate 6.2 execution request
 
-**Next action:** Resolve the historical-baseline reuse policy and total compute envelope, price the matrix below, then freeze the compact search and training recipe in the methodology owner.
+**Next action:** In 6.2, compute the required non-neural baselines and release the predeclared first full-task trial per protocol, one at a time. Review its actual epoch/run costs before releasing the remainder of each 100-attempt study. No training is authorized by this documentation checkpoint alone.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
-| 6.1 | Freeze matrix, historical reuse, budgets and training/selection protocol | **In progress** | Initial read-only historical inventory and Phase 5 handoff reviewed; alternatives and remaining decisions below. No budget or HPO launch is frozen. |
-| 6.2 | Run full-vocabulary baselines and tuning; select `H_base(m)` | **Deferred** | Requires 6.1. Use the existing canonical training/Optuna path. |
+| 6.1 | Freeze matrix, historical reuse, budgets and training/selection protocol | **Done** | Phase 6-D1, primitive policy and opt-in canonical metric/configuration/HPO route agree. Five fresh 100-attempt/40-epoch studies; fixed-selector Q3 reuse; no overall GPU-hour cap. Verification is recorded below. |
+| 6.2 | Run full-vocabulary baselines and tuning; select `H_base(m)` | **Pending** | 6.1 is complete. Use the opt-in canonical path and first-trial cost release; no campaign started. |
 | 6.3 | Run selected-vocabulary transfers and reference-model random controls | **Deferred** | Requires the relevant full-task configuration, frozen control design and budget from 6.1. |
-| 6.4 | Optional bounded selected-task local adaptation | **Deferred** | Execute only if explicitly included in the 6.1 budget; otherwise record omission and its Q4 limitation. |
+| 6.4 | Bounded selected-task local adaptation | **Deferred** | Included by Phase 6-D1: four additional LR/decay configurations per model after transferred runs. Remains separate from Q3. |
 | 6.5 | Freeze calibration, thresholds and the Phase 7 handoff | **Deferred** | Requires required runs and the selected-checkpoint ledger; test evaluation remains Phase 7. |
 
 Creating this plan completes the planning handoff, not 6.1. Later task checkpoints record actual configurations, results, costs, verification and the next action. Preserve completed and superseded evidence.
@@ -50,6 +50,8 @@ Read these inputs before making the corresponding decision:
 Operational task state belongs here; adopted numerical and comparison-policy decisions belong in `project_objective/model_comparison_methodology.md`. Reviewed predictive results belong in `experiment_results/`, current runtime changes in `implementation_details/`, and raw logs/predictions/checkpoints in experiment directories. This plan adds no parallel trainer, duplicate dataset or new permanent vocabulary.
 
 ## Historical budget and reuse baseline
+
+**Retained planning record:** the recommendations, matrix alternatives and budget scenarios in this section and the next were written before the user's continuous-GPU and fixed-reference decisions. They are not current unresolved launch choices. [Phase 6-D1](../project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol) and the completed checkpoint below now own the adopted policy; preserve the earlier rationale and numerical scenarios as history.
 
 ### Verified starting point
 
@@ -140,6 +142,33 @@ Before launch, the budget sheet must state usable GPU-hours/days, trial/horizon 
 
 ## 6.1 — Freeze matrix, budget and protocol
 
+### Completed protocol/configuration checkpoint — 2026-10-13
+
+The user permits continuous GPU use without a fixed total hour/day allowance and explicitly selected fixed-selector reuse for Q3. The adopted [Phase 6-D1](../project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol) closes the matrix, reuse, budget, search/recipe, selection, controls, local panel and operating-point decisions. The older open-question paragraphs below are retained checkpoint history, not outstanding user questions.
+
+- Five fresh studies: pretrained full ResNet18, frozen DINOv2 register-B/14, experimental EfficientNetV2-S, MaxViT-T and DICA-Net-S. Keep old loss-selected studies/transfers separate. Each new study has100 started attempts and40 maximum epochs, TPE/Hyperband, with an unpruned fixed trial 0 counted inside 100.
+- Common224 full-frame/flip input, FP32/effective 128, unweighted BCE/AdamW, two-axis LR/decay search, two warm-up epochs and38 cosine epochs. Native normalization/physical-batch and frozen-DINO differences remain explicit.
+- Selection is full-validation macro AP, maximizing every epoch with earliest-epoch/lowest-trial tie rules. Only completed40-epoch trials supply `H_base`; final full checkpoints remain distinct from best-AP checkpoints.
+- Q3 reuses `phase3-d1-v3`'s fixed384 recipe and final40-epoch full model, plus six fresh reduced runs: selected 59 and five deterministic support-matched random59 vocabularies. All use final40-epoch weights. No reference HPO, changed selector evidence, manual vocabulary revision or mixing with experimental224.
+- Include the four-run LR/decay local panel for each of the five categories, separately from transferred Q2 and fixed Q3. Temperature/global-threshold fitting and projected-task handling are fixed prospectively for6.5.
+- Release only the first trial per model before a measured-cost review. MaxViT has the clearest large wall-time risk, and no cap is extended automatically if a model is still improving at 40. The conditional smoke arithmetic remains explicitly not an ETA.
+
+The [primitive policy](../../src/training/resources/phase6_protocol_v1.json), [configuration/metric helpers](../../src/training/benchmark_protocol.py), [shared Lightning delta](../../src/lightning/benchmark_lgn.py), [isolated HPO controller](../../src/training/benchmark_campaign.py), [matched-input anchors](../../src/models/benchmark_anchors.py) and [CLI](../../scripts/launch_exps/benchmark/train.py) implement the6.1 preparation. They reuse canonical `model_training`/ExperimentalLGNM, rather than a per-family trainer. The CLI only prints the policy by default; actual execution requires `--execute`. Historical training, metadata, projection membership and selector sources are unchanged. Study resume uses the retained journal and sampler state, not legacy delete/recreate recovery; mid-trial interruptions explicitly require recovery rather than an uncounted retry.
+
+Verification at base `e0653dd` plus this working-tree change: **11 focused tests and287 repository tests pass**. Tests include an actual40-epoch **tiny synthetic CPU** fit, AP checkpoint/tie and full/light restore checks, five full/selected config round trips, and temporary scalar Optuna studies for continuation/accounting; these are not campaign HPO or real-food training. Additional cached-artifact CPU inspection verifies fresh ResNet and DINO weight hashes, DINO persistent-eval/frozen parameters and finite input gradients on a synthetic224 tensor. The initial CPU xFormers failure was corrected with an explicit instance-local official CPU attention path, without modifying cached or historical sources. New anchor physical 32 is still a configured request, not a measured GPU cap. Existing real test-split verification is metadata-only, not predictive evaluation. See the [runtime owner](../implementation_details/benchmark_training.md) for exact provenance and recovery boundaries.
+
+**Outcome:** 6.1 **Done**, 6.2 **Pending**. No real campaign, selector rerun, predictive test evaluation, new commit or push occurred. The scheduled continuation was removed at the user's request; work resumed in this chat.
+
+### Historical cost/disposition checkpoint — 2026-10-13
+
+The [reviewed cost baseline](../experiment_results/phase6_budget_baseline.md) and [reproducible summary](../../src_scratches/phase6_budget_audit/summary.json) complete the retained-evidence cost audit, not the 6.1 freeze. Recorded journal sums are 41.98 h for ResNet and 106.91 h for DINO, with restart-coverage limitations. Phase 5 timings do not establish full-epoch throughput; they also show no basis for treating 59-label transfers as cheaply proportional to output count. No new training or inference was performed.
+
+**Recommended disposition, pending the affordable matrix:** preserve the old 100-trial studies and selected artifacts as historical evidence; use fresh compact studies for ResNet18 and frozen DINO if they join a matched-budget headline with the three new models. Do not resume the old loss-selected studies under the new mAP objective. Historical selected-task launchers stay attached to trials 77/61; no completed selected campaign was found in the main workspace's expected `experiments/selected_v5` location, which does not establish whether the user ran them elsewhere.
+
+The default proposal remains five explicitly named protocols with equal bounded search opportunity, not equal clock time, keeping 40 epochs as the horizon to price. However, **20 trials is not yet a recommended minimum or approved cap**: allocate selected transfers, reference controls and inference first, then size the HPO pool within the remaining envelope. If unaffordable, present either a smaller common search or an explicitly narrowed headline comparison; never silently mix historical 100-trial winners into a small-search ranking. Optional local adaptation can be omitted explicitly before compromising the required paired controls.
+
+The user has been asked for total GPU-days, continuous versus intermittent availability and any deadline. Until that input arrives, the trial/control counts and precise stopping allocation stay open. The separate 384-pixel reference versus 224-pixel experimental EfficientNet decision also remains open: the audit supplies cost evidence, not authority to merge the protocols. A source/configuration implementation of the new monitor follows the adopted recipe; there is no repeat pipeline-qualification gate.
+
 ### Ordered decisions and deliverables
 
 1. **Historical reuse and scope.** Complete the disposition table for ResNet, DINO and any selected-task follow-up; identify missing evidence without retraining by default. Distinguish a common-budget headline from an explicitly historical/fixed-baseline table. Confirm the five-protocol matrix or record any scope amendment.
@@ -156,7 +185,7 @@ Before launch, the budget sheet must state usable GPU-hours/days, trial/horizon 
 | Loss and class weights | BCE reduction, train-only weighting formula and whether weighting is fixed or searched. Use an objective with common semantics across trial loss choices. Preserve retained-label weights exactly under projection where the formula permits; document any label-dependent renormalization. |
 | Optimizer and search | Fix optimizer/schedule families where possible to keep the small search meaningful; specify LR/decay ranges and any justified parameter groups. Avoid reintroducing architecture identity as a trial parameter. |
 | Horizon and stopping | Evaluate retaining 40 epochs versus a changed common cap; declare scheduler horizon, checkpoint cadence, pruning resources and any early stopping before outcomes. Matched transferred procedures use the same declared budget/stopping rule, with realized epochs/updates reported. |
-| Batch, precision and BatchNorm | Choose effective batch and precision explicitly. Measured FP32 portfolio capacities are 32/16/32 at effective128; they are conditional. Decide common feasible physical batch versus disclosed model-specific batches, and keep the same physical policy within full/selected/random pairs. Accumulation does not equalize BatchNorm; native BN settings also differ. |
+| Batch, precision and BatchNorm | Choose effective batch and precision explicitly. Measured FP32 portfolio capacities are 32/16/32 at effective 128; they are conditional. Decide common feasible physical batch versus disclosed model-specific batches, and keep the same physical policy within full/selected/random pairs. Accumulation does not equalize BatchNorm; native BN settings also differ. |
 | Selection and operating point | Full-validation macro mAP aggregation; declared tie-break/checkpoint rule. Final micro F1 uses a validation-selected global threshold after model selection. Calibration method, fitting boundary and identity/reuse under projection must be explicit. |
 | Reproducibility | One seed/configuration; pinned source/config/artifact/class identity, full/light/resume meaning, fresh initialization, study names and exact recorded trial budget. |
 | Q3 controls and Q4 option | Reference protocol, number of draws, deterministic support matching and allowable overlap; optional local panel shape and equal per-category opportunity. No manual ingredient-review dependency. |
@@ -216,5 +245,7 @@ Required experiment artifacts are a run/study manifest with source and configura
 | Date | Event | Result |
 | --- | --- | --- |
 | 2026-10-13 | Created the Phase 6 plan after Phase 5 completion; incorporated the user's historical-budget question and removal of standalone pipeline qualification | 6.1 **In progress**; five stages, explicit reuse routes, priced-scenario framework and reference-protocol decision. Canonical runtime accepted; narrow new-metric/configuration work identified. No training, inference, model construction or study mutation performed. |
+| 2026-10-13 | Completed the read-only historical-cost subtask of 6.1 and checked all 200 saved configurations against retained inventory | Reviewed cost baseline and reproducible metadata-only audit retained; recommended historical/new-study separation. 6.1 remains **In progress**, awaiting the user compute envelope and protocol/configuration freeze; no campaign started. |
+| 2026-10-13 | Adopted Phase6-D1 after continuous-GPU availability and explicit fixed-selector reuse; implemented and checked the narrow executable protocol delta | 6.1 **Done**; 6.2 **Pending**. Five bounded fresh studies, separate fixed-reference controls and local panel, global AP/maximizing selection, strict configuration/provenance and non-destructive study continuation. No campaign launched. |
 
-The planning checkpoint verified the historical saved settings against the reviewed evidence, inspected the metric/selection integration points, and checked documentation links and formatting. The next work is the actual 6.1 budget/reuse/protocol decision; no total time allowance, trial count, random-draw count or new scientific recipe has been silently fixed.
+The planning and cost checkpoints remain retained history. The completed6.1 checkpoint explicitly supersedes their open choices, with scientific authority in Phase 6-D1 and runtime behavior in its implementation owner. The next work is the separately released6.2 campaign, not another general pipeline qualification.

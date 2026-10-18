@@ -1,7 +1,7 @@
 # Vision models
 
 **Created:** 2026-08-02
-**Last updated:** 2026-10-07
+**Last updated:** 2026-10-13
 
 This page describes the implementation of the models available in `src/models` and their contract with the training pipeline. The problem remains a multi-label classification task: each model outputs a vector of `num_classes` **logits**, with no final sigmoid. Converting logits to probabilities and applying `BCEWithLogitsLoss` are responsibilities of the Lightning module.
 
@@ -64,6 +64,8 @@ The use of concatenation preserves features from all previous layers, but increa
 
 ## DINOv2 ViT-B/14 with registers
 
+This section describes the historical adapter. The separate [Phase 6 anchor runtime](benchmark_training.md#anchor-initialization-and-source-pinning) uses `BenchmarkAnchor` for both ResNet18 and DINOv2: common fit/pad224, seeded heads, pinned local artifacts/source and strict experimental persistence. DINO retains its register-B/14 encoder and four-CLS-plus-mean-patch representation but holds the encoder persistently eval. This opt-in comparison path does not change the historical classes below, and its configured physical batch is not a new measured GPU maximum.
+
 `DinoV2B14` loads the `dinov2_vitb14_reg_lc` model from the `facebookresearch/dinov2` repository through `torch.hub`. The backbone is a base Vision Transformer with `14×14` patches and register tokens; the suffix `_lc` selects the variant equipped with a linear classifier. The class replaces `model.linear_head` with a new `Linear` whose output size is `num_classes`, so the upstream checkpoint head is not reused for ingredient prediction.
 
 ### Freezing and fine-tuning
@@ -103,15 +105,15 @@ constant that guarantees memory feasibility on every device.
 
 ## EfficientNetV2-S 4A experiment
 
-[`EfficientNetV2SExperiment`](../../src/models/experimental_efficientnet.py) retains TorchVision's intact features and global pool, replacing its entire stock readout with seeded biased `Linear(1280,L)` and no classifier dropout. The shared full-frame input is 224 pixels, not the selector's 384. Full and persistent-eval frozen-encoder modes preserve input-gradient diagnostics; configuration records the exact original ImageNet enum, primitive contract and adaptation. Widths 1/50/59/165 and the 20,388,853-parameter count at165 are verified with no-network fixtures.
+[`EfficientNetV2SExperiment`](../../src/models/experimental_efficientnet.py) retains TorchVision's intact features and global pool, replacing its entire stock readout with seeded biased `Linear(1280,L)` and no classifier dropout. The shared full-frame input is 224 pixels, not the selector's 384. Full and persistent-eval frozen-encoder modes preserve input-gradient diagnostics; configuration records the exact original ImageNet enum, primitive contract and adaptation. Widths 1/50/59/165 and the 20,388,853-parameter count at 165 are verified with no-network fixtures.
 
-[`ExperimentalLGNM`](../../src/lightning/experimental_lgn.py) integrates exact batching, sample-weighted final/truncated accumulation groups, ordered classes and full/light checkpoint guards through canonical construction. The [owning contract](experimental_model_contract.md#experimental-efficientnet-and-canonical-runtime--52) records interfaces, tests and limits. The actual ImageNet artifact, real CUDA and consumer checks now pass; physical32/accumulation4 gives effective128 in the separately declared smoke, not a universal cap or Phase 6 hyperparameter recommendation.
+[`ExperimentalLGNM`](../../src/lightning/experimental_lgn.py) integrates exact batching, sample-weighted final/truncated accumulation groups, ordered classes and full/light checkpoint guards through canonical construction. The [owning contract](experimental_model_contract.md#experimental-efficientnet-and-canonical-runtime--52) records interfaces, tests and limits. The actual ImageNet artifact, real CUDA and consumer checks now pass; physical 32/accumulation4 gives effective 128 in the separately declared smoke, not a universal cap or Phase 6 hyperparameter recommendation.
 
 ## MaxViT-T 4A experiment
 
 [`MaxViTTExperiment`](../../src/models/experimental_maxvit.py) retains TorchVision's intact stem and MaxViT blocks with a new GAP/flatten/biased `Linear(512,L)` readout. The whole stock normalization/projection/Tanh classifier is removed. It shares EfficientNet's 224 full-frame transform and seeded head policy; the saved contract explicitly validates partition-seven geometry and BatchNorm epsilon 1e-3/momentum 0.01, preserving pretrained running statistics. Full/frozen behavior covers both stem and blocks, and frozen state remains eval while input gradients work.
 
-The traversed final block provides `[B,512,7,7]` diagnostic features; the final linear supplies the complete classifier for pooled image/concept vectors. Counts, class identity, strict full/light offline restoration and production Grad-CAM/factorization helpers are verified with synthetic CPU fixtures and bounded real-food runtime checks. The [owning record](experimental_model_contract.md#experimental-maxvit-and-artifact-provenance--53) records exact original hashes, notices, normalization rationale and limits. Full CUDA adaptation passes at physical16/accumulation8/effective128 under the declared smoke conditions; frozen mode remains supported but is not CUDA-qualified by that run.
+The traversed final block provides `[B,512,7,7]` diagnostic features; the final linear supplies the complete classifier for pooled image/concept vectors. Counts, class identity, strict full/light offline restoration and production Grad-CAM/factorization helpers are verified with synthetic CPU fixtures and bounded real-food runtime checks. The [owning record](experimental_model_contract.md#experimental-maxvit-and-artifact-provenance--53) records exact original hashes, notices, normalization rationale and limits. Full CUDA adaptation passes at physical 16/accumulation8/effective 128 under the declared smoke conditions; frozen mode remains supported but is not CUDA-qualified by that run.
 
 ## DICA-Net-S 4A experiment
 
@@ -121,7 +123,7 @@ CPU tensor tests verify both-path gradients, reference attention and label-row p
 
 [`DICANetSExperiment`](../../src/models/experimental_dica_net.py) loads the approved original ImageNet encoder, verifies its complete artifact hash and retains every feature weight/buffer through custom initialization. It provides common 224 preprocessing, full or persistent-eval frozen adaptation, native BatchNorm epsilon 1e-3/momentum 0.1 with preserved statistics, strict configuration/provenance and complete offline full/light restoration through `ExperimentalLGNM`. The serialized identity remains `p2_s`. The [initialization/persistence owner](experimental_model_contract.md#dica-net-s-initialization-and-persistence--542) records original-artifact evidence, tests and limits.
 
-The diagnostic classifier is the complete two-scale readout, never the context-only linear. Standalone-concept factorization is explicitly unsupported; the dashboard shows its reason while retaining predictions and valid Grad-CAM. Synthetic CPU checks cover full/frozen gradients and exact full/selected class order; real CUDA, offline restoration and production callback checks pass at physical32/accumulation4/effective128. Actual browser acceptance confirms the explanatory panel. Display overlays invert the saved transform's normalization without re-running preprocessing. This is not localization-quality evidence. [Measured readiness and comparison constraints](experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) do not authorize benchmark training.
+The diagnostic classifier is the complete two-scale readout, never the context-only linear. Standalone-concept factorization is explicitly unsupported; the dashboard shows its reason while retaining predictions and valid Grad-CAM. Synthetic CPU checks cover full/frozen gradients and exact full/selected class order; real CUDA, offline restoration and production callback checks pass at physical 32/accumulation4/effective 128. Actual browser acceptance confirms the explanatory panel. Display overlays invert the saved transform's normalization without re-running preprocessing. This is not localization-quality evidence. [Measured readiness and comparison constraints](experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) do not authorize benchmark training.
 
 ## Torchvision ResNet wrapper
 

@@ -1,7 +1,7 @@
 # Experiment results
 
 **Created:** 2026-09-23
-**Last updated:** 2026-10-05
+**Last updated:** 2026-10-13
 
 ## Context and scope
 
@@ -22,6 +22,7 @@ Raw JSON/HTML reports, checkpoints, event files, W&B stores, exhaustive tables, 
 
 - [`basic_v5_resnet_dinov2.md`](basic_v5_resnet_dinov2.md) records the exploratory validation comparison of the existing `basic_v5` ResNet18 and frozen-backbone DINOv2-B/14 HPO campaigns. It identifies ResNet18 trial 77 as the stronger observed artifact while retaining the final-benchmark gate.
 - [`basic_v5_resnet_dinov2.png`](basic_v5_resnet_dinov2.png) is the compact, versioned figure derived from the same reviewed comparison.
+- [`phase6_budget_baseline.md`](phase6_budget_baseline.md) reviews historical journal durations and existing Phase 5/selector timing evidence for Phase 6 planning, separating measurements from conditional cost arithmetic; it adopts no training budget.
 - [`phase3_d1_v3_pilot.md`](phase3_d1_v3_pilot.md) records only the sealed 24-label pilot of the completed 40-epoch reference-selector campaign, the provisional numerical-profile outcomes, exact artifact provenance, and interpretation limits; the other 141 labels remain outside this review.
 - [`phase3_d1_v3_full_profile.md`](phase3_d1_v3_full_profile.md) reviews P4's unchanged application of the pilot-frozen rule to all 165 labels; its five outcomes are provisional and do not constitute a selected vocabulary.
 - [`phase3_d1_v3_inclusion_policy_audit.md`](phase3_d1_v3_inclusion_policy_audit.md) preserves the post-P4 objective-alignment audit and old-interval counterfactuals that motivated the subsequently adopted D6 amendment.

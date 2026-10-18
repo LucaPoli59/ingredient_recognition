@@ -4,7 +4,7 @@
 **Last updated:** 2026-10-13
 **Overall status:** In progress  
 **Current macro-phase:** Training and hyperparameter tuning — protocol planning
-**Current focus:** Phase 6 planning is active under its dedicated execution plan. Work package 6.1 assesses historical ResNet/DINOv2 reuse, the experiment matrix and an affordable comparable budget, then freezes the training/selection protocol. The canonical pipeline and completed Phase 5 qualification are accepted foundations; no standalone requalification stage is planned. Campaign execution awaits 6.1; no new benchmark training or final test evaluation has started.
+**Current focus:** Phase 6-D1 and its executable protocol close6.1. Work package6.2 is Pending: start the declared first full-task trial per model only when execution is requested, then review measured costs before releasing the remaining fixed budget. Historical studies remain separate and Q3 reuses the fixed selector. No benchmark campaign or final test evaluation has started; no standalone pipeline requalification is planned.
 
 ## Purpose
 
@@ -36,7 +36,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Done** | [All three adapters and measured readiness](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) pass useful full/selected CUDA, strict offline restoration and real consumer checks; the completed plan hands off constraints without launching a benchmark. |
-| 6 | Training and hyperparameter tuning | **In progress** | [6.1 planning](plans/training_hyperparameter_tuning.md) covers historical reuse, matrix and budget/protocol freeze. Campaign execution remains deferred; generic pipeline qualification is omitted. |
+| 6 | Training and hyperparameter tuning | **In progress** | [6.1 is complete](plans/training_hyperparameter_tuning.md);6.2 execution is Pending under the finite protocol and first-trial measured-cost review. Generic pipeline qualification is omitted. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
 
@@ -294,7 +294,7 @@ All execution detail and lower-level custom checkpoints belong to the [feature p
 | 5.2 Experimental EfficientNetV2-S | **Done** | 5.1 | Distinct 224-pixel pooled head, full/frozen state and strict exact-batch/full-light persistence pass; 57 focused/206 tests at this checkpoint. Measured acceptance completed in5.5. |
 | 5.3 Experimental MaxViT-T | **Done** | 5.1 | Intact backbone/common readout, explicit normalization/geometry, approved artifact, strict offline full/light restoration and CPU diagnostics pass. Measured acceptance completed in5.5. |
 | 5.4 DICA-Net-S custom model | **Done** | 5.1 and reusable 5.2 foundations | Graph, initialization, full/frozen adaptation, offline persistence and capability-aware diagnostics pass; CPU fixtures and real callback checks are retained. Measured acceptance completed in5.5. |
-| 5.5 Measured qualification and Phase 6 handoff | **Done** | Each model's implementation gates | All three pass useful full adaptation at measured physical32/16/32, effective128/trueFP32, full/selected offline restore and real-consumer checks; 276 tests pass. [Readiness matrix](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) retains exact provenance, conditions and open comparison policy. |
+| 5.5 Measured qualification and Phase 6 handoff | **Done** | Each model's implementation gates | All three pass useful full adaptation at measured physical 32/16/32, effective 128/trueFP32, full/selected offline restore and real-consumer checks; 276 tests pass. [Readiness matrix](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) retains exact provenance, conditions and open comparison policy. |
 
 ### Resume gate
 
@@ -310,7 +310,7 @@ Maintain the [qualification CLI and contract](implementation_details/experimenta
 
 ## 6. Training and hyperparameter tuning
 
-**Status:** In progress — planning; campaign execution deferred
+**Status:** In progress — protocol frozen; campaign not started
 
 This macro-section covers baseline training, controlled model training, hyperparameter search, run selection, and reproducibility under the frozen benchmark.
 
@@ -332,7 +332,7 @@ The binding design is in [`project_objective/model_comparison_methodology.md`](p
 - [x] CSV, TensorBoard, and offline W&B logging paths exist.
 - [x] Historical experiments and plots exist for legacy data and configurations.
 
-Historical runs remain reviewed evidence. They are not automatically final common-protocol results; 6.1 explicitly decides reuse, validation-only re-evaluation or fresh comparable training for each anchor. Preserving the old nominal budget alone does not close that decision.
+Historical runs remain reviewed contextual evidence. Phase 6-D1 adopts fresh prospective anchor studies for the common comparison; old studies and historical transfers remain separate. Preserving the old nominal budget alone would not establish equivalent search/selection procedures.
 
 ### First-level work packages
 
@@ -340,15 +340,15 @@ The [training/HPO plan](plans/training_hyperparameter_tuning.md) owns lower-leve
 
 | Work package | Status | Completion gate and next action |
 | --- | --- | --- |
-| 6.1 Historical reuse, matrix and budget/protocol freeze | **In progress** | Initial saved-config inventory and planning handoff complete. Resolve anchor reuse/reruns and the separate reference-control cost; freeze affordable search/training/selection policy before studies. |
-| 6.2 Full-vocabulary baselines and tuning | **Deferred** | Requires 6.1. Produce required prior/visual baselines, traceable comparable studies and `H_base(m)` with retained checkpoint identities and consumed costs. |
+| 6.1 Historical reuse, matrix and budget/protocol freeze | **Done** | Phase 6-D1 and executable configurations/metric selection verified: five fresh 100-attempt/40-epoch studies, fixed-selector Q3 reuse, local panel and no total GPU-hour ceiling. Historical evidence remains separate. |
+| 6.2 Full-vocabulary baselines and tuning | **Pending** | 6.1 complete. Produce required baselines and the first declared trial per model; review measured time before the remaining allocation. No campaign launched. |
 | 6.3 Selected-vocabulary transfers and random controls | **Deferred** | Requires relevant full-task selections and the frozen control design. Complete matched same-label full/reduced comparisons and reference-model random-vocabulary gains. |
-| 6.4 Optional selected-task local adaptation | **Deferred** | Only if funded in 6.1. Apply the same bounded opportunity to participating categories and keep Q4 separate; otherwise record omission without blocking required work. |
+| 6.4 Selected-task local adaptation | **Deferred** | Included by Phase 6-D1: four additional LR/decay configurations per category after the transferred run. Keep Q4 separate from reference controls. |
 | 6.5 Operating-point freeze and Phase 7 handoff | **Deferred** | Requires mandatory campaign outputs. Freeze validation-only calibration/thresholds and the complete artifact/comparison ledger before final test evaluation. |
 
 ### Resume gate
 
-Data/vocabulary and required additional-model engineering gates are satisfied, and planning has resumed. Campaign execution requires 6.1's frozen matrix, reuse dispositions, affordable budget and training/selection settings. Any implementation delta is limited to the chosen protocol, such as connecting the benchmark metric to HPO/checkpoint selection; there is no new general training-pipeline acceptance phase.
+Data/vocabulary, required model engineering and6.1 protocol/configuration gates are satisfied. Campaign execution is a separate6.2 action with a first-trial cost-review boundary. The opt-in runtime connects complete-validation AP to HPO/checkpoint selection and preserves historical behavior; there is no new general training-pipeline acceptance phase. Resource failure or interrupted-trial recovery requires an explicit decision, not automatic extra budget or a silent protocol change.
 
 ### Completion gate
 
@@ -356,7 +356,7 @@ Every required baseline and shortlisted model in the adopted matrix has accounte
 
 ### Next action
 
-Complete 6.1 in the [dedicated plan](plans/training_hyperparameter_tuning.md), using the [methodology](project_objective/model_comparison_methodology.md), [historical study evidence](experiment_results/basic_v5_resnet_dinov2.md) and [model readiness constraints](implementation_details/experimental_model_contract.md#phase-6-comparison-constraints). Decide whether old anchors are contextual baselines or require fresh common-budget studies; price the reference controls and freeze the recipe. Numerical scenarios are not launch settings, and historical selected-task launchers remain distinct until their reuse disposition is recorded.
+Proceed with6.2 only on execution request: use the [dedicated plan](plans/training_hyperparameter_tuning.md), [Phase 6-D1](project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol) and [opt-in runtime](implementation_details/benchmark_training.md). Compute required baselines and release the first fixed trial per model, then discuss measured costs before more attempts. MaxViT has the clearest wall-time risk; no automatic extension beyond40 epochs is authorized.
 
 ## 7. Results comparison
 
@@ -468,7 +468,7 @@ project foundation [Done] -> data [Done]
 data -> 4A experimental-model research [Done] -> additional models [Done: 5.1–5.5]
 data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
-additional models + ingredient selection -> training and HTuning [In progress: 6.1 planning; campaigns deferred] -> results comparison [Deferred] -> thesis completion
+additional models + ingredient selection -> training and HTuning [In progress: 6.1 Done; 6.2 Pending, no campaign started] -> results comparison [Deferred] -> thesis completion
 
 Thesis outline and stable chapters may progress in parallel.
 ```
@@ -564,6 +564,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-07 | Custom model diagnostic integration | Verified real full/frozen Grad-CAM and the production cached-model callback on synthetic CPU inputs; explicit unsupported factorization preserves predictions, supported-model factorization and ordered full/selected outputs. | Work package 5.4 **Done**; Macro-section 5 **In progress**; 5.5 **Pending** and next | [Diagnostic contract](implementation_details/experimental_model_contract.md#dica-net-s-diagnostics-and-consumers--543), [completion checkpoint](plans/additional_model_implementation.md#543-completion-checkpoint--2026-10-07) |
 | 2026-10-07 | Measured additional-model qualification | Completed the shared CLI, fresh useful full-adaptation probes and six full/selected CUDA smokes; strict offline restoration, real callbacks/HTTP and representative browser checks pass. 276 regressions pass; sources/data/checkpoints and historical evidence are preserved. | Work package 5.5 and Macro-section 5 **Done**; Macro-section 6 remains **Deferred** for protocol/evaluation gates, with planning as the next handoff | [Measured readiness/constraints](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix), [completed feature checkpoint](plans/additional_model_implementation.md#55-completion-checkpoint--2026-10-07) |
 | 2026-10-13 | Training/HPO planning | Opened the dedicated Phase 6 plan with historical ResNet/DINOv2 reuse and budget scenarios, an explicit reference-control accounting boundary and five operational packages. Omitted standalone pipeline requalification by user request; retained focused changes for newly adopted protocol behavior. No campaign or budget freeze. | Macro-section 6 and Work package 6.1 **In progress**; campaign packages **Deferred** | [Training/HPO plan](plans/training_hyperparameter_tuning.md), [methodology handoff](project_objective/model_comparison_methodology.md#execution-dependencies-and-open-decisions) |
+| 2026-10-13 | Training protocol freeze | Continuous-GPU allowance and explicit fixed-selector reuse incorporated in Phase6-D1; finite five-protocol matrix, AP selection and executable opt-in path checked with focused/repository tests. Historical evidence preserved; no real campaign launched. | 6.1 **Done**,6.2 **Pending**; Macro-section6 remains **In progress** | [Completed checkpoint](plans/training_hyperparameter_tuning.md#completed-protocolconfiguration-checkpoint--2026-10-13), [runtime](implementation_details/benchmark_training.md) |
 
 ## Tracker maintenance rules
 

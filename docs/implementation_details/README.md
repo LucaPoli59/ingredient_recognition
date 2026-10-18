@@ -1,7 +1,7 @@
 # Implementation details
 
 **Created:** 2026-08-06  
-**Last updated:** 2026-10-07
+**Last updated:** 2026-10-13
 
 This directory contains durable documentation of the repository's current implementation contracts. It explains what the code supports, how components integrate, which configuration defaults and invariants are relied on, and where the behavior is verified.
 
@@ -13,6 +13,7 @@ Implementation-detail documents describe verified current behavior. They must id
 
 ## Files
 
+- [`benchmark_training.md`](benchmark_training.md) owns the opt-in Phase 6 recipe/configuration, epoch-global AP and maximizing checkpoint/HPO route, matched-input anchors, provenance and bounded study-resume contract; historical training remains unchanged.
 - [`models.md`](models.md) describes the vision-model implementations available under `src/models` and their training-pipeline contracts.
 - [`experimental_model_contract.md`](experimental_model_contract.md) defines opt-in Phase 5 preprocessing/identity, initialization, exact batching and engineering policy, all three adapters, original-artifact provenance and strict experimental Lightning restoration. It owns the reusable qualification CLI, measured full/selected CUDA caps, real callback/browser evidence, diagnostic limits and compact Phase 6 readiness matrix; these are not benchmark outcomes.
 - [`ingredient_mapping_rules.md`](ingredient_mapping_rules.md) is the long-term authority for custom `ingredients` to `ingredients_target` mappings, exclusions, multi-target expansions, retained distinctions, and collision boundaries.

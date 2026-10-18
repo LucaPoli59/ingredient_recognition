@@ -22,7 +22,7 @@ optimization (HPO), and final result production remain owned by Macro-sections 6
 and 7. It prescribes the model-side `M_ref` protocol under 4B-D1 and its
 campaign-side protocol under Phase 3-D1, and the original numerical profile
 gates under D4 and the revised inclusion policy under D6. P6 freezes the
-shared selected vocabulary below; the Phase 6 HPO budget remains a later decision.
+shared selected vocabulary below. [Phase 6-D1](#phase-6-d1--finite-training-and-comparison-protocol) freezes the later training budget and the prospective fixed-reference control amendment.
 
 ## Research questions
 
@@ -520,6 +520,8 @@ not an edit to this artifact or a per-model reselection.
 
 ### 3. Tune each model category once on the full common task
 
+Phase 6-D1 below is the adopted numerical implementation of this rule for the five comparison protocols. Its separate fixed-selector Q3 amendment supersedes references to a tuned `H_base(M_ref)` in Sections 4–5; the original rationale is retained.
+
 For every approved model category m, Macro-section 6 performs one bounded HPO
 campaign on V_base and freezes H_base(m) from validation data. The search
 objective, budget, transforms, loss policy, early-stopping rule, and one declared
@@ -616,6 +618,72 @@ limited evidence, but they do not estimate run-to-run stochastic variability.
 Every final table and claim must state this limitation and classify borderline
 vocabulary decisions as uncertain.
 
+## Phase 6-D1 — Finite training and comparison protocol
+
+**Adopted:** 2026-10-13, before any new benchmark/control training. The user permits continuous GPU use without a total hour/day ceiling, asks for finite limits comparable to DINOv2, and explicitly chooses reuse of the fixed selector for Q3. This decision fixes search opportunity, not a promised calendar duration. The machine-readable counterpart is [`phase6_protocol_v1.json`](../../src/training/resources/phase6_protocol_v1.json); the [runtime contract](../implementation_details/benchmark_training.md) owns executable behavior and recovery limits.
+
+### Matrix and historical disposition
+
+| Protocol | Full task / Q1 | Selected task / Q2 | Additional local panel / Q4 |
+| --- | --- | --- | --- |
+| ImageNet ResNet18, full adaptation | New 100-started-trial study | One fresh transfer | Four additional configurations |
+| DINOv2 register-B/14, frozen encoder, four last CLS vectors plus mean final patch readout | New 100-started-trial study | One fresh transfer | Four additional configurations |
+| Experimental EfficientNetV2-S, full adaptation | New 100-started-trial study | One fresh transfer | Four additional configurations |
+| MaxViT-T, full adaptation | New 100-started-trial study | One fresh transfer | Four additional configurations |
+| DICA-Net-S, full adaptation | New 100-started-trial study | One fresh transfer | Four additional configurations |
+
+Old ResNet/DINO studies and historical selected-task launchers remain contextual evidence, not members of this prospective ranking. They are not resumed under a new objective. Changed selection, augmentation, precision, initialization and search conditions justify new studies; matching the old directory's trial total alone would not. The DINO anchor is intentionally a frozen-representation protocol, **not** an equally fine-tuned architecture. Parameter counts, pretraining and native normalization differences remain disclosed. The whole DICA comparison does not isolate the contribution of one attention operator.
+
+The existing all-negative, train-prevalence and train-cuisine priors remain required validation baselines, without neural HPO. Cuisine is the already-declared metadata-assisted diagnostic, not an image-only input to the neural models.
+
+### Common recipe and bounded search
+
+| Field | Frozen policy |
+| --- | --- |
+| Data | Original v5 train/validation metadata and ordered 165 labels. Selected59 uses the published D6 artifact unchanged. Keep every record, including all-zero projected targets; no resplitting or per-split vocabulary fitting. |
+| Input/augmentation | All five protocols use the serialized RGB 224 full-frame fit/pad transform, ImageNet normalization and only train horizontal flip p=0.5. No crop, additional augmentation search, MixUp or label smoothing. This is a new matched-input anchor protocol, not a rewrite of historical preprocessing. |
+| Initialization | Original approved pretrained encoders; fresh seed 42 heads. The three portfolio initializers stay unchanged; new anchor heads use the same Xavier-uniform gain1/zero-bias policy. ResNet's original classifier and DINO's ImageNet linear classifier are not reused. Pin official artifacts and exact DINO source snapshot; do not fetch a mutable Hub revision during a run. |
+| Loss/optimizer | Unweighted mean BCEWithLogitsLoss and AdamW, betas(0.9,0.999), eps1e-8. One group contains all trainable parameters, including biases and normalization affine parameters. No loss/optimizer-family search or hidden decay exemption. |
+| Search dimensions | Only log-uniform LR and weight decay. Full-adaptation LR [1e-5,1e-3]; frozen DINO LR [1e-4,1e-2]; weight decay [1e-6,1e-2] for all. These are explicit project choices, not claimed optimal/universal literature ranges. Near-zero decay approximates weak regularization but is not literal zero. |
+| Horizon | Maximum40 epochs, 375 optimizer updates per full-data epoch, 15,000 if complete. Epoch1 uses0.1×sampledLR, epoch2 uses sampledLR; epochs3–40 follow cosine to0.001×sampledLR. No plateau extension, SWA, independent early stopping or model-specific extra epochs. |
+| Numeric/batch policy | True FP32, matmulhighest, TF32 disabled, one device, effective 128 and exact tail weighting, no dropped records. Physical32 for ResNet/DINO/EfficientNet/DICA; physical 16 for MaxViT; accumulation4 or8. Portfolio capacities are measured Phase 5 facts; anchor32 is a conservative configured request, **not a new measured maximum**. An OOM halts for a documented decision; do not silently switch topology, precision or adaptation. |
+| Normalization | Preserve pretrained running statistics initially and native full-adaptation BN settings; frozen DINO's complete encoder remains eval. Physical batch differs for MaxViT, and gradient accumulation does not equalize BN. Full/selected pairs preserve their physical-batch policy. |
+| Randomness | Training/head seed 42 for every configuration; no repeated training seeds. TPE seed 42 and separate control seed20261013. Seeded deterministic settings do not imply bitwise equality across libraries/devices. |
+
+Unweighted BCE is a simple common baseline loss, not a claim that class imbalance is absent. Macro AP still gives each valid label equal weight. The compact two-dimensional search allocates effort to optimization rather than mixing architecture or loss identities inside one study. Native pretrained encoders and the common non-cropping input follow the already-reviewed [portfolio](experimental_model_portfolio.md). These choices are prospective and informed by historical evidence; do not call them an uninformed preregistration.
+
+### HPO, checkpoint selection and finite cost
+
+Each of the five studies permits **100 started trials**, including COMPLETE, PRUNED and FAIL, without automatic replacement. Trial0 is an unpruned reference at LR1e-4 (frozen DINO1e-3), decay1e-4 and counts inside 100. The other99 use seeded TPE with eight startup trials and Hyperband(min_resource5,max_resource40,reduction_factor3). Report completed epochs as steps1–40, not zero-based epochs or optimizer updates. Pruning uses the current epoch's full-validation macro AP and never prunes at the completed40-epoch boundary. Only COMPLETE40-epoch trials can supply `H_base`; pruned partial runs are not eligible winners. A failed reference is preserved and requires explicit recovery, not an uncounted substitute.
+
+Macro AP is the unweighted mean of non-interpolated per-label average precision from **all validation records together**, using raw logits for ranking. Labels lacking either target outcome are reported as unavailable and excluded by the same target-derived mask, never by model scores; an empty valid mask or changed record/mask identity is an error. No trapezoidal PR area, batch-AP average or support-weighted mean is substituted. [Scikit-learn's AP definition](https://scikit-learn.org/1.4/modules/generated/sklearn.metrics.average_precision_score.html) supports this distinction.
+
+Validate and checkpoint every epoch, maximize `val_macro_ap`, retain the earliest epoch on an exact tie; between equal eligible trials choose the lowest trial number. Each eligible trial's objective is the score of its actually retained best-AP checkpoint, not a loss checkpoint or an unretained observation. Keep the final full resumable checkpoint separately. Uncalibrated micro F1 at 0.5 and loss are diagnostics, not extra selection criteria.
+
+Hyperband trades resource across configurations; it does not guarantee the historical pruning fraction or equally many complete trials. The min5/max40/factor3 choice retains the DINO-style finite limits and has two brackets. TPE adaptation is bracket-sensitive, so100 attempts offer more room than a very small study, without establishing a statistically sufficient sample size. See the [primary Hyperband paper](https://jmlr.org/papers/v18/16-558.html) and [installed-version Optuna guidance](https://optuna.readthedocs.io/en/v3.6.2/reference/generated/optuna.pruners.HyperbandPruner.html).
+
+The matrix contains at most500 full-task attempts, five selected transfers, six fixed-reference reduced runs and20 local-panel runs: **531 new attempts and21,240 maximum epochs before pruning**, excluding non-training evaluation work. No additional confirmation run is required when a retained eligible checkpoint exists. Search fairness means equal bounded opportunity, not equal wall time. Failures and resource-driven amendments stay visible in the ledger.
+
+The [cost audit](../experiment_results/phase6_budget_baseline.md) warns that new FP32 full-adaptation models may take much longer than historical frozen DINO; MaxViT is the clearest risk. The short-smoke extrapolation is not an ETA. Release **one predeclared reference trial per model first**, then review measured epoch/validation/checkpoint time and full-study projections with the user before releasing more attempts. Do not change scientific settings from that trial's per-label outcomes. Unlimited total hours does not authorize indefinite trials or automatic extension beyond40; non-convergence at that cap is a reported limitation and any new horizon needs a common, explicit amendment. No separate qualification campaign is introduced.
+
+### Q3 amendment: reuse the fixed selector, not a second reference HPO
+
+The user chose the completed `phase3-d1-v3` recipe and **final epoch40 full-task checkpoint** as the Q3 reference. No new `H_base(M_ref)` search is run. In Sections4–5's formula, replace `H_base(M_ref)` with this fixed `H_ref`; this is the only reference-search amendment. The full model is never reselected separately for each vocabulary.
+
+Train six fresh reduced models from the original ImageNet initialization: selected 59 and five random59 controls. Preserve the selector's 384-pixel input, retained dropout, original seeded head initialization, train-only positive weights, AdamW settings, two warm-up/38 cosine epochs, physical 8/accumulation 16/effective 128 and40-epoch schedule. Use **final epoch40** for every reduced reference model too, rather than giving reduced tasks an AP-selected epoch against a fixed final full model. Retain each label's original train-derived `(N-P)/P` weight without renormalizing across the subset. Do not borrow the experimental224 head, unweighted loss or tuning. Its old training/source inventory remains immutable; a maintained transfer launcher must document any execution-only differences without changing the recipe.
+
+Before control training, sort all165 labels independently by `(train_positive_count, base_index)` and `(validation_positive_count, base_index)`. Assign each rank to `floor(4*rank/165)`; the pair defines up to16 support cells. Match exactly the selected vocabulary's count in every cell, drawing without replacement within a draw from **all165**, with NumPy PCG64 seed20261013, cells in lexicographic order, candidates in base order and draws in order0–4. Store each result in base order. Cells have sufficient candidates because the selected labels themselves are in the pool. Overlap with selected and between draws is allowed and reported; no duplicate/undesirable draw is resampled. Report residual continuous support/prevalence differences and semantic composition descriptively; no new outcome-informed matching constraint is added. This controls coarse support, not all label semantics or observability.
+
+For each vocabulary, compare reduced training against the same full model projected to its exact columns, and report both AP and micro-F1 **gains**, not absolute scores across different tasks. Five controls give descriptive context, not a formal significance test or seed-stability evidence. The selected vocabulary was derived and revised using this reference's train/validation evidence: selection dependence and reference-specific advantage remain limitations; held-out test reporting later does not turn the design into an independent vocabulary-discovery study.
+
+### Bounded local adaptation and operating points
+
+Q4 is included, separately from Q3. For each of the five comparison protocols, the transferred selected run is the baseline candidate. Add four40-epoch runs: LR×0.5 and×2 at unchanged decay; decay×0.1 and×10 at unchanged LR. No joint grid, clamping to the original HPO interval, optimizer change or fresh Optuna search. Select with the same full-validation AP/earliest-epoch rule, including the existing transfer as a candidate. An exact tie keeps the transfer, then the declared panel order. This is the best **within the bounded panel**, not a global selected-task optimum.
+
+In 6.5, after selecting weights, fit one positive global temperature on validation mean BCE, with T∈[0.05,20], then one global micro-F1-maximizing threshold. Temperature is optimized in log-space with bounded scalar optimization, tolerance1e-8/max500 iterations, also checking boundaries and T=1; exact ties prefer T closest to1, then lowerT. Threshold candidates are distinct calibrated-logit scores plus the all-negative cutoff; predictions use `score >= cutoff`, exact F1 ties prefer the highest cutoff. Persist the logit cutoff as well as its probability equivalent to avoid sigmoid-saturation ambiguities.
+
+For each full, selected or random evaluation task, fit operating points on that task's validation columns. A projected full model keeps its **same weights/checkpoint** but refits T/threshold on the projected validation task, just as its reduced comparator does. Thus F1 gains include task-specific operating-point fitting, whereas AP gains remain ranking-only. No per-label temperatures/thresholds or fitting on test. The same validation set is used for selection and fitting; its metrics are selection-influenced diagnostics, not unbiased final estimates. Phase7 applies the frozen artifacts once to test and reports the paired metrics and single-seed limitation.
+
 ## Rejected primary designs
 
 | Design | Why it is not the primary methodology |
@@ -648,14 +716,7 @@ stage; existing canonical training remains the foundation, with only changes
 required by the adopted protocol receiving focused checks. This does not
 replace the threshold-free selection and validation-only operating-point rules.
 
-The plan's numerical budget alternatives are proposals, not a new scientific
-freeze. In particular, a historical 100-trial/40-epoch cap does not by itself
-establish equal search opportunity, and historical loss-selected checkpoints
-do not automatically become `H_base(m)` under a different objective. The exact
-384-pixel `M_ref` remains distinct from the 224-pixel experimental EfficientNet;
-any cheaper reference-control design requires an explicit amendment before
-control outcomes. Q1–Q4, the published vocabulary and Phase 3 evidence remain
-unchanged. Record adopted Phase 6 budget/protocol choices here when 6.1 closes.
+**Phase 6-D1 amendment — 2026-10-13:** the [adopted finite protocol](#phase-6-d1--finite-training-and-comparison-protocol) supersedes the handoff's open budget/reference choices. Five fresh matched-opportunity studies replace historical winners in the prospective comparison; the384-pixel fixed-selector reuse for Q3 is explicit and distinct from experimental224. Q1–Q4, the published vocabulary and original Phase 3 evidence remain unchanged. Campaign execution and measured cost releases belong to the dedicated plan, not this scientific freeze.
 
 | Owner | Required decision or artifact | Status |
 | --- | --- | --- |
