@@ -2,15 +2,15 @@
 
 **Created:** 2026-10-13
 
-**Last updated:** 2026-10-13
+**Last updated:** 2026-10-20
 
-**Status:** In progress — protocol frozen; campaign not started
+**Status:** In progress — first-release cost review and final-checkpoint disposition required
 
 ## Purpose and scope
 
 This is the execution owner for [Macro-section 6](../general_plan.md#6-training-and-hyperparameter-tuning). Turn the completed data, vocabulary and model work into a bounded training campaign that answers the [Q1–Q4 comparison questions](../project_objective/model_comparison_methodology.md#research-questions), accounts for the existing ResNet/DINOv2 investment, and hands frozen models and operating points to Phase 7.
 
-The plan does not reopen the selected 59-label vocabulary, the three-model portfolio, or the single-seed constraint. Historical budget alternatives are retained below as dated planning evidence; the adopted [Phase 6-D1 protocol](../project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol) and its executable configuration supersede their open choices. No campaign or predictive test evaluation has started.
+The plan does not reopen the selected 59-label vocabulary, the three-model portfolio, or the single-seed constraint. Historical budget alternatives are retained below as dated planning evidence; the adopted [Phase 6-D1 protocol](../project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol) and its executable configuration supersede their open choices. The authorized first release finished training and validation export; its measured-cost review and missing-final-checkpoint disposition are now required. Predictive test evaluation remains unavailable.
 
 The user explicitly removed the previously proposed standalone pipeline-qualification stage on 2026-10-13: the canonical training code and Phase 5 qualification are accepted foundations. The five stages below are renumbered; **6.2 now means full-vocabulary tuning**, not another validation of the training infrastructure. Any work required by a newly adopted metric, monitor or experiment configuration is scoped to that change within 6.1, rather than a repeat of Phase 5.
 
@@ -18,14 +18,14 @@ The user explicitly removed the previously proposed standalone pipeline-qualific
 
 **Overall status:** In progress
 
-**Current task:** 6.1 complete — await the separate 6.2 execution request
+**Current task:** 6.2 — first five trials/exports verified; cost review and final-checkpoint retention gate open
 
-**Next action:** In 6.2, compute the required non-neural baselines and release the predeclared first full-task trial per protocol, one at a time. Review its actual epoch/run costs before releasing the remainder of each 100-attempt study. No training is authorized by this documentation checkpoint alone.
+**Next action:** Review the [measured first-release costs and failed final-checkpoint gate](../experiment_results/phase6_first_release.md) with the user before any further attempt. Resolve the retained trials' missing-final disposition, then repair future final-state persistence with explicit source-provenance/resume handling. Do not retrain, recreate trials or release remaining allowances automatically.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | 6.1 | Freeze matrix, historical reuse, budgets and training/selection protocol | **Done** | Phase 6-D1, primitive policy and opt-in canonical metric/configuration/HPO route agree. Five fresh 100-attempt/40-epoch studies; fixed-selector Q3 reuse; no overall GPU-hour cap. Verification is recorded below. |
-| 6.2 | Run full-vocabulary baselines and tuning; select `H_base(m)` | **Pending** | 6.1 is complete. Use the opt-in canonical path and first-trial cost release; no campaign started. |
+| 6.2 | Run full-vocabulary baselines and tuning; select `H_base(m)` | **In progress** | Baselines and five COMPLETE40-epoch trials/ordered validation exports verified. Queue is `awaiting_cost_review`;28.36 h observed release wall time. Every `last.ckpt` duplicates its earlier best, so final-state retention is unmet. Remaining99/model, artifact disposition and full-study selection stay open. |
 | 6.3 | Run selected-vocabulary transfers and reference-model random controls | **Deferred** | Requires the relevant full-task configuration, frozen control design and budget from 6.1. |
 | 6.4 | Bounded selected-task local adaptation | **Deferred** | Included by Phase 6-D1: four additional LR/decay configurations per model after transferred runs. Remains separate from Q3. |
 | 6.5 | Freeze calibration, thresholds and the Phase 7 handoff | **Deferred** | Requires required runs and the selected-checkpoint ledger; test evaluation remains Phase 7. |
@@ -200,6 +200,30 @@ The source inspection on 2026-10-13 confirms `val_loss` remains wired into [trai
 
 ## 6.2 — Full-vocabulary baselines and tuning
 
+### First-release review — 2026-10-20
+
+All five predeclared trial0 runs finished normally; the queue stopped at `awaiting_cost_review` on2026-10-19 at21:01 UTC. The [reviewed result](../experiment_results/phase6_first_release.md) and [reproducible audit](../../src_scratches/phase6_first_release_audit/README.md) verify each journal's single COMPLETE trial, all40 epochs/15,000 updates, exact source/weight/data identities, AP-selected checkpoint and ordered5,996×165 validation export. No additional campaign attempt, image inference or predictive test evaluation was performed during review. The completed training remains counted inside each100-attempt study. All15 focused tests pass again on synthetic CPU/temporary studies;401 documentation links/anchors, retained history, protected hashes and formatting pass. The291-test full-suite result remains the earlier launch checkpoint, not a new full-suite run.
+
+Observed model-release wall times are1.74/7.02/5.12/9.16/5.30 h for ResNet/DINO/EfficientNet/MaxViT/DICA, totaling28.36 h. The result separates epoch-ledger/session/release timing and records substantial DINO rate variation. Multiplying the five observed release times by99 gives116.97 continuous days **only as unpruned full-run-equivalent arithmetic**, not an ETA or bound. Hyperband's actual pruning fraction and future cost are unknown; selected/reference/local work is additional. No budget/horizon or scientific setting was changed.
+
+**Unmet artifact gate:** CPU inspection of all ten checkpoint payloads shows that `last.ckpt` is byte-identical to the selected checkpoint, at epochs10/29/13/37/11 rather than40. Installed Lightning2.6.1 updates this monitored callback's last file only when a top-k save occurs. The best artifacts and exports are valid; the final epoch40 weights/optimizer state were not retained and cannot be recovered from scalar histories. The previous launch checkpoint only verified filename existence and did not establish final-state semantics.
+
+Before releasing more trials, obtain the user's cost review and explicit disposition of this missing-final evidence. Future retention needs a focused earlier-best/later-final regression and a genuine final full save before best-weight restoration. Preserve original journals/checkpoints/source inventories; any repair must document the new source identity and strict-resume transition rather than overwrite old manifests. Do not relabel best as final, invalidate/recreate COMPLETE trials or retrain them automatically. No source repair or new commit occurred in this review. The monitoring heartbeat is retired because training is finished and user direction is required;6.2 remains **In progress**.
+
+### First-release checkpoint — 2026-10-18
+
+Committed the complete 6.1 preparation as `fae4301` after all287 existing tests passed, excluding the three user-owned dirty files. The user then authorized6.2. The [first-release launcher](../../scripts/launch_exps/benchmark/first_trials.py) now computes the required priors and executes the five predeclared trial0 configurations in policy order, one at a time. It records persistent queue/model state and stops at failure or `awaiting_cost_review`. It does not release the other99 trials automatically.
+
+Campaign: `experiments/benchmark_v1/phase62-20261018-v1/`; parent log: `experiments/benchmark_v1/phase62-20261018-v1.log`. Launch was 2026-10-18T16:39:36.828289+00:00 (18:39 Europe/Rome), queue PID386, Git base `fae43019918c990206ef49bdf6db13956b0ae14d`. ResNet18 trial0 started at16:39:39 UTC. The first study verifies the original artifact, records its source inventory/ZIP, prepares the complete fitted configuration and enters CUDA training. The remaining DINO/EfficientNet/MaxViT/DICA protocols are queued. Scientific policy hash remains `4a5fe311e083594de1d872cd3eea3701e8bfa641bfa7753c9b8f3d40d45d756c`.
+
+The first ResNet epoch completed375 optimizer updates in193.63 seconds, including validation/checkpoint callbacks. This is one initial epoch, not a stable campaign ETA. All78 saved source entries match the ZIP and current source bytes; ZIP SHA-256 is `c0257171668285e4b7cfb9090b7f74454c3b9eafdda26120419815a1003a9c1a`. A same-chat monitor checks every four hours while the queue runs, preserving the earlier control interval preference. No additional trial allocation is released automatically.
+
+The [reviewed baselines](../experiment_results/phase6_validation_baselines.md) are complete on both full165 and selected59 validation columns. They use only train-fitted priors, retain every row and store ordered scores/targets/IDs. Full-task macro AP is0.046751 for either constant control and0.126409 for the cuisine diagnostic; current F1 uses fixed0.5 and remains provisional for the operating-point phase. Baseline computation reads no test metadata or images; neural DataModule preparation retains its existing all-split metadata access while test/predict image loaders are forbidden.
+
+Execution additions preserve ordered validation logits from the retained checkpoint after a completed release, using explicit CUDA inference after teardown and canonical offline reconstruction. They verify the actual record/class/target identity and AP reproduction, without fitting calibration or selecting a different checkpoint. These additions and the original metric/configuration path pass15 focused and291 total repository tests, including synthetic CPU fits and temporary scalar studies. No selector source/evidence, target metadata, projection membership or user-owned dirty file changed. The 6.2 changes remain uncommitted.
+
+**Still required at this launch checkpoint:** complete the first five runs and their validation exports, review actual costs, execute the remaining approved study budgets, select eligible `H_base(m)` artifacts and publish the complete study/cost/selection ledger. The package remains **In progress**; a successful launch is not its completion. The later review above records actual completion and the newly discovered retention exception.
+
 - Compute all-negative, prevalence and cuisine-prior predictions from train; evaluate on validation with the same metric definitions. Preserve the cuisine diagnostic boundary.
 - Run only the frozen matrix on all 165 labels through canonical training/Optuna. Each model protocol gets its own identified study; retain complete, pruned, interrupted and failed trials without treating them as equivalent completed observations.
 - Record configured and consumed budget, seed, transforms, physical/effective batch, adaptation, finite loss/update state, and exact selected checkpoint/configuration. Use explicit resumption with the same study protocol; do not mix a new objective or budget into an old study silently.
@@ -247,5 +271,7 @@ Required experiment artifacts are a run/study manifest with source and configura
 | 2026-10-13 | Created the Phase 6 plan after Phase 5 completion; incorporated the user's historical-budget question and removal of standalone pipeline qualification | 6.1 **In progress**; five stages, explicit reuse routes, priced-scenario framework and reference-protocol decision. Canonical runtime accepted; narrow new-metric/configuration work identified. No training, inference, model construction or study mutation performed. |
 | 2026-10-13 | Completed the read-only historical-cost subtask of 6.1 and checked all 200 saved configurations against retained inventory | Reviewed cost baseline and reproducible metadata-only audit retained; recommended historical/new-study separation. 6.1 remains **In progress**, awaiting the user compute envelope and protocol/configuration freeze; no campaign started. |
 | 2026-10-13 | Adopted Phase6-D1 after continuous-GPU availability and explicit fixed-selector reuse; implemented and checked the narrow executable protocol delta | 6.1 **Done**; 6.2 **Pending**. Five bounded fresh studies, separate fixed-reference controls and local panel, global AP/maximizing selection, strict configuration/provenance and non-destructive study continuation. No campaign launched. |
+| 2026-10-18 | Committed 6.1 as `fae4301`; completed prior controls and launched the authorized first full-task release | 6.2 **In progress**. Baseline artifacts/result retained; ResNet18 trial0 running, four later protocols queued.291 tests pass; measured-cost review and full-study selections remain open. |
+| 2026-10-20 | Reviewed all five completed reference trials and measured costs; found the monitored callback did not retain final epoch40 state | Training, selected checkpoints, source identities and validation exports verified;6.2 remains **In progress** at cost review and explicit artifact-disposition/retention-repair gate. No further training or commit; monitor retired. |
 
-The planning and cost checkpoints remain retained history. The completed6.1 checkpoint explicitly supersedes their open choices, with scientific authority in Phase 6-D1 and runtime behavior in its implementation owner. The next work is the separately released6.2 campaign, not another general pipeline qualification.
+The planning and cost checkpoints remain retained history. The completed6.1 checkpoint supersedes their open choices, with scientific authority in Phase6-D1 and runtime behavior in its implementation owner. The first release is finished; the reviewed cost/artifact exception now gates another release and later study selection.

@@ -148,7 +148,7 @@ def execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed=
 
 def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed=False):
     """Explicitly invoked by Phase 6.2, not by configuration inspection/tests."""
-    from src.training.commons import model_training, load_datamodule
+    from src.training.commons import model_training, load_datamodule, set_torch_constants
     from src.training.experimental_runtime import prepare_experimental_config
     from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
     from src.ingredient_selection.runtime import resolve_projection
@@ -197,6 +197,7 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
         wd = trial.suggest_float("weight_decay", *p["search"]["weight_decay"], log=True)
         folder = root / f"trial_{trial.number}"
         folder.mkdir(exist_ok=False)
+        set_torch_constants()  # canonical spawn; numeric benchmark settings override its legacy defaults below
         lgn.seed_everything(42, workers=True)
         torch.set_float32_matmul_precision("highest")
         torch.backends.cuda.matmul.allow_tf32 = False
@@ -231,6 +232,8 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
         if all(t.state.is_finished() for t in study.trials):
             _save_sampler(root, study)
     winner = select_trial(study)
+    from src.training.benchmark_predictions import export_best_validation
+    predictions = export_best_validation(root, winner.number, winner.user_attrs["best_checkpoint"], winner.value)
     return {"trials_started": len(study.trials), "remaining": remaining_trials(study),
             "best_trial": winner.number, "best_value": winner.value,
-            "best_checkpoint": winner.user_attrs["best_checkpoint"]}
+            "best_checkpoint": winner.user_attrs["best_checkpoint"], "validation_predictions": predictions}

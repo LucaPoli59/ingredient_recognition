@@ -2,7 +2,7 @@
 
 > Documento vivente per l'assistente e per chi lavora al repository. Va aggiornato a ogni modifica architetturale o funzionale rilevante, e quando si confermano nuove informazioni sul progetto.
 
-**Ultimo aggiornamento:** 13 ottobre 2026
+**Ultimo aggiornamento:** 20 ottobre 2026
 **Stato della ricognizione:** architettura e flusso principale verificati nel codice. `ingredients_target_v5_metadata.json` è il default runtime FoodOn-first, con 165 target e split Yummly 47.965/5.996/5.996 train/val/test; `v4` e le generazioni legacy restano disponibili. La compatibilità storica 2.1c e Data 2.4 sono chiuse: training CUDA minimo, checkpoint reload e dashboard sono verificati nel [contratto runtime](docs/implementation_details/image_data_loading.md). Il selettore 4B-D1 EfficientNetV2-S è implementato. La campagna Phase 3-D1/D2/D3 `phase3-d1-v3` ha completato 40 epoche con batch effettivo 128; D4 e la sua applicazione originale restano conservati. D5 rende facoltative le revisioni manuali. D6 adotta la politica di qualità validation con intervalli appaiati coerenti, mantenendo train e cuisine come diagnostiche. La proiezione condivisa `ingredients_selected_v5_d6_v1` è un artefatto esplicito e versionato, integrato in P7 come opzione a 59 label e non come nuovo default runtime. P7 chiude la macrofase 3 con parità e retention verificate; lo stato corrente è in `docs/general_plan.md`. Il confronto esplorativo storico `basic_v5` è conservato sotto `docs/experiment_results/` senza modificare il gate del benchmark finale.
 
 ## Scopo
@@ -161,6 +161,8 @@ Le immagini sono normalmente ridimensionate a 224×224. Per i modelli generici i
 
 ## Addestramento e valutazione
 
+La prima release del benchmark usa [`scripts/launch_exps/benchmark/first_trials.py`](scripts/launch_exps/benchmark/first_trials.py), che stampa il piano per default e avvia con `--execute` le baseline e i cinque trial iniziali in serie. Lo stato persistente, i journal separati e la pausa per rivedere i costi sono gestiti da `src/training/benchmark_queue.py`. `benchmark_baselines.py` calcola i controlli dai soli metadata train/validation; `benchmark_predictions.py` salva gli output ordinati del checkpoint scelto e richiede esplicitamente CUDA dopo il teardown di Lightning. Contratto, comandi e limiti sono in [`benchmark_training.md`](docs/implementation_details/benchmark_training.md); il [piano operativo](docs/plans/training_hyperparameter_tuning.md) possiede lo stato della campagna.
+
 Le revisioni operative Phase 3-D2/D3 del 27 settembre 2026 richiedono batch
 effettivo 128 e 40 epoche nel workspace WSL principale (2 di warm-up e 38 di
 cosine decay, audit ogni 2 epoche). Il launcher rilanciabile è
@@ -287,6 +289,8 @@ Gli script hanno parametri e nomi esperimento hard-coded: vanno verificati/adatt
 Il contratto degli artefatti sperimentali e i limiti delle analisi offline sono verificati in [`docs/implementation_details/experiment_artifacts.md`](docs/implementation_details/experiment_artifacts.md). L'audit del 14 settembre 2026 copre i 200 trial target-v5 ResNet/DINOv2 e dimostra l'estrazione locale degli istogrammi W&B su un trial per famiglia; configurazioni, CSV, TensorBoard, journal e checkpoint richiedono gestione esplicita di alias, riprese, loss pesate e scala AMP. Il logging opzionale per ingrediente nel Lightning model e il comparatore locale JSON/HTML sono implementati sotto [`src/lightning/lgn_models.py`](src/lightning/lgn_models.py) e [`scripts/analise_exp/compare_experiments/`](scripts/analise_exp/compare_experiments/). Il contratto mantenuto è [`docs/implementation_details/experiment_comparison.md`](docs/implementation_details/experiment_comparison.md), mentre [`docs/plans/experiment_comparison.md`](docs/plans/experiment_comparison.md) conserva il piano completato.
 
 I risultati sperimentali revisionati hanno una sezione dedicata in [`docs/experiment_results/`](docs/experiment_results/README.md), separata da contratti, metodologia e output grezzi. Il primo record è il confronto storico [`basic_v5` ResNet18–DINOv2](docs/experiment_results/basic_v5_resnet_dinov2.md): identifica ResNet18 trial 77 come artefatto validation migliore, ma circoscrive il claim al confronto tra fine-tuning completo ResNet e linear probing DINOv2 con backbone congelato e mantiene differito il benchmark finale.
+
+Il [record della prima release Phase6.2](docs/experiment_results/phase6_first_release.md) conserva costi misurati, verifica riproducibile degli artefatti e limiti delle proiezioni di costo, senza promuoverli a ranking finale. La verifica ha anche mostrato che il nome `last.ckpt` non garantisce uno stato finale: il [contratto runtime](docs/implementation_details/benchmark_training.md#first-release-artifact-verification-and-retention-limitation--2026-10-20) documenta il comportamento osservato di Lightning2.6.1 e il gate di correzione/disposizione. I manifest originali non vanno riscritti per nascondere questa eccezione; stato e autorizzazioni restano nel piano operativo.
 
 - `src/dashboards/dash/app.py` avvia una web app Dash sulla porta 8050.
 - Le immagini in `data/` sono servite singolarmente dalla route Flask `/assets/data/<percorso>`; non deve esistere il precedente symlink `dash/static/assets/data`, perche WhiteNoise indicizza ricorsivamente gli asset all'avvio e blocca la dashboard sui dataset grandi.
