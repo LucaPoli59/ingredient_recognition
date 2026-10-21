@@ -1,9 +1,15 @@
 # Phase 6 benchmark launchers
 
 **Created:** 2026-10-18
-**Last updated:** 2026-10-20
+**Last updated:** 2026-10-21
 
 Run from the main WSL repository with the project's ML Python. The [scientific protocol](../../../docs/project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol), [runtime contract](../../../docs/implementation_details/benchmark_training.md) and [execution plan](../../../docs/plans/training_hyperparameter_tuning.md) own policy, implementation and state.
+
+## Current planning boundary — D3 fresh studies
+
+[Phase6-D3](../../../docs/project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies) now requires five new50-attempt studies beginning at fresh trial0, without importing or resuming the first release. D2's additional plateau guard must be implemented with that new policy. **The current commands below still implement v1/100 attempts without the guard**: they are retained interface/history examples, not an approved new-campaign recipe. Merely choosing a new directory does not activate D3. No new launch command is claimed until the [ordered restart checks](../../../docs/plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) pass and training is explicitly requested.
+
+Preserve `phase62-20261018-v1`, its journals/samplers/checkpoints and registered source patch unchanged. Its five trials remain separate cost/runtime evidence outside the new cohort. Reuse the corrected independent best/latest checkpoint implementation; do not add a v1-to-v2 trial/policy migration just to retain those observations. Future ordinary continuation within each new study remains distinct from importing an old trial.
 
 ## First release
 

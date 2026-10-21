@@ -3,8 +3,8 @@
 **Created:** 2026-08-02  
 **Last updated:** 2026-10-21
 **Overall status:** In progress  
-**Current macro-phase:** Training and hyperparameter tuning — approved stopping policy awaiting implementation
-**Current focus:** Work package 6.2 is In progress: five completed trials/exports retain their accepted missing-final exception, with future persistence/source repair verified. The user approved prospective [Phase6-D2 plateau pruning](project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo); implementation and a separate policy/source transition remain pending. The queue stays `awaiting_cost_review`, no further attempt is released and executable stopping is unchanged. Historical studies, fixed Q3 and final-test isolation retain their roles.
+**Current macro-phase:** Training and hyperparameter tuning — fresh50-attempt campaign preparation
+**Current focus:** Work package6.2 is In progress. The user adopted [Phase6-D3](project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies): five new50-attempt studies from trial0, without importing the first release. Implement the revised policy and D2 plateau guard, then prepare a new campaign. The five completed v1 runs remain separate cost/runtime evidence; their old queue/artifacts stay unchanged. No new study/training is launched by this documentation update. Q3, shared vocabulary and final-test isolation are unchanged.
 
 ## Purpose
 
@@ -36,7 +36,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Done** | [All three adapters and measured readiness](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) pass useful full/selected CUDA, strict offline restoration and real consumer checks; the completed plan hands off constraints without launching a benchmark. |
-| 6 | Training and hyperparameter tuning | **In progress** | [6.2 persistence/source repair is complete](plans/training_hyperparameter_tuning.md); D2 stopping policy approved. Guard implementation/transition, next cost release and remaining full-study tuning are outstanding. |
+| 6 | Training and hyperparameter tuning | **In progress** | [D3 fresh50-attempt restart](plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) approved for all five models; no old trial import. Revised policy/D2 implementation, new launch and HPO selection are outstanding. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
 
@@ -310,7 +310,7 @@ Maintain the [qualification CLI and contract](implementation_details/experimenta
 
 ## 6. Training and hyperparameter tuning
 
-**Status:** In progress — checkpoint/source repair complete; D2 approved, activation and cost release pending
+**Status:** In progress — D3 fresh50-attempt studies approved; implementation and new campaign pending
 
 This macro-section covers baseline training, controlled model training, hyperparameter search, run selection, and reproducibility under the frozen benchmark.
 
@@ -340,15 +340,15 @@ The [training/HPO plan](plans/training_hyperparameter_tuning.md) owns lower-leve
 
 | Work package | Status | Completion gate and next action |
 | --- | --- | --- |
-| 6.1 Historical reuse, matrix and budget/protocol freeze | **Done** | Phase 6-D1 and executable configurations/metric selection verified: five fresh 100-attempt/40-epoch studies, fixed-selector Q3 reuse, local panel and no total GPU-hour ceiling. Historical evidence remains separate. |
-| 6.2 Full-vocabulary baselines and tuning | **In progress** | Five COMPLETE trials/exports retained with accepted missing-final exception; future persistence/source repair verified. D2 plateau policy approved; implement/version its separate transition and obtain cost release before more attempts. Full-study selection remains outstanding. |
+| 6.1 Historical reuse, matrix and budget/protocol freeze | **Done** | Original D1 implementation/verification retained. D2/D3 prospectively amend stopping, budget and cohort; implementation tracked in6.2. Fixed-selector Q3, local panel and data boundaries stay unchanged. |
+| 6.2 Full-vocabulary baselines and tuning | **In progress** | Original five COMPLETE trials remain separate evidence; persistence fix verified. D3 requires five fresh50-attempt studies with D2 guard, no old trial/sampler import. Implement/check the revised policy, prepare/launch a new campaign, then select new-study winners. |
 | 6.3 Selected-vocabulary transfers and random controls | **Deferred** | Requires relevant full-task selections and the frozen control design. Complete matched same-label full/reduced comparisons and reference-model random-vocabulary gains. |
 | 6.4 Selected-task local adaptation | **Deferred** | Included by Phase 6-D1: four additional LR/decay configurations per category after the transferred run. Keep Q4 separate from reference controls. |
 | 6.5 Operating-point freeze and Phase 7 handoff | **Deferred** | Requires mandatory campaign outputs. Freeze validation-only calibration/thresholds and the complete artifact/comparison ledger before final test evaluation. |
 
 ### Resume gate
 
-Data/vocabulary, required model engineering and6.1 protocol/configuration gates are satisfied. The first6.2 release finished training/export and reached its cost boundary. The user-authorized [future persistence and additive source repair](implementation_details/benchmark_training.md#explicit-checkpoint-repair-source-transition) preserves the five completed trials and explicitly accepts their missing-final exception without fabricating states or retraining. All five retained studies load with one COMPLETE trial/99 remaining. [D2](project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) is now approved prospectively; guard implementation, an explicit new policy/source transition and another cost/allocation release still gate further training. The executable v1 policy is unchanged.
+Data/vocabulary, model engineering and original6.1 gates are satisfied. The first6.2 release and [persistence/source repair](implementation_details/benchmark_training.md#explicit-checkpoint-repair-source-transition) remain verified historical checkpoints. Under [D3](project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies), the five original trials are outside the new selection cohort and their remaining99/model are not resumed. The50-attempt budget/restart decision is closed; revised machine-policy/D2 implementation, focused acceptance and new-campaign preparation are required before an explicitly authorized launch. No old-to-new migration is needed. Executable v1 is unchanged for now.
 
 ### Completion gate
 
@@ -356,7 +356,7 @@ Every required baseline and shortlisted model in the adopted matrix has accounte
 
 ### Next action
 
-Implement the [approved D2 plateau safeguard and its acceptance gates](plans/training_hyperparameter_tuning.md#additional-plateau-stopping--approved-implementation-pending), with an explicit separate policy/source transition. Then obtain the next finite allocation using the measured first-release costs; this documentation approval/commit starts no trial. Preserve COMPLETE40 eligibility, original evidence and the completed checkpoint-only repair. Routine campaign monitoring remains retired.
+Start [restart step R1](plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21): implement one new50-attempt protocol with the approved D2 guard, reusing corrected best/latest saving. Follow with focused tests and fresh campaign preparation; do not recover/import the old first trial or resume v1. Original evidence stays retained and no training is started by this planning task. Later selected/random/local runs retain their dependencies.
 
 ## 7. Results comparison
 
@@ -468,7 +468,7 @@ project foundation [Done] -> data [Done]
 data -> 4A experimental-model research [Done] -> additional models [Done: 5.1–5.5]
 data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
-additional models + ingredient selection -> training and HTuning [In progress: 6.1 Done; 6.2 runtime repair Done, D2 activation/cost release pending] -> results comparison [Deferred] -> thesis completion
+additional models + ingredient selection -> training and HTuning [In progress: original 6.1 Done; 6.2 D3 fresh50 studies/D2 implementation pending] -> results comparison [Deferred] -> thesis completion
 
 Thesis outline and stable chapters may progress in parallel.
 ```
@@ -569,6 +569,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-20 | Full-task first-release review | Verified five COMPLETE40-epoch trials, AP-selected checkpoints and ordered validation exports; recorded28.36 h release wall time. Payload inspection found all last files duplicate earlier best states rather than final40-epoch states. Preserved all original evidence, stopped at the declared cost boundary and retired monitoring. | 6.2 and Macro-section6 remain **In progress**; user cost review, explicit artifact disposition and future retention repair required before more attempts | [Reviewed result](experiment_results/phase6_first_release.md), [review checkpoint](plans/training_hyperparameter_tuning.md#first-release-review--2026-10-20), [runtime limitation](implementation_details/benchmark_training.md#first-release-artifact-verification-and-retention-limitation--2026-10-20) |
 | 2026-10-20 | Training persistence/source repair | Implemented independent best/latest full checkpoints and registered the authorized additive source/exception transition on all five studies. All300 tests and real read-only study/source/accounting checks pass; original evidence and trial numbers remain unchanged. Additional plateau stopping remains a proposal only. | 6.2 and Macro-section6 remain **In progress**; runtime repair **Done**, next stopping/cost release decision open; no additional campaign trial | [Runtime/source contract](implementation_details/benchmark_training.md#explicit-checkpoint-repair-source-transition), [execution checkpoint](plans/training_hyperparameter_tuning.md#runtime-persistencesource-amendment-checkpoint--2026-10-20) |
 | 2026-10-21 | Full-task stopping-policy adoption | Recorded the user's2026-10-20 approval of prospective D2 plateau pruning, preserving Hyperband, COMPLETE40 eligibility and the five original trials. Runtime activation and a separate policy/source transition remain pending; no further attempt was released. | 6.2 and Macro-section6 remain **In progress**; stopping decision **Done**, implementation/cost release next | [D2 decision](project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo), [execution acceptance](plans/training_hyperparameter_tuning.md#additional-plateau-stopping--approved-implementation-pending) |
+| 2026-10-21 | Full-task budget and cohort revision | User adopted D3:50 new attempts per category, fresh trial0/journal/sampler, no import of the five first-release runs. Retain those as separate cost/runtime evidence and carry D2 into a new policy rather than migrating v1. | 6.2 and Macro-section6 remain **In progress**; revised implementation, fresh campaign preparation and explicit launch next | [D3 decision](project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies), [restart steps](plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) |
 
 ## Tracker maintenance rules
 

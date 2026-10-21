@@ -2,11 +2,13 @@
 
 **Created:** 2026-10-20
 **Last updated:** 2026-10-21
-**Status:** Reviewed provisional validation/cost evidence; original missing-final exception retained and explicitly accepted, future runtime repair verified separately
+**Status:** Reviewed historical first-release validation/cost/runtime evidence; superseded as a selection cohort by Phase6-D3, original missing-final exception retained
 
 ## Purpose and scope
 
 Review the five predeclared, unpruned trial0 runs in `experiments/benchmark_v1/phase62-20261018-v1/` before releasing any other attempts. This is the measured-cost boundary in [Phase 6-D1](../project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol), not completed HPO, a final model ranking or permission to start the remaining99 trials per model. [Phase 6.2](../plans/training_hyperparameter_tuning.md#62--full-vocabulary-baselines-and-tuning) remains **In progress**.
+
+**Later cohort decision,2026-10-21:** [D3](../project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies) adopts five new50-attempt studies from fresh trial0. The runs reviewed here remain cost/runtime and historical validation evidence only: no old trial, score, checkpoint or sampler is imported into the new HPO, plateau incumbent or winner selection. The old remaining99/model are not released. This changes the role of the evidence, not its quantitative findings, COMPLETE states or source/artifact hashes.
 
 The queue started at 2026-10-18T16:39:36.828289+00:00 and stopped normally at 2026-10-19T21:01:04.142807+00:00 (23:01 Europe/Rome), with `status=awaiting_cost_review`. No additional campaign training was launched during review. The monitoring heartbeat was retired at the handoff; another release requires an explicit decision.
 
@@ -97,6 +99,8 @@ The user must review the measured costs and the missing-final disposition before
 **Subsequent user-authorized disposition,2026-10-20:** after this original audit, the user requested the checkpoint fix and explicit source-transition step. Future independent best/latest full saves and the additive `final-checkpoint-v1` transition are now verified in the [runtime owner](../implementation_details/benchmark_training.md#checkpoint-repair-and-provenance-verification--2026-10-20). The five trial0 runs remain COMPLETE/eligible with their missing final states explicitly accepted; no epoch40 state is fabricated and no trial is rerun. The original78 reviewed input hashes, journals and samplers remain byte-identical, as checked by the [separate transition verifier](../../src_scratches/phase6_first_release_audit/verify_runtime_patch.py) and [retained report](../../src_scratches/phase6_first_release_audit/runtime_patch_verification.json). Original audit helper/summary and quantitative findings above are unchanged.300 repository tests pass; this is future persistence acceptance, not new campaign or comparative evidence.
 
 **Subsequent stopping-policy approval,2026-10-20, recorded2026-10-21:** the user adopted [Phase 6-D2](../project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) for future full-task attempts. This changes no quantitative finding or original trial above. The [execution plan](../plans/training_hyperparameter_tuning.md#additional-plateau-stopping--approved-implementation-pending) retains the unmet guard implementation, explicit policy/source transition and next cost-release gates; no additional training is released by approval.
+
+**Subsequent fresh-study decision,2026-10-21:** D3 replaces that continuation route with new50-attempt studies and the same D2 guard. The earlier COMPLETE/eligible disposition refers to v1 only; these five trials do not supply new-study `H_base`. Keep the complete original campaign and its registered repair, without further migration, deletion or relabelling. The [restart steps](../plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) prepare the revised protocol and new campaign; no implementation or training is performed by this documentation update. Already-spent28.36 h remain outside the fresh budget rather than disappearing from cost accounting.
 
 Reproduce the read-only review from the repository root in its ML environment:
 
