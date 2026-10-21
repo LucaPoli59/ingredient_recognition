@@ -5,9 +5,9 @@
 
 ## Scope and authority
 
-This document owns the opt-in executable contract for [Phase6-D1/D2/D3](../project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies). Scientific decisions belong there; execution belongs in the [training plan](../plans/training_hyperparameter_tuning.md). The original v1 first release and subsequent persistence repair remain dated evidence below. R1 now implements the distinct v2 fresh-study policy; no new campaign has been launched.
+This document owns the opt-in executable contract for [Phase6-D1/D2/D3](../project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies). Scientific decisions belong there; execution belongs in the [training plan](../plans/training_hyperparameter_tuning.md). The original v1 first release and subsequent persistence repair remain dated evidence below. R1–R3 implement/accept/prepare v2; the R4 checkpoint records its authorized continuous launch.
 
-**Current implementation:** the active default is `phase6-comparison-v2`, with50 started attempts per model and D2's independent plateau guard. New studies have fresh journals/samplers under `experiments/benchmark_v2/`; v1 studies are not imported or resumed. The [v1 policy](../../src/training/resources/phase6_protocol_v1.json) stays byte-identical. A registered hash resolver preserves saved v1 module/checkpoint semantics for offline reconstruction instead of relabelling them v2. R1 implementation, R2 acceptance and R3 preparation are complete; R4 explicit launch remains separate. Neither a successful test nor CLI inspection authorizes training.
+**Current implementation:** the active default is `phase6-comparison-v2`, with50 started attempts per model and D2's independent plateau guard. New studies have fresh journals/samplers under `experiments/benchmark_v2/`; v1 studies are not imported or resumed. The [v1 policy](../../src/training/resources/phase6_protocol_v1.json) stays byte-identical. A registered hash resolver preserves saved v1 module/checkpoint semantics for offline reconstruction instead of relabelling them v2. R1–R3 are complete; R4 now has explicit continuous-release authorization under the historical-cost amendment. Neither a successful test nor CLI inspection authorizes training by itself.
 
 The path consists of the [v2 primitive policy](../../src/training/resources/phase6_protocol_v2.json), [configuration/metric helpers](../../src/training/benchmark_protocol.py), [plateau/eligibility helper](../../src/training/benchmark_stopping.py), [shared Lightning adapter](../../src/lightning/benchmark_lgn.py), [isolated study controller](../../src/training/benchmark_campaign.py), [matched-input anchors](../../src/models/benchmark_anchors.py) and [thin CLI](../../scripts/launch_exps/benchmark/train.py). It calls canonical `model_training` and reuses exact batching, projection, complete-state restoration and identity checks. Legacy trainers/studies, selector evidence, metadata and the59-label artifact are unchanged.
 
@@ -41,6 +41,14 @@ Each study uses the controller's shared `prepare_study` path, also reused by ord
 An explicit later `first_trials.py --prepared --execute` verifies the whole campaign before entering its serial first release. Individual study startup similarly uses `train.py --prepared --execute`; it is distinct from `--resume`, which requires finished attempts. Prepared startup requires unchanged empty journal/sampler/configuration/source bytes, opens that same study and only then enqueues the fixed reference0 inside50. It cannot be repeated after an attempt starts. Forgetting `--prepared` still refuses the existing directory; no overwrite or migration bypass is introduced. Source changes after preparation fail verification; a Git commit with identical inventoried bytes alone does not invalidate the snapshot.
 
 The preparation manifest also records the hashed reviewed first-release cost basis and conditional full-run-equivalent arithmetic for the50-attempt opportunity. Only old costs are consumed; old scores, weights and sampler observations do not enter the new cohort. Pruning savings remain unknown and subsequent Q2/Q3/Q4 work is excluded from that arithmetic.
+
+## Continuous release after historical-cost approval
+
+`first_trials.py --prepared --full-budget --cost-reviewed --execute` explicitly releases the entire50-attempt allowance. Both approval/prepared flags are required; default inspection still starts nothing. The shared queue first runs one fresh reference0 per model, then resumes each same study for49 further attempts, serially. It does not repeat references for cost estimation. The individual controller, sampler, Hyperband/plateau policy, failure accounting and strict source checks are unchanged. The legacy first-release mode still pauses when full-budget approval is absent.
+
+Before baseline computation or training, `campaign_queue.json` records the historical-cost basis, frozen projection, approval and absence of a post-reference pause. Every finished model/phase records its result and remaining budget; a runtime exception stops the queue with retained failure state. Completion requires50 started/0 remaining per study and ends at `complete`, not an automatic6.3 handoff. Mid-trial recovery is still not automatic. Training failures consume their attempt but halt this release for explicit review; they are never replaced silently.
+
+The original R3 preparation remains immutable. Because the queue/CLI source changed, `phase62-20261021-v2-release1` is freshly prepared with the updated exact bytes; `phase62-20261021-v2` remains a retained empty preparation, not another training cohort. The unchanged scientific policy is not re-versioned for this operational release amendment. The historical cost projection remains59.08 unpruned full-run-equivalent days; pruning savings and actual finish time are unknown.
 
 ## Configurations, exact accumulation and validation ranking
 
@@ -152,6 +160,22 @@ Actual `--verify` was exercised with `ask`, `optimize`, canonical training and d
 The [six preparation tests](../../tests/test_benchmark_preparation.py) cover empty studies/templates, source/config/journal/sampler hash checks, explicit prepared startup/fixed trial0, rejection of overwrite/empty-resume/repeat launch, queue handoff, CLI inspection/name guards and retained preparation failure. Controller training/export and environment/data verification are synthetic doubles in those tests, not measured qualification. **51 focused and327 repository tests pass** (full suite89.172 seconds); the existing real test-split vocabulary check remains metadata-only.
 
 The manifest's cost basis is the reviewed28.36 h first release, separately spent outside the new allowance. Multiplying that five-model release by50 yields59.08 continuous full-run-equivalent days for HPO alone, **not an ETA or bound**. Unknown pruning/speed variation and later transfers/controls/local work preclude a promised duration. R4 still requires explicit authorization; its first release runs only fresh reference0 per model and stops at the existing cost-review boundary. No R3 commit or training launch is implied.
+
+### R4 continuous-release verification — 2026-10-21
+
+R3 is committed as `9448fbc`. The additional release mode passes53 focused/329 repository tests (94.927 seconds); synthetic doubles verify approval-before-write, all five reference releases followed by49/model, exact attempt-account forwarding, complete termination and immediate stop on runtime failure. The existing controller/plateau/persistence regressions pass unchanged. These are not real250-trial completion evidence or a measured pruning speedup. The real test-split compatibility check remains metadata-only.
+
+The actual full-budget CLI dry run printed50/model without work. `phase62-20261021-v2-release1` was then prepared and inspected with five empty studies before launch, preserving the original R3 preparation. Saved identities:
+
+| Artifact | SHA-256 or value |
+| --- | --- |
+| Preparation manifest | `fc0bc23fbf172c990f39de14bbe3f9b61d4c6dd0c1b3f7abc88ece45ed28c2b7` |
+| All five84-file inventories | `69716056ed8bf0a9978d472e496228db9eaa9113ca3a1b5f2b6965460da5ce05` |
+| Source ZIP | `b512ba8b4c262c1bf3e01419866ae4bbb2d3ef0a37960656476bdcbda35bb6a8` |
+| Git base | `9448fbcde3dcf6110a002fdb9dbd94efa589f74c` plus saved exact working-tree bytes |
+| Scientific policy | Unchanged v2 SHA-256 `8896b66288f6a53002c30d1b8d050bb0f8bf7ec17370045d0630fd3d43f23181` |
+
+The queue started at2026-10-21T10:41:22.466123+00:00, PID94359, with the persisted historical-cost approval. ResNet18 reference0 is running on CUDA; the other references are pending at launch. The [execution checkpoint](../plans/training_hyperparameter_tuning.md#r4-continuous-release--2026-10-21) owns operational state and monitoring. No new full epoch,40-epoch result, pruning saving or final comparison is claimed by startup. No predictive test/predict evaluation, metadata/projection/selector change or old-trial import occurred. Source changes remain uncommitted and must not drift during healthy training.
 
 ### Phase 6.2 execution additions — 2026-10-18
 

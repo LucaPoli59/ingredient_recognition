@@ -148,6 +148,39 @@ class PreparationTests(unittest.TestCase):
             with self.subTest(name=name), self.assertRaises(ValueError):
                 preparation.campaign_plan(name)
 
+    def test_full_release_requires_approval_and_runs_one_then_fortynine(self):
+        preparation.prepare_campaign(self.name)
+        before = self.all_bytes()
+        for options in ({"full_budget": True}, {"full_budget": True, "prepared": True}):
+            with self.assertRaisesRegex(ValueError, "explicit cost approval"):
+                benchmark_queue.first_trials(self.name, **options)
+        self.assertEqual(before, self.all_bytes())
+        def result(root, model_id, **options):
+            return {"trials_started": 50, "remaining": 0} if options.get("resume") else {
+                "trials_started": 1, "remaining": 49}
+        with mock.patch.object(benchmark_queue, "run_baselines"), \
+             mock.patch.object(benchmark_queue, "execute", side_effect=result) as execute:
+            state = benchmark_queue.first_trials(self.name, prepared=True, full_budget=True, cost_reviewed=True)
+        self.assertEqual(state["status"], "complete")
+        self.assertFalse(state["cost_approval"]["post_reference_pause"])
+        self.assertEqual(len(execute.call_args_list), 10)
+        for i, call in enumerate(execute.call_args_list):
+            self.assertEqual(call.args[1], policy()["models"][i % 5])
+            self.assertEqual(call.kwargs, {"prepared": True} if i < 5 else {
+                "resume": True, "additional_trials": 49, "cost_reviewed": True})
+        self.assertTrue(all(row["result"]["remaining"] == 0 for row in state["models"]))
+
+    def test_full_release_stops_on_failure_without_releasing_later_models(self):
+        preparation.prepare_campaign(self.name)
+        with mock.patch.object(benchmark_queue, "run_baselines"), \
+             mock.patch.object(benchmark_queue, "execute", side_effect=RuntimeError("synthetic runtime failure")) as execute:
+            with self.assertRaisesRegex(RuntimeError, "synthetic runtime failure"):
+                benchmark_queue.first_trials(self.name, prepared=True, full_budget=True, cost_reviewed=True)
+        self.assertEqual(execute.call_count, 1)
+        state = json.loads((self.root / "campaign_queue.json").read_text())
+        self.assertEqual(state["status"], "failed")
+        self.assertTrue(all(row["status"] == "pending" for row in state["models"][1:]))
+
     def test_preparation_failure_is_retained_and_cannot_be_overwritten(self):
         original = campaign.prepare_study
         def fail(root, model_id):

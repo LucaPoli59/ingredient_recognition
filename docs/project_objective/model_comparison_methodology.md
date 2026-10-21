@@ -630,6 +630,8 @@ vocabulary decisions as uncertain.
 
 **Budget/cohort amendment:** [D3 below](#phase-6-d3--fresh-fifty-trial-studies), adopted2026-10-21, supersedes D1's100-attempt budget and continuation of the first release. Preserve D1's original matrix, numerical ceiling and execution evidence below as history; the revised budget is50 new attempts per model, beginning at a new trial0.
 
+**Cost-release amendment:** the [2026-10-21 historical-cost decision](#cost-release-amendment--2026-10-21) supersedes the repeated post-reference cost pause for the fresh campaign. It changes release authorization, not the frozen training/HPO policy.
+
 ### Matrix and historical disposition
 
 | Protocol | Full task / Q1 | Selected task / Q2 | Additional local panel / Q4 |
@@ -694,7 +696,7 @@ For each full, selected or random evaluation task, fit operating points on that 
 
 ## Phase 6-D2 — Conservative plateau pruning for full-task HPO
 
-**Adopted:** 2026-10-20 by explicit user approval, after the five reference trials and cost review but before any trial1 release. **Recorded:** 2026-10-21. **Execution status:** implemented in v2 under R1, no new campaign launched. This is a prospective, cost-informed amendment, not an uninformed preregistration or a retrospective change to the completed trials.
+**Adopted:** 2026-10-20 by explicit user approval, after the five reference trials and cost review but before any trial1 release. **Recorded:** 2026-10-21. **Execution status:** implemented/accepted in v2; the R4 launch is recorded in the execution plan under D3's cost-release amendment. This is a prospective, cost-informed amendment, not an uninformed preregistration or a retrospective change to the completed trials.
 
 **D3 scope update:** the guard is carried into the [new50-attempt studies](#phase-6-d3--fresh-fifty-trial-studies), not retrofitted onto the v1 studies. D3 supersedes the100-attempt accounting and old-study transition clauses retained below. Incumbents and eligible winners come only from the corresponding new study; the original five trial0 scores are not imported.
 
@@ -729,7 +731,7 @@ At the D2 documentation checkpoint, [`phase6_protocol_v1.json`](../../src/traini
 
 ## Phase 6-D3 — Fresh fifty-trial studies
 
-**Adopted:** 2026-10-21 by explicit user decision to reduce HPO to50 attempts per model and restart from trial0 rather than recover/import the completed first trial. **Execution status:** R1 implementation, R2 acceptance and R3 empty-campaign preparation are complete in distinct v2; R4 explicit launch remains pending. This follows observed first-release cost, not an outcome-blind preregistration.
+**Adopted:** 2026-10-21 by explicit user decision to reduce HPO to50 attempts per model and restart from trial0 rather than recover/import the completed first trial. **Execution status:** R1–R3 are complete; the user has authorized R4 with the historical-cost release amendment below. Actual launch/attempt state belongs to the execution plan. This follows observed first-release cost, not an outcome-blind preregistration.
 
 ### New cohort and fixed boundaries
 
@@ -752,6 +754,14 @@ The user accepts rerunning the five reference configurations to simplify code an
 Implement D2/D3 together in a new versioned machine policy and explicit new protocol/study identity, planned as `phase6-comparison-v2`. Use new campaign directories, fresh source snapshots and independent journal/sampler/checkpoint artifacts. Keep the v1 manifest and original snapshots unchanged. No v1-to-v2 source/study migration or extension of `final-checkpoint-v1` is needed for this route; that repair remains retained history, while the corrected independent best/latest callbacks are reused for new trials.
 
 The [execution plan](../plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) defines ordered checks and campaign preparation. The budget/restart decision is closed; implementation acceptance and explicit training-launch authorization remain separate. The adoption checkpoint itself changed no code or experiments.
+
+### Cost-release amendment — 2026-10-21
+
+The user authorizes proceeding without repeating trials to re-estimate cost. Reuse the reviewed v1 release times and adjust the arithmetic for50 attempts and the changed stopping policy. Maximum horizon, images, precision and batching are unchanged; thus the observed per-model full-run rates remain a reasonable rough basis, not a promised speed. Independent plateau pruning and Hyperband may reduce realized epochs, but no defensible savings percentage is known. No pilot or additional cost-only run is required.
+
+At the old measured rates,250 unpruned40-epoch runs correspond to59.08 continuous full-run-equivalent days for HPO alone. Keep the old28.36 h separately spent; later Q2/Q3/Q4, interruptions and changed overhead are additional. This is conditional arithmetic, not an ETA or a strict upper bound. Retaining the unpruned scenario avoids inventing a plateau speedup.
+
+Release the five fresh reference0s **inside** the50-attempt studies, then the remaining49 per model in serial GPU execution without a second user cost-review pause. These references remain part of the adopted fresh-search design, not extra cost-measurement trials. Persist the estimate and approval before training. Runtime failures or incompatible resources still stop the queue; do not silently retry, replace attempts, extend the budget/horizon or release6.3–6.5. D2/D3 scientific settings and machine-policy hashes remain unchanged. This explicitly supersedes the repeat first-release pause, not the original v1 history or its accounting.
 
 **R1 implementation checkpoint,2026-10-21:** [`phase6_protocol_v2.json`](../../src/training/resources/phase6_protocol_v2.json) now implements this policy and is the active CLI/configuration default. V1 is unchanged and its saved module identities remain recognizable offline; old studies are not migrated. The [runtime owner](../implementation_details/benchmark_training.md#r1-v2-policy-and-plateau-implementation--2026-10-21) records verification, exact hashes and remaining limits. R1 implements the adopted rule, not a new scientific amendment or an authorized campaign launch.
 

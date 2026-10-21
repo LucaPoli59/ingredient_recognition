@@ -7,7 +7,7 @@ Run from the main WSL repository with the project's ML Python. The [scientific p
 
 ## Current implementation boundary — D3 fresh studies
 
-[Phase6-D3](../../../docs/project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies) is implemented under R1: the commands now use `phase6-comparison-v2`,50 attempts and D2's independent plateau guard. R2 acceptance and R3 preparation are complete. Default inspection starts nothing; the prepared campaign has zero attempts. New execution uses fresh studies under `experiments/benchmark_v2/`, without importing or resuming the first release. R4 launch requires separate authorization; invocation examples are interfaces, not permission to train.
+[Phase6-D3](../../../docs/project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies) is implemented under R1: commands use `phase6-comparison-v2`,50 attempts and D2's independent plateau guard. R2/R3 are complete; the original R3 preparation stays empty and the separately source-bound R4 continuous campaign is now running under explicit user approval. Default inspection still starts nothing. New execution uses fresh studies under `experiments/benchmark_v2/`, without importing or resuming the first release. Invocation examples alone are not permission to train.
 
 Preserve `phase62-20261018-v1`, its journals/samplers/checkpoints and registered source patch unchanged. Its five trials remain separate cost/runtime evidence outside the new cohort. Reuse the corrected independent best/latest checkpoint implementation; do not add a v1-to-v2 trial/policy migration just to retain those observations. Future ordinary continuation within each new study remains distinct from importing an old trial.
 
@@ -24,6 +24,15 @@ The default only prints the plan. `--write` creates five empty studies, fresh sa
 R3 prepared `phase62-20261021-v2`, with0 attempts in each50-attempt study. Use `--verify`, not `--write`, for that existing name. Its exact identities and evidence are in the [runtime checkpoint](../../../docs/implementation_details/benchmark_training.md#r3-preparation-and-inspected-handoff--2026-10-21).
 
 ## First release
+
+**Current authorization,2026-10-21:** the user accepts historical-cost estimates and waives a repeat cost pause. The continuous release uses the new preparation `phase62-20261021-v2-release1`; the original R3 empty preparation stays retained. This operational amendment leaves all50-attempt/scientific settings unchanged.
+
+```bash
+python scripts/launch_exps/benchmark/first_trials.py --run-name PREPARED_CAMPAIGN --prepared --full-budget --cost-reviewed
+python scripts/launch_exps/benchmark/first_trials.py --run-name PREPARED_CAMPAIGN --prepared --full-budget --cost-reviewed --execute
+```
+
+The first command only prints. Explicit execution runs reference0/model, then49 additional attempts/model serially, without another cost pause. Both approval/prepared flags are mandatory. It records the cost basis before work and stops on errors; no replacement, extra trial or later-phase launch is implied. The ordinary first-release mode below remains available without full-budget approval.
 
 ```bash
 python scripts/launch_exps/benchmark/first_trials.py --run-name NEW_CAMPAIGN
