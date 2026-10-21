@@ -4,13 +4,13 @@
 
 **Last updated:** 2026-10-21
 
-**Status:** In progress — R1 v2/50-attempt policy and plateau implementation complete; R2 acceptance next
+**Status:** In progress — R1 implementation and R2 acceptance complete; R3 campaign preparation next
 
 ## Purpose and scope
 
 This is the execution owner for [Macro-section 6](../general_plan.md#6-training-and-hyperparameter-tuning). Turn the completed data, vocabulary and model work into a bounded training campaign that answers the [Q1–Q4 comparison questions](../project_objective/model_comparison_methodology.md#research-questions), accounts for the existing ResNet/DINOv2 investment, and hands frozen models and operating points to Phase 7.
 
-The plan does not reopen the selected59-label vocabulary, portfolio or single-seed constraint. D1 supplies the original recipe; [D2/D3](../project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies) add plateau pruning and five fresh50-attempt studies. R1 implements the distinct v2 policy and guard through canonical training; the v1 policy/campaign and its repair remain historical evidence, without import/recovery. Budget/restart choices are closed. Dedicated R2 acceptance, R3 campaign preparation and explicit training launch remain pending; predictive test evaluation remains unavailable.
+The plan does not reopen the selected59-label vocabulary, portfolio or single-seed constraint. D1 supplies the original recipe; [D2/D3](../project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies) add plateau pruning and five fresh50-attempt studies. R1 implements the distinct v2 policy and guard through canonical training; R2 accepts its controller/stopping behavior. The v1 policy/campaign and its repair remain historical evidence, without import/recovery. Budget/restart choices are closed. R3 campaign preparation and explicit training launch remain pending; predictive test evaluation remains unavailable.
 
 The user explicitly removed the previously proposed standalone pipeline-qualification stage on 2026-10-13: the canonical training code and Phase 5 qualification are accepted foundations. The five stages below are renumbered; **6.2 now means full-vocabulary tuning**, not another validation of the training infrastructure. Any work required by a newly adopted metric, monitor or experiment configuration is scoped to that change within 6.1, rather than a repeat of Phase 5.
 
@@ -18,14 +18,14 @@ The user explicitly removed the previously proposed standalone pipeline-qualific
 
 **Overall status:** In progress
 
-**Current task:** 6.2 — R1 Done; R2 acceptance of the new controller/policy behavior is next
+**Current task:** 6.2 — R1/R2 Done; R3 fresh-campaign preparation is next
 
-**Next action:** Perform R2's dedicated acceptance, including controller-level release/negative-path checks and review of the new artifacts. R1's31 focused/307 repository tests already verify the implementation delta. Then prepare the new campaign in R3 before an explicit launch. Do not resume v1 or import its trial0s. No real v2 study exists yet.
+**Next action:** Prepare the new campaign in R3: inspect its new names/paths, fresh configuration/source identities and dry run before any explicit launch. R2 acceptance passes45 focused/321 repository tests. Do not resume v1 or import its trial0s. No real v2 study exists yet; R3–R5 have not started.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | 6.1 | Freeze matrix, historical reuse, budgets and training/selection protocol | **Done** | Original D1 checkpoint complete; D2/D3 prospectively amend stopping/budget/cohort. Revised implementation belongs to6.2, not a repeat of Phase5. Q3/local-panel/data boundaries stay fixed. |
-| 6.2 | Run full-vocabulary baselines and tuning; select `H_base(m)` | **In progress** | R1 v2/50 policy and independent plateau guard implemented;31 focused/307 tests pass. Original trials remain outside the new cohort. R2 acceptance, R3 preparation, launch/HPO and selection remain open; no real new attempt used. |
+| 6.2 | Run full-vocabulary baselines and tuning; select `H_base(m)` | **In progress** | R1 committed as `0d28eea`; R2 accepted with45 focused/321 tests, including controller accounting/rejection and actual CPU pruning persistence. Original trials remain outside the new cohort. R3 preparation, launch/HPO and selection remain open; no real new attempt used. |
 | 6.3 | Run selected-vocabulary transfers and reference-model random controls | **Deferred** | Requires the relevant full-task configuration, frozen control design and budget from 6.1. |
 | 6.4 | Bounded selected-task local adaptation | **Deferred** | Included by Phase 6-D1: four additional LR/decay configurations per model after transferred runs. Remains separate from Q3. |
 | 6.5 | Freeze calibration, thresholds and the Phase 7 handoff | **Deferred** | Requires required runs and the selected-checkpoint ledger; test evaluation remains Phase 7. |
@@ -213,7 +213,7 @@ The new allowance is250 HPO attempts/10,000 maximum HPO epochs; unchanged Q2/Q3/
 | Step | Task | Status | Acceptance/output |
 | --- | --- | --- | --- |
 | R1 | Implement the revised policy and plateau guard | **Done** | `phase6-comparison-v2`,50-attempt accounting, fresh study identity/path and independent D2 guard implemented.31 focused/307 tests pass; default CLI inspection confirms50 without execution. V1 artifacts unchanged; no campaign created. |
-| R2 | Verify only the new behavior and compatibility | **Pending** | Synthetic histories/studies prove50-attempt accounting including COMPLETE/PRUNED/FAIL, fresh trial numbering/sampler, no old incumbent/import, D2 boundary cases, checkpoint-before-prune and full-horizon winner eligibility. Run proportionate regressions; no generic repeat model qualification or predictive test access. |
+| R2 | Verify only the new behavior and compatibility | **Done** |45 focused/321 repository tests pass. Actual controller/temporary studies verify fresh numbering/samplers,50-attempt mixed-state accounting, no replacement/import, guarded resume and strict winner eligibility. Production CPU pruning proves checkpoint/cost-before-exception and actual PRUNED state; no generic qualification or campaign/test inference. |
 | R3 | Prepare the fresh campaign and inspect its dry run | **Pending** | New campaign/study names and paths, empty journals, fresh source inventories/configuration hashes, approved artifact/data/class identity and explicit50 cap/40-epoch recipe. Refuse overwrite/old-study reuse; use the measured cost record for planning. No training during preparation. |
 | R4 | Launch and execute the new HPO when explicitly requested | **Pending** | Serial GPU execution under the verified D2/D3 policy, fresh reference trial0s inside50, bounded release/attempt ledgers, best/latest checkpoints and ordered validation exports. No automatic cap/horizon extension, uncounted retry or topology change. The budget is already chosen; implementation acceptance and launch authorization are separate. |
 | R5 | Select and hand off the new full-task winners | **Pending** | Complete attempt/cost/disposition ledger and eligible new-study `H_base` for all categories. Keep old first-release metrics outside this cohort; then release dependent6.3/6.4 work under its own authorization. |
@@ -229,6 +229,16 @@ The [stopping helper](../../src/training/benchmark_stopping.py) and production c
 **Verification:**31 focused benchmark tests and307 repository tests pass (83.662 seconds). New checks use synthetic histories, temporary studies and actual CPU trainer fits, including a fixed-AP fixture pruned at epoch20 with full checkpoint, cost record and actual PRUNED state. They also verify tolerance boundaries, incumbent eligibility/protection, Hyperband independence, exemptions,50-attempt accounting and saved-v1 reconstruction. Default CLI inspection prints v2/50 without model construction or study creation. Existing real test-split vocabulary checking is metadata-only, not predictive evaluation. Exact implementation scope/limitations belong to the [runtime owner](../implementation_details/benchmark_training.md#r1-v2-policy-and-plateau-implementation--2026-10-21).
 
 **Outcome:** R1 **Done**; R2 **Pending** as the dedicated controller-level acceptance checkpoint. No real study/campaign creation, CUDA probe, food-image training/inference, predictive test evaluation or second commit occurred. R3–R5 are not automatically started. The retained v1 cutoff reports/source snapshots remain unchanged; they are historical evidence, not current-source validators after this deliberate new-version implementation.
+
+### R2 acceptance checkpoint — 2026-10-21
+
+Committed R1 as `0d28eea`, excluding all personal/parallel thesis changes, then completed only R2. The [dedicated acceptance tests](../../tests/test_benchmark_restart_acceptance.py) exercise the actual controller, temporary Optuna journals/samplers and saved source/stopping artifacts, with explicit synthetic data/training/export boundaries. All five study identities start empty with fresh seeded samplers. Mixed finished-state fixtures allow attempt49 and reject the51st; failed/incomplete work consumes its attempt without automatic replacement. Rejected incompatible resumes preserve journal/sampler bytes.
+
+Two actual tiny CPU trainer paths run through the controller: a forced Hyperband decision prunes at5 and independent plateau at20. Optuna records PRUNED automatically, after latest full optimizer/scheduler state, cost rows and reason/epoch/time artifacts. A strict AP improvement smaller than1e-4 saves best epoch5 without resetting patience; the plateau fixture retains a distinct latest epoch20 state. Existing boundary/incumbent/exemption/legacy tests remain passing. Exact evidence and fixture limits are in the [runtime owner](../implementation_details/benchmark_training.md#r2-controller-and-stopping-acceptance--2026-10-21).
+
+Negative-path acceptance found and corrected narrowly scoped guards: reject oversized releases before creating an empty study, compare saved policy/data manifests on resume, and refuse missing-journal recreation. Both scientific policy hashes and all scientific choices remain unchanged. **45 focused tests and321 repository tests pass** (87.042 seconds). Read-only retention confirms74 original v1 campaign input hashes, five unchanged journal/sampler pairs and ten source ZIP inventories; the old queue status is unchanged. The existing real test-split check remains metadata-only.
+
+**Outcome:** R2 **Done**; R3 **Pending** and next. No real v2 campaign directory, model training/inference on food images, CUDA qualification or predictive test evaluation occurred. These tests do not estimate savings or convergence. R2 source/tests/documentation remain uncommitted; R3 preparation and R4 explicit launch are not automatically performed.
 
 ### Runtime persistence/source amendment checkpoint — 2026-10-20
 
@@ -246,11 +256,11 @@ The [read-only transition verifier](../../src_scratches/phase6_first_release_aud
 
 **Decision checkpoint:** the user approved the conservative configuration on2026-10-20; this2026-10-21 documentation update records it as binding [Phase 6-D2](../project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo). The methodology owns the rule, primary-source rationale and limitations; the earlier proposal and completed repair checkpoint remain dated history.
 
-**Current execution scope under D3:** R1 implements this guard for new50-attempt studies; no campaign has yet used it. Original five scores are not eligible incumbents. Fresh policy/study creation replaces the old-study migration envisaged by D2. The checklist below remains R2 acceptance scope, partly covered by the implementation checks and not a claim that all later preparation is complete.
+**Current execution scope under D3:** R1 implements this guard for new50-attempt studies and R2 acceptance is complete; no campaign has yet used it. Original five scores are not eligible incumbents. Fresh policy/study creation replaces the old-study migration envisaged by D2. The checklist below separates accepted implementation behavior from pending preparation/launch.
 
 The approved summary is an independent plateau-pruning guard alongside unchanged Hyperband: earliest stop20, patience10 epoch-validation checks, absolute AP `min_delta=1e-4`, and protection against this guard for a trial whose strict best AP exceeds the eligible COMPLETE incumbent. Keep strict best-checkpoint selection and COMPLETE40/15,000-update eligibility. Record a plateau stop as `PRUNED`, consuming its attempt, not an eligible early-stopped winner. Trial0, the completed40 boundary, original five trials and Q2/Q3/Q4 runs are excluded. Neither numerical settings nor savings are established by the literature or fitted from the five curves; late-improver risk remains.
 
-**Implementation and release acceptance, still Pending:**
+**Implementation acceptance: Done in R2. Campaign preparation/release: R3/R4 Pending.**
 
 - Test the20-epoch floor,10-check patience and tolerance boundary using synthetic AP histories; distinguish strict best checkpoints from tolerance-based plateau state.
 - Test the eligible-incumbent condition, exact ties, absent incumbent and a possible new winner; this safeguard must not disable or defer ordinary Hyperband.
@@ -340,5 +350,6 @@ Required experiment artifacts are a run/study manifest with source and configura
 | 2026-10-21 | Recorded the user's2026-10-20 approval as Phase6-D2 | Additional plateau pruning is binding prospective policy, with explicit implementation/transition acceptance above. No stopping code, executable policy, completed trial or campaign allocation changed;6.2 remains In progress. |
 | 2026-10-21 | Adopted Phase6-D3:50 new attempts per model, restart from trial0 without importing the first release | Old five trials remain separate reviewed evidence; R1–R5 replace old-study migration/continuation with a fresh versioned campaign and unchanged D2 guard. Implementation and launch pending; no source, executable policy or experiment artifact changed. |
 | 2026-10-21 | Committed the D3 plan as `48315d1` and completed R1 implementation | V2/50 policy, fresh identity/path and independent plateau guard pass31 focused/307 repository tests. No real study/training or second commit; R2 acceptance is next and R3–R5 remain Pending. |
+| 2026-10-21 | Committed R1 as `0d28eea` and completed R2 acceptance |45 focused/321 tests pass, including actual controller state/accounting and CPU checkpoint-before-prune. Hardened rejected release/resume inputs; policies/v1 evidence unchanged. R3 preparation is next; no real v2 campaign or additional commit. |
 
-The planning and cost checkpoints remain retained history. Original6.1 and R1 are complete; D2/D3 own the new stopping,50-attempt budget and fresh cohort. Original exception/repair evidence is retained without trial import. R2 acceptance and R3 preparation precede a new launch; full-study execution/selection remain open.
+The planning and cost checkpoints remain retained history. Original6.1 and R1/R2 are complete; D2/D3 own the new stopping,50-attempt budget and fresh cohort. Original exception/repair evidence is retained without trial import. R3 preparation precedes a new explicitly authorized launch; full-study execution/selection remain open.

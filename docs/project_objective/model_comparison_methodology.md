@@ -729,7 +729,7 @@ At the D2 documentation checkpoint, [`phase6_protocol_v1.json`](../../src/traini
 
 ## Phase 6-D3 — Fresh fifty-trial studies
 
-**Adopted:** 2026-10-21 by explicit user decision to reduce HPO to50 attempts per model and restart from trial0 rather than recover/import the completed first trial. **Execution status:** R1 implemented in a distinct v2 policy; dedicated R2 acceptance, R3 preparation and new launch remain pending. This follows observed first-release cost, not an outcome-blind preregistration.
+**Adopted:** 2026-10-21 by explicit user decision to reduce HPO to50 attempts per model and restart from trial0 rather than recover/import the completed first trial. **Execution status:** R1 implementation and R2 acceptance are complete in a distinct v2 policy; R3 preparation and new launch remain pending. This follows observed first-release cost, not an outcome-blind preregistration.
 
 ### New cohort and fixed boundaries
 
@@ -799,7 +799,7 @@ replace the threshold-free selection and validation-only operating-point rules.
 | Subphase 4B | Choose, verify, and freeze M_ref. | Done: 4B-D1 freezes the EfficientNetV2-S model-side selector and [`reference_selector_research.md`](../plans/reference_selector_research.md) records the completed evidence and handoff. |
 | Macro-section 3 | Implement the frozen selector workflow and produce versioned V_selected evidence. | Done through P7: D6 uncertainty, shared projection, opt-in runtime integration and retention checks are complete. Original D4 evidence and the full default remain preserved; the [completed plan](../plans/recognizable_ingredient_selection.md) owns the execution record. |
 | Macro-section 5 | Implement and technically qualify the adopted experiment-model protocols. | Done on 2026-10-07: all three protocols passed measured full/selected CUDA, persistence and consumer gates. The [completed plan](../plans/additional_model_implementation.md) and [readiness constraints](../implementation_details/experimental_model_contract.md#phase-6-comparison-constraints) supply the handoff. |
-| Macro-section 6 | Accept/prepare D2/D3 execution, run five fresh50-attempt studies, then transfers/controls and operating-point handoff. | Original6.1 and R1 Done;6.2 In progress. First release retained outside the new cohort; R2 acceptance, R3 preparation, launch and new HPO remain pending in the [execution plan](../plans/training_hyperparameter_tuning.md). |
+| Macro-section 6 | Prepare D2/D3 execution, run five fresh50-attempt studies, then transfers/controls and operating-point handoff. | Original6.1 and R1/R2 Done;6.2 In progress. First release retained outside the new cohort; R3 preparation, launch and new HPO remain pending in the [execution plan](../plans/training_hyperparameter_tuning.md). |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
 
 ## Related documentation

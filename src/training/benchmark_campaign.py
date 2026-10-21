@@ -56,6 +56,8 @@ def open_study(root, model_id, *, resume=False):
     identity = {"policy_hash": policy_hash(), "model_id": model_id,
                 "study_name": f"{p['protocol_id']}-{model_id}", "optuna": optuna.__version__}
     if resume:
+        if any(not (root / name).is_file() for name in ("study_identity.json", "journal.log", "sampler.bin")):
+            raise ValueError("study resume inputs are missing; no study may be recreated")
         if json.loads((root / "study_identity.json").read_text()) != identity:
             raise ValueError("study protocol/model/package identity differs")
         digest, payload = (root / "sampler.bin").read_bytes().split(b"\n", 1)
@@ -162,6 +164,8 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
     root = Path(root).resolve()
     if type(additional_trials) is not int or additional_trials < 1:
         raise ValueError("additional_trials must be positive")
+    if additional_trials > policy()["hpo"]["started_trials_per_model"]:
+        raise ValueError("requested release exceeds the fixed started-trial budget")
     if (resume or additional_trials > 1) and not cost_reviewed:
         raise ValueError("acknowledge the measured-cost review before releasing multiple/further trials")
     # Prevent accidentally opening an existing study in another legacy location.
@@ -172,7 +176,12 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
     config = make_config(model_id, root / "template")
     projection.verify_metadata(config.datamodule["data_dir"])
     environment = environment_identity(model_id)
+    data_identity = {"metadata_hashes": dict(projection.metadata_hashes),
+                     "base_class_order": list(projection.base_class_order)}
     if resume:
+        if (json.loads((root / "policy.json").read_text()) != policy()
+                or json.loads((root / "data_identity.json").read_text()) != data_identity):
+            raise ValueError("saved benchmark policy/data identity changed")
         if json.loads((root / "environment.json").read_text()) != environment:
             raise ValueError("benchmark environment/original-artifact identity changed")
         source_identity = validate_study_sources(root)
@@ -187,8 +196,7 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
             with zipfile.ZipFile(root / "dinov2_source.zip", "x", zipfile.ZIP_DEFLATED) as archive:
                 for path in sorted((source / "dinov2").rglob("*.py")) + [source / "hubconf.py", source / "LICENSE"]:
                     archive.write(path, path.relative_to(source))
-        write_new(root / "data_identity.json", {"metadata_hashes": dict(projection.metadata_hashes),
-                                                "base_class_order": list(projection.base_class_order)})
+        write_new(root / "data_identity.json", data_identity)
         source_identity = validate_study_sources(root)
     if additional_trials > remaining_trials(study):
         raise ValueError("requested release exceeds the remaining fixed budget")
