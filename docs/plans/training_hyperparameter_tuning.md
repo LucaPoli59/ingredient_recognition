@@ -2,15 +2,15 @@
 
 **Created:** 2026-10-13
 
-**Last updated:** 2026-10-20
+**Last updated:** 2026-10-21
 
-**Status:** In progress — first-release cost review and final-checkpoint disposition required
+**Status:** In progress — runtime repair complete; D2 plateau policy approved, implementation and cost release pending
 
 ## Purpose and scope
 
 This is the execution owner for [Macro-section 6](../general_plan.md#6-training-and-hyperparameter-tuning). Turn the completed data, vocabulary and model work into a bounded training campaign that answers the [Q1–Q4 comparison questions](../project_objective/model_comparison_methodology.md#research-questions), accounts for the existing ResNet/DINOv2 investment, and hands frozen models and operating points to Phase 7.
 
-The plan does not reopen the selected 59-label vocabulary, the three-model portfolio, or the single-seed constraint. Historical budget alternatives are retained below as dated planning evidence; the adopted [Phase 6-D1 protocol](../project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol) and its executable configuration supersede their open choices. The authorized first release finished training and validation export; its measured-cost review and missing-final-checkpoint disposition are now required. Predictive test evaluation remains unavailable.
+The plan does not reopen the selected 59-label vocabulary, the three-model portfolio, or the single-seed constraint. Historical budget alternatives are retained below as dated planning evidence; [Phase 6-D1](../project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol) supersedes their open choices. The first release finished training/export; its future persistence fix and explicit source/exception transition are complete. The user approved [Phase 6-D2](../project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) on2026-10-20. Its additional plateau guard is not yet implemented or activated; the executable v1 policy remains unchanged. Another cost/allocation release still needs an explicit decision. Predictive test evaluation remains unavailable.
 
 The user explicitly removed the previously proposed standalone pipeline-qualification stage on 2026-10-13: the canonical training code and Phase 5 qualification are accepted foundations. The five stages below are renumbered; **6.2 now means full-vocabulary tuning**, not another validation of the training infrastructure. Any work required by a newly adopted metric, monitor or experiment configuration is scoped to that change within 6.1, rather than a repeat of Phase 5.
 
@@ -18,14 +18,14 @@ The user explicitly removed the previously proposed standalone pipeline-qualific
 
 **Overall status:** In progress
 
-**Current task:** 6.2 — first five trials/exports verified; cost review and final-checkpoint retention gate open
+**Current task:** 6.2 — checkpoint/source repair complete; approved D2 guard awaiting implementation and prospective transition
 
-**Next action:** Review the [measured first-release costs and failed final-checkpoint gate](../experiment_results/phase6_first_release.md) with the user before any further attempt. Resolve the retained trials' missing-final disposition, then repair future final-state persistence with explicit source-provenance/resume handling. Do not retrain, recreate trials or release remaining allowances automatically.
+**Next action:** Implement and test the approved D2 plateau guard and its explicit versioned policy/source transition, then obtain a finite cost/allocation release before more training. This documentation/commit checkpoint does not implement the guard or release attempts. Retain the five accepted trial0 artifacts without retraining or manifest replacement.
 
 | # | Task | Status | Evidence or result |
 | --- | --- | --- | --- |
 | 6.1 | Freeze matrix, historical reuse, budgets and training/selection protocol | **Done** | Phase 6-D1, primitive policy and opt-in canonical metric/configuration/HPO route agree. Five fresh 100-attempt/40-epoch studies; fixed-selector Q3 reuse; no overall GPU-hour cap. Verification is recorded below. |
-| 6.2 | Run full-vocabulary baselines and tuning; select `H_base(m)` | **In progress** | Baselines and five COMPLETE40-epoch trials/ordered validation exports verified. Queue is `awaiting_cost_review`;28.36 h observed release wall time. Every `last.ckpt` duplicates its earlier best, so final-state retention is unmet. Remaining99/model, artifact disposition and full-study selection stay open. |
+| 6.2 | Run full-vocabulary baselines and tuning; select `H_base(m)` | **In progress** | Baselines/five COMPLETE trials retained; persistence/source repair verified with300 tests. D2 additional plateau pruning approved but not executable. Guard implementation/transition, remaining99/model cost release and full-study selection stay open. |
 | 6.3 | Run selected-vocabulary transfers and reference-model random controls | **Deferred** | Requires the relevant full-task configuration, frozen control design and budget from 6.1. |
 | 6.4 | Bounded selected-task local adaptation | **Deferred** | Included by Phase 6-D1: four additional LR/decay configurations per model after transferred runs. Remains separate from Q3. |
 | 6.5 | Freeze calibration, thresholds and the Phase 7 handoff | **Deferred** | Requires required runs and the selected-checkpoint ledger; test evaluation remains Phase 7. |
@@ -200,6 +200,35 @@ The source inspection on 2026-10-13 confirms `val_loss` remains wired into [trai
 
 ## 6.2 — Full-vocabulary baselines and tuning
 
+### Runtime persistence/source amendment checkpoint — 2026-10-20
+
+Following the user's request to implement the fix and source-transition step, [the runtime owner](../implementation_details/benchmark_training.md#explicit-checkpoint-repair-source-transition) now documents independent native best/latest checkpoint callbacks and final-payload checks before restoring best weights. The production CPU regression holds best at epoch1 and verifies a genuinely different full epoch40 state, correct counters/identity and offline restoration; pruning still leaves the latest full state. All24 focused and300 repository tests pass. The existing real test-split vocabulary check is metadata-only; no campaign training, new food-image inference or predictive test evaluation occurred.
+
+Registered `final-checkpoint-v1` on all five studies through the explicit CLI. Each keeps its original78-entry inventory/ZIP, journal, sampler, configurations, checkpoints, logs and validation exports byte-identical, while adding a new80-entry source snapshot, amendment record and saved prior sampler. New active inventory SHA-256 is `e0b9586d56367e42206b2e27cbfaec043278a69e78edcd4368e0c104035cc50b`. Only the two reviewed existing source files and two new source files are allowed; any further drift is rejected. Future trials bind this source identity without retrofitting trial0.
+
+The [read-only transition verifier](../../src_scratches/phase6_first_release_audit/verify_runtime_patch.py) and [retained verification](../../src_scratches/phase6_first_release_audit/runtime_patch_verification.json) confirm all78 originally reviewed input hashes and canonical study loading without `ask`, `suggest`, `optimize` or writes to journal/sampler: one COMPLETE trial and99 remaining for every model. Verification SHA-256 is `92b9b372d923a50d85a5aa59418ca6077cd8900e397ced1e46ccc85fd3a6fb9e`. The original audit helper/summary are unchanged; their direct current-source equality is historical, not a reason to rewrite the old inventory after an explicit patch.
+
+**Disposition:** retain the five completed trial0 runs as eligible AP-selected evidence, with missing final epoch40 states documented and accepted under the user's requested transition. Do not manufacture final states, replay/recreate trials or retrain automatically. This closes the future-persistence/source-transition work, not6.2 or its cost gate. No additional trial is allocated, no stopping policy is changed and no commit is implied.
+
+### Additional plateau stopping — approved, implementation pending
+
+**Decision checkpoint:** the user approved the conservative configuration on2026-10-20; this2026-10-21 documentation update records it as binding [Phase 6-D2](../project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo). The methodology owns the rule, primary-source rationale and limitations; the earlier proposal and completed repair checkpoint remain dated history.
+
+The approved summary is an independent plateau-pruning guard alongside unchanged Hyperband: earliest stop20, patience10 epoch-validation checks, absolute AP `min_delta=1e-4`, and protection against this guard for a trial whose strict best AP exceeds the eligible COMPLETE incumbent. Keep strict best-checkpoint selection and COMPLETE40/15,000-update eligibility. Record a plateau stop as `PRUNED`, consuming its attempt, not an eligible early-stopped winner. Trial0, the completed40 boundary, original five trials and Q2/Q3/Q4 runs are excluded. Neither numerical settings nor savings are established by the literature or fitted from the five curves; late-improver risk remains.
+
+**Implementation and release acceptance, still Pending:**
+
+- Test the20-epoch floor,10-check patience and tolerance boundary using synthetic AP histories; distinguish strict best checkpoints from tolerance-based plateau state.
+- Test the eligible-incumbent condition, exact ties, absent incumbent and a possible new winner; this safeguard must not disable or defer ordinary Hyperband.
+- Verify trial0/epoch40 exclusions, `PRUNED` rather than COMPLETE/FAIL, reason/epoch/update/time retention, unchanged attempt counts and full-horizon `H_base` eligibility.
+- Preserve the latest full checkpoint before either pruning path and retain independent best/latest semantics.
+- Version/persist the new executable stopping policy and source identity through a separately reviewed transition; preserve original manifests, journal/sampler state, completed trials and the existing checkpoint-only patch rather than overwriting it.
+- Reconcile the remaining finite allocation with the measured costs and obtain explicit release authorization. Approval of D2 and this commit alone start no new trial.
+
+No stopping implementation is part of this documentation checkpoint. The current machine policy/hash and registered80-file source bytes remain unchanged; the existing guard rejects unregistered drift. Do not attach a generic trainer early-stop callback that returns an incomplete trial, or wrap Hyperband with `PatientPruner` and claim an independent OR rule.
+
+**Verification,2026-10-21:** all300 repository tests pass again in81.047 seconds, including the24 focused benchmark tests. The read-only transition verifier again confirms all78 original audit inputs, all five active source identities and one COMPLETE/99 remaining per study, with unchanged journal/sampler bytes. Relative documentation links/anchors, retained history and protected user-file hashes pass. These are persistence/compatibility and documentation checks, not D2 implementation tests or new campaign training; the existing real test-split check is metadata-only, not predictive evaluation.
+
 ### First-release review — 2026-10-20
 
 All five predeclared trial0 runs finished normally; the queue stopped at `awaiting_cost_review` on2026-10-19 at21:01 UTC. The [reviewed result](../experiment_results/phase6_first_release.md) and [reproducible audit](../../src_scratches/phase6_first_release_audit/README.md) verify each journal's single COMPLETE trial, all40 epochs/15,000 updates, exact source/weight/data identities, AP-selected checkpoint and ordered5,996×165 validation export. No additional campaign attempt, image inference or predictive test evaluation was performed during review. The completed training remains counted inside each100-attempt study. All15 focused tests pass again on synthetic CPU/temporary studies;401 documentation links/anchors, retained history, protected hashes and formatting pass. The291-test full-suite result remains the earlier launch checkpoint, not a new full-suite run.
@@ -273,5 +302,7 @@ Required experiment artifacts are a run/study manifest with source and configura
 | 2026-10-13 | Adopted Phase6-D1 after continuous-GPU availability and explicit fixed-selector reuse; implemented and checked the narrow executable protocol delta | 6.1 **Done**; 6.2 **Pending**. Five bounded fresh studies, separate fixed-reference controls and local panel, global AP/maximizing selection, strict configuration/provenance and non-destructive study continuation. No campaign launched. |
 | 2026-10-18 | Committed 6.1 as `fae4301`; completed prior controls and launched the authorized first full-task release | 6.2 **In progress**. Baseline artifacts/result retained; ResNet18 trial0 running, four later protocols queued.291 tests pass; measured-cost review and full-study selections remain open. |
 | 2026-10-20 | Reviewed all five completed reference trials and measured costs; found the monitored callback did not retain final epoch40 state | Training, selected checkpoints, source identities and validation exports verified;6.2 remains **In progress** at cost review and explicit artifact-disposition/retention-repair gate. No further training or commit; monitor retired. |
+| 2026-10-20 | Implemented the authorized final-state persistence repair and registered its additive source/exception transition | Independent best/latest states and300 tests pass; all original evidence/journal/sampler preserved. Five studies load with one COMPLETE trial/99 remaining each. Early/plateau stopping is a documented proposal only; no further campaign release or commit. |
+| 2026-10-21 | Recorded the user's2026-10-20 approval as Phase6-D2 | Additional plateau pruning is binding prospective policy, with explicit implementation/transition acceptance above. No stopping code, executable policy, completed trial or campaign allocation changed;6.2 remains In progress. |
 
-The planning and cost checkpoints remain retained history. The completed6.1 checkpoint supersedes their open choices, with scientific authority in Phase6-D1 and runtime behavior in its implementation owner. The first release is finished; the reviewed cost/artifact exception now gates another release and later study selection.
+The planning and cost checkpoints remain retained history. The completed6.1 checkpoint supersedes their open choices; Phase6-D2 now amends future full-task stopping prospectively. The first-release exception is explicitly retained and future persistence/source transition is repaired. D2 implementation/transition and the next cost release still gate additional training and later study selection.

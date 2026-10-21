@@ -1,8 +1,8 @@
 # Comparative model and vocabulary-reduction methodology
 
 **Created:** 2026-08-12
-**Last updated:** 2026-10-13
-**Status:** Active and binding design through D6 and its P6 projection freeze. D4 remains the immutable original pilot-frozen profile; D6 adopts the reviewed, outcome-informed inclusion policy without changing the training campaign or default vocabulary. P6 publishes one shared selected vocabulary. The later benchmark also requires the independent Subphase 4A model portfolio.
+**Last updated:** 2026-10-21
+**Status:** Active and binding design through D6/P6 and Phase 6-D1/D2. D4 remains the immutable original pilot-frozen profile; D6 changes neither the training campaign nor the default vocabulary. Phase 6-D2 approves prospective additional plateau pruning; implementation and activation are still pending. The independent Subphase 4A portfolio and shared vocabulary remain unchanged.
 
 ## Purpose and scope
 
@@ -23,6 +23,8 @@ and 7. It prescribes the model-side `M_ref` protocol under 4B-D1 and its
 campaign-side protocol under Phase 3-D1, and the original numerical profile
 gates under D4 and the revised inclusion policy under D6. P6 freezes the
 shared selected vocabulary below. [Phase 6-D1](#phase-6-d1--finite-training-and-comparison-protocol) freezes the later training budget and the prospective fixed-reference control amendment.
+
+[Phase 6-D2](#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) amends only future full-task HPO stopping, preserving the original D1 execution record and completed-trial eligibility.
 
 ## Research questions
 
@@ -622,6 +624,8 @@ vocabulary decisions as uncertain.
 
 **Adopted:** 2026-10-13, before any new benchmark/control training. The user permits continuous GPU use without a total hour/day ceiling, asks for finite limits comparable to DINOv2, and explicitly chooses reuse of the fixed selector for Q3. This decision fixes search opportunity, not a promised calendar duration. The machine-readable counterpart is [`phase6_protocol_v1.json`](../../src/training/resources/phase6_protocol_v1.json); the [runtime contract](../implementation_details/benchmark_training.md) owns executable behavior and recovery limits.
 
+**Prospective stopping amendment:** [D2 below](#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) supersedes D1's prohibition on an independent plateau guard for future full-task HPO only. The original recipe below and its executable v1 manifest remain retained history/current runtime respectively until the explicit activation gate passes.
+
 ### Matrix and historical disposition
 
 | Protocol | Full task / Q1 | Selected task / Q2 | Additional local panel / Q4 |
@@ -684,6 +688,39 @@ In 6.5, after selecting weights, fit one positive global temperature on validati
 
 For each full, selected or random evaluation task, fit operating points on that task's validation columns. A projected full model keeps its **same weights/checkpoint** but refits T/threshold on the projected validation task, just as its reduced comparator does. Thus F1 gains include task-specific operating-point fitting, whereas AP gains remain ranking-only. No per-label temperatures/thresholds or fitting on test. The same validation set is used for selection and fitting; its metrics are selection-influenced diagnostics, not unbiased final estimates. Phase7 applies the frozen artifacts once to test and reports the paired metrics and single-seed limitation.
 
+## Phase 6-D2 — Conservative plateau pruning for full-task HPO
+
+**Adopted:** 2026-10-20 by explicit user approval, after the five reference trials and cost review but before any trial1 release. **Recorded:** 2026-10-21. **Execution status:** approved, not implemented or activated. This is a prospective, cost-informed amendment, not an uninformed preregistration or a retrospective change to the completed trials.
+
+### Approved rule and applicability
+
+Keep D1's Hyperband unchanged and add an **independent OR guard** to subsequent full-vocabulary HPO attempts in each of the five studies. The guard uses only the existing epoch-global validation macro AP; it adds no per-label selection or training metric.
+
+| Field | Approved policy |
+| --- | --- |
+| Monitor | Maximize complete-validation `val_macro_ap`, checked once per completed epoch. |
+| Earliest additional stop | After20 completed epochs, never before. Patience uses epoch-validation checks, not batches or optimizer updates. |
+| Plateau tolerance | Patience10 validation checks without an improvement greater than absolute `min_delta=1e-4` AP. Track the tolerance-based best and no-improvement history from the first validation check; the20-epoch floor gates termination, not metric collection. |
+| Incumbent protection | Apply the additional stop only when the trial's strict best observed AP is not above the best eligible COMPLETE trial's AP in the same study. If there is no eligible incumbent, this guard does not fire. This protection does not veto ordinary Hyperband pruning. |
+| State/accounting | Record `PRUNED`, reason, completed epoch, optimizer updates and consumed time; never label plateau termination `COMPLETE` or `FAIL`. It consumes its existing attempt within100, without replacement. |
+| Exclusions | Never apply this guard to trial0 or at the completed40-epoch boundary. Do not apply it to Q2 transfers, the fixed-selector Q3 recipe or Q4 local panels. |
+
+The tolerance-based plateau state is distinct from **strict** best-AP checkpointing: every strict AP improvement still updates the selected checkpoint, including improvements smaller than `min_delta`. Only COMPLETE40-epoch/15,000-update trials can supply `H_base`; early-pruned best weights do not become eligible winners. The original five COMPLETE trials, their AP-selected artifacts and accepted missing-final exception remain unchanged. The40-epoch horizon, scheduler,100-attempt opportunity, search space, seeds, physical/effective batches and remaining D1 comparison/operating-point rules are unchanged.
+
+### Rationale, evidence and limitations
+
+[Optuna3.6.2 Hyperband](https://optuna.readthedocs.io/en/v3.6.2/reference/generated/optuna.pruners.HyperbandPruner.html) allocates resources across configurations and brackets. A plateau rule instead uses within-trial improvement history, so it can stop a non-leading stagnant attempt that Hyperband lets continue. The20/10/1e-4 values and incumbent condition are **project trade-offs**, not standard or optimal settings established by these sources, nor parameters tuned against the five observed curves.
+
+[Optuna3.6.2 PatientPruner](https://optuna.readthedocs.io/en/v3.6.2/reference/generated/optuna.pruners.PatientPruner.html) gates its wrapped pruner with a patience condition; with no wrapped pruner it supplies an early-stop-style criterion. Consequently, `PatientPruner(Hyperband)` is not the adopted independent OR composition and could delay existing Hyperband decisions. [Lightning2.6.1 EarlyStopping](https://github.com/Lightning-AI/pytorch-lightning/blob/2.6.1/src/lightning/pytorch/callbacks/early_stopping.py) requests trainer termination; using it alone would not supply the required Optuna `PRUNED` accounting. Versioned primary sources were rechecked on2026-10-21; they justify the mechanism distinction, not the project's numerical policy.
+
+The guard can still discard a late improver as cosine LR declines; incumbent protection only reduces that risk. It does not prove that skipped epochs are useless, guarantee savings or equal completed-trial counts, or turn selection-influenced validation metrics into unbiased final estimates. Apply the same rule to all five studies and report actual costs and both pruning reasons.
+
+### Activation gate and unchanged evidence
+
+The [execution plan](../plans/training_hyperparameter_tuning.md#additional-plateau-stopping--approved-implementation-pending) owns implementation and release tasks. Before any further attempt, implement and test the independent guard, persist/version its exact machine-readable policy and trial provenance, and establish an explicit source/study-policy transition from the retained v1 studies. Preserve original policy/source snapshots, journals, sampler state, trial numbers and the separate `final-checkpoint-v1` repair record; do not rewrite that record to absorb a scientific change.
+
+The current [`phase6_protocol_v1.json`](../../src/training/resources/phase6_protocol_v1.json), SHA-256 `4a5fe311e083594de1d872cd3eea3701e8bfa641bfa7753c9b8f3d40d45d756c`, and executable stopping are unchanged by this documentation approval. No new trial budget release, new training or predictive test evaluation is authorized here. A later release still requires its explicit cost/allocation decision.
+
 ## Rejected primary designs
 
 | Design | Why it is not the primary methodology |
@@ -718,13 +755,15 @@ replace the threshold-free selection and validation-only operating-point rules.
 
 **Phase 6-D1 amendment — 2026-10-13:** the [adopted finite protocol](#phase-6-d1--finite-training-and-comparison-protocol) supersedes the handoff's open budget/reference choices. Five fresh matched-opportunity studies replace historical winners in the prospective comparison; the384-pixel fixed-selector reuse for Q3 is explicit and distinct from experimental224. Q1–Q4, the published vocabulary and original Phase 3 evidence remain unchanged. Campaign execution and measured cost releases belong to the dedicated plan, not this scientific freeze.
 
+**Phase 6-D2 approval — 2026-10-20, recorded2026-10-21:** the [prospective plateau guard](#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) is adopted for future full-task HPO, without changing COMPLETE40 eligibility or the completed five reference runs. Implementation, explicit policy/source transition and the next cost release remain open; approval is not activation.
+
 | Owner | Required decision or artifact | Status |
 | --- | --- | --- |
 | Subphase 4A | Define and justify two established model families and one custom attention architecture to compare. | Done: established pair and custom P2-S adopted in the [portfolio](experimental_model_portfolio.md); the [completed 4A plan](../plans/experimental_model_research.md) hands implementation gates to Phase 5. Q1–Q4 are unchanged. |
 | Subphase 4B | Choose, verify, and freeze M_ref. | Done: 4B-D1 freezes the EfficientNetV2-S model-side selector and [`reference_selector_research.md`](../plans/reference_selector_research.md) records the completed evidence and handoff. |
 | Macro-section 3 | Implement the frozen selector workflow and produce versioned V_selected evidence. | Done through P7: D6 uncertainty, shared projection, opt-in runtime integration and retention checks are complete. Original D4 evidence and the full default remain preserved; the [completed plan](../plans/recognizable_ingredient_selection.md) owns the execution record. |
 | Macro-section 5 | Implement and technically qualify the adopted experiment-model protocols. | Done on 2026-10-07: all three protocols passed measured full/selected CUDA, persistence and consumer gates. The [completed plan](../plans/additional_model_implementation.md) and [readiness constraints](../implementation_details/experimental_model_contract.md#phase-6-comparison-constraints) supply the handoff. |
-| Macro-section 6 | Freeze HPO objectives/budgets, random-control count and matching rules, transfer runs, and any equal local-adaptation panel. | In progress at [6.1 planning](../plans/training_hyperparameter_tuning.md); historical reuse and budget/protocol decisions remain open. Campaign execution is deferred until that freeze. |
+| Macro-section 6 | Execute frozen studies/transfers/controls and operating-point handoff; implement D2 before a further approved full-study release. | 6.1 Done;6.2 In progress after the first five COMPLETE trials. Checkpoint/source repair is verified; D2 activation, next cost release and remaining HPO are pending in the [execution plan](../plans/training_hyperparameter_tuning.md). |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
 
 ## Related documentation

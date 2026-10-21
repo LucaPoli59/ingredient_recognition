@@ -1,8 +1,8 @@
 # Phase 6.2 first full-task release and measured-cost review
 
 **Created:** 2026-10-20
-**Last updated:** 2026-10-20
-**Status:** Reviewed provisional validation/cost evidence; training and selected exports verified, final-checkpoint retention gate failed
+**Last updated:** 2026-10-21
+**Status:** Reviewed provisional validation/cost evidence; original missing-final exception retained and explicitly accepted, future runtime repair verified separately
 
 ## Purpose and scope
 
@@ -93,6 +93,10 @@ Do not relabel a best checkpoint as final, change COMPLETE to FAIL, recreate a t
 ## Handoff and limitations
 
 The user must review the measured costs and the missing-final disposition before more attempts are released. All remaining99/model are unstarted. No6.3 training, selector rerun, vocabulary change, calibration, predictive test evaluation, source repair or new commit occurred in this review. The original campaign, journals, sampler snapshots, checkpoints, source inventories and user edits are preserved.
+
+**Subsequent user-authorized disposition,2026-10-20:** after this original audit, the user requested the checkpoint fix and explicit source-transition step. Future independent best/latest full saves and the additive `final-checkpoint-v1` transition are now verified in the [runtime owner](../implementation_details/benchmark_training.md#checkpoint-repair-and-provenance-verification--2026-10-20). The five trial0 runs remain COMPLETE/eligible with their missing final states explicitly accepted; no epoch40 state is fabricated and no trial is rerun. The original78 reviewed input hashes, journals and samplers remain byte-identical, as checked by the [separate transition verifier](../../src_scratches/phase6_first_release_audit/verify_runtime_patch.py) and [retained report](../../src_scratches/phase6_first_release_audit/runtime_patch_verification.json). Original audit helper/summary and quantitative findings above are unchanged.300 repository tests pass; this is future persistence acceptance, not new campaign or comparative evidence.
+
+**Subsequent stopping-policy approval,2026-10-20, recorded2026-10-21:** the user adopted [Phase 6-D2](../project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) for future full-task attempts. This changes no quantitative finding or original trial above. The [execution plan](../plans/training_hyperparameter_tuning.md#additional-plateau-stopping--approved-implementation-pending) retains the unmet guard implementation, explicit policy/source transition and next cost-release gates; no additional training is released by approval.
 
 Reproduce the read-only review from the repository root in its ML environment:
 

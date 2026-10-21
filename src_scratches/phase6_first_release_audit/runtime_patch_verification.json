@@ -1,0 +1,86 @@
+{
+  "campaign": "experiments/benchmark_v1/phase62-20261018-v1",
+  "policy_hash": "4a5fe311e083594de1d872cd3eea3701e8bfa641bfa7753c9b8f3d40d45d756c",
+  "original_review_sha256": "2a8eaa78edbe26b48437bba35f1538685fa5d943242aaa8e2b6b44b9d955cd0e",
+  "original_inputs_verified": 78,
+  "models": [
+    {
+      "model_id": "resnet18_anchor",
+      "trials_started": 1,
+      "remaining": 99,
+      "source_identity": {
+        "runtime_patch": "final-checkpoint-v1",
+        "inventory": "runtime_patches/final-checkpoint-v1/source_inventory.json",
+        "inventory_sha256": "e0b9586d56367e42206b2e27cbfaec043278a69e78edcd4368e0c104035cc50b",
+        "amendment_sha256": "22a6aa96087b1f45b994071c7181974b9b5cc62fef89f3050c233b8a6b038953"
+      },
+      "source_entries": 80,
+      "source_zip_sha256": "a35b867a6d489e1eef4a2871680536f86978944139f185697a8dfa973129dff8",
+      "journal_sha256": "0b818eea1382e046b73d5549b1606c4e86e978a6a5fab84ab694c5dfdd289eda",
+      "sampler_sha256": "77f1efcf68f4d0373877fdf87649b279c9dc97f60a8fbe1a4885d8b9b7d16097"
+    },
+    {
+      "model_id": "dinov2_b14_anchor",
+      "trials_started": 1,
+      "remaining": 99,
+      "source_identity": {
+        "runtime_patch": "final-checkpoint-v1",
+        "inventory": "runtime_patches/final-checkpoint-v1/source_inventory.json",
+        "inventory_sha256": "e0b9586d56367e42206b2e27cbfaec043278a69e78edcd4368e0c104035cc50b",
+        "amendment_sha256": "3cd1e6a24d5a32f1c3fcb1a5ae479027c03157440ff41c972b3c30ec14dc7040"
+      },
+      "source_entries": 80,
+      "source_zip_sha256": "a35b867a6d489e1eef4a2871680536f86978944139f185697a8dfa973129dff8",
+      "journal_sha256": "e55777346413194da37835c0714d0377eb032459719f53b65c01cd51cc91f569",
+      "sampler_sha256": "77f1efcf68f4d0373877fdf87649b279c9dc97f60a8fbe1a4885d8b9b7d16097"
+    },
+    {
+      "model_id": "efficientnet_v2_s",
+      "trials_started": 1,
+      "remaining": 99,
+      "source_identity": {
+        "runtime_patch": "final-checkpoint-v1",
+        "inventory": "runtime_patches/final-checkpoint-v1/source_inventory.json",
+        "inventory_sha256": "e0b9586d56367e42206b2e27cbfaec043278a69e78edcd4368e0c104035cc50b",
+        "amendment_sha256": "6bb90b7a97c1936a0ccc6db63e02731ab941fb7dcb45c83bda695c9a10d8efad"
+      },
+      "source_entries": 80,
+      "source_zip_sha256": "a35b867a6d489e1eef4a2871680536f86978944139f185697a8dfa973129dff8",
+      "journal_sha256": "ddfff413dd7ff8ef2b90bd0f928bbe2cd5d688e9226a3c8e8161d9d12ad88c75",
+      "sampler_sha256": "77f1efcf68f4d0373877fdf87649b279c9dc97f60a8fbe1a4885d8b9b7d16097"
+    },
+    {
+      "model_id": "maxvit_t",
+      "trials_started": 1,
+      "remaining": 99,
+      "source_identity": {
+        "runtime_patch": "final-checkpoint-v1",
+        "inventory": "runtime_patches/final-checkpoint-v1/source_inventory.json",
+        "inventory_sha256": "e0b9586d56367e42206b2e27cbfaec043278a69e78edcd4368e0c104035cc50b",
+        "amendment_sha256": "db58aeeef911adcf2cb7bfb8dcdb61367371dae347aa5eeb7e72780664a4e90a"
+      },
+      "source_entries": 80,
+      "source_zip_sha256": "a35b867a6d489e1eef4a2871680536f86978944139f185697a8dfa973129dff8",
+      "journal_sha256": "51f0949097ccd39bf74c40bed4b1a518a04e93b5a8cff98b21660fad7cf331e1",
+      "sampler_sha256": "77f1efcf68f4d0373877fdf87649b279c9dc97f60a8fbe1a4885d8b9b7d16097"
+    },
+    {
+      "model_id": "p2_s",
+      "trials_started": 1,
+      "remaining": 99,
+      "source_identity": {
+        "runtime_patch": "final-checkpoint-v1",
+        "inventory": "runtime_patches/final-checkpoint-v1/source_inventory.json",
+        "inventory_sha256": "e0b9586d56367e42206b2e27cbfaec043278a69e78edcd4368e0c104035cc50b",
+        "amendment_sha256": "eb09d4b33f42e62782ab1516eb3b1d1e619a8a7000c0c0bf30928a524450675a"
+      },
+      "source_entries": 80,
+      "source_zip_sha256": "a35b867a6d489e1eef4a2871680536f86978944139f185697a8dfa973129dff8",
+      "journal_sha256": "fd571ffa56f2740fb75a89e8178c04c9696ddf014fa25dd22f4222d88974e04e",
+      "sampler_sha256": "77f1efcf68f4d0373877fdf87649b279c9dc97f60a8fbe1a4885d8b9b7d16097"
+    }
+  ],
+  "training_started": false,
+  "new_trials_created": false,
+  "test_metadata_or_images_read": false
+}

@@ -110,11 +110,23 @@ class BenchmarkProtocolTests(unittest.TestCase):
             checkpoint = trainer.checkpoint_callback
             self.assertEqual(checkpoint.monitor, "val_macro_ap")
             self.assertEqual(checkpoint.mode, "max")
-            self.assertTrue(Path(checkpoint.last_model_path).exists())
+            self.assertEqual(Path(trainer.last_checkpoint_path).name, "last.ckpt")
             self.assertTrue((Path(directory) / "logs/0/metrics.csv").is_file())
             self.assertEqual(len((Path(directory) / "epoch_costs.jsonl").read_text().splitlines()), 40)
             saved = torch.load(checkpoint.best_model_path, map_location="cpu", weights_only=False)
             self.assertEqual(saved["epoch"], 0)  # Equal AP keeps the first epoch, not the last.
+            final = torch.load(trainer.last_checkpoint_path, map_location="cpu", weights_only=False)
+            self.assertEqual(final["epoch"], 39)
+            self.assertEqual(final["global_step"], 40)
+            self.assertTrue(final["optimizer_states"])
+            self.assertTrue(final["lr_schedulers"])
+            self.assertTrue(any(not torch.equal(final["state_dict"][name], value)
+                                for name, value in saved["state_dict"].items()))
+            final_clone = BenchmarkLGNM.load_from_config(dict(module.hparams), initialize_pretrained=False)
+            final_clone.load_weights_from_checkpoint_data(final)
+            for name, value in final_clone.state_dict().items():
+                torch.testing.assert_close(value, final["state_dict"][name])
+            self.assertEqual(len(list((Path(directory) / "checkpoints").glob("*.ckpt"))), 2)
             clone = BenchmarkLGNM.load_from_config(dict(module.hparams), initialize_pretrained=False)
             clone.load_weights_from_checkpoint_data(saved)
             for a, b in zip(module.parameters(), clone.parameters()):

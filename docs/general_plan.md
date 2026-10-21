@@ -1,10 +1,10 @@
 # General project plan
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-10-20
+**Last updated:** 2026-10-21
 **Overall status:** In progress  
-**Current macro-phase:** Training and hyperparameter tuning — first-release review
-**Current focus:** Work package 6.2 is In progress: the five first full-task trials completed40 epochs/15,000 updates each, with selected validation exports and provenance verified. The queue is `awaiting_cost_review`; no other attempt is released. The [reviewed result](experiment_results/phase6_first_release.md) records measured costs and missing final checkpoint states, requiring explicit disposition and future retention repair before continuation. Historical studies and the fixed Q3 selector keep their declared roles; final test evaluation remains unavailable.
+**Current macro-phase:** Training and hyperparameter tuning — approved stopping policy awaiting implementation
+**Current focus:** Work package 6.2 is In progress: five completed trials/exports retain their accepted missing-final exception, with future persistence/source repair verified. The user approved prospective [Phase6-D2 plateau pruning](project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo); implementation and a separate policy/source transition remain pending. The queue stays `awaiting_cost_review`, no further attempt is released and executable stopping is unchanged. Historical studies, fixed Q3 and final-test isolation retain their roles.
 
 ## Purpose
 
@@ -36,7 +36,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Done** | [All three adapters and measured readiness](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) pass useful full/selected CUDA, strict offline restoration and real consumer checks; the completed plan hands off constraints without launching a benchmark. |
-| 6 | Training and hyperparameter tuning | **In progress** | [6.1 is complete;6.2 awaits first-release review](plans/training_hyperparameter_tuning.md). Five completed trials/exports and measured costs are retained; missing final states require disposition/retention repair before more attempts. |
+| 6 | Training and hyperparameter tuning | **In progress** | [6.2 persistence/source repair is complete](plans/training_hyperparameter_tuning.md); D2 stopping policy approved. Guard implementation/transition, next cost release and remaining full-study tuning are outstanding. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
 
@@ -310,7 +310,7 @@ Maintain the [qualification CLI and contract](implementation_details/experimenta
 
 ## 6. Training and hyperparameter tuning
 
-**Status:** In progress — first-release cost review and artifact disposition required
+**Status:** In progress — checkpoint/source repair complete; D2 approved, activation and cost release pending
 
 This macro-section covers baseline training, controlled model training, hyperparameter search, run selection, and reproducibility under the frozen benchmark.
 
@@ -341,14 +341,14 @@ The [training/HPO plan](plans/training_hyperparameter_tuning.md) owns lower-leve
 | Work package | Status | Completion gate and next action |
 | --- | --- | --- |
 | 6.1 Historical reuse, matrix and budget/protocol freeze | **Done** | Phase 6-D1 and executable configurations/metric selection verified: five fresh 100-attempt/40-epoch studies, fixed-selector Q3 reuse, local panel and no total GPU-hour ceiling. Historical evidence remains separate. |
-| 6.2 Full-vocabulary baselines and tuning | **In progress** | Prior controls and five COMPLETE trials/ordered validation exports verified; queue awaits cost review. Resolve missing final checkpoint states and future retention before more attempts; full-study selection remains outstanding. |
+| 6.2 Full-vocabulary baselines and tuning | **In progress** | Five COMPLETE trials/exports retained with accepted missing-final exception; future persistence/source repair verified. D2 plateau policy approved; implement/version its separate transition and obtain cost release before more attempts. Full-study selection remains outstanding. |
 | 6.3 Selected-vocabulary transfers and random controls | **Deferred** | Requires relevant full-task selections and the frozen control design. Complete matched same-label full/reduced comparisons and reference-model random-vocabulary gains. |
 | 6.4 Selected-task local adaptation | **Deferred** | Included by Phase 6-D1: four additional LR/decay configurations per category after the transferred run. Keep Q4 separate from reference controls. |
 | 6.5 Operating-point freeze and Phase 7 handoff | **Deferred** | Requires mandatory campaign outputs. Freeze validation-only calibration/thresholds and the complete artifact/comparison ledger before final test evaluation. |
 
 ### Resume gate
 
-Data/vocabulary, required model engineering and6.1 protocol/configuration gates are satisfied. The user-authorized first6.2 release finished training/export and reached its cost-review boundary. The [artifact review](experiment_results/phase6_first_release.md#failed-final-checkpoint-gate) found that each last file duplicates an earlier best state, despite completed training. User cost review, explicit exception disposition and a provenance-preserving future retention repair gate another release; do not recreate trials or retrain automatically.
+Data/vocabulary, required model engineering and6.1 protocol/configuration gates are satisfied. The first6.2 release finished training/export and reached its cost boundary. The user-authorized [future persistence and additive source repair](implementation_details/benchmark_training.md#explicit-checkpoint-repair-source-transition) preserves the five completed trials and explicitly accepts their missing-final exception without fabricating states or retraining. All five retained studies load with one COMPLETE trial/99 remaining. [D2](project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) is now approved prospectively; guard implementation, an explicit new policy/source transition and another cost/allocation release still gate further training. The executable v1 policy is unchanged.
 
 ### Completion gate
 
@@ -356,7 +356,7 @@ Every required baseline and shortlisted model in the adopted matrix has accounte
 
 ### Next action
 
-Review the [completed first-release cost/artifact evidence](experiment_results/phase6_first_release.md) with the user under the [dedicated plan](plans/training_hyperparameter_tuning.md#first-release-review--2026-10-20). No further trial is released before cost approval and resolution of the final-checkpoint gate. The [runtime contract](implementation_details/benchmark_training.md) records the actual retention limitation. MaxViT has the largest observed full-run cost; epochs are not extended automatically. Routine monitoring is retired while user direction is required.
+Implement the [approved D2 plateau safeguard and its acceptance gates](plans/training_hyperparameter_tuning.md#additional-plateau-stopping--approved-implementation-pending), with an explicit separate policy/source transition. Then obtain the next finite allocation using the measured first-release costs; this documentation approval/commit starts no trial. Preserve COMPLETE40 eligibility, original evidence and the completed checkpoint-only repair. Routine campaign monitoring remains retired.
 
 ## 7. Results comparison
 
@@ -468,7 +468,7 @@ project foundation [Done] -> data [Done]
 data -> 4A experimental-model research [Done] -> additional models [Done: 5.1–5.5]
 data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
-additional models + ingredient selection -> training and HTuning [In progress: 6.1 Done; 6.2 first-release cost/artifact review] -> results comparison [Deferred] -> thesis completion
+additional models + ingredient selection -> training and HTuning [In progress: 6.1 Done; 6.2 runtime repair Done, D2 activation/cost release pending] -> results comparison [Deferred] -> thesis completion
 
 Thesis outline and stable chapters may progress in parallel.
 ```
@@ -567,6 +567,8 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-13 | Training protocol freeze | Continuous-GPU allowance and explicit fixed-selector reuse incorporated in Phase6-D1; finite five-protocol matrix, AP selection and executable opt-in path checked with focused/repository tests. Historical evidence preserved; no real campaign launched. | 6.1 **Done**,6.2 **Pending**; Macro-section6 remains **In progress** | [Completed checkpoint](plans/training_hyperparameter_tuning.md#completed-protocolconfiguration-checkpoint--2026-10-13), [runtime](implementation_details/benchmark_training.md) |
 | 2026-10-18 | Full-task training first release | Committed6.1 as `fae4301`, completed train-fitted validation priors and launched the authorized serial five-model reference release with retained configuration/source identities and ordered validation export. All291 repository tests pass. | 6.2 **In progress**; Macro-section6 **In progress**; first-release cost review remains open | [Launch checkpoint](plans/training_hyperparameter_tuning.md#first-release-checkpoint--2026-10-18), [baseline result](experiment_results/phase6_validation_baselines.md), [runtime](implementation_details/benchmark_training.md) |
 | 2026-10-20 | Full-task first-release review | Verified five COMPLETE40-epoch trials, AP-selected checkpoints and ordered validation exports; recorded28.36 h release wall time. Payload inspection found all last files duplicate earlier best states rather than final40-epoch states. Preserved all original evidence, stopped at the declared cost boundary and retired monitoring. | 6.2 and Macro-section6 remain **In progress**; user cost review, explicit artifact disposition and future retention repair required before more attempts | [Reviewed result](experiment_results/phase6_first_release.md), [review checkpoint](plans/training_hyperparameter_tuning.md#first-release-review--2026-10-20), [runtime limitation](implementation_details/benchmark_training.md#first-release-artifact-verification-and-retention-limitation--2026-10-20) |
+| 2026-10-20 | Training persistence/source repair | Implemented independent best/latest full checkpoints and registered the authorized additive source/exception transition on all five studies. All300 tests and real read-only study/source/accounting checks pass; original evidence and trial numbers remain unchanged. Additional plateau stopping remains a proposal only. | 6.2 and Macro-section6 remain **In progress**; runtime repair **Done**, next stopping/cost release decision open; no additional campaign trial | [Runtime/source contract](implementation_details/benchmark_training.md#explicit-checkpoint-repair-source-transition), [execution checkpoint](plans/training_hyperparameter_tuning.md#runtime-persistencesource-amendment-checkpoint--2026-10-20) |
+| 2026-10-21 | Full-task stopping-policy adoption | Recorded the user's2026-10-20 approval of prospective D2 plateau pruning, preserving Hyperband, COMPLETE40 eligibility and the five original trials. Runtime activation and a separate policy/source transition remain pending; no further attempt was released. | 6.2 and Macro-section6 remain **In progress**; stopping decision **Done**, implementation/cost release next | [D2 decision](project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo), [execution acceptance](plans/training_hyperparameter_tuning.md#additional-plateau-stopping--approved-implementation-pending) |
 
 ## Tracker maintenance rules
 

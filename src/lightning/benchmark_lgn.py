@@ -120,8 +120,13 @@ class BenchmarkTrainer(lgn.Trainer):
         self.debug = False
         save_dir = Path(save_dir)
         checkpoint = ModelCheckpoint(dirpath=save_dir / "checkpoints", monitor=MONITOR, mode="max",
-                                     save_top_k=1, save_last=True, every_n_epochs=1,
+                                     save_top_k=1, save_last=False, every_n_epochs=1,
                                      save_on_train_epoch_end=False, filename="epoch={epoch}-map={val_macro_ap:.8f}")
+        # An independent unmonitored callback saves every epoch, even when AP falls.
+        self._latest_checkpoint = ModelCheckpoint(
+            dirpath=save_dir / "checkpoints", monitor=None, save_top_k=1, save_last=False,
+            every_n_epochs=1, save_on_train_epoch_end=False, filename="last",
+            enable_version_counter=False, save_weights_only=False)
         extra = kwargs.pop("callbacks", [])
         for name in ("limit_train_batches", "limit_val_batches"):
             if name in kwargs and kwargs[name] != 1.0:
@@ -132,8 +137,13 @@ class BenchmarkTrainer(lgn.Trainer):
                          num_sanity_val_steps=0, benchmark=False, deterministic="warn",
                          default_root_dir=str(save_dir / "scratch"), logger=logger,
                          callbacks=extra + [EpochCostLedger(save_dir / "epoch_costs.jsonl")]
-                         + ([EpochPruning(trial)] if trial is not None else []) + [checkpoint],
+                         + ([EpochPruning(trial)] if trial is not None else [])
+                         + [checkpoint, self._latest_checkpoint],
                          **kwargs)
+
+    @property
+    def last_checkpoint_path(self):
+        return self._latest_checkpoint.best_model_path
 
     @classmethod
     def load_from_config(cls, config, grad_accum=1, **kwargs):
@@ -151,5 +161,10 @@ class BenchmarkTrainer(lgn.Trainer):
         best = self.checkpoint_callback.best_model_path
         if not best:
             raise ValueError("completed benchmark fit has no retained AP-selected checkpoint")
+        final = torch.load(self.last_checkpoint_path, map_location="cpu", weights_only=False)
+        if (final["epoch"] + 1 != self.current_epoch or final["global_step"] != self.global_step
+                or not final.get("optimizer_states") or not final.get("lr_schedulers")):
+            raise ValueError("benchmark last checkpoint does not contain the final full training state")
+        del final
         model.load_weights_from_checkpoint_data(torch.load(best, map_location="cpu", weights_only=False))
         return model

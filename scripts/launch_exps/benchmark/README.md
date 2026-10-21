@@ -1,7 +1,7 @@
 # Phase 6 benchmark launchers
 
 **Created:** 2026-10-18
-**Last updated:** 2026-10-18
+**Last updated:** 2026-10-20
 
 Run from the main WSL repository with the project's ML Python. The [scientific protocol](../../../docs/project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol), [runtime contract](../../../docs/implementation_details/benchmark_training.md) and [execution plan](../../../docs/plans/training_hyperparameter_tuning.md) own policy, implementation and state.
 
@@ -17,6 +17,17 @@ The first command prints the plan. The second computes validation prior controls
 Artifacts live below `experiments/benchmark_v1/NEW_CAMPAIGN/`: `campaign_queue.json`, `baselines/`, separate model study journals/configurations/source inventories, epoch costs, best/last checkpoints and ordered validation exports. A terminal interruption is preserved for explicit recovery, without automatic retraining.
 
 ## Later individual releases
+
+### Reviewed checkpoint-only source repair
+
+```bash
+python scripts/launch_exps/benchmark/register_runtime_patch.py --run-name phase62-20261018-v1
+python scripts/launch_exps/benchmark/register_runtime_patch.py --run-name phase62-20261018-v1 --apply --accept-missing-final
+```
+
+The first command only inspects. The second adds the reviewed `final-checkpoint-v1` source snapshot/amendment to every first-release study, explicitly retaining trial0's missing-final exception without rewriting its original manifest, journal, sampler or artifacts. It is idempotent for identical registered sources; unrelated changes fail. It does not train, release budget or enable early stopping. See the [source-transition contract](../../../docs/implementation_details/benchmark_training.md#explicit-checkpoint-repair-source-transition). Future attempts bind their source identity separately. Use `trainer.last_checkpoint_path` for the latest full state; the monitored callback only owns best-AP selection.
+
+### Training after cost/policy approval
 
 ```bash
 python scripts/launch_exps/benchmark/train.py

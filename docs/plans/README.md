@@ -1,13 +1,13 @@
 # Implementation plans
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-10-20
+**Last updated:** 2026-10-21
 
 This directory contains the execution plans for concrete project implementations. These plans translate work packages from the project-wide [`general_plan.md`](../general_plan.md) into bounded technical tasks, verification steps, dependencies, and completion criteria.
 
 ## Active plans
 
-- [`training_hyperparameter_tuning.md`](training_hyperparameter_tuning.md) owns Phase6 planning and execution:6.1 is frozen; the first five6.2 trials/validation exports are verified, with measured-cost review and missing-final-checkpoint disposition/repair required before remaining attempts.6.2 remains In progress. Later selected/random transfers, local adaptation and the Phase7 handoff retain their dependencies; no standalone requalification stage is added.
+- [`training_hyperparameter_tuning.md`](training_hyperparameter_tuning.md) owns Phase6 planning and execution:6.1 is frozen; five6.2 trials/exports remain retained with an accepted missing-final exception and verified persistence/source repair. D2 plateau pruning is approved, but implementation/transition, next cost release and remaining tuning stay open;6.2 remains In progress. Later selected/random transfers, local adaptation and Phase7 retain their dependencies; no standalone requalification stage is added.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 

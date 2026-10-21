@@ -1,7 +1,7 @@
 # Experiment results
 
 **Created:** 2026-09-23
-**Last updated:** 2026-10-20
+**Last updated:** 2026-10-21
 
 ## Context and scope
 
@@ -20,7 +20,7 @@ Raw JSON/HTML reports, checkpoints, event files, W&B stores, exhaustive tables, 
 
 ## Files
 
-- [`phase6_first_release.md`](phase6_first_release.md) reviews the five completed40-epoch reference trials, verified selected validation exports, measured costs and conditional study arithmetic. It explicitly records missing final checkpoint states and the user-review gate; it is not completed HPO or a final ranking.
+- [`phase6_first_release.md`](phase6_first_release.md) reviews the five completed40-epoch reference trials, verified validation exports, measured costs and conditional study arithmetic. It preserves the accepted missing-final exception and links the subsequent runtime/source repair and prospective D2 approval; stopping activation and another cost release remain open. It is not completed HPO or a final ranking.
 - [`phase6_validation_baselines.md`](phase6_validation_baselines.md) records train-fitted all-negative, prevalence and cuisine controls on full/selected validation tasks, with ordered artifacts and provisional fixed-threshold F1; full-study tuning remains incomplete.
 - [`basic_v5_resnet_dinov2.md`](basic_v5_resnet_dinov2.md) records the exploratory validation comparison of the existing `basic_v5` ResNet18 and frozen-backbone DINOv2-B/14 HPO campaigns. It identifies ResNet18 trial 77 as the stronger observed artifact while retaining the final-benchmark gate.
 - [`basic_v5_resnet_dinov2.png`](basic_v5_resnet_dinov2.png) is the compact, versioned figure derived from the same reviewed comparison.

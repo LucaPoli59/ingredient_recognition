@@ -99,16 +99,8 @@ def select_trial(study):
 
 
 def _source_snapshot(root):
-    repo = Path(__file__).resolve().parents[2]
-    paths = sorted(set(p for directory in ("src", "settings", "scripts/launch_exps/benchmark")
-                       for p in (repo / directory).rglob("*.py")) | set((repo / "src/training/resources").glob("*.json")))
-    inventory = {str(p.relative_to(repo)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
-    with zipfile.ZipFile(root / "source_snapshot.zip", "x", zipfile.ZIP_DEFLATED) as archive:
-        for path in paths:
-            archive.write(path, path.relative_to(repo))
-    write_new(root / "source_inventory.json", {
-        "base_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip(),
-        "files": inventory, "zip_sha256": hashlib.sha256((root / "source_snapshot.zip").read_bytes()).hexdigest()})
+    from src.training.benchmark_provenance import write_source_snapshot
+    write_source_snapshot(root)
 
 
 def environment_identity(model_id):
@@ -152,6 +144,7 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
     from src.training.experimental_runtime import prepare_experimental_config
     from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
     from src.ingredient_selection.runtime import resolve_projection
+    from src.training.benchmark_provenance import validate_study_sources
 
     root = Path(root).resolve()
     if type(additional_trials) is not int or additional_trials < 1:
@@ -166,15 +159,12 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
     config = make_config(model_id, root / "template")
     projection.verify_metadata(config.datamodule["data_dir"])
     environment = environment_identity(model_id)
-    study = open_study(root, model_id, resume=resume)
     if resume:
         if json.loads((root / "environment.json").read_text()) != environment:
             raise ValueError("benchmark environment/original-artifact identity changed")
-        saved = json.loads((root / "source_inventory.json").read_text())
-        repo = Path(__file__).resolve().parents[2]
-        if any(hashlib.sha256((repo / name).read_bytes()).hexdigest() != digest for name, digest in saved["files"].items()):
-            raise ValueError("benchmark sources changed; explicit protocol review is required")
-    else:
+        source_identity = validate_study_sources(root)
+    study = open_study(root, model_id, resume=resume)
+    if not resume:
         _source_snapshot(root)
         write_new(root / "policy.json", policy())
         write_new(root / "environment.json", environment)
@@ -186,6 +176,7 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
                     archive.write(path, path.relative_to(source))
         write_new(root / "data_identity.json", {"metadata_hashes": dict(projection.metadata_hashes),
                                                 "base_class_order": list(projection.base_class_order)})
+        source_identity = validate_study_sources(root)
     if additional_trials > remaining_trials(study):
         raise ValueError("requested release exceeds the remaining fixed budget")
 
@@ -197,6 +188,8 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
         wd = trial.suggest_float("weight_decay", *p["search"]["weight_decay"], log=True)
         folder = root / f"trial_{trial.number}"
         folder.mkdir(exist_ok=False)
+        write_new(folder / "source_identity.json", source_identity)
+        trial.set_user_attr("source_identity", source_identity)
         set_torch_constants()  # canonical spawn; numeric benchmark settings override its legacy defaults below
         lgn.seed_everything(42, workers=True)
         torch.set_float32_matmul_precision("highest")
@@ -217,6 +210,7 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
             trial.set_user_attr("completed_epochs", 40)
             trial.set_user_attr("optimizer_updates", trainer.global_step)
             trial.set_user_attr("best_checkpoint", trainer.checkpoint_callback.best_model_path)
+            trial.set_user_attr("final_checkpoint", trainer.last_checkpoint_path)
             return float(trainer.checkpoint_callback.best_model_score)
         finally:
             trial.set_user_attr("session_wall_seconds", time.monotonic() - start)
