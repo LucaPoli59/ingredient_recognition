@@ -1,0 +1,174 @@
+{
+  "all_negative_label_accuracy": 0.9532693346474228,
+  "cuisine": {
+    "american": {
+      "complete_flavor_fraction": 0.9620463877483076,
+      "complete_flavor_rows": 8669,
+      "rows": 9011
+    },
+    "chinese": {
+      "complete_flavor_fraction": 0.6970974944182585,
+      "complete_flavor_rows": 2810,
+      "rows": 4031
+    },
+    "french": {
+      "complete_flavor_fraction": 0.7515179822512844,
+      "complete_flavor_rows": 3218,
+      "rows": 4282
+    },
+    "greek": {
+      "complete_flavor_fraction": 0.7405620210048255,
+      "complete_flavor_rows": 2609,
+      "rows": 3523
+    },
+    "indian": {
+      "complete_flavor_fraction": 0.543958742632613,
+      "complete_flavor_rows": 2215,
+      "rows": 4072
+    },
+    "italian": {
+      "complete_flavor_fraction": 0.7383148350789432,
+      "complete_flavor_rows": 4723,
+      "rows": 6397
+    },
+    "japanese": {
+      "complete_flavor_fraction": 0.6417201898910919,
+      "complete_flavor_rows": 2298,
+      "rows": 3581
+    },
+    "mexican": {
+      "complete_flavor_fraction": 0.7115544472152951,
+      "complete_flavor_rows": 4280,
+      "rows": 6015
+    },
+    "spanish": {
+      "complete_flavor_fraction": 0.6940104166666666,
+      "complete_flavor_rows": 2132,
+      "rows": 3072
+    },
+    "thai": {
+      "complete_flavor_fraction": 0.5990957045968349,
+      "complete_flavor_rows": 2385,
+      "rows": 3981
+    }
+  },
+  "flavor_complete_fraction": 0.7367663921609507,
+  "flavor_dimensions": {
+    "bitter": {
+      "max": 1.0,
+      "min": 0.0,
+      "numeric_rows": 35340,
+      "outside_zero_one": 0
+    },
+    "meaty": {
+      "max": 1.0,
+      "min": 0.0,
+      "numeric_rows": 35340,
+      "outside_zero_one": 0
+    },
+    "piquant": {
+      "max": 1.0,
+      "min": 0.0,
+      "numeric_rows": 35339,
+      "outside_zero_one": 0
+    },
+    "salty": {
+      "max": 1.0,
+      "min": 0.0,
+      "numeric_rows": 35340,
+      "outside_zero_one": 0
+    },
+    "sour": {
+      "max": 1.0,
+      "min": 0.0,
+      "numeric_rows": 35340,
+      "outside_zero_one": 0
+    },
+    "sweet": {
+      "max": 1.0,
+      "min": 0.0,
+      "numeric_rows": 35340,
+      "outside_zero_one": 0
+    }
+  },
+  "flavor_normalized_key_collision_rows": 0,
+  "flavor_raw_key_schemas": [
+    {
+      "keys": [
+        "bitter",
+        "meaty",
+        "piquant",
+        "salty",
+        "sour",
+        "sweet"
+      ],
+      "rows": 30341
+    },
+    {
+      "keys": [
+        "Bitter",
+        "Meaty",
+        "Piquant",
+        "Salty",
+        "Sour",
+        "Sweet"
+      ],
+      "rows": 14197
+    },
+    {
+      "keys": [
+        "Bitter",
+        "Meaty",
+        "Salty",
+        "Sour",
+        "Sweet"
+      ],
+      "rows": 1
+    }
+  ],
+  "flavor_status": {
+    "absent_or_empty": 3426,
+    "nonempty_incomplete_or_nonnumeric": 9200,
+    "six_numeric_dimensions": 35339
+  },
+  "label_cardinality_histogram": {
+    "3": 3774,
+    "4": 4705,
+    "5": 5540,
+    "6": 5860,
+    "7": 5560,
+    "8": 5127,
+    "9": 4391,
+    "10": 3502,
+    "11": 2931,
+    "12": 2220,
+    "13": 1557,
+    "14": 1096,
+    "15": 663,
+    "16": 446,
+    "17": 266,
+    "18": 167,
+    "19": 65,
+    "20": 36,
+    "21": 25,
+    "22": 8,
+    "23": 14,
+    "24": 5,
+    "25": 3,
+    "26": 3,
+    "34": 1
+  },
+  "label_count": 165,
+  "label_density": 0.046730665352577166,
+  "label_support_min_max": [
+    454,
+    30023
+  ],
+  "mean_labels_per_recipe": 7.710559783175232,
+  "positive_assignments": 369837,
+  "rows": 47965,
+  "scope": "Train metadata only; no images, validation, test, model or GPU accessed",
+  "script_sha256": "88ea00daa4a679d07f59d11fbf1339cf77fe2215a45bc6f96d3cdea65c988c85",
+  "source": "data/input/yummly/train/ingredients_target_v5_metadata.json",
+  "source_sha256": "30fa8d1aec04ca951c5a498f4c08c7f458b8bdfa754dd3a1fb839c9d898c221b"
+}
