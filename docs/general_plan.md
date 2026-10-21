@@ -3,8 +3,8 @@
 **Created:** 2026-08-02  
 **Last updated:** 2026-10-21
 **Overall status:** In progress  
-**Current macro-phase:** Training and hyperparameter tuning — fresh50-attempt campaign preparation
-**Current focus:** Work package6.2 is In progress. The user adopted [Phase6-D3](project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies): five new50-attempt studies from trial0, without importing the first release. Implement the revised policy and D2 plateau guard, then prepare a new campaign. The five completed v1 runs remain separate cost/runtime evidence; their old queue/artifacts stay unchanged. No new study/training is launched by this documentation update. Q3, shared vocabulary and final-test isolation are unchanged.
+**Current macro-phase:** Training and hyperparameter tuning — R1 implementation complete, R2 acceptance next
+**Current focus:** Work package6.2 is In progress. R1 implements the separate v2/50-attempt policy and D2 plateau guard, with31 focused/307 repository tests passing. R2 dedicated acceptance is next, then R3 fresh-campaign preparation; no real v2 study or training exists yet. The five completed v1 runs stay separate cost/runtime evidence, without import. Q3, shared vocabulary and final-test isolation remain unchanged.
 
 ## Purpose
 
@@ -36,7 +36,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Done** | [All three adapters and measured readiness](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) pass useful full/selected CUDA, strict offline restoration and real consumer checks; the completed plan hands off constraints without launching a benchmark. |
-| 6 | Training and hyperparameter tuning | **In progress** | [D3 fresh50-attempt restart](plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) approved for all five models; no old trial import. Revised policy/D2 implementation, new launch and HPO selection are outstanding. |
+| 6 | Training and hyperparameter tuning | **In progress** | [R1 v2/50 policy and plateau guard implemented](plans/training_hyperparameter_tuning.md#r1-completion-checkpoint--2026-10-21). R2 acceptance, R3 preparation, explicit launch and new HPO/selection remain outstanding; no old trial import. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
 
@@ -310,7 +310,7 @@ Maintain the [qualification CLI and contract](implementation_details/experimenta
 
 ## 6. Training and hyperparameter tuning
 
-**Status:** In progress — D3 fresh50-attempt studies approved; implementation and new campaign pending
+**Status:** In progress — R1 implementation Done; R2 acceptance and new campaign pending
 
 This macro-section covers baseline training, controlled model training, hyperparameter search, run selection, and reproducibility under the frozen benchmark.
 
@@ -341,14 +341,14 @@ The [training/HPO plan](plans/training_hyperparameter_tuning.md) owns lower-leve
 | Work package | Status | Completion gate and next action |
 | --- | --- | --- |
 | 6.1 Historical reuse, matrix and budget/protocol freeze | **Done** | Original D1 implementation/verification retained. D2/D3 prospectively amend stopping, budget and cohort; implementation tracked in6.2. Fixed-selector Q3, local panel and data boundaries stay unchanged. |
-| 6.2 Full-vocabulary baselines and tuning | **In progress** | Original five COMPLETE trials remain separate evidence; persistence fix verified. D3 requires five fresh50-attempt studies with D2 guard, no old trial/sampler import. Implement/check the revised policy, prepare/launch a new campaign, then select new-study winners. |
+| 6.2 Full-vocabulary baselines and tuning | **In progress** | R1's distinct v2/50 policy and independent plateau guard pass31 focused/307 tests. Original five trials remain separate evidence. Complete R2 acceptance and R3 preparation before explicit new launch; full HPO/selection still outstanding. |
 | 6.3 Selected-vocabulary transfers and random controls | **Deferred** | Requires relevant full-task selections and the frozen control design. Complete matched same-label full/reduced comparisons and reference-model random-vocabulary gains. |
 | 6.4 Selected-task local adaptation | **Deferred** | Included by Phase 6-D1: four additional LR/decay configurations per category after the transferred run. Keep Q4 separate from reference controls. |
 | 6.5 Operating-point freeze and Phase 7 handoff | **Deferred** | Requires mandatory campaign outputs. Freeze validation-only calibration/thresholds and the complete artifact/comparison ledger before final test evaluation. |
 
 ### Resume gate
 
-Data/vocabulary, model engineering and original6.1 gates are satisfied. The first6.2 release and [persistence/source repair](implementation_details/benchmark_training.md#explicit-checkpoint-repair-source-transition) remain verified historical checkpoints. Under [D3](project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies), the five original trials are outside the new selection cohort and their remaining99/model are not resumed. The50-attempt budget/restart decision is closed; revised machine-policy/D2 implementation, focused acceptance and new-campaign preparation are required before an explicitly authorized launch. No old-to-new migration is needed. Executable v1 is unchanged for now.
+Data/vocabulary, model engineering and original6.1 gates are satisfied. The first release/repair remain historical checkpoints outside the new selection cohort. [R1](plans/training_hyperparameter_tuning.md#r1-completion-checkpoint--2026-10-21) now implements D2/D3 in a distinct v2 policy; the v1 policy/campaign remain unchanged and are not resumed. Budget/restart decisions are closed. Dedicated R2 acceptance, R3 preparation and explicit launch are still required; no old-to-new migration or repeat general model qualification is needed.
 
 ### Completion gate
 
@@ -356,7 +356,7 @@ Every required baseline and shortlisted model in the adopted matrix has accounte
 
 ### Next action
 
-Start [restart step R1](plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21): implement one new50-attempt protocol with the approved D2 guard, reusing corrected best/latest saving. Follow with focused tests and fresh campaign preparation; do not recover/import the old first trial or resume v1. Original evidence stays retained and no training is started by this planning task. Later selected/random/local runs retain their dependencies.
+Proceed to [restart step R2](plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21), the dedicated controller-level acceptance checkpoint after R1 implementation. Then prepare the new campaign in R3; do not import old trials, resume v1 or start HPO automatically. Existing evidence, full-horizon winner eligibility and later selected/random/local dependencies remain preserved.
 
 ## 7. Results comparison
 
@@ -468,7 +468,7 @@ project foundation [Done] -> data [Done]
 data -> 4A experimental-model research [Done] -> additional models [Done: 5.1–5.5]
 data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
-additional models + ingredient selection -> training and HTuning [In progress: original 6.1 Done; 6.2 D3 fresh50 studies/D2 implementation pending] -> results comparison [Deferred] -> thesis completion
+additional models + ingredient selection -> training and HTuning [In progress: original 6.1/R1 Done; 6.2 R2 acceptance then fresh50 campaign pending] -> results comparison [Deferred] -> thesis completion
 
 Thesis outline and stable chapters may progress in parallel.
 ```
@@ -588,6 +588,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 - [`project_objective/problem_definition.md`](project_objective/problem_definition.md) defines the research question and success criteria.
 - [`project_objective/yummly_data_audit.md`](project_objective/yummly_data_audit.md) contains the evidence behind the current data priorities.
 - [`project_objective/ingredient_vocabulary_audit.md`](project_objective/ingredient_vocabulary_audit.md) contains the evidence and provisional classifications for the candidate ingredient vocabulary.
+| 2026-10-21 | Revised full-task policy implementation | Committed the D3 plan as `48315d1` and completed R1: separate v2/50 policy, fresh-study identity/path, independent plateau guard and reason/cost artifacts.31 focused/307 tests pass; v1 evidence and personal edits preserved, no new campaign or second commit. | 6.2 and Macro-section6 remain **In progress**; R1 **Done**, R2 acceptance next, R3–R5 Pending | [R1 checkpoint](plans/training_hyperparameter_tuning.md#r1-completion-checkpoint--2026-10-21), [runtime verification](implementation_details/benchmark_training.md#r1-v2-policy-and-plateau-implementation--2026-10-21) |
 - [`research/topics/ingredient_vocabularies/README.md`](research/topics/ingredient_vocabularies/README.md) indexes the reusable, dataset-independent vocabulary catalog.
 - [`plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md`](plans/data_ingredient_refactor/controlled_vocabulary_evaluation.md) records the Yummly-specific controlled-vocabulary evidence and implementation decision gate.
 - [`project_objective/benchmark_decisions.md`](project_objective/benchmark_decisions.md) contains the binding benchmark policies and readiness checklist.

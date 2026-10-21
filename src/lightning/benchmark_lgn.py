@@ -12,20 +12,20 @@ import torch
 
 from src.lightning.experimental_lgn import ExperimentalLGNM
 from src.lightning.custom_callbacks import CSVLoggerEncode
-from src.training.benchmark_protocol import BenchmarkSchedule, MONITOR, epoch_metrics, policy, policy_hash
+from src.training.benchmark_protocol import BenchmarkSchedule, MONITOR, epoch_metrics, policy, policy_hash, policy_for_hash
+from src.training.benchmark_stopping import PlateauState
 
 
 class BenchmarkLGNM(ExperimentalLGNM):
     def __init__(self, *args, benchmark_policy_hash=None, expected_validation_records=None, **kwargs):
-        if benchmark_policy_hash != policy_hash():
-            raise ValueError("benchmark policy identity is missing or differs")
+        saved_policy = policy_for_hash(benchmark_policy_hash)
         if type(expected_validation_records) is not int or expected_validation_records <= 0:
             raise ValueError("the complete validation record count is required")
         super().__init__(*args, **kwargs)
         if self.weighted_loss or self.optimizer is not torch.optim.AdamW or self.lr_scheduler is not BenchmarkSchedule or self.use_swa:
             raise ValueError("benchmark optimizer/loss/schedule differs from the frozen recipe")
         contract = self.model.experimental_contract
-        physical = policy()["physical_batches"][contract.model_id]
+        physical = saved_policy["physical_batches"][contract.model_id]
         adaptation = "frozen_encoder" if contract.model_id == "dinov2_b14_anchor" else "full"
         if (contract.head_seed != 42 or contract.horizontal_flip_probability != .5
                 or contract.adaptation != adaptation or self.exact_batch_plan.physical_batch_size != physical
@@ -79,17 +79,60 @@ class BenchmarkLGNM(ExperimentalLGNM):
 
 class EpochPruning(Callback):
     """Prune only after validation/checkpoint saving, with one-based epochs."""
-    def __init__(self, trial):
+    def __init__(self, trial, save_dir=None):
         self.trial = trial
+        self.save_dir = Path(save_dir) if save_dir is not None else None
+        self._bind(policy())
+
+    def _bind(self, saved_policy):
+        self.protocol = saved_policy
+        self.rule = saved_policy["hpo"].get("plateau")
+        self.plateau = PlateauState(self.rule["patience"], self.rule["min_delta"]) if self.rule else None
+
+    def on_fit_start(self, trainer, pl_module):
+        self._bind(policy_for_hash(pl_module.hparams["benchmark_policy_hash"]))
+        if self.rule:
+            attributes = self.trial.study.user_attrs
+            if (attributes.get("benchmark_policy_hash") != pl_module.hparams["benchmark_policy_hash"]
+                    or attributes.get("benchmark_model_id") != pl_module.model.experimental_contract.model_id):
+                raise ValueError("HPO trial does not belong to this fresh protocol/model study")
+
+    def _prune(self, reason, epoch, value, trainer, incumbent=None):
+        costs = []
+        if self.save_dir is not None:
+            costs = [json.loads(line) for line in (self.save_dir / "epoch_costs.jsonl").read_text().splitlines()]
+            if not costs or costs[-1]["epoch"] != epoch:
+                raise ValueError("pruning requires the completed epoch cost record")
+        record = {"reason": reason, "protocol_id": self.protocol["protocol_id"],
+                  "policy_hash": policy_hash(self.protocol["protocol_id"]), "completed_epochs": epoch,
+                  "optimizer_updates": getattr(trainer, "global_step", None), "val_macro_ap": value,
+                  "best_observed_ap": self.plateau.best_observed if self.plateau else None,
+                  "patience_best_ap": self.plateau.patience_best if self.plateau else None,
+                  "bad_checks": self.plateau.bad_checks if self.plateau else None,
+                  "eligible_incumbent_ap": incumbent,
+                  "consumed_epoch_seconds": sum(row["seconds"] for row in costs) if costs else None}
+        self.trial.set_user_attr("pruning", record)
+        if self.save_dir is not None:
+            with (self.save_dir / "pruning.json").open("x") as stream:
+                json.dump(record, stream, indent=2, allow_nan=False)
+        raise optuna.TrialPruned(f"{reason} at completed epoch {epoch}")
 
     def on_train_epoch_end(self, trainer, pl_module):
         value = float(trainer.callback_metrics[MONITOR])
         if not math.isfinite(value):
             raise ValueError("nonfinite HPO objective")
         epoch = trainer.current_epoch + 1
+        if self.plateau:
+            self.plateau.observe(value)
         self.trial.report(value, step=epoch)
-        if self.trial.number != 0 and epoch < 40 and self.trial.should_prune():
-            raise optuna.TrialPruned(f"Hyperband at completed epoch {epoch}")
+        if self.trial.number == 0 or epoch >= self.protocol["epochs"]:
+            return
+        if self.trial.should_prune():
+            self._prune("hyperband", epoch, value, trainer)
+        if self.plateau:
+            stop, incumbent = self.plateau.should_prune(epoch, self.rule, self.trial.study)
+            if stop:
+                self._prune("plateau", epoch, value, trainer, incumbent)
 
 
 class EpochCostLedger(Callback):
@@ -137,7 +180,7 @@ class BenchmarkTrainer(lgn.Trainer):
                          num_sanity_val_steps=0, benchmark=False, deterministic="warn",
                          default_root_dir=str(save_dir / "scratch"), logger=logger,
                          callbacks=extra + [EpochCostLedger(save_dir / "epoch_costs.jsonl")]
-                         + ([EpochPruning(trial)] if trial is not None else [])
+                         + ([EpochPruning(trial, save_dir)] if trial is not None else [])
                          + [checkpoint, self._latest_checkpoint],
                          **kwargs)
 

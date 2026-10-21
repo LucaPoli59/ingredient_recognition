@@ -5,17 +5,17 @@
 
 ## Scope and authority
 
-This document owns the opt-in executable delta for [Phase 6-D1](../project_objective/model_comparison_methodology.md#phase-6-d1--finite-training-and-comparison-protocol). Scientific decisions belong there; execution belongs in the [training plan](../plans/training_hyperparameter_tuning.md). The 2026-10-13 checkpoint prepared the protocol. The 2026-10-18 first release now executes it under the separate Phase 6.2 authorization, reusing the accepted Phase 5 training foundation.
+This document owns the opt-in executable contract for [Phase6-D1/D2/D3](../project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies). Scientific decisions belong there; execution belongs in the [training plan](../plans/training_hyperparameter_tuning.md). The original v1 first release and subsequent persistence repair remain dated evidence below. R1 now implements the distinct v2 fresh-study policy; no new campaign has been launched.
 
-**Prospective policy, not current runtime:** [D2](../project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) approves additional plateau pruning; [D3](../project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies) now requires five new50-attempt studies from fresh trial0, without importing the old trials/journals/samplers. The revised policy/guard are not implemented or activated. Executable v1 still uses100 attempts and Hyperband-only stopping. Its scientific/source identity and checkpoint-repair records remain unchanged; they are not a new-campaign launch recipe. The [restart steps](../plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) replace old-study migration with new versioned policy/study creation, reusing the already-corrected independent best/latest callbacks.
+**Current implementation:** the active default is `phase6-comparison-v2`, with50 started attempts per model and D2's independent plateau guard. New studies have fresh journals/samplers under `experiments/benchmark_v2/`; v1 studies are not imported or resumed. The [v1 policy](../../src/training/resources/phase6_protocol_v1.json) stays byte-identical. A registered hash resolver preserves saved v1 module/checkpoint semantics for offline reconstruction instead of relabelling them v2. R2 acceptance and R3 campaign preparation remain separate from R1 implementation; neither a successful test nor CLI inspection authorizes training.
 
-The new path consists of the [primitive policy](../../src/training/resources/phase6_protocol_v1.json), [configuration/metric helpers](../../src/training/benchmark_protocol.py), [shared Lightning adapter](../../src/lightning/benchmark_lgn.py), [isolated study controller](../../src/training/benchmark_campaign.py), [matched-input anchors](../../src/models/benchmark_anchors.py) and [thin CLI](../../scripts/launch_exps/benchmark/train.py). It calls canonical `model_training` and reuses ExperimentalLGNM's exact batching, projection, complete-state restoration and identity checks. It does not edit legacy trainers, the old Optuna studies, selector sources/evidence, metadata or the published59-label artifact.
+The path consists of the [v2 primitive policy](../../src/training/resources/phase6_protocol_v2.json), [configuration/metric helpers](../../src/training/benchmark_protocol.py), [plateau/eligibility helper](../../src/training/benchmark_stopping.py), [shared Lightning adapter](../../src/lightning/benchmark_lgn.py), [isolated study controller](../../src/training/benchmark_campaign.py), [matched-input anchors](../../src/models/benchmark_anchors.py) and [thin CLI](../../scripts/launch_exps/benchmark/train.py). It calls canonical `model_training` and reuses exact batching, projection, complete-state restoration and identity checks. Legacy trainers/studies, selector evidence, metadata and the59-label artifact are unchanged.
 
 ## Inspect first; execution is explicit
 
 From the main repository and its ML environment:
 
-**Retained v1 interface:** the commands and resume semantics below describe the currently implemented100-attempt route. D3 does not authorize resuming its remaining99/model. Do not use a new directory alone as if it implemented50 attempts or D2; revised launch instructions follow only after their focused acceptance. Original-study compatibility code remains retained, but new HPO needs no import/migration of those trials.
+The commands below now inspect or build v2 configurations. The original100-attempt route is retained evidence, not a launch option. A new name alone cannot migrate an old study: the controller checks new location, protocol/model/budget identity and matching source/configuration before execution.
 
 ```bash
 python scripts/launch_exps/benchmark/train.py
@@ -24,13 +24,13 @@ python scripts/launch_exps/benchmark/train.py --model maxvit_t --export-config N
 
 These commands print the policy or export a new configuration without constructing a model, evaluating images or opening an Optuna study. The default task is full 165; `make_config(..., selected=True)` explicitly builds the published59-label configuration for later transfers. Both orders are obtained from the frozen projection resource, not inferred anew from validation. All five model configurations serialize and round-trip through ExpConfig.
 
-The following is the **future6.2 invocation form**, not an instruction that was executed during6.1:
+The following is the **v2 invocation form**, not an executed campaign or permission to skip R2/R3:
 
 ```bash
 python scripts/launch_exps/benchmark/train.py --execute --model maxvit_t --run-name CAMPAIGN_NAME
 ```
 
-It creates a new model-specific directory below `experiments/benchmark_v1/`, refuses an existing directory and releases only trial 0 by default. After the user's measured-cost review, `--resume --cost-reviewed --additional-trials N` explicitly releases more attempts within the remaining100. All controllers share a nonblocking WSL file lock; it does not reserve the GPU against unrelated user processes, which must be checked before an actual launch. There is no generic CUDA smoke, automatic topology fallback or automatic trial replacement.
+It creates a new model-specific directory below `experiments/benchmark_v2/`, refuses an existing directory and releases only a newly trained trial0 by default. `--cost-reviewed --additional-trials N` explicitly acknowledges the measured-cost review for multiple/further attempts; `--resume` is only for an already-created v2 study between finished trials. Every release stays within50 total attempts. The existing host-wide nonblocking lock is shared with retained v1 controllers; it is a mutex, not an old-study import or a reservation against unrelated GPU processes. No automatic topology fallback, epoch extension or trial replacement is supported.
 
 ## Configurations, exact accumulation and validation ranking
 
@@ -43,6 +43,14 @@ Training uses the existing exact sample-mean accumulation, including the short f
 Consumers obtain the selected path from `trainer.checkpoint_callback.best_model_path` and the latest path from **`trainer.last_checkpoint_path`**, not the monitored callback's `last_model_path`. After fit, the adapter verifies the latest payload's epoch/update horizon and optimizer/scheduler presence **before** restoring the best-AP weights. An epoch-cost JSONL records elapsed train/validation/checkpoint time and cumulative optimizer updates before pruning. This repairs future persistence without changing model updates, AP selection or stopping policy. The first release's earlier missing-final states remain an explicit retained exception below, not retroactively repaired files.
 
 The Optuna callback reports the **current** full-validation AP at completed epoch1–40 after validation checkpoint callbacks. Trial0 is never pruned; other trials can be pruned before 40. Study selection considers only COMPLETE trials that actually reached 40 and 15,000 updates; its objective is the score of the retained best-AP checkpoint. Exact trial ties prefer the lower number. This route does not use the legacy loss monitor or last-on-tie selection behavior.
+
+### Independent plateau pruning in v2
+
+[`PlateauState`](../../src/training/benchmark_stopping.py) tracks strict observed best AP separately from tolerance-based patience. A score must exceed the patience best by more than1e-4 to reset its counter; small cumulative improvements can eventually cross that threshold. Tracking starts with the first validation, but this guard cannot fire before20 completed epochs or before10 non-improving checks. Strict AP checkpoint selection still records every strict improvement.
+
+`EpochPruning` first asks the unchanged Hyperband pruner. If Hyperband permits continuation, a plateau may additionally prune only when its strict best AP is not above the best eligible COMPLETE40/15,000-update trial in the **same study**. With no eligible incumbent it continues. A potential new winner is protected from this guard, not from Hyperband. Trial0 and completed epoch40 are exempt from both pruning paths. A callback is only attached for HPO trials, not standalone selected/Q3/Q4 runs; at fit startup v2 checks its study policy/model attributes against the module.
+
+Both paths record a `pruning` Optuna user attribute and `pruning.json` containing reason (`hyperband` or `plateau`), policy identity, epoch/updates, current and best AP, patience state, applicable incumbent and summed consumed epoch seconds. Epoch/checkpoint saving and `epoch_costs.jsonl` precede the exception. Raising `TrialPruned` supplies the actual PRUNED state; the controller retains session wall time in its existing `finally` block. No incomplete trainer return is converted to COMPLETE or FAIL. Every attempted trial also saves `stopping_policy.json` and the matching Optuna attribute before fit, alongside its source/configuration identity.
 
 ## Anchor initialization and source pinning
 
@@ -65,15 +73,17 @@ Physical32 for the two anchors is a declared initial request, not a measured FP3
 
 ## Study provenance, isolation and recovery
 
-New studies use their own JournalStorage, stable protocol/model study name, maximize direction, seeded TPE and explicit Hyperband resources. Historical journals and `_restore_study` are never used. The fixed reference trial is enqueued with recorded parameters inside the100-attempt allowance. Failed/pruned attempts consume that allowance; exceptions stop execution and are not swallowed.
+New studies use their own JournalStorage, v2 protocol/model study name, maximize direction, seeded TPE and unchanged Hyperband resources. Their policy hash, model and50-attempt allowance are also saved as study user attributes and verified on resume. Historical journals and `_restore_study` are never used. The newly trained reference trial is enqueued inside50; failed/pruned attempts consume that allowance without replacement. Non-pruning exceptions stop execution and are not swallowed.
 
 Artifacts include the policy/hash, model/study identity, package/original-weight identity, metadata hashes/base order, exact source-file inventory and ZIP tied to the Git base revision, per-trial complete configuration, actual epoch costs and separate best/last checkpoints. Selected output identity is already supported by the common config/checkpoint path; reference-control generation/training and operating-point artifacts are later6.3/6.5 work, not silently implemented by the full-study CLI.
 
-Resuming is supported **between finished trials**. A checksummed local sampler snapshot preserves the actual TPE RNG state instead of resetting it from its initial seed. Only load this controller's trusted local snapshot; pickle is not a safe external import format. The controller verifies matching policy, model, Optuna/package/artifact identities and source hashes and uses `load_study`, without recreating trials. Existing trial numbers, intermediate values and costs remain intact. Partial/mid-trial interruption, RUNNING/WAITING states, missing sampler state or journal/snapshot disagreement cause an explicit recovery error. Existing full last checkpoints remain available, but automatic mid-trial recovery is deliberately not claimed; any recovery must account for prior work without resetting the100-attempt budget or silently replaying partial epochs.
+Resuming is supported **between finished trials within the same v2 study**. A checksummed local sampler snapshot preserves actual TPE RNG state. Only load this controller's trusted local snapshot; pickle is not a safe external import format. Matching policy/model, package/artifact identity, source bytes and trial accounting are verified without recreating trials. Partial/mid-trial interruption, RUNNING/WAITING states, missing sampler state or journal/snapshot disagreement cause explicit recovery errors. Automatic mid-trial recovery is not claimed; prior work must remain accounted inside50 without silent epoch replay. Fresh creation refuses existing directories, and v1 identities/paths are rejected rather than adapted.
 
 ### Explicit checkpoint-repair source transition
 
 [`benchmark_provenance.py`](../../src/training/benchmark_provenance.py) supports the specifically reviewed **`final-checkpoint-v1`** transition, not a generic hash bypass. The [registration CLI](../../scripts/launch_exps/benchmark/register_runtime_patch.py) inspects by default; `--apply --accept-missing-final` explicitly registers the user-approved retention exception without starting a trial. It checks all five studies before applying and shares the nonblocking controller lock.
+
+This legacy registration helper is now explicitly pinned to the retained v1 policy. Current source drift from R1 is intentionally not absorbed into its old patch; replaying that registration against changed active sources must fail. New v2 studies use their own initial exact source snapshot, without a patch/import path from v1. The historical cutoff verifier remains retained, not relabelled as a current-source v2 validator.
 
 Registration requires exactly the single COMPLETE first-release trial with40 epochs/15,000 updates, unchanged scientific policy, verified original source ZIP/inventory and sampler checksum. The only allowed existing-source changes are `src/lightning/benchmark_lgn.py` and `src/training/benchmark_campaign.py`; the only added inventoried sources are the provenance helper and registration CLI. Any other modified, missing or added source is rejected. This is code-file review scope, not permission to change optimization behavior inside those files.
 
@@ -86,6 +96,14 @@ Before a later study is opened, validation checks the original snapshot, registe
 DataModule preparation still reads all-split metadata. The execution boundary forbids test/predict dataloaders; no predictive test evaluation belongs to Phase 6. The source snapshot includes local source content independently of a clean Git tree. No commit/push or source-cleanup operation is part of the launcher.
 
 ## Verification boundary
+
+### R1 v2 policy and plateau implementation — 2026-10-21
+
+The [implementation checks](../../tests/test_benchmark_plateau.py) and existing benchmark tests pass:31 focused tests and307 repository tests (83.662 seconds). The policy delta test verifies that model/training/Q3/Q4 fields are unchanged; only protocol/cohort,50-attempt allowance and D2 plateau fields differ from v1. V2 policy SHA-256 is `8896b66288f6a53002c30d1b8d050bb0f8bf7ec17370045d0630fd3d43f23181`; v1 retains `4a5fe311e083594de1d872cd3eea3701e8bfa641bfa7753c9b8f3d40d45d756c`.
+
+Tests use synthetic AP histories, temporary scalar studies and actual tiny CPU Lightning fits. They cover tolerance/patience/floor, absent/ineligible/tied/beaten incumbent, independent Hyperband, trial0/epoch40 exemptions,50-attempt mixed-state accounting/resume, old-policy identity rejection and offline saved-v1 module reconstruction. A fixed synthetic AP trace with NopPruner isolates the actual plateau callback: it raises at epoch20, after a full epoch20 checkpoint and matching cost ledger, records PRUNED in the temporary study and persists the same reason/cost locally and in Optuna. This is not a changed campaign pruner or a measured GPU/convergence result.
+
+Default CLI inspection prints v2/50 plus the plateau rule without constructing a model, creating a study or training. No real v2 campaign directory/journal was created, no old trial imported and no predictive test evaluation performed. The suite's existing real test-split vocabulary check is metadata-only. R2 remains the dedicated acceptance checkpoint (including controller-level release/negative-path checks), followed by R3 preparation; R1 alone does not release training.
 
 ### Phase 6.2 execution additions — 2026-10-18
 

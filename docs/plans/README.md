@@ -7,7 +7,7 @@ This directory contains the execution plans for concrete project implementations
 
 ## Active plans
 
-- [`training_hyperparameter_tuning.md`](training_hyperparameter_tuning.md) owns Phase6 execution. D3 adopts five fresh50-attempt studies from new trial0, without importing the first release; D2 supplies the plateau guard. Ordered restart steps cover revised implementation, focused checks, new campaign preparation, launch and winner selection. Original evidence/repair stay retained;6.2 remains In progress and later selected/random/local work keeps its dependencies. No repeat general qualification stage is added.
+- [`training_hyperparameter_tuning.md`](training_hyperparameter_tuning.md) owns Phase6 execution. R1 implements D2/D3's separate v2/50-attempt policy and plateau guard; R2 acceptance is next, followed by R3 preparation and a separately authorized new campaign. Original trials/evidence are retained without import;6.2 remains In progress and later selected/random/local work keeps its dependencies. No repeat general qualification stage is added.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 

@@ -9,16 +9,32 @@ import numpy as np
 from sklearn.metrics import average_precision_score
 import torch
 
-POLICY_PATH = Path(__file__).with_name("resources") / "phase6_protocol_v1.json"
+LEGACY_PROTOCOL_ID = "phase6-comparison-v1"
+ACTIVE_PROTOCOL_ID = "phase6-comparison-v2"
+POLICY_PATHS = {name: Path(__file__).with_name("resources") / filename for name, filename in (
+    (LEGACY_PROTOCOL_ID, "phase6_protocol_v1.json"), (ACTIVE_PROTOCOL_ID, "phase6_protocol_v2.json"))}
+POLICY_PATH = POLICY_PATHS[ACTIVE_PROTOCOL_ID]
 MONITOR = "val_macro_ap"
 
 
-def policy():
-    return json.loads(POLICY_PATH.read_text())
+def policy(protocol_id=ACTIVE_PROTOCOL_ID):
+    if protocol_id not in POLICY_PATHS:
+        raise ValueError("unknown benchmark protocol identity")
+    return json.loads(POLICY_PATHS[protocol_id].read_text())
 
 
-def policy_hash():
-    return hashlib.sha256(POLICY_PATH.read_bytes()).hexdigest()
+def policy_hash(protocol_id=ACTIVE_PROTOCOL_ID):
+    if protocol_id not in POLICY_PATHS:
+        raise ValueError("unknown benchmark protocol identity")
+    return hashlib.sha256(POLICY_PATHS[protocol_id].read_bytes()).hexdigest()
+
+
+def policy_for_hash(digest):
+    """Resolve saved identities without reinterpreting a v1 checkpoint as v2."""
+    for protocol_id in POLICY_PATHS:
+        if digest == policy_hash(protocol_id):
+            return policy(protocol_id)
+    raise ValueError("benchmark policy identity is missing or differs")
 
 
 def epoch_metrics(logits, targets):

@@ -9,8 +9,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
-from src.training.benchmark_protocol import policy
-from src.training.benchmark_provenance import inspect_patch, register_checkpoint_patch
+from src.training.benchmark_provenance import policy, inspect_patch, register_checkpoint_patch
 
 
 def main():

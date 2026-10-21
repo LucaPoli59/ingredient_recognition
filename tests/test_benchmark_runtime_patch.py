@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader
 from src.lightning.benchmark_lgn import BenchmarkLGNM, BenchmarkTrainer
 from src.models.experimental_contract import ExperimentalModelContract
 from src.training.benchmark_campaign import open_study, _save_sampler, remaining_trials
-from src.training.benchmark_protocol import BenchmarkSchedule, policy, policy_hash
+from src.training.benchmark_protocol import BenchmarkSchedule, policy, policy_hash, LEGACY_PROTOCOL_ID
 from src.training.benchmark_provenance import (
     ADDED, MODIFIED, inspect_patch, register_checkpoint_patch, validate_study_sources,
     write_source_snapshot, patch_directory,
@@ -23,6 +23,11 @@ from test_experimental_lightning import TinyExperimentalAdapter, synthetic_data,
 
 
 class RuntimePatchTests(unittest.TestCase):
+    def legacy_study(self, root, resume=False):
+        with mock.patch("src.training.benchmark_campaign.policy", return_value=policy(LEGACY_PROTOCOL_ID)), \
+             mock.patch("src.training.benchmark_campaign.policy_hash", return_value=policy_hash(LEGACY_PROTOCOL_ID)):
+            return open_study(root, "maxvit_t", resume=resume)
+
     def fixture(self, directory):
         repo = Path(directory) / "repo"
         files = MODIFIED | {"src/models/unchanged.py", "src/training/resources/phase6_protocol_v1.json"}
@@ -31,7 +36,7 @@ class RuntimePatchTests(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("original fixture bytes\n")
         root = repo / "experiments/study"
-        study = open_study(root, "maxvit_t")
+        study = self.legacy_study(root)
 
         def objective(trial):
             trial.set_user_attr("completed_epochs", 40)
@@ -41,7 +46,7 @@ class RuntimePatchTests(unittest.TestCase):
         study.optimize(objective, n_trials=1)
         _save_sampler(root, study)
         self.snapshot(root, repo)
-        (root / "policy.json").write_text(json.dumps(policy()))
+        (root / "policy.json").write_text(json.dumps(policy(LEGACY_PROTOCOL_ID)))
         for name in ("trial_0/trial_config.json", "trial_0/epoch_costs.jsonl",
                      "trial_0/checkpoints/last.ckpt", "trial_0/checkpoints/best.ckpt",
                      "validation/trial_0/prediction_manifest.json", "validation/trial_0/validation_predictions.npz"):
@@ -72,10 +77,11 @@ class RuntimePatchTests(unittest.TestCase):
             self.assertEqual(identity["runtime_patch"], "final-checkpoint-v1")
             self.assertTrue(all(path.read_bytes() == value for path, value in before.items()))
             self.assertEqual(self.register(root, repo), identity)
-            resumed = open_study(root, "maxvit_t", resume=True)
+            resumed = self.legacy_study(root, resume=True)
             self.assertEqual(len(resumed.trials), 1)
             self.assertEqual(resumed.trials[0].state, optuna.trial.TrialState.COMPLETE)
-            self.assertEqual(remaining_trials(resumed), 99)
+            with mock.patch("src.training.benchmark_campaign.policy", return_value=policy(LEGACY_PROTOCOL_ID)):
+                self.assertEqual(remaining_trials(resumed), 99)
             self.assertEqual((root / "journal.log").read_bytes(), before[root / "journal.log"])
             self.assertEqual((root / "sampler.bin").read_bytes(), before[root / "sampler.bin"])
             self.assertEqual((patch_directory(root) / "sampler_before.bin").read_bytes(), before[root / "sampler.bin"])
@@ -159,6 +165,7 @@ class LatestCheckpointPruningTests(unittest.TestCase):
                                benchmark_policy_hash=policy_hash(), expected_validation_records=17)
         module.startup_model(synthetic_datamodule())
         trial = mock.Mock(number=1)
+        trial.study.user_attrs = {"benchmark_policy_hash": policy_hash(), "benchmark_model_id": "efficientnet_v2_s"}
         trial.should_prune.return_value = True
         with tempfile.TemporaryDirectory() as directory:
             trainer = BenchmarkTrainer(directory, grad_accum=4, accelerator="cpu", trial=trial,

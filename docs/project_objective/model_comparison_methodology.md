@@ -2,7 +2,7 @@
 
 **Created:** 2026-08-12
 **Last updated:** 2026-10-21
-**Status:** Active and binding design through D6/P6 and Phase 6-D1/D2/D3. D3 adopts five fresh 50-attempt studies without importing the first-release trials; D2 supplies their additional plateau rule. The revised executable policy and guard are not yet implemented or activated. The independent portfolio, shared vocabulary and original evidence remain unchanged.
+**Status:** Active and binding design through D6/P6 and Phase6-D1/D2/D3. D3's fresh50-attempt policy and D2 guard are implemented in v2 under R1; no new campaign has launched. The independent portfolio, shared vocabulary and original evidence remain unchanged. Dedicated acceptance/preparation still precede execution.
 
 ## Purpose and scope
 
@@ -626,7 +626,7 @@ vocabulary decisions as uncertain.
 
 **Adopted:** 2026-10-13, before any new benchmark/control training. The user permits continuous GPU use without a total hour/day ceiling, asks for finite limits comparable to DINOv2, and explicitly chooses reuse of the fixed selector for Q3. This decision fixes search opportunity, not a promised calendar duration. The machine-readable counterpart is [`phase6_protocol_v1.json`](../../src/training/resources/phase6_protocol_v1.json); the [runtime contract](../implementation_details/benchmark_training.md) owns executable behavior and recovery limits.
 
-**Prospective stopping amendment:** [D2 below](#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) supersedes D1's prohibition on an independent plateau guard for future full-task HPO only. The original recipe below and its executable v1 manifest remain retained history/current runtime respectively until the explicit activation gate passes.
+**Stopping amendment:** [D2 below](#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo) supersedes D1's prohibition on an independent plateau guard for future full-task HPO only. The original recipe/manifest below remain retained v1 history; R1 now implements D2/D3 in the separate v2 policy without launching it.
 
 **Budget/cohort amendment:** [D3 below](#phase-6-d3--fresh-fifty-trial-studies), adopted2026-10-21, supersedes D1's100-attempt budget and continuation of the first release. Preserve D1's original matrix, numerical ceiling and execution evidence below as history; the revised budget is50 new attempts per model, beginning at a new trial0.
 
@@ -694,7 +694,7 @@ For each full, selected or random evaluation task, fit operating points on that 
 
 ## Phase 6-D2 — Conservative plateau pruning for full-task HPO
 
-**Adopted:** 2026-10-20 by explicit user approval, after the five reference trials and cost review but before any trial1 release. **Recorded:** 2026-10-21. **Execution status:** approved, not implemented or activated. This is a prospective, cost-informed amendment, not an uninformed preregistration or a retrospective change to the completed trials.
+**Adopted:** 2026-10-20 by explicit user approval, after the five reference trials and cost review but before any trial1 release. **Recorded:** 2026-10-21. **Execution status:** implemented in v2 under R1, no new campaign launched. This is a prospective, cost-informed amendment, not an uninformed preregistration or a retrospective change to the completed trials.
 
 **D3 scope update:** the guard is carried into the [new50-attempt studies](#phase-6-d3--fresh-fifty-trial-studies), not retrofitted onto the v1 studies. D3 supersedes the100-attempt accounting and old-study transition clauses retained below. Incumbents and eligible winners come only from the corresponding new study; the original five trial0 scores are not imported.
 
@@ -725,11 +725,11 @@ The guard can still discard a late improver as cosine LR declines; incumbent pro
 
 The [execution plan](../plans/training_hyperparameter_tuning.md#additional-plateau-stopping--approved-implementation-pending) owns implementation and release tasks. Before any further attempt, implement and test the independent guard, persist/version its exact machine-readable policy and trial provenance, and establish an explicit source/study-policy transition from the retained v1 studies. Preserve original policy/source snapshots, journals, sampler state, trial numbers and the separate `final-checkpoint-v1` repair record; do not rewrite that record to absorb a scientific change.
 
-The current [`phase6_protocol_v1.json`](../../src/training/resources/phase6_protocol_v1.json), SHA-256 `4a5fe311e083594de1d872cd3eea3701e8bfa641bfa7753c9b8f3d40d45d756c`, and executable stopping are unchanged by this documentation approval. No new trial budget release, new training or predictive test evaluation is authorized here. A later release still requires its explicit cost/allocation decision.
+At the D2 documentation checkpoint, [`phase6_protocol_v1.json`](../../src/training/resources/phase6_protocol_v1.json), SHA-256 `4a5fe311e083594de1d872cd3eea3701e8bfa641bfa7753c9b8f3d40d45d756c`, and executable stopping were unchanged. V1 stays immutable; R1 now implements the distinct v2 policy under D3 below. No new training or predictive test evaluation follows automatically from implementation; campaign preparation and explicit launch remain separate.
 
 ## Phase 6-D3 — Fresh fifty-trial studies
 
-**Adopted:** 2026-10-21 by explicit user decision to reduce HPO to50 attempts per model and restart from trial0 rather than recover/import the completed first trial. **Execution status:** approved planning amendment; implementation and a new campaign launch are pending. This follows observed first-release cost, not an outcome-blind preregistration.
+**Adopted:** 2026-10-21 by explicit user decision to reduce HPO to50 attempts per model and restart from trial0 rather than recover/import the completed first trial. **Execution status:** R1 implemented in a distinct v2 policy; dedicated R2 acceptance, R3 preparation and new launch remain pending. This follows observed first-release cost, not an outcome-blind preregistration.
 
 ### New cohort and fixed boundaries
 
@@ -751,7 +751,9 @@ The user accepts rerunning the five reference configurations to simplify code an
 
 Implement D2/D3 together in a new versioned machine policy and explicit new protocol/study identity, planned as `phase6-comparison-v2`. Use new campaign directories, fresh source snapshots and independent journal/sampler/checkpoint artifacts. Keep the v1 manifest and original snapshots unchanged. No v1-to-v2 source/study migration or extension of `final-checkpoint-v1` is needed for this route; that repair remains retained history, while the corrected independent best/latest callbacks are reused for new trials.
 
-The [execution plan](../plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) defines the ordered focused checks and new-campaign preparation. The budget/restart decision is closed; implementation acceptance and explicit training-launch authorization remain separate. This documentation task changes no executable policy, creates no study and launches no training. The old100-attempt CLI is not a substitute for the pending50-attempt implementation.
+The [execution plan](../plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) defines ordered checks and campaign preparation. The budget/restart decision is closed; implementation acceptance and explicit training-launch authorization remain separate. The adoption checkpoint itself changed no code or experiments.
+
+**R1 implementation checkpoint,2026-10-21:** [`phase6_protocol_v2.json`](../../src/training/resources/phase6_protocol_v2.json) now implements this policy and is the active CLI/configuration default. V1 is unchanged and its saved module identities remain recognizable offline; old studies are not migrated. The [runtime owner](../implementation_details/benchmark_training.md#r1-v2-policy-and-plateau-implementation--2026-10-21) records verification, exact hashes and remaining limits. R1 implements the adopted rule, not a new scientific amendment or an authorized campaign launch.
 
 ## Rejected primary designs
 
@@ -797,7 +799,7 @@ replace the threshold-free selection and validation-only operating-point rules.
 | Subphase 4B | Choose, verify, and freeze M_ref. | Done: 4B-D1 freezes the EfficientNetV2-S model-side selector and [`reference_selector_research.md`](../plans/reference_selector_research.md) records the completed evidence and handoff. |
 | Macro-section 3 | Implement the frozen selector workflow and produce versioned V_selected evidence. | Done through P7: D6 uncertainty, shared projection, opt-in runtime integration and retention checks are complete. Original D4 evidence and the full default remain preserved; the [completed plan](../plans/recognizable_ingredient_selection.md) owns the execution record. |
 | Macro-section 5 | Implement and technically qualify the adopted experiment-model protocols. | Done on 2026-10-07: all three protocols passed measured full/selected CUDA, persistence and consumer gates. The [completed plan](../plans/additional_model_implementation.md) and [readiness constraints](../implementation_details/experimental_model_contract.md#phase-6-comparison-constraints) supply the handoff. |
-| Macro-section 6 | Implement D2/D3, execute five fresh50-attempt studies, then transfers/controls and operating-point handoff. | Original6.1 checkpoint Done;6.2 In progress. The first release is retained outside the new cohort; revised protocol/guard implementation, launch and new HPO remain pending in the [execution plan](../plans/training_hyperparameter_tuning.md). |
+| Macro-section 6 | Accept/prepare D2/D3 execution, run five fresh50-attempt studies, then transfers/controls and operating-point handoff. | Original6.1 and R1 Done;6.2 In progress. First release retained outside the new cohort; R2 acceptance, R3 preparation, launch and new HPO remain pending in the [execution plan](../plans/training_hyperparameter_tuning.md). |
 | Macro-section 7 | Freeze report schemas, evaluate the already selected configurations on test, and keep Q1–Q4 result statements separate. | Deferred until Macro-section 6 completes. |
 
 ## Related documentation

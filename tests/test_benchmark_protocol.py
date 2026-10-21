@@ -155,7 +155,7 @@ class BenchmarkProtocolTests(unittest.TestCase):
             before = (root / "journal.log").read_bytes()
             resumed = open_study(root, "maxvit_t", resume=True)
             self.assertEqual((root / "journal.log").read_bytes(), before)
-            self.assertEqual(remaining_trials(resumed), 97)
+            self.assertEqual(remaining_trials(resumed), 47)
             # Compare next TPE draw against a separately deserialized copy of the sampler.
             a = resumed.ask().suggest_float("x", 1e-5, 1e-3, log=True)
             b = study.ask().suggest_float("x", 1e-5, 1e-3, log=True)
@@ -168,7 +168,7 @@ class BenchmarkProtocolTests(unittest.TestCase):
     def test_trial_selection_requires_complete_horizon_and_earliest_tie(self):
         study = optuna.create_study(direction="maximize")
         for score, epochs in [(1., 4), (.8, 40), (.8, 40)]:
-            study.add_trial(optuna.trial.create_trial(value=score, user_attrs={"completed_epochs": epochs}))
+            study.add_trial(optuna.trial.create_trial(value=score, user_attrs={"completed_epochs": epochs, "optimizer_updates": 15000}))
         self.assertEqual(select_trial(study).number, 1)
 
     def test_real_resnet_offline_adapter_and_contract(self):

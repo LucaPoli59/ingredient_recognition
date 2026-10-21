@@ -27,13 +27,13 @@ def main():
         if args.export_config:
             if not args.model or args.export_config.exists():
                 parser.error("config export requires --model and a new output file")
-            make_config(args.model, ROOT / "experiments/benchmark_v1/CONFIG_ONLY").save_to_file(args.export_config)
+            make_config(args.model, ROOT / "experiments/benchmark_v2/CONFIG_ONLY").save_to_file(args.export_config)
         print(json.dumps(policy(), indent=2))
         return
     if args.export_config or not args.model or not args.run_name or Path(args.run_name).name != args.run_name:
         parser.error("execution requires --model and a simple --run-name, without config export")
-    from src.training.benchmark_campaign import execute
-    print(json.dumps(execute(ROOT / "experiments/benchmark_v1" / args.run_name / args.model,
+    from src.training.benchmark_campaign import execute, CAMPAIGN_ROOT
+    print(json.dumps(execute(CAMPAIGN_ROOT / args.run_name / args.model,
                              args.model, resume=args.resume, additional_trials=args.additional_trials,
                              cost_reviewed=args.cost_reviewed), indent=2))
 

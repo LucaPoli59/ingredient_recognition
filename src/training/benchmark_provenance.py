@@ -7,8 +7,13 @@ from pathlib import Path
 import subprocess
 import tempfile
 import zipfile
+from functools import partial
 
-from src.training.benchmark_protocol import policy, policy_hash
+from src.training.benchmark_protocol import policy as load_policy, policy_hash as hash_policy, LEGACY_PROTOCOL_ID
+
+# This historical patch never follows the active new-study policy implicitly.
+policy = partial(load_policy, LEGACY_PROTOCOL_ID)
+policy_hash = partial(hash_policy, LEGACY_PROTOCOL_ID)
 
 PATCH_ID = "final-checkpoint-v1"
 MODIFIED = {"src/lightning/benchmark_lgn.py", "src/training/benchmark_campaign.py"}

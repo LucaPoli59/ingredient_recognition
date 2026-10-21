@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from src.training.benchmark_campaign import execute
+from src.training.benchmark_campaign import execute, CAMPAIGN_ROOT
 from src.training.benchmark_baselines import run_baselines
 from src.training.benchmark_protocol import policy, policy_hash
 
@@ -29,7 +29,7 @@ def first_trials(run_name):
     if Path(run_name).name != run_name or run_name in (".", ".."):
         raise ValueError("a simple new run name is required")
     repo = Path(__file__).resolve().parents[2]
-    root = repo / "experiments" / "benchmark_v1" / run_name
+    root = CAMPAIGN_ROOT / run_name
     root.mkdir(parents=True, exist_ok=False)
     state_path = root / "campaign_queue.json"
     state = {"run_name": run_name, "policy_hash": policy_hash(), "pid": os.getpid(),

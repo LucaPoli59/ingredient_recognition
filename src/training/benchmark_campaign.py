@@ -22,6 +22,9 @@ from optuna.trial import TrialState
 import torch
 
 from src.training.benchmark_protocol import policy, policy_hash, make_config
+from src.training.benchmark_stopping import eligible_complete_trials
+
+CAMPAIGN_ROOT = Path(__file__).resolve().parents[2] / "experiments" / "benchmark_v2"
 
 
 def write_new(path, data):
@@ -63,14 +66,24 @@ def open_study(root, model_id, *, resume=False):
     else:
         root.mkdir(parents=True, exist_ok=False)
         write_new(root / "study_identity.json", identity)
-        sampler = optuna.samplers.TPESampler(seed=42, n_startup_trials=8)
-    pruner = optuna.pruners.HyperbandPruner(min_resource=5, max_resource=40, reduction_factor=3)
+        sampler = optuna.samplers.TPESampler(seed=p["hpo"]["sampler_seed"], n_startup_trials=p["hpo"]["startup_trials"])
+    pruner = optuna.pruners.HyperbandPruner(min_resource=p["hpo"]["min_resource"],
+        max_resource=p["hpo"]["max_resource"], reduction_factor=p["hpo"]["reduction_factor"])
     if resume:
         study = optuna.load_study(storage=_storage(root), study_name=identity["study_name"],
                                  sampler=sampler, pruner=pruner)
     else:
         study = optuna.create_study(storage=_storage(root), study_name=identity["study_name"],
                                    sampler=sampler, pruner=pruner, direction="maximize")
+        if p.get("study_initialization") == "fresh_no_trial_import":
+            study.set_user_attr("benchmark_policy_hash", policy_hash())
+            study.set_user_attr("benchmark_model_id", model_id)
+            study.set_user_attr("started_trial_budget", p["hpo"]["started_trials_per_model"])
+    if p.get("study_initialization") == "fresh_no_trial_import":
+        if (study.user_attrs.get("benchmark_policy_hash") != policy_hash()
+                or study.user_attrs.get("benchmark_model_id") != model_id
+                or study.user_attrs.get("started_trial_budget") != p["hpo"]["started_trials_per_model"]):
+            raise ValueError("fresh study policy/model/budget identity differs; trial import is unsupported")
     if resume:
         if (snapshot["optuna"] != optuna.__version__ or snapshot["trials"] != len(study.trials)
                 or any(t.state in (TrialState.RUNNING, TrialState.WAITING) for t in study.trials)):
@@ -91,10 +104,9 @@ def remaining_trials(study):
 
 
 def select_trial(study):
-    completed = [t for t in study.trials if t.state == TrialState.COMPLETE
-                 and t.user_attrs.get("completed_epochs") == 40 and t.value is not None]
+    completed = eligible_complete_trials(study)
     if not completed:
-        raise ValueError("no eligible complete 40-epoch trial")
+        raise ValueError("no eligible complete 40-epoch/15000-update trial")
     return min(completed, key=lambda t: (-t.value, t.number))
 
 
@@ -128,9 +140,10 @@ def environment_identity(model_id):
 def execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed=False):
     """Serialize campaign controllers on the single-device WSL host."""
     import fcntl
-    allowed = Path(__file__).resolve().parents[2] / "experiments" / "benchmark_v1"
-    allowed.mkdir(parents=True, exist_ok=True)
-    with (allowed / ".controller.lock").open("a") as lock:
+    # Keep the existing host-wide mutex shared with retained v1 controllers.
+    lock_root = Path(__file__).resolve().parents[2] / "experiments" / "benchmark_v1"
+    lock_root.mkdir(parents=True, exist_ok=True)
+    with (lock_root / ".controller.lock").open("a") as lock:
         try:
             fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as error:
@@ -150,11 +163,11 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
     if type(additional_trials) is not int or additional_trials < 1:
         raise ValueError("additional_trials must be positive")
     if (resume or additional_trials > 1) and not cost_reviewed:
-        raise ValueError("review the first trial's measured time before releasing additional trials")
+        raise ValueError("acknowledge the measured-cost review before releasing multiple/further trials")
     # Prevent accidentally opening an existing study in another legacy location.
-    allowed = Path(__file__).resolve().parents[2] / "experiments" / "benchmark_v1"
+    allowed = CAMPAIGN_ROOT.resolve()
     if not root.is_relative_to(allowed) or root == allowed:
-        raise ValueError("benchmark study must be isolated below experiments/benchmark_v1")
+        raise ValueError("fresh benchmark study must be isolated below experiments/benchmark_v2")
     projection = resolve_projection(policy()["selected_projection"])
     config = make_config(model_id, root / "template")
     projection.verify_metadata(config.datamodule["data_dir"])
@@ -190,6 +203,11 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
         folder.mkdir(exist_ok=False)
         write_new(folder / "source_identity.json", source_identity)
         trial.set_user_attr("source_identity", source_identity)
+        stopping = {"protocol_id": p["protocol_id"], "policy_hash": policy_hash(),
+                    "hpo": p["hpo"], "eligible_trials": p["selection"]["eligible_trials"],
+                    "required_completed_epochs": 40, "required_optimizer_updates": 15000}
+        write_new(folder / "stopping_policy.json", stopping)
+        trial.set_user_attr("stopping_policy", stopping)
         set_torch_constants()  # canonical spawn; numeric benchmark settings override its legacy defaults below
         lgn.seed_everything(42, workers=True)
         torch.set_float32_matmul_precision("highest")
