@@ -13,6 +13,7 @@ The 4A and 4B plans may cite shared research evidence, but their criteria, decis
 
 ## Completed plans
 
+- [`thesis_writing_skills.md`](thesis_writing_skills.md) records the reviewed specialist installations and project writing skill supporting Macro-section 8. This is tool/workflow readiness, not a completed outline or thesis.
 - [`additional_model_implementation.md`](additional_model_implementation.md) retains the completed Phase 5 foundations, three adapters and useful measured full/selected CUDA, offline restoration and real-consumer acceptance. The runtime owner supplies the Phase 6 readiness matrix; completion is not a training/HPO launch or model ranking.
 - [`data_ingredient_refactor/`](data_ingredient_refactor/README.md) retains the completed Yummly Data plan for Work packages 2.1b–2.4 and its controlled-vocabulary evidence. Real training, checkpoint and dashboard runtime gates passed on 2026-10-06.
 - [`recognizable_ingredient_selection.md`](recognizable_ingredient_selection.md) is the completed Macro-section 3 plan for the EfficientNetV2-S campaign, historical reproduction, numerical `v5` profile, shared vocabulary freeze and P7 opt-in runtime integration. Legacy code is retained as evidence but retired from active use; physical cleanup needs separate review. Former mandatory P5 manual review remains an optional appendix.

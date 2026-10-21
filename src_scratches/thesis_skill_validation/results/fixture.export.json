@@ -1,0 +1,45 @@
+{
+  "notice": "Export completed with explicit settings. This report does not establish visual, accessibility, scientific-integrity, or journal-submission compliance.",
+  "outputs": [
+    {
+      "format": "png",
+      "kind": "raster",
+      "path": "results\\fixture.png",
+      "size_bytes": 31144
+    },
+    {
+      "format": "pdf",
+      "kind": "vector-container",
+      "path": "results\\fixture.pdf",
+      "size_bytes": 25055
+    }
+  ],
+  "provenance": {
+    "raw_data": "result.json",
+    "transformations": [],
+    "uncertainty": "not supplied; one synthetic seed"
+  },
+  "schema_version": "1.0",
+  "settings": {
+    "bbox_inches": null,
+    "dpi": 300.0,
+    "facecolor": "white",
+    "figure_size_inches": [
+      4.330708661417323,
+      2.5590551181102366
+    ],
+    "font_mode": "truetype",
+    "formats": [
+      "png",
+      "pdf"
+    ],
+    "pad_inches": 0.1,
+    "tiff_rgb": false,
+    "transparent": false
+  },
+  "versions": {
+    "matplotlib": "3.11.2",
+    "pillow": "13.0.0"
+  },
+  "warnings": []
+}

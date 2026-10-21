@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "split": "validation",
+  "metric": "label_macro_ap",
+  "value": 0.41,
+  "seeds": [
+    42
+  ],
+  "uncertainty": null,
+  "comparators": [],
+  "purpose": "Skill review fixture only; no project measurement."
+}

@@ -1,0 +1,52 @@
+{
+  "python": "3.12.14",
+  "packages": {
+    "requests": "2.34.2",
+    "matplotlib": "3.11.2",
+    "pillow": "13.0.0",
+    "pypdf": "6.21.1",
+    "pyyaml": "6.0.3"
+  },
+  "checks": [
+    {
+      "command": "doi_to_bibtex.py",
+      "returncode": 0
+    },
+    {
+      "command": "format_bibtex.py",
+      "returncode": 0
+    },
+    {
+      "command": "validate_citations.py",
+      "returncode": 1
+    },
+    {
+      "command": "validate_citations.py",
+      "returncode": 0
+    },
+    {
+      "command": "render_fixture.py",
+      "returncode": 0
+    },
+    {
+      "command": "image_metadata.py",
+      "returncode": 0
+    },
+    {
+      "command": "image_metadata.py",
+      "returncode": 0
+    },
+    {
+      "command": "palette_audit.py",
+      "returncode": 0
+    }
+  ],
+  "bibliography_input_unchanged": true,
+  "citation_key_preserved": "He2016deep",
+  "observed_edge_keys": [
+    "CodeExample",
+    "Key"
+  ],
+  "entries_after_appending_unterminated_entry": 1,
+  "numeric_and_scope_review": "Manual review required; see review.md. Citation scripts do not check numbers."
+}

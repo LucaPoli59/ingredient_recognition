@@ -1,7 +1,7 @@
 # Topic research
 
 **Created:** 2026-08-02  
-**Last updated:** 2026-09-08
+**Last updated:** 2026-10-20
 
 Use this directory for detailed research on a single, well-defined topic.
 
@@ -21,3 +21,4 @@ Use a lowercase, descriptive directory name for `<topic>`. Its `README.md` must 
 - [`label_learnability/`](label_learnability/README.md) records a reusable method for assessing whether a supervised classification label is learnable under a declared experimental protocol.
 - [`experimental_model_candidates/`](experimental_model_candidates/README.md) records the normalized 4A.2 dossiers and qualitative handoff for the five new experiment-model candidates.
 - [`custom_attention_model_design/`](custom_attention_model_design/README.md) records the custom-model brief, reusable component evidence and counterevidence, compatibility/scaling synthesis, and three topology proposals supporting the portfolio's custom decision.
+- [`thesis_writing/`](thesis_writing/README.md) investigates manuscript tools, scientific-writing skills, evidence control, institutional guidance, and the author's writing sample for Macro-section 8.

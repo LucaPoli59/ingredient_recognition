@@ -38,7 +38,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 5 | Additional model implementation | **Done** | [All three adapters and measured readiness](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) pass useful full/selected CUDA, strict offline restoration and real consumer checks; the completed plan hands off constraints without launching a benchmark. |
 | 6 | Training and hyperparameter tuning | **In progress** | R3 committed; [R4 continuous release](plans/training_hyperparameter_tuning.md#r4-continuous-release--2026-10-21) uses historical costs without a repeat pause. HPO completion and selection remain outstanding; no old trial import. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
-| 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
+| 8 | Thesis writing | **Pending** | Programme, English language and Markdown source confirmed; prepare the outline and evidence map without waiting for final export formatting. |
 
 ## 1. Project foundation
 
@@ -422,11 +422,22 @@ Use the completed [comparison tooling](implementation_details/experiment_compari
 
 This macro-section turns the verified project evidence into the thesis manuscript. Writing should progress alongside the project rather than begin only after experiments finish.
 
+### Confirmed writing requirements
+
+The user confirmed the following on **2026-10-20**. This section owns the project-level writing requirements; research records link here rather than treating recommendations as adopted decisions.
+
+- **Programme:** master's degree in Informatica at Università degli Studi di Milano-Bicocca.
+- **Manuscript language:** English.
+- **Authoritative source format:** Markdown, with a possible later Word export. LaTeX is not the selected authoring workflow.
+- **AI assistance:** the user confirms it is allowed and requires it to remain unobtrusive in the prose. Preserve the author's reasoning and keep any required assistance acknowledgment accurate.
+- **Editorial standard:** natural English with content-driven structure, no repetitive paragraph templates or filler, factual claims supported by verified sources or project evidence, consequential choices explicitly motivated, and explanations no more complex or lengthy than needed. These are required section acceptance criteria, detailed in the [editorial guidance](research/topics/thesis_writing/author_voice.md#required-editorial-standard).
+- **Still open:** final submission template and format, length expectations, deadline, citation style, and any specific acknowledgment wording. These do not block an initial Markdown outline or stable chapter drafting.
+
 ### Planned work packages
 
 | Work package | Status | Dependency |
 | --- | --- | --- |
-| 8.1 Thesis outline and claim map | **Pending** | Stable research questions and institutional format. |
+| 8.1 Thesis outline and claim map | **Pending** | Stable research questions; confirmed English/Markdown direction. Final export template is not a prerequisite for a provisional outline. |
 | 8.2 Background and related work | **Pending** | Model discovery and topic research. |
 | 8.3 Dataset and methodology | **Pending** | Frozen benchmark and experiment protocol. |
 | 8.4 Experimental setup | **Deferred** | Final training configuration. |
@@ -441,6 +452,10 @@ This macro-section turns the verified project evidence into the thesis manuscrip
 - [x] Model and technical deep dives provide reusable background material.
 
 These documents are inputs to the thesis, not substitutes for a coherent manuscript.
+
+The [preparatory thesis-writing research](research/topics/thesis_writing/README.md) reviews tools, skills, institutional sources and the supplied bachelor-thesis style sample. It now applies the confirmed requirements above. Its detailed workflow and chapter structure remain recommendations; the 8.1 outline/claim map remains **Pending**.
+
+The [writing-skill setup](plans/thesis_writing_skills.md) provides the repository-scoped [`write-thesis`](../.agents/skills/write-thesis/SKILL.md) workflow, two pinned specialist installations, and bounded citation/figure/evidence-review checks. Use this entry point for 8.1 and later writing; [verification limits](research/topics/thesis_writing/skill_selection.md) remain explicit. Tool readiness does not complete the outline or release result-dependent writing gates.
 
 ### Pending
 
@@ -459,7 +474,7 @@ The final manuscript is internally consistent, all claims trace to evidence, req
 
 ### Next action
 
-Create the thesis outline and claim map as soon as the institutional template and submission requirements are available.
+Use `write-thesis` to prepare the provisional English Markdown outline and claim map under the confirmed requirements. Record outstanding submission details separately and apply them when preparing the final export; retain the Phase 6/7 gates for result-dependent claims.
 
 ## Cross-phase dependency flow
 
@@ -568,7 +583,10 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-18 | Full-task training first release | Committed6.1 as `fae4301`, completed train-fitted validation priors and launched the authorized serial five-model reference release with retained configuration/source identities and ordered validation export. All291 repository tests pass. | 6.2 **In progress**; Macro-section6 **In progress**; first-release cost review remains open | [Launch checkpoint](plans/training_hyperparameter_tuning.md#first-release-checkpoint--2026-10-18), [baseline result](experiment_results/phase6_validation_baselines.md), [runtime](implementation_details/benchmark_training.md) |
 | 2026-10-20 | Full-task first-release review | Verified five COMPLETE40-epoch trials, AP-selected checkpoints and ordered validation exports; recorded28.36 h release wall time. Payload inspection found all last files duplicate earlier best states rather than final40-epoch states. Preserved all original evidence, stopped at the declared cost boundary and retired monitoring. | 6.2 and Macro-section6 remain **In progress**; user cost review, explicit artifact disposition and future retention repair required before more attempts | [Reviewed result](experiment_results/phase6_first_release.md), [review checkpoint](plans/training_hyperparameter_tuning.md#first-release-review--2026-10-20), [runtime limitation](implementation_details/benchmark_training.md#first-release-artifact-verification-and-retention-limitation--2026-10-20) |
 | 2026-10-20 | Training persistence/source repair | Implemented independent best/latest full checkpoints and registered the authorized additive source/exception transition on all five studies. All300 tests and real read-only study/source/accounting checks pass; original evidence and trial numbers remain unchanged. Additional plateau stopping remains a proposal only. | 6.2 and Macro-section6 remain **In progress**; runtime repair **Done**, next stopping/cost release decision open; no additional campaign trial | [Runtime/source contract](implementation_details/benchmark_training.md#explicit-checkpoint-repair-source-transition), [execution checkpoint](plans/training_hyperparameter_tuning.md#runtime-persistencesource-amendment-checkpoint--2026-10-20) |
+| 2026-10-20 | Thesis writing requirements | User confirmed the Informatica master's programme at Milano-Bicocca, English manuscript, Markdown source with possible Word export, and permitted AI assistance with natural, rigorous prose. This supersedes the research's initial LaTeX recommendation and removes final-template availability as a prerequisite for a provisional outline. | Macro-section 8 and 8.1 remain **Pending**; writing requirements recorded, outline/evidence map next | [Confirmed requirements](#confirmed-writing-requirements), [updated research](research/topics/thesis_writing/tools_and_workflow.md) |
+| 2026-10-20 | Thesis editorial requirements clarified | User made unobtrusive AI assistance, avoidance of repetitive structures, factual and cited support, explicit motivations and concise explanations essential writing requirements. Recorded their application and section acceptance checks in the editorial guidance. | Macro-section 8 and 8.1 remain **Pending**; editorial requirements refined | [Confirmed requirements](#confirmed-writing-requirements), [editorial standard](research/topics/thesis_writing/author_voice.md#required-editorial-standard) |
 | 2026-10-21 | Full-task stopping-policy adoption | Recorded the user's2026-10-20 approval of prospective D2 plateau pruning, preserving Hyperband, COMPLETE40 eligibility and the five original trials. Runtime activation and a separate policy/source transition remain pending; no further attempt was released. | 6.2 and Macro-section6 remain **In progress**; stopping decision **Done**, implementation/cost release next | [D2 decision](project_objective/model_comparison_methodology.md#phase-6-d2--conservative-plateau-pruning-for-full-task-hpo), [execution acceptance](plans/training_hyperparameter_tuning.md#additional-plateau-stopping--approved-implementation-pending) |
+| 2026-10-21 | Thesis writing tools | Completed the bounded specialist-selection and project-skill setup: two pinned specialist installations, repository writing guidance, citation/figure checks and a synthetic evidence-review exercise. | Tool setup **Done**; Macro-section 8 and 8.1 remain **Pending** for the outline/claim map | [Setup plan](plans/thesis_writing_skills.md), [selection and limits](research/topics/thesis_writing/skill_selection.md), [writing skill](../.agents/skills/write-thesis/SKILL.md) |
 | 2026-10-21 | Full-task budget and cohort revision | User adopted D3:50 new attempts per category, fresh trial0/journal/sampler, no import of the five first-release runs. Retain those as separate cost/runtime evidence and carry D2 into a new policy rather than migrating v1. | 6.2 and Macro-section6 remain **In progress**; revised implementation, fresh campaign preparation and explicit launch next | [D3 decision](project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies), [restart steps](plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) |
 | 2026-10-21 | Revised full-task policy implementation | Committed the D3 plan as `48315d1` and completed R1: separate v2/50 policy, fresh-study identity/path, independent plateau guard and reason/cost artifacts.31 focused/307 tests pass; v1 evidence and personal edits preserved, no new campaign or second commit. | 6.2 and Macro-section6 remain **In progress**; R1 **Done**, R2 acceptance next, R3–R5 Pending | [R1 checkpoint](plans/training_hyperparameter_tuning.md#r1-completion-checkpoint--2026-10-21), [runtime verification](implementation_details/benchmark_training.md#r1-v2-policy-and-plateau-implementation--2026-10-21) |
 | 2026-10-21 | Revised full-task acceptance | Committed R1 as `0d28eea`; accepted R2 controller accounting, guarded resume and actual CPU pruning persistence, with45 focused/321 tests. V1 artifacts/policies remain unchanged and no real new campaign exists. | 6.2 and Macro-section6 remain **In progress**; R1/R2 **Done**, R3 preparation next | [R2 checkpoint](plans/training_hyperparameter_tuning.md#r2-acceptance-checkpoint--2026-10-21), [runtime acceptance](implementation_details/benchmark_training.md#r2-controller-and-stopping-acceptance--2026-10-21) |

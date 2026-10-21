@@ -1,0 +1,19 @@
+{
+  "filepath": "results\\references.bib",
+  "total_entries": 1,
+  "valid_entries": 1,
+  "errors": [],
+  "warnings": [],
+  "duplicates": [],
+  "venue_standard_checked": null,
+  "min_count_checked": null,
+  "manuscript_results": {
+    "checked": true,
+    "manuscript_filepath": "results\\draft_corrected.md",
+    "cited_keys": [
+      "He2016deep"
+    ],
+    "missing_keys": [],
+    "unused_keys": []
+  }
+}

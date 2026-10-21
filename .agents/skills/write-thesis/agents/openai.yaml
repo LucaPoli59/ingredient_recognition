@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ingredient Recognition Thesis"
+  short_description: "Write and review the Ingredient Recognition thesis"
+  default_prompt: "Use $write-thesis to draft or review a thesis section against the project evidence and editorial requirements."
