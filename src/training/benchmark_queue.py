@@ -25,12 +25,16 @@ def save_state(path, state):
     os.replace(temporary, path)
 
 
-def first_trials(run_name):
+def first_trials(run_name, *, prepared=False):
     if Path(run_name).name != run_name or run_name in (".", ".."):
         raise ValueError("a simple new run name is required")
     repo = Path(__file__).resolve().parents[2]
     root = CAMPAIGN_ROOT / run_name
-    root.mkdir(parents=True, exist_ok=False)
+    if prepared:
+        from src.training.benchmark_preparation import inspect_campaign
+        inspect_campaign(run_name)
+    else:
+        root.mkdir(parents=True, exist_ok=False)
     state_path = root / "campaign_queue.json"
     state = {"run_name": run_name, "policy_hash": policy_hash(), "pid": os.getpid(),
              "started_at": timestamp(), "status": "preparing_baselines",
@@ -47,7 +51,8 @@ def first_trials(run_name):
             state.update(status="running", updated_at=timestamp())
             save_state(state_path, state)
             print(f"Starting {current['model_id']} trial 0 at {current['started_at']}", flush=True)
-            current["result"] = execute(root / current["model_id"], current["model_id"])
+            current["result"] = execute(root / current["model_id"], current["model_id"],
+                                        **({"prepared": True} if prepared else {}))
             current.update(status="complete", completed_at=timestamp())
             save_state(state_path, state)
         state.update(status="awaiting_cost_review", completed_at=timestamp())

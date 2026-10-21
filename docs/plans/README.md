@@ -7,7 +7,7 @@ This directory contains the execution plans for concrete project implementations
 
 ## Active plans
 
-- [`training_hyperparameter_tuning.md`](training_hyperparameter_tuning.md) owns Phase6 execution. R1 implements D2/D3's separate v2/50-attempt policy and plateau guard; R2 acceptance is complete, with R3 preparation next and a separately authorized new campaign still pending. Original trials/evidence are retained without import;6.2 remains In progress and later selected/random/local work keeps its dependencies. No repeat general qualification stage is added.
+- [`training_hyperparameter_tuning.md`](training_hyperparameter_tuning.md) owns Phase6 execution. R1/R2 implementation/acceptance and R3 empty-campaign preparation are complete; R4 explicit launch is next and no new attempt has started. Original trials/evidence are retained without import;6.2 remains In progress and later selected/random/local work keeps its dependencies. No repeat general qualification stage is added.
 
 The 4A and 4B plans may cite shared research evidence, but their criteria, decisions, and downstream handoffs remain independent.
 

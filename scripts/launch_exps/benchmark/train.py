@@ -17,12 +17,13 @@ def main():
     parser.add_argument("--run-name")
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument("--prepared", action="store_true", help="start this verified empty R3 study, not resume a trial")
     parser.add_argument("--additional-trials", type=int, default=1)
     parser.add_argument("--cost-reviewed", action="store_true")
     parser.add_argument("--export-config", type=Path, help="new config file only; does not construct a model")
     args = parser.parse_args()
     if not args.execute:
-        if args.resume or args.cost_reviewed or args.additional_trials != 1:
+        if args.resume or args.prepared or args.cost_reviewed or args.additional_trials != 1:
             parser.error("execution options require --execute")
         if args.export_config:
             if not args.model or args.export_config.exists():
@@ -30,11 +31,12 @@ def main():
             make_config(args.model, ROOT / "experiments/benchmark_v2/CONFIG_ONLY").save_to_file(args.export_config)
         print(json.dumps(policy(), indent=2))
         return
-    if args.export_config or not args.model or not args.run_name or Path(args.run_name).name != args.run_name:
+    if (args.export_config or not args.model or not args.run_name or Path(args.run_name).name != args.run_name
+            or (args.resume and args.prepared)):
         parser.error("execution requires --model and a simple --run-name, without config export")
     from src.training.benchmark_campaign import execute, CAMPAIGN_ROOT
     print(json.dumps(execute(CAMPAIGN_ROOT / args.run_name / args.model,
-                             args.model, resume=args.resume, additional_trials=args.additional_trials,
+                             args.model, resume=args.resume, prepared=args.prepared, additional_trials=args.additional_trials,
                              cost_reviewed=args.cost_reviewed), indent=2))
 
 

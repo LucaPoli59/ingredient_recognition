@@ -3,8 +3,8 @@
 **Created:** 2026-08-02  
 **Last updated:** 2026-10-21
 **Overall status:** In progress  
-**Current macro-phase:** Training and hyperparameter tuning — R1/R2 complete, R3 campaign preparation next
-**Current focus:** Work package6.2 is In progress. R1 is committed as `0d28eea`; R2 controller/stopping acceptance passes45 focused/321 repository tests, with release/resume guards strengthened. R3 fresh-campaign preparation is next; no real v2 study or training exists yet. The five completed v1 runs stay separate cost/runtime evidence, without import. Q3, shared vocabulary and final-test isolation remain unchanged.
+**Current macro-phase:** Training and hyperparameter tuning — R1/R2/R3 complete, R4 explicit launch pending
+**Current focus:** Work package6.2 is In progress. R2 is committed as `efcf607`; R3 prepares `phase62-20261021-v2` with five verified empty studies and frozen configuration/source identities.51 focused/327 repository tests pass;0 new attempts have started. R4 requires explicit launch authorization and retains the first-release cost review. The completed v1 runs stay separate evidence without import; Q3, shared vocabulary and final-test isolation are unchanged.
 
 ## Purpose
 
@@ -36,7 +36,7 @@ A macro-section may remain **In progress** while some of its work packages are *
 | 3 | Ingredient selection | **Done** | D6/P6 shared vocabulary and P7 opt-in runtime integration are complete, with original D4 evidence, default full task and all records preserved. Parity/retention checks pass; historical code is retired from active use but retained. Mandatory P5/3.4 remains superseded. |
 | 4 | Model research | **Done** | 4A selected two established families and one custom topology; 4B froze the independent 4B-D1 EfficientNetV2-S reference-selector protocol and released Phase 3. |
 | 5 | Additional model implementation | **Done** | [All three adapters and measured readiness](implementation_details/experimental_model_contract.md#measured-cuda-acceptance-and-readiness-matrix) pass useful full/selected CUDA, strict offline restoration and real consumer checks; the completed plan hands off constraints without launching a benchmark. |
-| 6 | Training and hyperparameter tuning | **In progress** | [R1/R2 implementation and acceptance complete](plans/training_hyperparameter_tuning.md#r2-acceptance-checkpoint--2026-10-21). R3 preparation, explicit launch and new HPO/selection remain outstanding; no old trial import. |
+| 6 | Training and hyperparameter tuning | **In progress** | [R3 empty-campaign preparation complete](plans/training_hyperparameter_tuning.md#r3-preparation-checkpoint--2026-10-21). R4 explicit launch and new HPO/selection remain outstanding; no old trial import or new attempt started. |
 | 7 | Results comparison | **Deferred** | Work package 7.1 tooling is done and the historical basic_v5 ResNet/DINOv2 validation comparison is retained; final comparisons resume after comparable benchmark runs are complete. |
 | 8 | Thesis writing | **Pending** | Define the thesis outline and map project evidence to chapters. |
 
@@ -310,7 +310,7 @@ Maintain the [qualification CLI and contract](implementation_details/experimenta
 
 ## 6. Training and hyperparameter tuning
 
-**Status:** In progress — R1/R2 Done; R3 preparation and new campaign pending
+**Status:** In progress — R1/R2/R3 Done; R4 launch and campaign execution pending
 
 This macro-section covers baseline training, controlled model training, hyperparameter search, run selection, and reproducibility under the frozen benchmark.
 
@@ -341,14 +341,14 @@ The [training/HPO plan](plans/training_hyperparameter_tuning.md) owns lower-leve
 | Work package | Status | Completion gate and next action |
 | --- | --- | --- |
 | 6.1 Historical reuse, matrix and budget/protocol freeze | **Done** | Original D1 implementation/verification retained. D2/D3 prospectively amend stopping, budget and cohort; implementation tracked in6.2. Fixed-selector Q3, local panel and data boundaries stay unchanged. |
-| 6.2 Full-vocabulary baselines and tuning | **In progress** | R1 committed and R2 acceptance complete:45 focused/321 tests, controller accounting/resume guards and actual CPU pruning persistence. Original five trials remain separate evidence. Prepare R3 before explicit new launch; full HPO/selection still outstanding. |
+| 6.2 Full-vocabulary baselines and tuning | **In progress** | R2 committed; R3 prepares five empty50-attempt studies with hashed configs/source/artifact/data identities.51 focused/327 tests pass. Original five trials remain separate evidence. R4 explicit launch and full HPO/selection remain outstanding. |
 | 6.3 Selected-vocabulary transfers and random controls | **Deferred** | Requires relevant full-task selections and the frozen control design. Complete matched same-label full/reduced comparisons and reference-model random-vocabulary gains. |
 | 6.4 Selected-task local adaptation | **Deferred** | Included by Phase 6-D1: four additional LR/decay configurations per category after the transferred run. Keep Q4 separate from reference controls. |
 | 6.5 Operating-point freeze and Phase 7 handoff | **Deferred** | Requires mandatory campaign outputs. Freeze validation-only calibration/thresholds and the complete artifact/comparison ledger before final test evaluation. |
 
 ### Resume gate
 
-Data/vocabulary, model engineering and original6.1 gates are satisfied. The first release/repair remain historical checkpoints outside the new selection cohort. [R1/R2](plans/training_hyperparameter_tuning.md#r2-acceptance-checkpoint--2026-10-21) implement and accept D2/D3 in a distinct v2 policy; the v1 policy/campaign remain unchanged and are not resumed. Budget/restart decisions are closed. R3 preparation and explicit launch are still required; no old-to-new migration or repeat general model qualification is needed.
+Data/vocabulary, model engineering and original6.1 gates are satisfied. The first release/repair remain historical checkpoints outside the new selection cohort. [R1/R2/R3](plans/training_hyperparameter_tuning.md#r3-preparation-checkpoint--2026-10-21) implement, accept and prepare D2/D3 in a distinct v2 campaign; the v1 evidence is unchanged and not resumed. Budget/restart decisions are closed. Reverify the prepared handoff before an explicitly authorized R4 launch; no old-to-new migration or repeat general model qualification is needed.
 
 ### Completion gate
 
@@ -356,7 +356,7 @@ Every required baseline and shortlisted model in the adopted matrix has accounte
 
 ### Next action
 
-Proceed to [restart step R3](plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21): prepare new campaign names/paths, fresh configuration/source identities and an inspected dry run. R2 is accepted; no actual v2 campaign exists yet. Do not import old trials, resume v1 or start HPO automatically. Existing evidence, full-horizon winner eligibility and later selected/random/local dependencies remain preserved.
+Obtain an explicit [R4 launch request](plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) for prepared `phase62-20261021-v2`; reverify the empty handoff before starting its first serial reference release. R3 is complete with0 attempts used. Do not import old trials, resume v1 or release remaining attempts automatically. Existing evidence, full-horizon winner eligibility and later selected/random/local dependencies remain preserved.
 
 ## 7. Results comparison
 
@@ -468,7 +468,7 @@ project foundation [Done] -> data [Done]
 data -> 4A experimental-model research [Done] -> additional models [Done: 5.1–5.5]
 data -> 4B reference-selector research [Done] -> ingredient selection [Done]
 4A <-> shared discoveries, source catalogs, and technical evidence <-> 4B
-additional models + ingredient selection -> training and HTuning [In progress: original 6.1/R1/R2 Done; 6.2 R3 preparation then fresh50 campaign pending] -> results comparison [Deferred] -> thesis completion
+additional models + ingredient selection -> training and HTuning [In progress: original 6.1/R1/R2/R3 Done; 6.2 R4 explicit launch/full HPO pending] -> results comparison [Deferred] -> thesis completion
 
 Thesis outline and stable chapters may progress in parallel.
 ```
@@ -572,6 +572,7 @@ This table is append-only. Add one row when a macro-section or first-level work 
 | 2026-10-21 | Full-task budget and cohort revision | User adopted D3:50 new attempts per category, fresh trial0/journal/sampler, no import of the five first-release runs. Retain those as separate cost/runtime evidence and carry D2 into a new policy rather than migrating v1. | 6.2 and Macro-section6 remain **In progress**; revised implementation, fresh campaign preparation and explicit launch next | [D3 decision](project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies), [restart steps](plans/training_hyperparameter_tuning.md#fresh-fifty-trial-restart--2026-10-21) |
 | 2026-10-21 | Revised full-task policy implementation | Committed the D3 plan as `48315d1` and completed R1: separate v2/50 policy, fresh-study identity/path, independent plateau guard and reason/cost artifacts.31 focused/307 tests pass; v1 evidence and personal edits preserved, no new campaign or second commit. | 6.2 and Macro-section6 remain **In progress**; R1 **Done**, R2 acceptance next, R3–R5 Pending | [R1 checkpoint](plans/training_hyperparameter_tuning.md#r1-completion-checkpoint--2026-10-21), [runtime verification](implementation_details/benchmark_training.md#r1-v2-policy-and-plateau-implementation--2026-10-21) |
 | 2026-10-21 | Revised full-task acceptance | Committed R1 as `0d28eea`; accepted R2 controller accounting, guarded resume and actual CPU pruning persistence, with45 focused/321 tests. V1 artifacts/policies remain unchanged and no real new campaign exists. | 6.2 and Macro-section6 remain **In progress**; R1/R2 **Done**, R3 preparation next | [R2 checkpoint](plans/training_hyperparameter_tuning.md#r2-acceptance-checkpoint--2026-10-21), [runtime acceptance](implementation_details/benchmark_training.md#r2-controller-and-stopping-acceptance--2026-10-21) |
+| 2026-10-21 | Fresh full-task campaign preparation | Committed R2 as `efcf607`; prepared five empty studies in `phase62-20261021-v2`, with verified original artifacts, metadata/configuration/source identities and an inspected dry run.51 focused/327 tests pass; no new attempt or model training. | 6.2 and Macro-section6 remain **In progress**; R1–R3 **Done**, R4 explicit launch pending | [R3 checkpoint](plans/training_hyperparameter_tuning.md#r3-preparation-checkpoint--2026-10-21), [prepared handoff](implementation_details/benchmark_training.md#r3-preparation-and-inspected-handoff--2026-10-21) |
 
 ## Tracker maintenance rules
 

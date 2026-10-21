@@ -13,7 +13,7 @@ Implementation-detail documents describe verified current behavior. They must id
 
 ## Files
 
-- [`benchmark_training.md`](benchmark_training.md) owns active v2/50-attempt HPO, independent plateau/Hyperband pruning with saved reasons/costs, global AP and strict winner eligibility, fresh-study identity, independent best/latest saves and offline saved-v1 module compatibility. Original v1 campaign/repair evidence remains retained; no new campaign launch is implied.
+- [`benchmark_training.md`](benchmark_training.md) owns active v2/50-attempt HPO, independent plateau/Hyperband pruning, strict winner eligibility, independent best/latest saves and offline saved-v1 compatibility. It also owns non-training campaign preparation, hashed empty-study handoff and explicit prepared startup. Original v1 evidence stays retained; preparation is not a training launch.
 - [`models.md`](models.md) describes the vision-model implementations available under `src/models` and their training-pipeline contracts.
 - [`experimental_model_contract.md`](experimental_model_contract.md) defines opt-in Phase 5 preprocessing/identity, initialization, exact batching and engineering policy, all three adapters, original-artifact provenance and strict experimental Lightning restoration. It owns the reusable qualification CLI, measured full/selected CUDA caps, real callback/browser evidence, diagnostic limits and compact Phase 6 readiness matrix; these are not benchmark outcomes.
 - [`ingredient_mapping_rules.md`](ingredient_mapping_rules.md) is the long-term authority for custom `ingredients` to `ingredients_target` mappings, exclusions, multi-target expansions, retained distinctions, and collision boundaries.

@@ -7,7 +7,7 @@
 
 This document owns the opt-in executable contract for [Phase6-D1/D2/D3](../project_objective/model_comparison_methodology.md#phase-6-d3--fresh-fifty-trial-studies). Scientific decisions belong there; execution belongs in the [training plan](../plans/training_hyperparameter_tuning.md). The original v1 first release and subsequent persistence repair remain dated evidence below. R1 now implements the distinct v2 fresh-study policy; no new campaign has been launched.
 
-**Current implementation:** the active default is `phase6-comparison-v2`, with50 started attempts per model and D2's independent plateau guard. New studies have fresh journals/samplers under `experiments/benchmark_v2/`; v1 studies are not imported or resumed. The [v1 policy](../../src/training/resources/phase6_protocol_v1.json) stays byte-identical. A registered hash resolver preserves saved v1 module/checkpoint semantics for offline reconstruction instead of relabelling them v2. R1 implementation and R2 acceptance are complete; R3 campaign preparation and explicit launch remain separate. Neither a successful test nor CLI inspection authorizes training.
+**Current implementation:** the active default is `phase6-comparison-v2`, with50 started attempts per model and D2's independent plateau guard. New studies have fresh journals/samplers under `experiments/benchmark_v2/`; v1 studies are not imported or resumed. The [v1 policy](../../src/training/resources/phase6_protocol_v1.json) stays byte-identical. A registered hash resolver preserves saved v1 module/checkpoint semantics for offline reconstruction instead of relabelling them v2. R1 implementation, R2 acceptance and R3 preparation are complete; R4 explicit launch remains separate. Neither a successful test nor CLI inspection authorizes training.
 
 The path consists of the [v2 primitive policy](../../src/training/resources/phase6_protocol_v2.json), [configuration/metric helpers](../../src/training/benchmark_protocol.py), [plateau/eligibility helper](../../src/training/benchmark_stopping.py), [shared Lightning adapter](../../src/lightning/benchmark_lgn.py), [isolated study controller](../../src/training/benchmark_campaign.py), [matched-input anchors](../../src/models/benchmark_anchors.py) and [thin CLI](../../scripts/launch_exps/benchmark/train.py). It calls canonical `model_training` and reuses exact batching, projection, complete-state restoration and identity checks. Legacy trainers/studies, selector evidence, metadata and the59-label artifact are unchanged.
 
@@ -31,6 +31,16 @@ python scripts/launch_exps/benchmark/train.py --execute --model maxvit_t --run-n
 ```
 
 It creates a new model-specific directory below `experiments/benchmark_v2/`, refuses an existing directory and releases only a newly trained trial0 by default. `--cost-reviewed --additional-trials N` explicitly acknowledges the measured-cost review for multiple/further attempts; `--resume` is only for an already-created v2 study between finished trials. Every release stays within50 total attempts. The existing host-wide nonblocking lock is shared with retained v1 controllers; it is a mutex, not an old-study import or a reservation against unrelated GPU processes. No automatic topology fallback, epoch extension or trial replacement is supported.
+
+### Prepare without training
+
+[`prepare.py`](../../scripts/launch_exps/benchmark/prepare.py) calls [`benchmark_preparation.py`](../../src/training/benchmark_preparation.py). The default prints only a deterministic plan; `--write` creates a new campaign, five empty studies and a `preparation_manifest.json`; `--verify` inspects the existing handoff read-only. Existing directories are never overwritten, and a partial failure retains a failure record instead of silently rebuilding.
+
+Each study uses the controller's shared `prepare_study` path, also reused by ordinary fresh execution. It verifies approved cached weights/packages and frozen metadata hashes, saves the complete165-output configuration template, source inventory/ZIP, policy/environment/data identity and a fresh checksummed sampler. `prepared_study.json` hashes these exact files, including the **empty** journal, plus the pinned DINO source ZIP where applicable. Preparation never calls `ask`, `enqueue_trial`, `optimize`, model construction, training or prediction export. Metadata verification includes the retained test metadata hash, not test images or predictions.
+
+An explicit later `first_trials.py --prepared --execute` verifies the whole campaign before entering its serial first release. Individual study startup similarly uses `train.py --prepared --execute`; it is distinct from `--resume`, which requires finished attempts. Prepared startup requires unchanged empty journal/sampler/configuration/source bytes, opens that same study and only then enqueues the fixed reference0 inside50. It cannot be repeated after an attempt starts. Forgetting `--prepared` still refuses the existing directory; no overwrite or migration bypass is introduced. Source changes after preparation fail verification; a Git commit with identical inventoried bytes alone does not invalidate the snapshot.
+
+The preparation manifest also records the hashed reviewed first-release cost basis and conditional full-run-equivalent arithmetic for the50-attempt opportunity. Only old costs are consumed; old scores, weights and sampler observations do not enter the new cohort. Pruning savings remain unknown and subsequent Q2/Q3/Q4 work is excluded from that arithmetic.
 
 ## Configurations, exact accumulation and validation ranking
 
@@ -125,6 +135,23 @@ The initial negative tests exposed two hardening gaps: an oversized request crea
 **Limits:** metadata verification, model construction and validation export are doubles at the controller boundary; the synthetic COMPLETE fixture's40/15,000 counters are injected, not measured training. The two pruning fits use17 synthetic rows/two outputs and one CPU update per epoch, not375. Hyperband's decision is forced to isolate its branch; its production class/resources stay unchanged. These checks do not measure GPU cost, convergence or savings and do not repeat model qualification. The full suite's existing real test-split vocabulary check is metadata-only, not predictive evaluation.
 
 A separate read-only retention check confirms74 original v1 campaign input hashes, all five journal/sampler pairs and ten original/registered source ZIP inventories, with the old queue still `awaiting_cost_review`. There is no real `experiments/benchmark_v2/` directory, new campaign or predictive test access. R2 is accepted; R3 preparation and an explicitly authorized launch remain outstanding. R2 changes remain uncommitted.
+
+### R3 preparation and inspected handoff — 2026-10-21
+
+R2 was committed as `efcf607`. The actual preparation CLI and first-release dry run were inspected, then `prepare.py --run-name phase62-20261021-v2 --write` created `experiments/benchmark_v2/phase62-20261021-v2/` at2026-10-21T10:22:22.531649+00:00. Its state is **prepared_not_launched**: all five studies have0 trials and50 remaining, with no WAITING reference, trial directory, baseline output or campaign queue yet. All templates retain165 classes in exact base order, full-default projection, FP32/effective128,40 epochs and physical32/32/32/16/32 with accumulation4/4/4/8/4. Planned complete counters remain375 updates/epoch and15,000 total; no new updates were measured.
+
+| Retained preparation identity | SHA-256 or value |
+| --- | --- |
+| `preparation_manifest.json` | `28d108baf21eb3aa807ee54724d7a7b88b0a7902b17bc6b9b7ca4f24afb9bb97` |
+| All five84-file source inventories | `5a93b2e5fa1f0e36ad7a0e6866f8d5d6891eb9f53a05631ce06eb3d1646b4e1b` |
+| All five source ZIPs | `97f8c6a54816175aa70e9216f0214b35e8ae5598377ba39ad9d06bccd3a0eab9` |
+| Git base | `efcf60769d1b5508b15bef62c61213fafe78a976` plus exact saved working-tree bytes |
+
+Actual `--verify` was exercised with `ask`, `optimize`, canonical training and downloads forbidden; subsequent read-only loading confirmed every study empty. Hashing every prepared file before/after confirmed no mutation. Approved original artifacts, package identities, DINO source and all-split metadata hashes pass. No model was constructed or image evaluated. The original v1 evidence/registered repair remain separate and unchanged.
+
+The [six preparation tests](../../tests/test_benchmark_preparation.py) cover empty studies/templates, source/config/journal/sampler hash checks, explicit prepared startup/fixed trial0, rejection of overwrite/empty-resume/repeat launch, queue handoff, CLI inspection/name guards and retained preparation failure. Controller training/export and environment/data verification are synthetic doubles in those tests, not measured qualification. **51 focused and327 repository tests pass** (full suite89.172 seconds); the existing real test-split vocabulary check remains metadata-only.
+
+The manifest's cost basis is the reviewed28.36 h first release, separately spent outside the new allowance. Multiplying that five-model release by50 yields59.08 continuous full-run-equivalent days for HPO alone, **not an ETA or bound**. Unknown pruning/speed variation and later transfers/controls/local work preclude a promised duration. R4 still requires explicit authorization; its first release runs only fresh reference0 per model and stops at the existing cost-review boundary. No R3 commit or training launch is implied.
 
 ### Phase 6.2 execution additions — 2026-10-18
 

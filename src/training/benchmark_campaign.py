@@ -139,7 +139,76 @@ def environment_identity(model_id):
             "original_artifact": name, "sha256": expected, "bytes": path.stat().st_size}
 
 
-def execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed=False):
+def _study_inputs(root, model_id):
+    from src.ingredient_selection.runtime import resolve_projection
+    root = Path(root).resolve()
+    allowed = CAMPAIGN_ROOT.resolve()
+    if not root.is_relative_to(allowed) or root == allowed:
+        raise ValueError("fresh benchmark study must be isolated below experiments/benchmark_v2")
+    projection = resolve_projection(policy()["selected_projection"])
+    config = make_config(model_id, root / "template")
+    projection.verify_metadata(config.datamodule["data_dir"])
+    environment = environment_identity(model_id)
+    data_identity = {"metadata_hashes": dict(projection.metadata_hashes),
+                     "base_class_order": list(projection.base_class_order)}
+    return root, config, environment, data_identity
+
+
+def _validate_saved_inputs(root, environment, data_identity):
+    if (json.loads((root / "policy.json").read_text()) != policy()
+            or json.loads((root / "data_identity.json").read_text()) != data_identity):
+        raise ValueError("saved benchmark policy/data identity changed")
+    if json.loads((root / "environment.json").read_text()) != environment:
+        raise ValueError("benchmark environment/original-artifact identity changed")
+
+
+PREPARED_FILES = ("study_identity.json", "journal.log", "sampler.bin", "policy.json", "environment.json",
+                  "data_identity.json", "configuration_template.json", "source_inventory.json", "source_snapshot.zip")
+
+
+def prepare_study(root, model_id):
+    """Create a fresh empty study and immutable launch inputs; never ask/enqueue/fit."""
+    from src.training.benchmark_provenance import sha256, validate_study_sources
+    root, config, environment, data_identity = _study_inputs(root, model_id)
+    study = open_study(root, model_id)
+    _source_snapshot(root)
+    write_new(root / "policy.json", policy())
+    write_new(root / "environment.json", environment)
+    files = PREPARED_FILES
+    if model_id == "dinov2_b14_anchor":
+        from src.models.benchmark_anchors import verified_dino_source
+        source = verified_dino_source()
+        with zipfile.ZipFile(root / "dinov2_source.zip", "x", zipfile.ZIP_DEFLATED) as archive:
+            for path in sorted((source / "dinov2").rglob("*.py")) + [source / "hubconf.py", source / "LICENSE"]:
+                archive.write(path, path.relative_to(source))
+        files += ("dinov2_source.zip",)
+    write_new(root / "data_identity.json", data_identity)
+    config.save_to_file(root / "configuration_template.json")
+    source_identity = validate_study_sources(root)
+    write_new(root / "prepared_study.json", {"schema_version": 1, "status": "prepared_empty",
+        "model_id": model_id, "policy_hash": policy_hash(), "trials_started": 0,
+        "files": {name: sha256(root / name) for name in files}})
+    return study, source_identity
+
+
+def inspect_prepared_study(root, model_id):
+    """Read-only input/source validation, including the untouched empty journal/sampler."""
+    from src.training.benchmark_provenance import sha256, validate_study_sources
+    root, _, environment, data_identity = _study_inputs(root, model_id)
+    _validate_saved_inputs(root, environment, data_identity)
+    record = json.loads((root / "prepared_study.json").read_text())
+    files = set(PREPARED_FILES) | ({"dinov2_source.zip"} if model_id == "dinov2_b14_anchor" else set())
+    if (record.get("schema_version") != 1 or record.get("status") != "prepared_empty"
+            or record.get("policy_hash") != policy_hash() or record.get("model_id") != model_id
+            or record.get("trials_started") != 0 or set(record.get("files", {})) != files
+            or any(sha256(root / name) != digest for name, digest in record["files"].items())
+            or any(root.glob("trial_*"))):
+        raise ValueError("prepared study inputs changed or the study has already started")
+    validate_study_sources(root)
+    return record
+
+
+def execute(root, model_id, *, resume=False, prepared=False, additional_trials=1, cost_reviewed=False):
     """Serialize campaign controllers on the single-device WSL host."""
     import fcntl
     # Keep the existing host-wide mutex shared with retained v1 controllers.
@@ -150,15 +219,15 @@ def execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed=
             fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as error:
             raise RuntimeError("another benchmark controller owns the single-device lock") from error
-        return _execute(root, model_id, resume=resume, additional_trials=additional_trials, cost_reviewed=cost_reviewed)
+        return _execute(root, model_id, resume=resume, prepared=prepared,
+                        additional_trials=additional_trials, cost_reviewed=cost_reviewed)
 
 
-def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed=False):
+def _execute(root, model_id, *, resume=False, prepared=False, additional_trials=1, cost_reviewed=False):
     """Explicitly invoked by Phase 6.2, not by configuration inspection/tests."""
     from src.training.commons import model_training, load_datamodule, set_torch_constants
     from src.training.experimental_runtime import prepare_experimental_config
     from src.data_processing.images_recipes import ImagesRecipesBaseDataModule
-    from src.ingredient_selection.runtime import resolve_projection
     from src.training.benchmark_provenance import validate_study_sources
 
     root = Path(root).resolve()
@@ -166,38 +235,21 @@ def _execute(root, model_id, *, resume=False, additional_trials=1, cost_reviewed
         raise ValueError("additional_trials must be positive")
     if additional_trials > policy()["hpo"]["started_trials_per_model"]:
         raise ValueError("requested release exceeds the fixed started-trial budget")
+    if prepared and resume:
+        raise ValueError("prepared first launch and finished-trial resume are distinct")
     if (resume or additional_trials > 1) and not cost_reviewed:
         raise ValueError("acknowledge the measured-cost review before releasing multiple/further trials")
-    # Prevent accidentally opening an existing study in another legacy location.
-    allowed = CAMPAIGN_ROOT.resolve()
-    if not root.is_relative_to(allowed) or root == allowed:
-        raise ValueError("fresh benchmark study must be isolated below experiments/benchmark_v2")
-    projection = resolve_projection(policy()["selected_projection"])
-    config = make_config(model_id, root / "template")
-    projection.verify_metadata(config.datamodule["data_dir"])
-    environment = environment_identity(model_id)
-    data_identity = {"metadata_hashes": dict(projection.metadata_hashes),
-                     "base_class_order": list(projection.base_class_order)}
-    if resume:
-        if (json.loads((root / "policy.json").read_text()) != policy()
-                or json.loads((root / "data_identity.json").read_text()) != data_identity):
-            raise ValueError("saved benchmark policy/data identity changed")
-        if json.loads((root / "environment.json").read_text()) != environment:
-            raise ValueError("benchmark environment/original-artifact identity changed")
+    if resume or prepared:
+        root, _, environment, data_identity = _study_inputs(root, model_id)
+        _validate_saved_inputs(root, environment, data_identity)
+        if prepared:
+            inspect_prepared_study(root, model_id)
         source_identity = validate_study_sources(root)
-    study = open_study(root, model_id, resume=resume)
-    if not resume:
-        _source_snapshot(root)
-        write_new(root / "policy.json", policy())
-        write_new(root / "environment.json", environment)
-        if model_id == "dinov2_b14_anchor":
-            from src.models.benchmark_anchors import verified_dino_source
-            source = verified_dino_source()
-            with zipfile.ZipFile(root / "dinov2_source.zip", "x", zipfile.ZIP_DEFLATED) as archive:
-                for path in sorted((source / "dinov2").rglob("*.py")) + [source / "hubconf.py", source / "LICENSE"]:
-                    archive.write(path, path.relative_to(source))
-        write_new(root / "data_identity.json", data_identity)
-        source_identity = validate_study_sources(root)
+        study = open_study(root, model_id, resume=True)
+        if (prepared and study.trials) or (resume and not study.trials):
+            raise ValueError("empty studies require prepared launch; started studies require resume")
+    else:
+        study, source_identity = prepare_study(root, model_id)
     if additional_trials > remaining_trials(study):
         raise ValueError("requested release exceeds the remaining fixed budget")
 
