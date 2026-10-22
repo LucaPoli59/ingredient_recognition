@@ -2,10 +2,14 @@
 
 **Created:** 2026-10-21
 
-**Last updated:** 2026-10-21
+**Last updated:** 2026-10-22
 
-**Status:** Exploratory research plus an implemented ingredient-only PCA/AE pilot.
+**Status:** Ingredient-only PCA/AE and frozen-image-head pilots completed.
 See [experiment.md](experiment.md) for execution, validation and result scope.
+The subsequent [image-head experiment](image_experiment.md) compares image-only
+prediction through the 32-dimensional AE code with a direct ingredient head.
+The direct head performed better on validation macro AP and threshold-selected
+micro F1 in this first image pilot; see its result and limitation sections.
 
 ## Question and provisional assessment
 
@@ -199,8 +203,9 @@ Any uncertainty estimate should use the existing exact-image grouping policy.
 
 ## Boundaries and next decision
 
-The useful next experiment is ingredient-only compression with a small latent
-scan, followed by the matched frozen-feature comparison. A VAE introduces a KL
+The ingredient-only latent scan and frozen-feature comparison are now complete;
+their execution records below distinguish results from the broader proposed
+extensions in this research note. A VAE introduces a KL
 trade-off and possible additional reconstruction loss; generative sampling is
 not required to answer this first question. It remains a later alternative.
 
@@ -208,7 +213,8 @@ This scratch investigation does not alter the
 [benchmark methodology](../../docs/project_objective/model_comparison_methodology.md),
 selected vocabulary, active HPO studies or training sources. The original research
 and train audit did not run models. The subsequent ingredient-only implementation
-and its execution evidence are recorded in [experiment.md](experiment.md); image
-training and metadata extensions remain proposals. This is not an adopted
+and its execution evidence are recorded in [experiment.md](experiment.md); the
+image-head pilot is recorded in [image_experiment.md](image_experiment.md).
+Metadata extensions and end-to-end training remain proposals. This is not an adopted
 thesis-method decision. Reviewed findings can later be promoted
 under the project's [documentation policy](../../docs/README_DOCS_ORGN.md).
