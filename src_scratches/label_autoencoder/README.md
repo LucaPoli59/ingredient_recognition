@@ -4,7 +4,8 @@
 
 **Last updated:** 2026-10-21
 
-**Status:** Research and train-metadata inspection only; no model training performed.
+**Status:** Exploratory research plus an implemented ingredient-only PCA/AE pilot.
+See [experiment.md](experiment.md) for execution, validation and result scope.
 
 ## Question and provisional assessment
 
@@ -205,8 +206,9 @@ not required to answer this first question. It remains a later alternative.
 
 This scratch investigation does not alter the
 [benchmark methodology](../../docs/project_objective/model_comparison_methodology.md),
-selected vocabulary, active HPO studies or training sources. No AE, feature
-extraction, CNN training, dependency installation or test evaluation was run.
-The question remains open for discussion; this is not an adopted thesis-method
-decision or a completed experiment. Reviewed findings can later be promoted
+selected vocabulary, active HPO studies or training sources. The original research
+and train audit did not run models. The subsequent ingredient-only implementation
+and its execution evidence are recorded in [experiment.md](experiment.md); image
+training and metadata extensions remain proposals. This is not an adopted
+thesis-method decision. Reviewed findings can later be promoted
 under the project's [documentation policy](../../docs/README_DOCS_ORGN.md).
