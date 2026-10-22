@@ -17,9 +17,8 @@ import numpy as np
 from PIL import Image
 from threadpoolctl import threadpool_limits
 import torch
-from torch import nn
 import torchvision
-from torchvision.models import resnet18
+from src_scratches.label_autoencoder.image_models import load_backbone
 
 from src.data_processing.experimental_transforms import ExperimentalFitPad224
 from src_scratches.label_autoencoder.compare import ROOT, DEFAULT_DATA, sha256
@@ -62,14 +61,6 @@ def read_image_rows(data_dir, metadata):
         rows[split] = names
         sources[split] = {"path": str(path.resolve()), "sha256": hashlib.sha256(raw).hexdigest(), "rows": len(names)}
     return rows, sources
-
-
-def load_backbone(weights):
-    model = resnet18(weights=None)
-    model.load_state_dict(torch.load(weights, map_location="cpu", weights_only=True), strict=True)
-    model.fc = nn.Identity()
-    model.requires_grad_(False).eval().to(memory_format=torch.channels_last)
-    return model
 
 
 def validate_chunks(output, manifest, image_rows):
@@ -140,6 +131,7 @@ def extract(args, backbone=None):
     manifest["sessions"].append({"started_utc": datetime.now(timezone.utc).isoformat(),
                                  "pid": os.getpid(), "scheduler": os.sched_getscheduler(0) if hasattr(os, "sched_getscheduler") else None,
                                  "threads": args.threads, "extractor_sha256": sha256(Path(__file__)),
+                                 "model_source_sha256": sha256(Path(__file__).with_name("image_models.py")),
                                  "cpu_affinity": sorted(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else None,
                                  "cuda_visible_devices": os.environ["CUDA_VISIBLE_DEVICES"], "positions": dict(positions)})
     atomic_json(manifest_path, manifest)

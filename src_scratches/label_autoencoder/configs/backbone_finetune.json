@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "data_dir": "data/input/yummly",
+  "metadata": "ingredients_target_v5_metadata.json",
+  "expected_labels": 165,
+  "source_run": "src_scratches/label_autoencoder/outputs/image_heads_20261022_seed42",
+  "feature_cache": "src_scratches/label_autoencoder/outputs/resnet18_features_20261022",
+  "autoencoder": "src_scratches/label_autoencoder/outputs/20261021_ingredients_cpu_seed42/ae_k32.pt",
+  "weights": "~/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth",
+  "arms": ["direct", "ae32_frozen_decoder", "ae32_trainable_decoder"],
+  "seed": 42,
+  "epochs": 30,
+  "patience": 7,
+  "min_delta": 0.00001,
+  "batch_size": 32,
+  "workers": 2,
+  "threads": 2,
+  "backbone_lr": 0.0001,
+  "head_lr": 0.001,
+  "decoder_lr": 0.0001,
+  "latent_weight": 0.1
+}

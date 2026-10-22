@@ -10,6 +10,9 @@ The subsequent [image-head experiment](image_experiment.md) compares image-only
 prediction through the 32-dimensional AE code with a direct ingredient head.
 The direct head performed better on validation macro AP and threshold-selected
 micro F1 in this first image pilot; see its result and limitation sections.
+The [backbone fine-tuning follow-up](finetune_experiment.md) is implemented and
+prepared with frozen/trainable AE32 decoder arms and a direct reference, but has
+not been launched. Execution is deferred until GPU capacity is available.
 
 ## Question and provisional assessment
 
@@ -215,6 +218,7 @@ selected vocabulary, active HPO studies or training sources. The original resear
 and train audit did not run models. The subsequent ingredient-only implementation
 and its execution evidence are recorded in [experiment.md](experiment.md); the
 image-head pilot is recorded in [image_experiment.md](image_experiment.md).
-Metadata extensions and end-to-end training remain proposals. This is not an adopted
+Metadata extensions remain proposals; the prepared backbone fine-tuning follow-up
+has no real-training results yet. This is not an adopted
 thesis-method decision. Reviewed findings can later be promoted
 under the project's [documentation policy](../../docs/README_DOCS_ORGN.md).

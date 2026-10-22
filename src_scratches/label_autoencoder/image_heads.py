@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import argparse
-import copy
 import json
 import math
 import os
@@ -22,52 +21,9 @@ from torch import nn
 from src.data_processing.experimental_transforms import ExperimentalFitPad224
 from src_scratches.label_autoencoder import compare
 from src_scratches.label_autoencoder.image_features import atomic_json, load_backbone, load_features
-
-
-ARMS = ("direct", "ae32_aligned", "ae32_mse")
-
-
-def normalization(values):
-    return values.mean(axis=0), np.maximum(values.std(axis=0), 1e-6)
-
-
-class ImageHead(nn.Module):
-    """All forward/inference inputs are image features; no ingredient input exists."""
-    def __init__(self, kind, feature_mean, feature_std, label_count, decoder=None,
-                 latent_mean=None, latent_std=None):
-        super().__init__()
-        if kind not in ARMS:
-            raise ValueError(f"Unknown head {kind}")
-        self.kind = kind
-        self.register_buffer("feature_mean", torch.as_tensor(feature_mean, dtype=torch.float32))
-        self.register_buffer("feature_std", torch.as_tensor(feature_std, dtype=torch.float32))
-        if kind == "direct":
-            self.projection = nn.Linear(len(feature_mean), label_count)
-        else:
-            if decoder is None or latent_mean is None or latent_std is None:
-                raise ValueError("AE head requires decoder and train-fitted latent normalization")
-            self.register_buffer("latent_mean", torch.as_tensor(latent_mean, dtype=torch.float32))
-            self.register_buffer("latent_std", torch.as_tensor(latent_std, dtype=torch.float32))
-            self.projection = nn.Linear(len(feature_mean), len(latent_mean))
-            self.decoder = copy.deepcopy(decoder).requires_grad_(False).eval()
-            # Start near the train-average code; both AE objectives share this initialization.
-            nn.init.normal_(self.projection.weight, mean=0.0, std=0.01)
-            nn.init.zeros_(self.projection.bias)
-
-    def forward(self, features):
-        projected = self.projection((features - self.feature_mean) / self.feature_std)
-        if self.kind == "direct":
-            return projected, None
-        logits = self.decoder(projected * self.latent_std + self.latent_mean)
-        return logits, projected
-
-
-def teacher_codes(autoencoder, labels, batch_size=1024):
-    """Used for training targets/diagnostics, never to construct image predictions."""
-    autoencoder.eval()
-    with torch.inference_mode():
-        return np.concatenate([autoencoder.encoder(torch.from_numpy(labels[start:start + batch_size])).numpy()
-                               for start in range(0, len(labels), batch_size)])
+from src_scratches.label_autoencoder.image_models import (
+    ARMS, ImageHead, normalization, teacher_codes, load_head,
+)
 
 
 def predict(head, features, batch_size=1024):
@@ -171,19 +127,6 @@ def fit_head(head, train_x, train_y, train_z, val_x, val_y, val_z, args, output,
     return scores, extra
 
 
-def load_head(path):
-    saved = torch.load(path, map_location="cpu", weights_only=True)
-    state = saved["state_dict"]
-    decoder = None
-    if saved["kind"] != "direct":
-        decoder = nn.Sequential(nn.Linear(saved["latent_dim"], saved["decoder_hidden_dim"]), nn.ReLU(),
-                                nn.Linear(saved["decoder_hidden_dim"], saved["label_count"]))
-    model = ImageHead(saved["kind"], state["feature_mean"], state["feature_std"], saved["label_count"],
-                      decoder, state.get("latent_mean"), state.get("latent_std"))
-    model.load_state_dict(state, strict=True)
-    return model.eval(), saved
-
-
 def predict_image(image_path, head_path, weights_path):
     """A real deployment path accepting just an image and saved model artifacts."""
     head, saved = load_head(head_path)
@@ -281,7 +224,8 @@ def run(args):
     manifest = {"created_utc": datetime.now(timezone.utc).isoformat(), "contract": contract,
                 "arguments": {k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()},
                 "sources": provenance, "scripts": {p.name: compare.sha256(p) for p in
-                    (Path(__file__), Path(compare.__file__), Path(__file__).with_name("image_features.py"))},
+                    (Path(__file__), Path(compare.__file__), Path(__file__).with_name("image_features.py"),
+                     Path(__file__).with_name("image_models.py"))},
                 "device": "cpu", "cuda_visible_devices": os.environ["CUDA_VISIBLE_DEVICES"],
                 "scheduler": os.sched_getscheduler(0) if hasattr(os, "sched_getscheduler") else None,
                 "cpu_affinity": sorted(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else None,

@@ -6,6 +6,10 @@
 
 **Status:** Full-cohort CPU pilot completed; direct head preferred within this exploratory comparison.
 
+The separate [backbone fine-tuning follow-up](finetune_experiment.md) is prepared
+with frozen/trainable decoder arms; it has not been launched. The results below
+remain those of the completed frozen-feature pilot.
+
 ## Question and comparison boundary
 
 Does the [ingredient-only AE32 representation](experiment.md) help predict all
